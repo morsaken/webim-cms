@@ -93,6 +93,7 @@ class ContentSettings {
    'social.pinterest' => input('social_pinterest'),
    'social.skype' => input('social_skype'),
    'social.vimeo' => input('social_vimeo'),
+   'social.github' => input('social_github'),
    'google.search_console' => raw_input('google_search_console'),
    'google.analytics' => raw_input('google_analytics'),
    'google.adsense' => raw_input('google_adsense')
