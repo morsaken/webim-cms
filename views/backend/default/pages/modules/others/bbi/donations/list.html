@@ -1,0 +1,670 @@
+@extends('default')
+
+@section('title') {{{ $caption }}} :: @parent @stop
+
+@section('content')
+@include('topbar')
+<section id="content" class="table-layout">
+ <div class="tray tray-center pn va-t posr">
+  <div class="panel m15">
+   <div class="panel-menu p12 admin-form theme-primary">
+    <div class="row">
+     <div class="col-md-5">
+      <label class="field input">
+       <input type="text" id="filter-title" name="filter-title" placeholder="İsme Göre Filtrele" class="gui-input">
+      </label>
+     </div>
+     <div class="col-md-5">
+      <label class="field select">
+       <select id="filter-by" name="filter-by">
+        <option value="0">İşleme Göre Filtrele</option>
+        <option value="cc">Kredi Kartı</option>
+        <option value="sms">SMS</option>
+        <option value="eft">EFT / Havale</option>
+       </select>
+       <i class="arrow"></i>
+      </label>
+     </div>
+     <div class="col-md-2">
+      <label class="field select">
+       <select id="filter-status" name="filter-status">
+        <option value="0">Duruma Göre Filtrele</option>
+        <option value="true">Aktif</option>
+        <option value="false">Pasif</option>
+       </select>
+       <i class="arrow"></i>
+      </label>
+     </div>
+    </div>
+   </div>
+   <div id="list" class="panel-body">
+    @if (isset($list) && $list->total)
+    <table class="table admin-form theme-warning tc-checkbox-1 fs13">
+     <thead>
+      <tr class="bg-light">
+       <th class="text-center w30">#</th>
+       <th class="text-center">Fotoğraf</th>
+       <th class="">İsim</th>
+       <th class="text-center">Miktar</th>
+       <th class="text-center">Ödeme Türü</th>
+       <th class="text-right">Durum</th>
+      </tr>
+     </thead>
+     <tbody id="rows">
+      @foreach ($list->rows as $key => $row)
+      <tr>
+       <td class="text-center">{{ $key + 1 }}</td>
+       <td class="w100 text-center">
+        <img id="photo-{{ $row->id }}" class="img-responsive img-circle mw40 ib" src="{{ $row->photo }}" title="{{{ $row->fullname }}}">
+       </td>
+       <td>
+        <a href="#preview" data-id="{{ $row->id }}">{{{ $row->fullname }}}</a>
+       </td>
+       <td class="text-center">{{{ $row->amount }}}</td>
+       <td class="text-center">{{{ $row->by }}}</td>
+       <td class="text-right">
+        <div class="btn-group text-right">
+         <button type="button" class="btn btn-{{ $row->active ? 'primary' : 'inverse' }} btn-xs br2 dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          {{{ $row->status }}}
+          <span class="caret ml5"></span>
+         </button>
+         <ul class="dropdown-menu" role="menu">
+          <li>
+           <a href="#preview" data-id="{{ $row->id }}">Görüntüle</a>
+          </li>
+          <li>
+           <a href="#photo" data-id="{{ $row->id }}">Fotoğraf</a>
+          </li>
+          <li>
+           <a href="#delete" data-id="{{ $row->id }}">@lang('admin.button.delete', 'Sil')</a>
+          </li>
+          <li class="divider"></li>
+          <li>
+           <a href="#status" data-id="{{ $row->id }}">Onayla / Kaldır</a>
+          </li>
+         </ul>
+        </div>
+       </td>
+      </tr>
+      @endforeach
+     </tbody>
+    </table>
+    @if (isset($list->next) && !is_null($list->next))
+    <div class="text-center">
+     <a class="btn btn-danger" href="#more" data-url="{{ $list->next }}">@lang('admin.label.more', 'Devamı')</a>
+    </div>
+    @endif
+    @else
+    @include('list.empty')
+    @endif
+   </div>
+  </div>
+ </div>
+ <aside class="tray tray-left tray250 va-t pn" data-tray-height="match">
+  <div class="p15 admin-form">
+   <h4 class="mt5 text-muted fw500">Özet</h4>
+   <hr class="short">
+   <h6 class="fw400">Onaylı Rakam</h6>
+   <div class="section mb15">
+    <label class="field prepend-icon">
+     <input type="text" class="gui-input" readonly value="{{ $amount['active'] or 0 }}">
+      <span class="field-icon">
+       <i class="fa fa-try"></i>
+      </span>
+    </label>
+   </div>
+   <h6 class="fw400">Toplam Rakam</h6>
+   <div class="section mb15">
+    <label class="field prepend-icon">
+     <input type="text" class="gui-input" readonly value="{{ $amount['total'] or 0 }}">
+      <span class="field-icon">
+       <i class="fa fa-try"></i>
+      </span>
+    </label>
+   </div>
+  </div>
+  <hr class="short">
+  <form id="settings-form" class="p15 admin-form" method="post" action="@url('#current/settings')">
+   <h4 class="mt5 text-muted fw500">Ayarlar</h4>
+   <hr class="short">
+   <h6 class="fw400">Başlangıç Tarihi</h6>
+   <div class="section mb15">
+    <label class="field prepend-icon">
+     <input type="text" id="bbi_date_start" name="bbi_date_start" class="gui-input" placeholder="{{{ now('short') }}}" value="{{{ conf('bbi.date_start') }}}">
+     <span class="field-icon">
+      <i class="fa fa-calendar"></i>
+     </span>
+    </label>
+   </div>
+   <h6 class="fw400">Hedef Rakam</h6>
+   <div class="section mb15">
+    <label class="field prepend-icon">
+     <input type="text" id="bbi_target_amount" name="bbi_target_amount" class="gui-input" placeholder="100000" value="{{{ conf('bbi.target_amount') }}}">
+     <span class="field-icon">
+      <i class="fa fa-dollar"></i>
+     </span>
+    </label>
+   </div>
+   <h6 class="fw400">Hedef CO<sub>2</sub></h6>
+   <div class="section mb15">
+    <label class="field prepend-icon">
+     <input type="text" id="bbi_target_co2" name="bbi_target_co2" class="gui-input" placeholder="10" value="{{{ conf('bbi.target_co2') }}}">
+     <span class="field-icon">
+      <i class="fa fa-info"></i>
+     </span>
+    </label>
+   </div>
+   <hr class="short">
+   <div class="section">
+    <button type="submit" class="btn btn-default btn-sm ph25">
+     @lang('admin.button.save', 'Kaydet')
+    </button>
+   </div>
+  </form>
+ </aside>
+</section>
+
+<div id="preview-dialog" class="modal fade">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h4>
+     <i class="fa fa-info"></i>
+     Bilgi
+    </h4>
+   </div>
+   <div class="modal-body">
+    <table id="preview" class="table table-bordered table-striped">
+     <tbody>
+      <tr>
+       <td style="width: 35%;">Ödeme Türü / Miktar</td>
+       <td style="width: 65%;">
+        <a href="#" id="by" data-type="select" data-placement="right" data-title="Türü seçin" class="editable editable-click editable-empty">-</a>
+        /
+        ₺ <a href="#" id="amount" data-type="text" data-placement="right" data-title="Miktarı yazın" class="editable editable-click editable-empty">-</a>
+       </td>
+      </tr>
+      <tr>
+       <td>Ad</td>
+       <td>
+        <a href="#" id="firstname" data-type="text" data-placement="right" data-placeholder="Gerekli Alan" data-title="Adı yazın" class="editable editable-click editable-empty">-</a>
+       </td>
+      </tr>
+      <tr>
+       <td>Soyad</td>
+       <td>
+        <a href="#" id="lastname" data-type="text" data-placement="right" data-placeholder="Gerekli Alan" data-title="Soyadı yazın" class="editable editable-click editable-empty">-</a>
+       </td>
+      </tr>
+      <tr>
+       <td>E-Posta Adresi</td>
+       <td>
+        <a href="#" id="email" data-type="text" data-placement="right" data-placeholder="Gerekli Alan" data-title="E-posta adresini yazın" class="editable editable-click editable-empty">-</a>
+       </td>
+      </tr>
+      <tr>
+       <td>Telefon Numarası</td>
+       <td>
+        <a href="#" id="phone" data-type="text" data-placement="right" data-placeholder="Gerekli Alan" data-title="Telefon numarasını yazın" class="editable editable-click editable-empty">-</a>
+       </td>
+      </tr>
+      <tr>
+       <td>T.C. Kimlik No</td>
+       <td>
+        <a href="#" id="cinumber" data-type="text" data-placement="right" data-placeholder="Gerekli Alan" data-title="T.C. kimlik numarasını yazın" class="editable editable-click editable-empty">-</a>
+       </td>
+      </tr>
+      <tr>
+       <td>Adres</td>
+       <td>
+        <a href="#" id="address" data-type="textarea" data-placement="right" data-title="Adresi yazın" class="editable editable-pre-wrapped editable-click">-</a>
+       </td>
+      </tr>
+      <tr>
+       <td>Posta Kodu / İli</td>
+       <td>
+        <a href="#" id="zipcode" data-type="text" data-placement="right" data-title="Posta kodunu yazın" class="editable editable-click editable-empty">-</a>
+        /
+        <a href="#" id="city" data-type="text" data-placement="right" data-title="İli yazın" class="editable editable-click editable-empty">-</a>
+       </td>
+      </tr>
+      <tr>
+       <td>Nereden Duymuş?</td>
+       <td>
+        <a href="#" id="heard" data-type="select" data-placement="right" data-title="Nereden duymuş" class="editable editable-pre-wrapped editable-click">-</a>
+       </td>
+      </tr>
+      <tr>
+       <td>Mesaj</td>
+       <td>
+        <a href="#" id="message" data-type="textarea" data-placement="right" data-title="Mesajı yazın" class="editable editable-pre-wrapped editable-click">-</a>
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </div>
+   <div class="modal-footer">
+    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+     <i class="fa fa-close"></i>
+     @lang('admin.button.close', 'Kapat')
+    </button>
+   </div>
+  </div>
+ </div>
+</div>
+
+<div id="photo-dialog" class="modal fade">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h4>
+     <i class="fa fa-picture-o"></i>
+     Fotoğraf
+    </h4>
+   </div>
+   <div class="modal-body">
+    <form id="photo-form" method="post" action="@url()/photo">
+     <div class="center-block">
+      <img id="photo-preview" class="center-block" src="{{ $assets }}/upload-photo.png" height="100" data-default="{{ $assets }}/upload-photo.png" alt="Fotoğraf">
+      <input type="hidden" id="id" name="id" value="0">
+      <input type="file" id="photo" name="photo" accept="image/*" class="hidden">
+     </div>
+     <div class="center-block text-center mt15">
+      <button type="button" id="upload-photo" class="btn btn-primary">
+       <i class="fa fa-upload"></i>
+       Seç ve Yükle
+      </button>
+     </div>
+    </form>
+   </div>
+   <div class="modal-footer">
+    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+     <i class="fa fa-close"></i>
+     @lang('admin.button.close', 'Kapat')
+    </button>
+   </div>
+  </div>
+ </div>
+</div>
+@stop
+
+@section('link')
+@parent
+<link rel="stylesheet" type="text/css" href="{{ $root }}/js/lib/editors/xeditable/css/bootstrap-editable.css">
+<link rel="stylesheet" type="text/css" href="{{ $root }}/js/lib/editors/xeditable/inputs/address/address.css">
+<link rel="stylesheet" type="text/css" href="{{ $root }}/js/lib/editors/xeditable/inputs/typeaheadjs/lib/typeahead.js-bootstrap.css">
+@stop
+
+@section('script')
+@parent
+<script type="text/javascript" src="{{ $root }}/js/lib/editors/xeditable/js/bootstrap-editable.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/lib/editors/xeditable/inputs/address/address.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/lib/editors/xeditable/inputs/typeaheadjs/lib/typeahead.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/lib/editors/xeditable/inputs/typeaheadjs/typeaheadjs.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/moment/moment.min.js"></script>
+<script type="text/javascript">
+ //<![CDATA[
+ $(function() {
+  'use strict';
+
+  $('a[href="#more"]').click(function() {
+   var $this = $(this);
+
+   $this.prop('disabled');
+
+   $.post($(this).data('url'), function(result) {
+    if (result['rows']) {
+     var k, row, a, item, i = parseFloat(result['offset']);
+
+     for (k in result['rows']) {
+      row = result['rows'][k];
+
+      $('<tr/>').append(
+       $('<td/>').addClass('text-center').text(++i),
+       $('<td/>').addClass('text-center w100').append(
+        $('<img/>', {
+         'id': 'photo-' + row['id'],
+         'src': row['photo'],
+         'alt': row['fullname']
+        }).addClass('img-responsive img-circle mw40 ib')
+       ),
+       $('<td/>').append(
+        $('<a/>', {
+         'href': '#preview',
+         'data-id': row['id']
+        }).text(row['fullname'])
+       ),
+       $('<td/>').addClass('text-center').text(row['amount']),
+       $('<td/>').addClass('text-center').text(row['by']),
+       $('<td/>').addClass('text-right').append(
+        $('<div/>').addClass('btn-group text-right').append(
+         $('<button/>', {
+          'type': 'button',
+          'data-toggle': 'dropdown'
+         }).addClass('btn btn-' + (row['active'] ? 'primary' : 'inverse') +' btn-xs br2 dropdown-toggle').html(
+          row['status'] + ' <span class="caret ml5"></span>'
+         ),
+         $('<ul/>', {
+          'role': 'menu'
+         }).addClass('dropdown-menu').append(
+          $('<li/>').append(
+           $('<a/>', {
+            'href': '#preview',
+            'data-id': row['id']
+           }).text('Görüntüle')
+          ),
+          $('<li/>').append(
+           $('<a/>', {
+            'href': '#photo',
+            'data-id': row['id']
+           }).text('Fotoğraf')
+          ),
+          $('<li/>').append(
+           $('<a/>', {
+            'href': '#delete',
+            'data-id': row['id']
+           }).text('Sil')
+          ),
+          $('<li/>').addClass('divider'),
+          $('<li/>').append(
+           $('<a/>', {
+            'href': '#status',
+            'data-id': row['id']
+           }).text('Onayla / Kaldır')
+          )
+         )
+        )
+       )
+      ).appendTo('#rows');
+     }
+
+     events();
+
+     if (result['next']) {
+      $this.data('url', result['next']);
+     } else {
+      $this.remove();
+     }
+    } else {
+     $this.remove();
+    }
+   });
+
+   return false;
+  });
+
+  $('#settings-form').submit(function() {
+   $.ajax({
+    'type': $(this).attr('method'),
+    'url': $(this).attr('action'),
+    'data': $(this).serialize()
+   }).done(function(result) {
+    message(result);
+   });
+
+   return false;
+  });
+
+  $('#bbi_date_start').datepicker({
+   buttonText: '<i class="fa fa-calendar-o"></i>',
+   prevText: '<i class="fa fa-chevron-left"></i>',
+   nextText: '<i class="fa fa-chevron-right"></i>',
+   beforeShow: function(input, inst) {
+    var newclass = 'admin-form';
+    var themeClass = $(this).parents('.admin-form').attr('class');
+    var smartpikr = inst.dpDiv.parent();
+    if (!smartpikr.hasClass(themeClass)) {
+     inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
+    }
+   },
+   dateFormat: 'dd-mm-yy',
+   firstDay: 1
+  });
+
+  $.fn.editable.defaults.ajaxOptions = {
+   'type': 'PUT',
+   'dataType': 'json'
+  };
+
+  // Init X-editable Plugin
+  function XEdit() {
+   //editables
+   $('#zipcode, #city').editable({
+    'url': '@url()/' + $('#preview').data('id'),
+    'success': function (response, newValue) {
+     if (response && !response.success) {
+      return response.text;
+     }
+    }
+   });
+
+   $('#amount, #firstname, #lastname, #email, #phone, #cinumber').editable({
+    'url': '@url()/' + $('#preview').data('id'),
+    'success': function(response, newValue) {
+     if (response && !response.success){
+      return response.text;
+     } else {
+      $('a[href="#preview"][data-id="' + $('#preview').data('id') + '"]:first').text(response.return.fullname);
+     }
+    },
+    validate: function(value) {
+     if ($.trim(value) == '') return 'Bu alan gerekli';
+    }
+   });
+
+   $('#address, #message').editable({
+    'url': '@url()/' + $('#preview').data('id'),
+    'success': function(response, newValue) {
+     if (response && !response.success){
+      return response.text;
+     }
+    },
+    showbuttons: 'bottom'
+   });
+
+   $('#by').editable({
+    'url': '@url()/' + $('#preview').data('id'),
+    'success': function(response, newValue) {
+     if (response && !response.success){
+      return response.text;
+     }
+    },
+    source: [{
+     'value': 'cc',
+     'text': 'Kredi Kartı'
+    }, {
+     'value': 'sms',
+     'text': 'SMS'
+    }, {
+     'value': 'eft',
+     'text': 'EFT / Havale'
+    }]
+   });
+
+   $('#heard').editable({
+    'url': '@url()/' + $('#preview').data('id'),
+    'success': function(response, newValue) {
+     if (response && !response.success){
+      return response.text;
+     }
+    },
+    source: [{
+     'value': 'internet',
+     'text': 'İnternetten'
+    }, {
+     'value': 'friend',
+     'text': 'Arkadaşından'
+    }, {
+     'value': 'newspaper',
+     'text': 'Gazeteden'
+    }, {
+     'value': 'tv',
+     'text': 'Televizyondan'
+    }, {
+     'value': 'radio',
+     'text': 'Radyodan'
+    }, {
+     'value': 'other',
+     'text': 'Diğer'
+    }]
+   });
+  }
+
+  function events() {
+   $('a[href="#preview"]').off('click').click(function () {
+    if ($(this).data('id') > 0) {
+     $.ajax({
+      'type': 'GET',
+      'url': '@url()/' + $(this).data('id')
+     }).done(function (result) {
+      if (result && result.id) {
+       for (var key in result) {
+        if ($('#' + key).get(0)) {
+         $('#' + key)
+          .data('pk', result.id)
+          .data('value', result[key].length ? result[key] : null)
+          .text(result[key + '_title'] ? result[key + '_title'] : result[key]);
+        }
+       }
+
+       $('#preview').data('id', result.id);
+
+       $('#preview-dialog').modal();
+
+       XEdit();
+      }
+     });
+    }
+
+    return false;
+   });
+
+   $('a[href="#photo"]').off('click').click(function() {
+    var $this = $(this);
+
+    if ($this.data('id') > 0) {
+     $('#id').val($this.data('id'));
+     $('#photo-preview').attr('src', $('#photo-' + $this.data('id')).attr('src'));
+     $('#photo-dialog').modal();
+    }
+
+    return false;
+   });
+
+   $('a[href="#status"]').off('click').click(function () {
+    var $this = $(this);
+
+    if ($this.data('id') > 0) {
+     $.ajax({
+      'type': 'OPTION',
+      'url': '@url()/' + $(this).data('id')
+     }).done(function (result) {
+      if (result.success) {
+       var div = $this.closest('div');
+       var btn = div.find('button');
+
+       var txt = '';
+       btn.removeClass('btn-default btn-primary');
+
+       if (result.return.status == 'true') {
+        txt = 'Aktif';
+        btn.addClass('btn-primary');
+       } else {
+        txt = 'Pasif';
+        btn.addClass('btn-default');
+       }
+
+       txt += '<span class="caret ml5"></span>';
+
+       btn.html(txt);
+       div.removeClass('open');
+      } else {
+       message(result);
+      }
+     });
+    }
+
+    return false;
+   });
+
+   $('a[href="#delete"]').off('click').click(function () {
+    var ids = [];
+
+    if ($(this).data('id')) {
+     ids.push($(this).data('id'));
+    } else {
+     var checks = $('input[name="check[]"]:checked');
+
+     if (checks.length > 0) {
+      checks.each(function () {
+       ids.push($(this).val());
+      });
+     } else {
+      message("@lang('admin.message.check_at_least_one', 'En az bir kayıt seçmelisiniz!')");
+     }
+    }
+
+    if (ids.length > 0) {
+     message({
+      'type': 'confirm',
+      'text': "@lang('admin.message.are_you_sure_to_delete', 'Silmek istediğinize emin misiniz?')",
+      'onConfirm': function () {
+       _delete(ids);
+      }
+     });
+    }
+
+    return false;
+   });
+  }
+
+  function _delete(ids) {
+   $.ajax({
+    type: 'DELETE',
+    url: "@url()" + '/' + ids.join(',')
+   }).done(function(result) {
+    result.onAfterClose = function() {
+     if (result.success) {
+      window.location.href = "@url()";
+     }
+    };
+
+    message(result);
+   });
+  }
+
+  $('#photo').change(function(e) {
+   $('#photo-preview').attr('src', URL.createObjectURL(e.target.files[0]));
+
+   var form = $('#photo-form').get(0);
+   var formData = new FormData(form);
+
+   $.ajax({
+    'type': $(form).attr('method'),
+    'url': $(form).attr('action'),
+    'cache': false,
+    'dataType': 'json',
+    'contentType': false,
+    'processData': false,
+    'data': formData
+   }).done(function(result) {
+    if (result.success) {
+     $('#photo-' + $('#id').val()).attr('src', result.return.photo);
+     $('#photo-dialog').modal('hide');
+    } else {
+     message(result);
+    }
+   });
+  });
+
+  $('#upload-photo').click(function() {
+   $('#photo').trigger('click');
+  });
+
+  events();
+ });
+ //]]>
+</script>
+@stop

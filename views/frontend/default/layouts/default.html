@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="@lang('abbr')">
+<head>
+ <title>{{{ $title or 'Web-IM XI' }}}</title>
+ <meta charset="@lang('charset')">
+ <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+ <meta name="author" content="{{{ AUTHOR }}}">
+ <meta name="description" content="{{{ $description or '' }}}">
+ <meta name="keywords" content="{{{ $keywords or '' }}}">
+
+ <link type="image/x-icon" href="{{ $root }}/img/sun.png" rel="icon">
+ <link type="text/css" href="{{ $root }}/css/bootstrap.css" rel="stylesheet">
+ <link type="text/css" href="{{ $root }}/css/style.css" rel="stylesheet">
+ <link type="text/css" href="{{ $root }}/ui/ui.css" rel="stylesheet">
+ <link type="text/css" href="{{ $root }}/ui/ui.message.css" rel="stylesheet">
+
+ <script type="text/javascript" src="{{ $root }}/js/jquery.js"></script>
+ <script type="text/javascript" src="{{ $root }}/js/jquery.spritely.js"></script>
+ <script type="text/javascript" src="{{ $root }}/js/jquery.countdown.js"></script>
+ <script type="text/javascript" src="{{ $root }}/js/jquery.ui.js"></script>
+ <script type="text/javascript" src="{{ $root }}/js/jquery.blockui.js"></script>
+ <script type="text/javascript" src="{{ $root }}/js/scripts.js"></script>
+</head>
+<body data-date="{{ $date }}">
+ <div class="top_container">
+  <div class="container">
+   <div style="background-position: -234.7px 102px;" id="far-clouds" class="far-clouds stage"></div>
+   <div style="background-position: -465px 102px;" id="near-clouds" class="near-clouds stage"></div>
+   <div class="sun">
+    <img src="{{ $root }}/img/sun.png" alt="{{{ $title }}}" />
+   </div>
+   <div class="cloudy_countdown">
+    <div class="toLaunch">
+     <img src="{{ $root }}/img/to_launch.png" alt="{{{ $title }}}" />
+    </div>
+    <div id="countdown_dashboard">
+     <div class="dash days_dash">
+      <span class="dash_title">@lang('label.day', 'GÜN')</span>
+      <div class="digit">
+       <div style="display: none;" class="top">8</div>
+       <div style="display: block;" class="bottom">8</div>
+      </div>
+      <div class="digit">
+       <div style="display: none;" class="top">7</div>
+       <div style="display: block;" class="bottom">7</div>
+      </div>
+     </div>
+     <div class="dash hours_dash">
+      <span class="dash_title">@lang('label.hour', 'SAAT')</span>
+      <div class="digit">
+       <div style="display: none;" class="top">1</div>
+       <div style="display: block;" class="bottom">1</div>
+      </div>
+      <div class="digit">
+       <div style="display: none;" class="top">7</div>
+       <div style="display: block;" class="bottom">7</div>
+      </div>
+     </div>
+     <div class="dash minutes_dash">
+      <span class="dash_title">@lang('label.minute', 'DAKİKA')</span>
+      <div class="digit">
+       <div style="display: none;" class="top">4</div>
+       <div style="display: block;" class="bottom">4</div>
+      </div>
+      <div class="digit">
+       <div style="display: none;" class="top">3</div>
+       <div style="display: block;" class="bottom">3</div>
+      </div>
+     </div>
+     <div class="dash seconds_dash">
+      <span class="dash_title">@lang('label.second', 'SANİYE')</span>
+      <div class="digit">
+       <div style="display: none;" class="top">3</div>
+       <div style="display: block;" class="bottom">3</div>
+      </div>
+      <div class="digit">
+       <div style="display: block; overflow: hidden; height: 1px; padding-top: 0px; margin-top: 0px; padding-bottom: 0px; margin-bottom: 0px;" class="top">1</div>
+       <div style="display: block; overflow: hidden; height: 71px;" class="bottom">2</div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+ <div class="middle_container">
+  <div class="container">
+   <div class="info">{{{ conf('system.' . lang() . '.offline_message', lang('message.coming_soon', 'YAKINDA BURADAYIZ')) }}}</div>
+   <div class="newsletter">
+    <a id="newsletter-btn" href="javascript:void(0)">@lang('message.leave_your_email', 'e-posta adresinizi bırakın, sizi haberdar edelim')</a>
+   </div>
+  </div>
+ </div>
+ <div class="footer_container">
+  <div class="container">
+   <div class="social">
+    <a href="{{ strlen(conf('social.facebook')) ? conf('social.facebook') : '#' }}" target="_blank"><img src="{{ $root }}/img/facebook.png" alt="Facebook"></a>
+    <a href="{{ strlen(conf('social.twitter')) ? conf('social.twitter') : '#' }}" target="_blank"><img src="{{ $root }}/img/twitter.png" alt="Twitter"></a>
+    <a href="{{ strlen(conf('social.linkedin')) ? conf('social.linkedin') : '#' }}" target="_blank"><img src="{{ $root }}/img/linkedin.png" alt="LinkedIn"></a>
+   </div>
+   <span>&copy; 2015 Masters Corp.</span>
+   <div>&nbsp;</div>
+  </div>
+ </div>
+
+ <div id="dialog" style="display: none">
+  <form id="dialog-form" method="post" action="@url()">
+   <div class="form-group">
+    <label for="email">@lang('label.type_your_valid_email_address', 'Geçerli e-posta adresinizi yazınız'):</label>
+    <input type="email" id="email" name="email" class="form-control">
+   </div>
+   <div class="form-group">
+    <label for="code">@lang('label.captcha_code', 'Doğrulama Kodu'):</label>
+    <div class="input-group">
+     <input type="text" id="code" name="code" class="form-control">
+     <div class="input-group-addon">
+      <img id="captcha" src="@url('captcha')" alt="">
+     </div>
+    </div>
+   </div>
+  </form>
+ </div>
+</body>
+</html>

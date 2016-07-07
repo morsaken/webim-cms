@@ -1,0 +1,313 @@
+<div class="fileupload fileupload-new admin-form" data-provides="fileupload">
+ <div id="{{ $target or 'poster' }}-thumbnail" class="fileupload-new thumbnail">
+  @if (isset($poster) && !is_null($poster))
+  <img src="{{ $poster->image or '' }}" alt="{{{ $posterTitle or lang('admin.label.poster_picture', 'Poster Resmi') }}}">
+  @if (!is_null($poster->source) && in_array($poster->source->role, ['video', 'audio', 'link']))
+  <i class="fa fa-{{ $poster->source->role == 'link' ? 'link' : 'play' }}"></i>
+  @endif
+  @else
+  <img data-src="holder.js/100%x{{ $posterHeight or 300 }}/text:{{{ $posterTitle or lang('admin.label.poster_picture', 'Poster Resmi') }}}" height="{{ $posterHeight or 300 }}" alt="{{{ $posterTitle or lang('admin.label.poster_picture', 'Poster Resmi') }}}">
+  @endif
+ </div>
+ <div class="fileupload-preview fileupload-exists thumbnail"></div>
+ <div class="clearfix">
+  <button type="button" id="{{ $target or 'poster' }}-link" class="btn btn-dark w50" title="@lang('admin.button.add_link', 'Bağlantı Ekle')">
+   <i class="fa fa-link"></i>
+  </button>
+  <button type="button" id="{{ $target or 'poster' }}-pick" class="btn btn-dark w50" title="@lang('admin.button.pick_from_gallery', 'Galeriden Seç')">
+   <i class="fa fa-image"></i>
+  </button>
+  <button type="button" id="{{ $target or 'poster' }}-remove" class="btn btn-danger w50{{ !isset($poster) || is_null($poster) ? ' hide' : '' }}" title="@lang('admin.button.remove', 'Kaldır')">
+   <i class="fa fa-remove"></i>
+  </button>
+  <div class="pull-right">
+   <span class="button btn-system btn-file">
+    <span id="{{ $target or 'poster' }}-upload" class="fileupload-new" title="@lang('admin.button.pick_from_file', 'Dosyadan Seç')">
+     <i class="fa fa-upload"></i>
+    </span>
+    <span class="fileupload-exists" title="@lang('admin.button.change', 'Değiştir')">
+     <i class="fa fa-refresh"></i>
+    </span>
+    <input type="file" id="{{ $target or 'poster' }}-file" name="{{ $target or 'poster' }}-file">
+   </span>
+   <a id="{{ $target or 'poster' }}-upload-remove" href="#" class="button btn-danger fileupload-exists" data-dismiss="fileupload" title="@lang('admin.button.remove', 'Kaldır')">
+    <i class="fa fa-remove"></i>
+   </a>
+  </div>
+ </div>
+</div>
+
+@section('content')
+@parent
+<div id="{{ $target or 'poster' }}-pick-dialog" class="modal fade">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h4>
+     <i class="fa fa-picture-o"></i>
+     @lang('admin.label.pick_poster', 'Poster Seç')
+    </h4>
+   </div>
+   <div class="modal-body">
+    <form id="{{ $target or 'poster' }}-form" method="get" action="@url($prefix . 'content/media')">
+     <div class="input-group">
+      <input type="text" id="{{ $target or 'poster' }}-filter" name="{{ $target or 'poster' }}-filter" class="form-control" placeholder="[image, video, audio, file, link], [key, name]">
+      <span class="input-group-btn">
+       <button type="submit" class="btn btn-sm btn-info">
+        <i class="fa fa-search fa-2x"></i>
+       </button>
+      </span>
+     </div>
+    </form>
+    <div id="{{ $target or 'poster' }}-list"></div>
+   </div>
+   <div class="modal-footer">
+    <button type="button" id="{{ $target or 'poster' }}-add-btn" class="btn btn-sm btn-info">
+     <i class="fa fa-plus"></i>
+     @lang('admin.button.add', 'Ekle')
+    </button>
+    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+     <i class="fa fa-close"></i>
+     @lang('admin.button.close', 'Kapat')
+    </button>
+   </div>
+  </div>
+ </div>
+</div>
+@stop
+
+@include('addon.link', ['target' => (isset($target) ? $target : 'poster')])
+
+@section('script')
+@parent
+<script type="text/javascript">
+ //<![CDATA[
+ loadScript('{{ $root }}/js/plugins/bootstrap/holder.min.js', function() {
+  loadScript('{{ $root }}/js/plugins/fileupload/fileupload.js', function() {
+   // grant file-upload preview onclick functionality
+   $('.fileupload-preview').on('click', function() {
+    $('.btn-file > input').click();
+   });
+
+   $.fn.{{ $targetId or 'poster' }}List = function(r) {
+    var id = $('#{{ isset($targetId) ? $targetId . '-' : '' }}meta-poster_id').val();
+
+    return $('<div/>').addClass('preview' + (r.id == id ? ' selected' : '')).data({
+     'id': r.id,
+     'role': r.role
+    }).append(
+     $('<a/>', {
+      'href': '#{{ $target or 'poster' }}'
+     }).click(function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      $('#{{ $target or 'poster' }}-list > .preview').not('.disabled').not($(this).parent()).removeClass('selected');
+
+      if ($('#{{ $target or 'poster' }}-list > .preview.selected').not('.disabled').not($(this).parent()).length == 0) {
+       $(this).parent().toggleClass('selected');
+      }
+     }).append(
+      $('<img/>', {
+       'src': r.thumb,
+       'width': 150,
+       'height': 150,
+       'alt': r.title
+      }).data('src', r.poster),
+      $('<div/>').addClass('tags').append(
+       $('<span/>').addClass('label label-info br0').text(r.title)
+      ),
+      $('<i/>').addClass('fa fa-' + (r.role == 'link' ? 'link' : 'play') + ($.inArray(r.role, ['video', 'audio', 'link']) < 0 ? ' hide' : ''))
+     ),
+     $('<span/>').addClass('sticker').append(
+      $('<span/>').addClass('label label-success br0').append(
+       $('<i/>').addClass('fa fa-check')
+      )
+     )
+    );
+   };
+
+   $.fn.{{ $targetId or 'poster' }}Get = function(offset, btn) {
+    $('#{{ $target or 'poster' }}-form').find('button[type="submit"] > i')
+     .removeClass('fa-search fa-spin fa-spinner')
+     .addClass('fa-spin fa-spinner')
+     .prop('disabled', true);
+
+    $.ajax({
+     'type': $('#{{ $target or 'poster' }}-form').attr('method'),
+     'url': $('#{{ $target or 'poster' }}-form').attr('action'),
+     'data': {
+      'filter': $('#{{ $target or 'poster' }}-filter').val(),
+      'offset': (offset || 0)
+     },
+     global: false
+    }).done(function(result) {
+     if (btn !== 'undefined') {
+      $(btn).remove();
+     }
+
+     if (!offset) {
+      $('#{{ $target or 'poster' }}-list').empty();
+     }
+
+     if (result['total'] > 0) {
+      var rows = result['rows'], n;
+
+      for (n in rows) {
+       $.fn.{{ $targetId or 'poster' }}List(rows[n]).appendTo('#{{ $target or 'poster' }}-list');
+      }
+
+      if (result['offset'] + result['limit'] < result['total']) {
+       $('<button/>', {
+        'type': 'button'
+       }).click(function() {
+        $(this).empty().append(
+         $('<i/>').addClass('fa fa-spin fa-spinner')
+        );
+
+        $.fn.{{ $targetId or 'poster' }}Get(result['offset'] + result['limit'], this);
+       }).text("@lang('admin.label.more', 'Devamı')").addClass('btn btn-danger btn-block').appendTo('#{{ $target or 'poster' }}-list');
+      }
+     } else {
+      $('#{{ $target or 'poster' }}-list').append(
+       $('<p/>').addClass('text-center mv20').append(
+        $('<i/>').addClass('fa fa-warning'),
+        $('<span/>').addClass('ml5').text("@lang('admin.message.no_record_found', 'Kayıt bulunamadı!')")
+       )
+      )
+     }
+
+     $('#{{ $target or 'poster' }}-form').find('button[type="submit"] > i')
+      .removeClass('fa-search fa-spin fa-spinner')
+      .addClass('fa-search')
+      .prop('disabled', false);
+    });
+   };
+
+   $.fn.{{ $targetId or 'poster' }}Set = function(poster) {
+    if (poster.id && poster.image) {
+     if (!poster.role) {
+      poster.role = 'image';
+     }
+
+     $('#{{ $target or 'poster' }}-thumbnail').empty();
+     $('#{{ isset($targetId) ? $targetId . '-' : '' }}meta-poster_id').val(poster.id);
+     $('#{{ $target or 'poster' }}-remove').removeClass('hide');
+     $('<img/>', {
+      'src': poster.image,
+      'alt': ''
+     }).appendTo('#{{ $target or 'poster' }}-thumbnail');
+
+     if ($.inArray(poster.role, ['video', 'audio', 'link']) > -1) {
+      $('<i/>').addClass('fa fa-' + (poster.role == 'link' ? 'link' : 'play')).appendTo('#{{ $target or 'poster' }}-thumbnail');
+     }
+     $('#{{ $target or 'poster' }}-upload-remove').trigger('click');
+    }
+   };
+
+   $.fn.{{ $targetId or 'poster' }}Reset = function() {
+    $('#{{ $target or 'poster' }}-thumbnail').empty();
+    $('#{{ isset($targetId) ? $targetId . '-' : '' }}meta-poster_id').val(0);
+    $('#{{ $target or 'poster' }}-remove').addClass('hide');
+    $('#{{ $target or 'poster' }}-upload-remove').trigger('click');
+
+    Holder.addImage("holder.js/100%x{{ $posterHeight or 300 }}/text:{{ $posterTitle or lang('admin.label.poster_picture', 'Poster Resmi') }}", '#{{ $target or 'poster' }}-thumbnail').run();
+   };
+
+   $('#{{ $target or 'poster' }}-form').submit(function() {
+    $.fn.{{ $targetId or 'poster' }}Get(0);
+
+    return false;
+   });
+
+   $('#{{ $target or 'poster' }}-link').click(function () {
+    $('#{{ $target or 'poster' }}-link-dialog').modal();
+
+    return false;
+   });
+
+   $('#{{ $target or 'poster' }}-pick-dialog').on('show.bs.modal', function() {
+    $('#{{ $target or 'poster' }}-filter').val('');
+
+    $('#{{ $target or 'poster' }}-list').empty().append(
+     $('<p/>').addClass('text-center mv20').append(
+      $('<i/>').addClass('fa fa-2x fa-spin fa-spinner')
+     )
+    );
+
+    $('#{{ $target or 'poster' }}-form').trigger('submit');
+   });
+
+   $.fn.{{ $targetId or 'poster' }}AddLink = function(id) {
+    $.ajax({
+     'type': $('#{{ $target or 'poster' }}-form').attr('method'),
+     'url': $('#{{ $target or 'poster' }}-form').attr('action'),
+     'data': 'id=' + id
+    }).done(function(result) {
+     if (result['total'] > 0) {
+      var r = result['rows'][0];
+
+      $.fn.{{ $targetId or 'poster' }}Set({
+       'id': r.id,
+       'image': r.poster,
+       'role': r.role
+      });
+     } else {
+      message("@lang('admin.message.an_error_occured', 'Bir hata oluştu!')");
+     }
+    });
+   };
+
+   $('#{{ $target or 'poster' }}-pick').click(function() {
+    if ($('#{{ $target or 'poster' }}-upload-remove').is(':visible')) {
+     $('#{{ $target or 'poster' }}-upload-remove').trigger('click');
+    }
+
+    $('#{{ $target or 'poster' }}-pick-dialog').modal();
+
+    return false;
+   });
+
+   $('#{{ $target or 'poster' }}-add-btn').click(function() {
+    var m = $('#{{ $target or 'poster' }}-list').find('.preview.selected').not('.disabled');
+
+    if (m.length > 0) {
+     var p = m.first(), r = {
+      'id': p.data('id'),
+      'image': p.find('img').data('src'),
+      'role': p.data('role')
+     };
+
+     $.fn.{{ $targetId or 'poster' }}Set(r);
+
+     $('#{{ $target or 'poster' }}-pick-dialog').modal('hide');
+    } else {
+     message("@lang('admin.message.no_item_selected', 'Seçim yapmalısınız!')");
+    }
+
+    return false;
+   });
+
+   $('#{{ $target or 'poster' }}-remove').click(function() {
+    if (parseFloat($('#{{ isset($targetId) ? $targetId . '-' : '' }}meta-poster_id').val()) > 0) {
+     $.fn.{{ $targetId or 'poster' }}Reset();
+    } else {
+     message("@lang('admin.message.cannot_remove_poster_because_it_is_first_element_of_media', 'Görünen poster medyaya eklenen ilk nesnedir! Bu yüzden kaldırılamaz!')");
+    }
+
+    return false;
+   });
+
+   $('#{{ $target or 'poster' }}-upload').click(function() {
+    if ($('#{{ $target or 'poster' }}-remove').is(':visible')) {
+     $('#{{ $target or 'poster' }}-remove').trigger('click');
+    }
+
+    return false;
+   });
+  });
+ });
+ //]]>
+</script>
+@stop

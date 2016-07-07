@@ -1,0 +1,402 @@
+@extends('default')
+
+@section('title') {{{ $caption }}} :: @parent @stop
+
+@section('content')
+@include('topbar')
+<section id="content" class="table-layout">
+ <div class="tray tray-center pn va-t posr">
+  <div class="panel m15">
+   <div class="panel-heading">
+    <span class="panel-title">{{{ isset($content->title) ? lang('admin.label.edit', 'Düzenle') : lang('admin.label.create_new', 'Yeni Oluştur') }}}</span>
+    <ul class="nav panel-tabs-border panel-tabs">
+     <li class="active">
+      <a href="#tab-common" data-toggle="tab">@lang('admin.label.common', 'Genel')</a>
+     </li>
+     @foreach (langs() as $alias => $lang)
+     <li>
+      <a href="#tab-{{ $alias }}" data-toggle="tab">{{{ $lang }}}</a>
+     </li>
+     @endforeach
+     <li>
+      <a href="#tab-leathers" data-toggle="tab">@lang('efstraps.menu.leathers', 'Deriler')</a>
+     </li>
+     <li>
+      <a href="#tab-straps" data-toggle="tab">@lang('efstraps.menu.straps', 'Kayışlar')</a>
+     </li>
+     <li>
+      <a href="#tab-side-colors" data-toggle="tab">@lang('efstraps.menu.side_colors', 'Kenar Renkleri')</a>
+     </li>
+     <li>
+      <a href="#tab-sewing-colors" data-toggle="tab">@lang('efstraps.menu.sewing_colors', 'Dikiş Renkleri')</a>
+     </li>
+     <li>
+      <a href="#tab-sizes" data-toggle="tab">@lang('efstraps.menu.sizes', 'Boyutlar')</a>
+     </li>
+    </ul>
+   </div>
+   <form id="form" class="panel-body p20 pb10" method="post" enctype="multipart/form-data" action="@url()">
+    <input type="hidden" id="id" name="id" value="{{ $content->id or 0 }}">
+    <input type="hidden" id="version" name="version" value="{{ $content->version or 0 }}">
+    <input type="hidden" id="meta-poster_id" name="meta-poster_id" value="{{ $content->meta->poster_id or 0 }}">
+    <div class="tab-content pn br-n admin-form">
+     <div id="tab-common" class="tab-pane active">
+      <div class="section mbn row">
+       <div class="col-md-4">
+        @include('addon.poster', ['poster' => (isset($content->poster->image) ? $content->poster : null)])
+       </div>
+       <div class="col-md-8 pl15">
+        <div class="section mb15">
+         <h6 class="fw400">@lang('admin.label.category', 'Kategori')</h6>
+         <label class="field select">
+          <select id="category" name="category[]" class="select2" multiple size="5">
+           @foreach ($categories as $categoryId => $categoryTitle)
+           <option value="{{ $categoryId }}"{{ isset($content->categories[$categoryId]) ? ' selected="selected"' : '' }}>{{{ $categoryTitle }}}</option>
+           @endforeach
+          </select>
+         </label>
+        </div>
+        <div class="section mb15">
+         <h6 class="fw400">@lang('admin.label.url', 'URL')</h6>
+         <label class="field prepend-icon">
+          <input type="text" id="url" name="url" class="gui-input" value="{{{ $content->url or '' }}}">
+          <span class="field-icon">
+           <i class="fa fa-link"></i>
+          </span>
+         </label>
+        </div>
+        <div class="section mb15">
+         <h6 class="fw400">@lang('admin.label.order', 'Sırası')</h6>
+         <label class="field select">
+          <select id="order" name="order" class="select2">
+           @foreach ($orders as $orderId => $orderTitle)
+           <option value="{{ $orderId }}"{{ isset($content->order) && $content->order == $orderId ? ' selected="selected"' : '' }}>{{{ $orderTitle }}}</option>
+           @endforeach
+          </select>
+         </label>
+        </div>
+        <div class="section mb15">
+         <h6 class="fw400">@lang('admin.label.status', 'Durum')</h6>
+         <div class="option-group field">
+          <label class="option option-primary">
+           <input type="radio" id="active_true" name="active" value="true"{{ !isset($content->active) || $content->active == 'true' ? ' checked="checked"' : '' }}>
+           <span class="radio"></span>
+           @lang('admin.label.active', 'Aktif')
+          </label>
+          <label class="option option-primary">
+           <input type="radio" id="active_false" name="active" value="false"{{ isset($content->active) && $content->active == 'false' ? ' checked="checked"' : '' }}>
+           <span class="radio"></span>
+           @lang('admin.label.passive', 'Pasif')
+          </label>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     @foreach (langs() as $alias => $lang)
+     <div id="tab-{{ $alias }}" class="tab-pane">
+      @if (!isset($content->children[$alias]->id))
+      <div class="alert alert-dark alert-dismissable">
+       <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+       <i class="fa fa-warning pr10"></i>
+       <strong>@lang('admin.label.warning', 'Uyarı'):</strong>
+       @lang('admin.message.no_title_no_saving_for_this_language', 'Başlık girilmediği durumda bu dil için kayıt yapılmaz!')
+      </div>
+      @endif
+      <input type="hidden" id="{{ $alias }}-id" name="{{ $alias }}-id" value="{{{ $content->children[$alias]->id or 0 }}}">
+      <input type="hidden" id="{{ $alias }}-version" name="{{ $alias }}-version" value="{{ $content->children[$alias]->version or 0 }}">
+      <input type="hidden" id="{{ $alias }}-meta-content" name="{{ $alias }}-meta-content" value="{{{ $content->children[$alias]->meta->content or '' }}}">
+      <div class="section mb15">
+       <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
+       <label class="field prepend-icon">
+        <input type="text" id="{{ $alias }}-title" name="{{ $alias }}-title" class="gui-input" value="{{{ $content->children[$alias]->title or '' }}}">
+        <span class="field-icon">
+         <i class="fa fa-tag"></i>
+        </span>
+       </label>
+      </div>
+      <div class="section">
+       @include('addon.editor', ['id' => $alias . '-html-content', 'target' => $alias . '-meta-content'])
+      </div>
+     </div>
+     @endforeach
+     <div id="tab-leathers" class="tab-pane">
+      @include('addon.media', ['id' => 'leather', 'target' => 'leather', 'media' => (isset($content->leathers) ? $content->leathers : [])])
+     </div>
+     <div id="tab-straps" class="tab-pane">
+      @include('addon.media', ['id' => 'strap', 'target' => 'strap', 'media' => (isset($content->straps) ? $content->straps : [])])
+     </div>
+     <div id="tab-side-colors" class="tab-pane">
+      <div class="panel">
+       <div class="panel-heading">
+        <span class="panel-icon">
+         <i class="fa fa-eyedropper"></i>
+        </span>
+        <span class="panel-title">@lang('admin.label.colors', 'Renkler')</span>
+        <span class="panel-controls">
+         <a href="#color-add" data-target="side" title="@lang('admin.button.add', 'Ekle')"><i class="fa fa-plus"></i></a>
+        </span>
+       </div>
+       <div class="panel-body">
+        <div id="side-color-content" class="h-400 of-a of-x-h">
+         @if (isset($content->side_colors) && count($content->side_colors))
+         <div class="row">
+          @foreach ($content->side_colors as $color)
+          <div class="col-sm-4">
+           <div class="input-group colorpicker-component mv15 color">
+            <span class="input-group-addon"><i></i></span>
+            <input type="text" class="form-control" name="side_color_code[]" value="{{ $color }}">
+            <span class="input-group-addon">
+             <a href="#color-remove" class="text-danger">
+              <i class="fa fa-trash-o"></i>
+             </a>
+            </span>
+           </div>
+          </div>
+          @endforeach
+         </div>
+         @else
+         <div class="m10 text-center">
+          <span>@lang('admin.message.no_color_added', 'Herhangi bir renk eklenmedi')</span>
+         </div>
+         @endif
+        </div>
+       </div>
+      </div>
+     </div>
+     <div id="tab-sewing-colors" class="tab-pane">
+      <div class="panel">
+       <div class="panel-heading">
+        <span class="panel-icon">
+         <i class="fa fa-eyedropper"></i>
+        </span>
+        <span class="panel-title">@lang('admin.label.colors', 'Renkler')</span>
+        <span class="panel-controls">
+         <a href="#color-add" data-target="sewing" title="@lang('admin.button.add', 'Ekle')"><i class="fa fa-plus"></i></a>
+        </span>
+       </div>
+       <div class="panel-body">
+        <div id="sewing-color-content" class="h-400 of-a of-x-h">
+         @if (isset($content->sewing_colors) && count($content->sewing_colors))
+         <div class="row">
+          @foreach ($content->sewing_colors as $color)
+          <div class="col-sm-4">
+           <div class="input-group colorpicker-component mv15 color">
+            <span class="input-group-addon"><i></i></span>
+            <input type="text" class="form-control" name="sewing_color_code[]" value="{{ $color }}">
+            <span class="input-group-addon">
+             <a href="#color-remove" class="text-danger">
+              <i class="fa fa-trash-o"></i>
+             </a>
+            </span>
+           </div>
+          </div>
+          @endforeach
+         </div>
+         @else
+         <div class="m10 text-center">
+          <span>@lang('admin.message.no_color_added', 'Herhangi bir renk eklenmedi')</span>
+         </div>
+         @endif
+        </div>
+       </div>
+      </div>
+     </div>
+     <div id="tab-sizes" class="tab-pane">
+      @include('addon.media', ['id' => 'size', 'target' => 'size', 'media' => (isset($content->sizes) ? $content->sizes : [])])
+     </div>
+    </div>
+    <hr class="short alt">
+    <div class="section mbn text-right">
+     <button type="submit" id="save-btn" class="btn btn-primary">
+      <i class="fa fa-save"></i>
+      @lang('admin.button.save', 'Kaydet')
+     </button>
+     @if (isset($content->id) && ($content->id > 0))
+     <button type="button" id="delete-btn" data-id="{{ $content->id }}" class="btn btn-danger">
+      <i class="fa fa-trash-o"></i>
+      @lang('admin.button.delete', 'Sil')
+     </button>
+     @endif
+     <button type="button" id="cancel-btn" class="btn btn-default">
+      <i class="fa fa-reply"></i>
+      @lang('admin.button.cancel', 'İptal')
+     </button>
+    </div>
+   </form>
+  </div>
+ </div>
+</section>
+@stop
+
+@section('link')
+@parent
+<link rel="stylesheet" type="text/css" href="{{ $root }}/js/plugins/bootstrap/colorpicker/css/bootstrap-colorpicker.min.css">
+@stop
+
+@section('script')
+@parent
+<script type="text/javascript" src="{{ $root }}/js/plugins/bootstrap/colorpicker/js/bootstrap-colorpicker.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/jquery/jquery-ui-timepicker.min.js"></script>
+<script type="text/javascript">
+ //<![CDATA[
+ $(function() {
+  'use strict';
+
+  $('#url').blur(function() {
+   $(this).val($.normalizeString($(this).val()));
+  });
+
+  $('.color').colorpicker();
+
+  $('a[href="#color-add"]').click(function(e) {
+   e.preventDefault();
+
+   var t = $(this).data('target');
+   var c = $('#' + t + '-color-content > .row');
+
+   if (!c.find('input[name="' + t + '_color_code[]"]').length) {
+    c = $('<div/>').addClass('row').appendTo($('#' + t + '-color-content').empty());
+   }
+
+   $('<div/>').addClass('col-sm-4').append(
+    $('<div/>').addClass('input-group colorpicker-component mv15 color').append(
+     $('<span/>').addClass('input-group-addon').append('<i/>'),
+     $('<input/>', {
+      'type': 'text',
+      'name': t + '_color_code[]'
+     }).addClass('form-control').val('#000000'),
+     $('<span/>').addClass('input-group-addon').append(
+      $('<a/>', {
+       'href': '#color-remove'
+      }).addClass('text-danger').click(function(e) {
+       e.preventDefault();
+
+       $(this).closest('.col-sm-4').remove();
+      }).append(
+       $('<i/>').addClass('fa fa-trash-o')
+      )
+     )
+    )
+   ).appendTo(c);
+
+   $('.color').colorpicker();
+  });
+
+  $('a[href="#color-remove"]').click(function(e) {
+   e.preventDefault();
+
+   $(this).closest('.col-sm-4').remove();
+  });
+
+  // select dropdowns - placeholder like creation
+  var selectList = $('.admin-form select');
+  selectList.each(function(i, e) {
+   $(e).on('change', function() {
+    if ($(e).val() == "0") $(e).addClass("empty");
+    else $(e).removeClass("empty")
+   });
+  });
+  selectList.each(function(i, e) {
+   $(e).change();
+  });
+
+  $('#form').validate({
+   // Rules for form validation
+   rules : {
+    title : {
+     required : true
+    }
+   },
+   // Messages for form validation
+   messages : {
+    title : {
+     required : "@lang('admin.message.content_title_required', 'İçerik başlığını girin!')"
+    }
+   },
+   // Do not change code below
+   errorPlacement : function(error, element) {
+    error.insertAfter(element.parent());
+   },
+   submitHandler: function(form) {
+    var formData = new FormData(form);
+
+    $.ajax({
+     'type': $(form).attr('method'),
+     'url': $(form).attr('action'),
+     'cache': false,
+     'dataType': 'json',
+     'contentType': false,
+     'processData': false,
+     'data': formData
+    }).done(function(result) {
+     if (result.success) {
+      if (parseFloat($('#id').val()) == 0) {
+       result.onAfterClose = function() {
+        $('#cancel-btn').trigger('click');
+       };
+      }
+
+      $('#id').val(result.return.id);
+      $('#version').val(result.return.version);
+
+      if (result.return.poster.id) {
+       $.fn.posterSet(result.return.poster);
+      }
+
+      for (var alias in result.return.langs) {
+       $('#' + alias + '-id').val(result.return.langs[alias].id);
+       $('#' + alias + '-version').val(result.return.langs[alias].version);
+      }
+     }
+
+     if (result.success) {
+      message(result);
+     } else {
+      new PNotify({
+       title: "@lang('admin.label.error', 'Hata')",
+       text: result.text,
+       type: 'danger'
+      });
+     }
+    });
+   }
+  });
+
+  $('#delete-btn').popConfirm({
+   title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+   content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
+   placement: "top",
+   yesBtn: "@lang('admin.button.yes', 'Evet')",
+   noBtn: "@lang('admin.button.no', 'Hayır')",
+   confirm: function() {
+    $.ajax({
+     type: 'DELETE',
+     url: $('#form').attr('action')
+    }).done(function(result) {
+     result.onAfterClose = function() {
+      if (result.success) {
+       window.location.href = '{{ urlUp($breadcrumb) }}';
+      }
+     };
+
+     if (result.success) {
+      message(result);
+     } else {
+      new PNotify({
+       title: "@lang('admin.label.error', 'Hata')",
+       text: result.text,
+       type: 'danger'
+      });
+     }
+    });
+   }
+  });
+
+  $('#cancel-btn').click(function() {
+   window.location.href = '{{ urlUp($breadcrumb) }}';
+  });
+ });
+ //]]>
+</script>
+@stop

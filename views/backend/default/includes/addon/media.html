@@ -1,0 +1,352 @@
+<div class="panel">
+ <div class="panel-heading">
+  <span class="panel-icon">
+   <i class="fa fa-picture-o"></i>
+  </span>
+  <span class="panel-title">@lang('admin.label.media_content', 'Medya İçeriği')</span>
+  <span class="panel-controls">
+   <a href="#{{ $target or 'media' }}-reset" title="@lang('admin.button.clear', 'Temizle')"><i class="fa fa-refresh"></i></a>
+   <a href="#{{ $target or 'media' }}-pick" title="@lang('admin.button.pick', 'Seç')"><i class="fa fa-folder-open"></i></a>
+   <a href="#{{ $target or 'media' }}-upload" title="@lang('admin.button.upload', 'Yükle')"><i class="fa fa-upload"></i></a>
+   <a href="#{{ $target or 'media' }}-link" title="@lang('admin.button.add_link', 'Bağlantı Ekle')"><i class="fa fa-link"></i></a>
+   <a href="#{{ $target or 'media' }}-remove" title="@lang('admin.button.trash', 'Sil')"><i class="fa fa-trash"></i></a>
+  </span>
+ </div>
+ <div class="panel-body">
+  <div id="{{ $target or 'media' }}-content" class="h-400 of-a">
+   @if (isset($media) && count($media))
+   @foreach ($media as $item)
+   <div class="preview" data-id="{{ $item->id }}">
+    <a href="#{{ $target or 'media' }}">
+     <img src="{{ $item->poster->image }}" width="150" height="150" alt="{{{ $item->title }}}">
+     <div class="tags">
+      <span class="label label-info br0">{{{ $item->title }}}</span>
+     </div>
+     @if (in_array($item->role, ['video', 'audio', 'link']))
+     <i class="fa fa-{{ $item->role == 'link' ? 'link' : 'play' }}"></i>
+     @endif
+    </a>
+    <span class="sticker">
+     <span class="label label-danger br0">
+      <i class="fa fa-remove"></i>
+     </span>
+    </span>
+    <input type="hidden" name="{{ $id or 'media' }}_id[]" value="{{ $item->id }}">
+   </div>
+   @endforeach
+   @else
+   <div class="m10 text-center">
+    <span>@lang('admin.message.no_media_content_added', 'Herhangi bir medya içeriği eklenmedi')</span>
+   </div>
+   @endif
+  </div>
+ </div>
+</div>
+
+@section('content')
+@parent
+<div id="{{ $target or 'media' }}-pick-dialog" class="modal fade">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h4>
+     <i class="fa fa-picture-o"></i>
+     @lang('admin.label.pick_media', 'Medya Seç')
+    </h4>
+   </div>
+   <div class="modal-body">
+    <form id="{{ $target or 'media' }}-form" method="get" action="@url($prefix . 'content/media')">
+     <div class="input-group">
+      <input type="text" id="{{ $target or 'media' }}-filter" name="{{ $target or 'media' }}-filter" class="form-control" placeholder="[image, video, audio, file, link], [key, name]">
+      <span class="input-group-btn">
+       <button type="submit" class="btn btn-sm btn-info">
+        <i class="fa fa-search fa-2x"></i>
+       </button>
+      </span>
+     </div>
+    </form>
+    <hr class="divider short">
+    <div id="{{ $target or 'media' }}-list"></div>
+   </div>
+   <div class="modal-footer">
+    <button type="button" id="{{ $target or 'media' }}-add-btn" class="btn btn-sm btn-info">
+     <i class="fa fa-plus"></i>
+     @lang('admin.button.add', 'Ekle')
+    </button>
+    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+     <i class="fa fa-close"></i>
+     @lang('admin.button.close', 'Kapat')
+    </button>
+   </div>
+  </div>
+ </div>
+</div>
+
+<div id="{{ $target or 'media' }}-upload-dialog" class="modal fade">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h4>
+     <i class="fa fa-picture-o"></i>
+     @lang('admin.label.upload_media', 'Medya Yükle')
+    </h4>
+   </div>
+   <div class="modal-body">
+    <form id="{{ $target or 'media' }}-upload-form" method="post" action="@url($prefix . 'content/media/upload')">
+     <input type="file" id="{{ $target or 'media' }}-file" name="media-file[]" class="file-loading" multiple>
+    </form>
+   </div>
+   <div class="modal-footer">
+    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+     <i class="fa fa-close"></i>
+     @lang('admin.button.close', 'Kapat')
+    </button>
+   </div>
+  </div>
+ </div>
+</div>
+@stop
+
+@include('addon.link', ['target' => (isset($target) ? $target : 'media')])
+
+@section('script')
+@parent
+<script type="text/javascript">
+ //<![CDATA[
+ loadScript('{{ $root }}/js/plugins/fileinput/js/fileinput.min.js', function() {
+  loadScript('{{ $root }}/js/plugins/fileinput/js/fileinput_locale_{{ lang() }}.js', function() {
+   loadCSS('{{ $root }}/js/plugins/fileinput/css/fileinput.min.css', function() {
+
+    $.fn.{{ $target or 'media' }}Reset = function() {
+     $('#{{ $target or 'media' }}-content').empty().append(
+      $('<div/>').addClass('m10 text-center').append(
+       $('<span/>').text("@lang('admin.message.no_media_content_added', 'Herhangi bir medya içeriği eklenmedi')")
+      )
+     );
+    };
+
+    $.fn.{{ $target or 'media' }}Set = function(r, t) {
+     var s = $('#{{ $target or 'media' }}-content').find('input[name="{{ $id or 'media' }}_id[]"][value="' + r.id + '"]').length > 0;
+
+     return $('<div/>').addClass('preview' + (s ? ' selected disabled' : '')).data('id', r.id).append(
+      $('<a/>', {
+       'href': '#{{ $target or 'media' }}'
+      }).click(function (e) {
+       e.preventDefault();
+       e.stopPropagation();
+
+       if (!$(this).parent().hasClass('disabled')) {
+        $(this).parent().toggleClass('selected');
+       }
+      }).append(
+       $('<img/>', {
+        'src': r.thumb,
+        'width': 150,
+        'height': 150,
+        'alt': r.title
+       }).data('src', r.poster),
+       $('<div/>').addClass('tags').append(
+        $('<span/>').addClass('label label-info br0').text(r.title)
+       ),
+       $('<i/>').addClass('fa fa-' + (r.role == 'link' ? 'link' : 'play') + ($.inArray(r.role, ['video', 'audio', 'link']) < 0 ? ' hide' : ''))
+      ),
+      $('<span/>').addClass('sticker').append(
+       $('<span/>').addClass('label label-' + (t == 'in' ? 'danger' : 'success') + ' br0').append(
+        $('<i/>').addClass('fa fa-' + (t == 'in' ? 'remove' : 'check'))
+       )
+      ),
+      $('<input/>', {
+       'type': 'hidden',
+       'name': '{{ $id or 'media' }}_id[]'
+      }).val(r.id)
+     );
+    };
+
+    $('#{{ $target or 'media' }}-file').fileinput({
+     uploadUrl: $('#{{ $target or 'media' }}-upload-form').attr('action'),
+     uploadAsync: false,
+     maxFileCount: 50,
+     overwriteInitial: false
+    }).on('filebatchuploadsuccess', function (e, data) {
+     if ($('#{{ $target or 'media' }}-content > .preview').length == 0) {
+      $('#{{ $target or 'media' }}-content').empty();
+     }
+
+     for (var k in data.response) {
+      $.fn.{{ $target or 'media' }}Set(data.response[k], 'in').appendTo('#{{ $target or 'media' }}-content');
+     }
+    });
+
+    $.fn.{{ $target or 'media' }}Get = function(offset, btn) {
+     $('#{{ $target or 'media' }}-form').find('button[type="submit"] > i')
+      .removeClass('fa-search fa-spin fa-spinner')
+      .addClass('fa-spin fa-spinner')
+      .parent().prop('disabled', true);
+
+     $.ajax({
+      'type': $('#{{ $target or 'media' }}-form').attr('method'),
+      'url': $('#{{ $target or 'media' }}-form').attr('action'),
+      'data': {
+       'filter': $('#{{ $target or 'media' }}-filter').val(),
+       'offset': (offset || 0)
+      },
+      'global': false
+     }).done(function (result) {
+      if (btn !== 'undefined') {
+       $(btn).remove();
+      }
+
+      if (!offset) {
+       $('#{{ $target or 'media' }}-list').empty();
+      }
+
+      if (result['total'] > 0) {
+       var rows = result['rows'], n;
+
+       for (n in rows) {
+        $.fn.{{ $target or 'media' }}Set(rows[n]).appendTo('#{{ $target or 'media' }}-list');
+       }
+
+       if (result['offset'] + result['limit'] < result['total']) {
+        $('<button/>', {
+         'type': 'button'
+        }).click(function () {
+         $(this).empty().append(
+          $('<i/>').addClass('fa fa-spin fa-spinner')
+         ).prop('disabled', true);
+
+         $.fn.{{ $target or 'media' }}Get(result['offset'] + result['limit'], this);
+        }).text("@lang('admin.label.more', 'Devamı')").addClass('btn btn-danger btn-block').appendTo('#{{ $target or 'media' }}-list');
+       }
+      } else {
+       $('#{{ $target or 'media' }}-list').append(
+        $('<p/>').addClass('text-center mv20').append(
+         $('<i/>').addClass('fa fa-warning'),
+         $('<span/>').addClass('ml5').text("@lang('admin.message.no_record_found', 'Kayıt bulunamadı!')")
+        )
+       )
+      }
+
+      $('#{{ $target or 'media' }}-form').find('button[type="submit"] > i')
+       .removeClass('fa-search fa-spin fa-spinner')
+       .addClass('fa-search')
+       .parent().prop('disabled', false);
+     });
+    };
+
+    $('#{{ $target or 'media' }}-form').submit(function () {
+     $.fn.{{ $target or 'media' }}Get(0);
+     return false;
+    });
+
+    $('#{{ $target or 'media' }}-pick-dialog').on('show.bs.modal', function () {
+     $('#{{ $target or 'media' }}-filter').val('');
+
+     $('#{{ $target or 'media' }}-list').empty().append(
+      $('<p/>').addClass('text-center mv20').append(
+       $('<i/>').addClass('fa fa-2x fa-spin fa-spinner')
+      )
+     );
+
+     $('#{{ $target or 'media' }}-form').trigger('submit');
+    });
+
+    $('a[href="#{{ $target or 'media' }}-pick"]').click(function () {
+     $('#{{ $target or 'media' }}-pick-dialog').modal();
+     return false;
+    });
+
+    $('a[href="#{{ $target or 'media' }}-reset"]').popConfirm({
+     title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+     content: "@lang('admin.message.all_content_will_be_removed', 'Tüm içerikler kaldırılacaktır!')",
+     placement: "top",
+     yesBtn: "@lang('admin.button.yes', 'Evet')",
+     noBtn: "@lang('admin.button.no', 'Hayır')",
+     confirm: function () {
+      $.fn.{{ $target or 'media' }}Reset();
+     }
+    });
+
+    $('#{{ $target or 'media' }}-upload-dialog').on('show.bs.modal', function () {
+     $('#{{ $target or 'media' }}-upload-dialog .fileinput-remove-button').trigger('click');
+     $('#{{ $target or 'media' }}-upload-dialog .file-caption-name').empty();
+    });
+
+    $('a[href="#{{ $target or 'media' }}-upload"]').click(function () {
+     $('#{{ $target or 'media' }}-upload-dialog').modal();
+     return false;
+    });
+
+    $.fn.{{ $target or 'media' }}AddLink = function(id) {
+     $.ajax({
+      'type': $('#{{ $target or 'media' }}-form').attr('method'),
+      'url': $('#{{ $target or 'media' }}-form').attr('action'),
+      'data': 'id=' + id
+     }).done(function (result) {
+      if (result['total'] > 0) {
+       $.fn.{{ $target or 'media' }}Set(result['rows'][0], 'in').appendTo('#{{ $target or 'media' }}-content');
+      } else {
+       message("@lang('admin.message.an_error_occured', 'Bir hata oluştu!')");
+      }
+     });
+    };
+
+    $('a[href="#{{ $target or 'media' }}-link"]').click(function () {
+     $('#{{ $target or 'media' }}-link-dialog').modal();
+
+     return false;
+    });
+
+    $('a[href="#{{ $target or 'media' }}-remove"]').click(function () {
+     var m = $('#{{ $target or 'media' }}-content').find('.preview.selected');
+
+     if (m.length > 0) {
+      m.remove();
+
+      if ($('#{{ $target or 'media' }}-content > .preview').length == 0) {
+       $.fn.{{ $target or 'media' }}Reset();
+      }
+     } else {
+      message("@lang('admin.message.no_item_selected', 'Seçim yapmalısınız!')");
+     }
+
+     return false;
+    });
+
+    $('#{{ $target or 'media' }}-add-btn').click(function () {
+     var m = $('#{{ $target or 'media' }}-list').find('.preview.selected').not('.disabled');
+
+     if (m.length > 0) {
+      if ($('#{{ $target or 'media' }}-content > .preview').length == 0) {
+       $('#{{ $target or 'media' }}-content').empty();
+      }
+
+      m.each(function () {
+       $(this).clone(true).removeClass('selected disabled')
+        .appendTo('#{{ $target or 'media' }}-content')
+        .find('.sticker > span').removeClass('label-success').addClass('label-danger')
+        .find('> i').removeClass('fa-check').addClass('fa-remove');
+      });
+
+      $('#{{ $target or 'media' }}-pick-dialog').modal('hide');
+     } else {
+      message("@lang('admin.message.no_item_selected', 'Seçim yapmalısınız!')");
+     }
+
+     return false;
+    });
+
+    $('#{{ $target or 'media' }}-content').sortable({
+     revert: true
+    }).find('> .preview > a').click(function () {
+     $(this).parent().toggleClass('selected');
+     return false;
+    });
+   });
+  });
+ });
+ //]]>
+</script>
+@stop

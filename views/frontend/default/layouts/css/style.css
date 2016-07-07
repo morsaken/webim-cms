@@ -1,0 +1,218 @@
+@import url(http://fonts.googleapis.com/css?family=Titillium+Web:400,700&subset=latin,latin-ext);
+
+@font-face {
+  font-family: 'Abel';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Abel'), local('Abel-Regular'), url(http://themes.googleusercontent.com/static/fonts/abel/v3/EAqh528fFdbUek8UOky4sA.woff) format('woff');
+}
+
+@font-face {
+ font-family: 'BebasNeueRegular';
+ src: url('../fonts/BebasNeue-webfont.eot');
+ src: url('../fonts/BebasNeue-webfont.eot?#iefix') format('embedded-opentype'),
+ url('../fonts/BebasNeue-webfont.woff') format('woff'),
+ url('../fonts/BebasNeue-webfont.ttf') format('truetype'),
+ url('../fonts/BebasNeue-webfont.svg#BebasNeueRegular') format('svg');
+ font-weight: normal;
+ font-style: normal;
+}
+
+body {
+ background-color: #cfeef7;
+ font-family: 'Titillium Web', sans-serif;
+}
+
+/* Setting the stage for the animation*/
+.stage {
+ position: absolute;
+ top: 0;
+ left: 0;
+ width: 100%;
+ min-width: 900px;
+ height: 100%;
+ overflow: hidden;
+ z-index: 100;
+}
+
+.top_container {
+ background-image: url(../img/main_bg.png);
+ background-repeat: repeat;
+ height: 600px;
+}
+
+.middle_container {
+ position: relative;
+ background-image: url(../img/blue_bg.png);
+ background-repeat: repeat-x;
+ height: 82px;
+ padding-top: 9px;
+ margin-bottom: 50px;
+}
+
+.info {
+ font-size: 40px;
+ color: #fff;
+ text-align: center;
+}
+
+.newsletter {
+ position: relative;
+ font-size: 20px;
+ text-align: center;
+ padding: 30px;
+}
+
+.footer_container {
+ color: #005889;
+ font-size: 14px;
+ position: relative;
+ text-align: center;
+ z-index: 200;
+}
+
+.toLaunch {
+ position: absolute;
+ width: 180px;
+ margin: 40px 0 0 400px;
+}
+
+.social img {
+ padding: 10px;
+}
+
+/* Include the clouds*/
+.far-clouds {
+ background: transparent url(../img/far_clouds_1.png) 305px 102px repeat-x;
+}
+
+.near-clouds {
+ background: transparent url(../img/nearest_clouds.png) 305px 102px repeat-x;
+}
+
+/* CloudyCountdoen Styles*/
+
+/* Set the background for the coutdown*/
+.cloudy_countdown {
+ margin: 0 auto;
+ background-image: url(../img/countdown_clouds.png);
+ background-position: center;
+ background-repeat: no-repeat;
+ height: 301px;
+ width: 900px;
+ position: relative;
+}
+
+.dash {
+ height: 114px;
+ float: left;
+ position: relative;
+}
+
+/* Main style for the digits */
+.dash .digit {
+ font-size: 50px;
+ font-weight: normal;
+ float: left;
+ text-align: center;
+ display: block;
+ font-family: 'BebasNeueRegular';
+ text-shadow: 0px 1px 0px #B8D2E4;
+ color: #003669;
+ position: relative;
+ padding: 14px 0px 7px 0px;
+}
+
+/* Main style for all titles */
+.dash_title {
+ position: relative;
+ display: block;
+ font-size: 15px;
+ font-weight: bold;
+ left: 0;
+ color: #003669;
+ font-family: 'Abel';
+ text-transform: uppercase;
+}
+
+/* Position Titles days, hours, minutes, secods*/
+.days_dash .dash_title {
+ width: 90px;
+ left: -40px;
+ top: 60px;
+ position: relative;
+}
+
+.hours_dash .dash_title {
+ width: 60px;
+ left: -50px;
+ top: 60px;
+ position: relative;
+}
+
+.minutes_dash .dash_title {
+ width: 60px;
+ left: -65px;
+ top: 60px;
+ position: relative;
+}
+
+.seconds_dash .dash_title {
+ width: 60px;
+ left: -70px;
+ top: 60px;
+ position: relative;
+}
+
+/* Position days, hours, minutes, secods*/
+.days_dash {
+ position: relative;
+ top: 150px;
+ left: 150px;
+}
+
+.hours_dash {
+ position: relative;
+ top: 100px;
+ left: 300px;
+}
+
+.minutes_dash {
+ position: relative;
+ top: 170px;
+ left: 420px;
+}
+
+.seconds_dash {
+ position: relative;
+ top: 130px;
+ left: 600px;
+}
+
+input[type="email"] {
+ width: 460px;
+}
+
+.veil {
+ background: #ffffff;
+}
+
+.loading-bar {
+ position: fixed;
+ top: 100px;
+ left: 100px;
+ width: 50px;
+ height: 50px;
+ border: 2px solid #aaaaaa;
+ background: #ffffff url(../img/ajax-loader.gif) no-repeat center center;
+ text-indent: -1000px;
+ overflow: hidden;
+ border-radius: 6px;
+ -moz-border-radius: 6px;
+ -webkit-border-radius: 6px;
+ -khtml-border-radius: 6px;
+ box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+ -moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+ -webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+ -khtml-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+}

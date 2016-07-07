@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+ <title>{{ $title }}</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+
+ <link type="image/x-icon" href="{{ $root }}/img/favicon.ico" rel="shortcut icon">
+ <link type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300,600,800&amp;subset=latin,latin-ext" rel="stylesheet">
+ <link type="text/css" href="{{ $root }}/fonts/font-awesome/font-awesome.css" rel="stylesheet">
+ <link type="text/css" href="{{ $root }}/js/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+ <link type="text/css" href="{{ $root }}/js/lib/editors/contentbuilder/builder.css" rel="stylesheet">
+</head>
+<body style="background:#eee;">
+<div id="contentarea" class="container"></div>
+<div id="panel">
+ <button type="button" id="view-btn" class="btn btn-default">
+  @lang('admin.button.view_html', 'HTML Görüntüle')
+ </button> &nbsp;
+ <button type="button" id="save-btn" class="btn btn-primary">
+  @lang('admin.button.ok', 'Tamam')
+ </button>
+ <button type="button" id="close-btn" class="btn btn-danger">
+  @lang('admin.button.close', 'Kapat')
+ </button>
+</div>
+
+<script type="text/javascript" src="{{ $root }}/js/lib/jquery/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/lib/jquery/ui/jquery-ui.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/lib/editors/contentbuilder/builder.js"></script>
+<script type="text/javascript">
+ //<![CDATA[
+ jQuery(document).ready(function ($) {
+  //Load saved content
+  if (localStorage.getItem('content') != null) {
+   $('#contentarea').html(localStorage.getItem('content'));
+  }
+
+  //Run the builder
+  $('#contentarea').contentbuilder({
+   zoom: 0.85,
+   snippetOpen: true,
+   imageselect: '@url($prefix . 'content/builder/media')',
+   fileselect: '@url($prefix . 'content/builder/media/files')',
+   snippetFile: '@url($prefix . 'content/builder/snippets')',
+   toolbar: 'left'
+  });
+ });
+
+ $('#view-btn').click(function() {
+  $('#contentarea').data('contentbuilder').viewHtml();
+
+  return false;
+ });
+
+ $('#save-btn').click(function() {
+  //Save Content
+  var sHTML = $('#contentarea').data('contentbuilder').html();
+  localStorage.setItem('content', sHTML);
+
+  $('#close-btn').trigger('click');
+
+  return false;
+ });
+
+ $('#close-btn').click(function() {
+  window.parent.$('#builder').trigger('close');
+
+  return false;
+ });
+ //]]>
+</script>
+</body>
+</html>

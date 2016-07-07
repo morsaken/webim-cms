@@ -1,0 +1,299 @@
+@extends('default', ['bodyClass' => 'form-nestable-page'])
+
+@section('title') {{{ $caption }}} :: @parent @stop
+
+@section('content')
+@include('topbar')
+<section id="content" class="table-layout">
+ <div class="tray tray-center pn va-t posr" data-tray-height="match">
+  <div class="panel m15">
+   <div class="panel-menu p12 admin-form theme-primary">
+    <div class="row">
+     <div class="col-md-3">
+      <label class="field select">
+       <select id="filter-language" name="filter-language">
+        @foreach (langs() as $langCode => $langTitle)
+        <option value="{{ $langCode }}"{{ input('language', lang()) == $langCode ? ' selected="selected"' : '' }}>{{{ $langTitle }}}</option>
+        @endforeach
+       </select>
+       <i class="arrow"></i>
+      </label>
+     </div>
+    </div>
+   </div>
+   <div class="panel-body">
+    <div id="list" class="dd">
+     <div class="alert alert-default w400 mv20 center-block text-center">@lang('admin.label.loading', 'Yükleniyor...')</div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<div id="menu-modal" class="modal fade">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h4>
+     <i class="fa fa-info"></i>
+     @lang('admin.label.menu', 'Menü')
+    </h4>
+   </div>
+   <form id="menu-form" class="admin-form" method="post" action="@url()">
+    <input type="hidden" id="id" name="id" value="0">
+    <input type="hidden" id="language" name="language" value="@lang()">
+    <input type="hidden" id="version" name="version" value="0">
+    <div class="modal-body">
+     <div class="section mb15">
+      <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
+      <label class="field prepend-icon">
+       <input type="text" id="title" name="title" class="gui-input" maxlength="255">
+       <span class="field-icon">
+        <i class="fa fa-tag"></i>
+       </span>
+      </label>
+     </div>
+     <div class="section mb15">
+      <h6 class="fw400">@lang('admin.label.url', 'URL')</h6>
+      <label class="field prepend-icon">
+       <input type="text" id="url" name="url" class="gui-input" maxlength="255">
+       <span class="field-icon">
+        <i class="fa fa-tag"></i>
+       </span>
+      </label>
+     </div>
+    </div>
+    <div class="modal-footer">
+     <button type="submit" class="btn btn-sm btn-primary">
+      <i class="fa fa-save"></i>
+      @lang('admin.button.save', 'Kaydet')
+     </button>
+     <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+      <i class="fa fa-close"></i>
+      @lang('admin.button.close', 'Kapat')
+     </button>
+    </div>
+   </form>
+  </div>
+ </div>
+</div>
+@stop
+
+@section('link')
+@parent
+<link rel="stylesheet" type="text/css" href="{{ $root }}/js/plugins/jquery/nestable/nestable.css">
+@stop
+
+@section('script')
+@parent
+<script type="text/javascript" src="{{ $root }}/js/plugins/jquery/nestable/jquery.nestable.js"></script>
+<script type="text/javascript">
+ //<![CDATA[
+ var language = $('#filter-language').val();
+
+ function getList() {
+  $.ajax({
+   'type': 'get',
+   'url': "@url()",
+   'data': {
+    'language': language
+   }
+  }).done(function(result) {
+   $('#list').empty();
+
+   if (result.length) {
+    make(result);
+   } else {
+    $('<div/>')
+     .addClass('alert alert-default w400 mv20 center-block text-center')
+     .appendTo('#list').text("@lang('admin.message.no_content_found', 'Kayıt bulunamadı!')");
+   }
+  });
+ }
+
+ function make(list, target) {
+  var added;
+
+  for (var k in list) {
+   added = add(list[k], target);
+
+   if (list[k].children && list[k].children.length) {
+    make(list[k].children, added);
+   }
+  }
+ }
+
+ function add(menu, target) {
+  if (!target || !target.length) {
+   target = $('#list');
+
+   if (!target.find('> ol').length) {
+    target.empty();
+   }
+  }
+
+  var ol = target.find('> ol');
+
+  if (!ol.length) {
+   ol = $('<ol/>').addClass('dd-list').appendTo(target);
+  }
+
+  var li = $('li[data-id="' + menu.id + '"]');
+
+  if (li.length) {
+   li.find('.dd-handle').text(menu.title);
+   li.find('.dd-url').text(menu.url);
+  } else {
+   li = $('<li/>', {
+    'data-id': menu.id
+   }).addClass('dd-item dd-primary').append(
+    $('<div/>').addClass('dd-handle').text(menu.title),
+    $('<div/>').addClass('dd-content').append(
+     $('<div/>').addClass('p5 mb10 br-a').html('URL: <span class="dd-url">' + menu.url + '</span>'),
+     $('<a/>', {
+      'href': '#edit',
+      'data-id': menu.id,
+      'data-url': menu.url,
+      'data-title': menu.title,
+      'data-version': menu.version
+     }).addClass('btn btn-info btn-sm mr10').click(function (e) {
+      e.preventDefault();
+
+      $('#id').val($(this).data('id'));
+      $('#language').val(language);
+      $('#url').val($(this).data('url'));
+      $('#title').val($(this).data('title'));
+      $('#version').val($(this).data('version'));
+
+      $('#menu-modal').modal();
+
+      window.setTimeout(function () {
+       $('#title').select();
+      }, 200);
+     }).text("@lang('admin.button.edit', 'Düzenle')"),
+     $('<a/>', {
+      'href': '#delete',
+      'data-id': menu.id
+     }).addClass('btn btn-danger btn-sm').popConfirm({
+      title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+      content: "@lang('admin.message.will_delete_user', 'Kullanıcı ile bağlantılı tüm içerikler silinecektir!')",
+      placement: "top",
+      yesBtn: "@lang('admin.button.yes', 'Evet')",
+      noBtn: "@lang('admin.button.no', 'Hayır')",
+      confirm: function() {
+       $.ajax({
+        type: 'DELETE',
+        url: "@url()/" + $(this).data('id')
+       }).done(function(result) {
+        if (result.success) {
+         getList();
+        } else {
+         new PNotify({
+          title: "@lang('admin.label.error', 'Hata')",
+          text: result.text,
+          type: 'danger'
+         });
+        }
+       });
+      }
+     }).text("@lang('admin.button.delete', 'Sil')")
+    )
+   ).appendTo(ol);
+  }
+
+  return li;
+ }
+
+ $('#list').nestable().on('change', function(e) {
+  var list = e.length ? e : $(e.target),
+   output = list.data('output');
+
+  if (window.JSON) {
+   $.ajax({
+    'type': 'post',
+    'url': "@url('#current/orders')",
+    'data': 'list=' + JSON.stringify(list.nestable('serialize'))
+   }).done(function(result) {
+    console.log(result);
+   });
+  } else {
+   message('JSON browser support required');
+  }
+ });
+
+ $(function() {
+  //Get list
+  getList();
+
+  $('#filter-language').change(function() {
+   window.location.href = "@url()?language=" + $(this).val();
+  });
+
+  $('a[href="#add"]').click(function(e) {
+   e.preventDefault();
+
+   $('#id').val(0);
+   $('#language').val(language);
+   $('#url').val('');
+   $('#title').val('');
+   $('#version').val(0);
+
+   $('#menu-form').validate().resetForm();
+
+   $('#menu-modal').modal();
+
+   window.setTimeout(function() {
+    $('#title').focus();
+   }, 200);
+  });
+
+  $('#menu-form').validate({
+   'rules': {
+    'url': {
+     'required': true
+    },
+    'title': {
+     'required': true
+    }
+   },
+   'messages': {
+    url : {
+     required : "@lang('admin.message.content_url_required', 'İçerik URL\'yi girin!')"
+    },
+    'title': {
+     'required': "@lang('admin.message.content_title_required', 'İçerik başlığını girin!')"
+    }
+   },
+   'errorPlacement': function (error, element) {
+    error.insertAfter(element.parent());
+   },
+   'submitHandler': function (form) {
+    $.ajax({
+     'type': $(form).attr('method'),
+     'url': $(form).attr('action'),
+     'data': $(form).serialize()
+    }).done(function(result) {
+     if (result.success) {
+      add({
+       'id': result.return.id,
+       'url': $('#url').val(),
+       'title': $('#title').val(),
+       'version': result.return.version
+      });
+
+      $('#menu-modal').modal('hide');
+     } else {
+      new PNotify({
+       title: "@lang('admin.label.error', 'Hata')",
+       text: result.text,
+       type: 'danger'
+      });
+     }
+    });
+   }
+  });
+ });
+ //]]>
+</script>
+@stop

@@ -1,0 +1,155 @@
+@extends('default')
+
+@section('title') {{{ $caption }}} :: @parent @stop
+
+@section('content')
+@include('topbar')
+<section id="content">
+ <div class="row mb10">
+  <div class="col-md-3">
+   <div class="panel bg-alert light of-h mb10">
+    <div class="pn pl20 p5">
+     <div class="icon-bg"><i class="fa fa-comments-o"></i></div>
+     <h2 class="mt15 lh15"><b>{{ $newsCount or 0 }}</b></h2>
+     <h5 class="text-muted">@lang('admin.label.news', 'Haber')</h5>
+    </div>
+   </div>
+  </div>
+  <div class="col-md-3">
+   <div class="panel bg-info light of-h mb10">
+    <div class="pn pl20 p5">
+     <div class="icon-bg"><i class="fa fa-arrows"></i></div>
+     <h2 class="mt15 lh15"><b>{{ $pageCount or 0 }}</b></h2>
+     <h5 class="text-muted">@lang('admin.label.route', 'Sayfa')</h5>
+    </div>
+   </div>
+  </div>
+  <div class="col-md-3">
+   <div class="panel bg-danger light of-h mb10">
+    <div class="pn pl20 p5">
+     <div class="icon-bg"><i class="fa fa-picture-o"></i></div>
+     <h2 class="mt15 lh15"><b>{{ $mediaCount or 0 }}</b></h2>
+     <h5 class="text-muted">@lang('admin.label.media', 'Medya')</h5>
+    </div>
+   </div>
+  </div>
+  <div class="col-md-3">
+   <div class="panel bg-warning light of-h mb10">
+    <div class="pn pl20 p5">
+     <div class="icon-bg"><i class="fa fa-envelope"></i></div>
+     <h2 class="mt15 lh15"><b>{{ $inboxCount or 0 }}</b></h2>
+     <h5 class="text-muted">@lang('admin.label.message', 'Mesaj')</h5>
+    </div>
+   </div>
+  </div>
+ </div>
+ <div class="admin-panels sb-l-o-full">
+  <div class="row">
+   <div class="col-md-12 admin-grid">
+    <div class="panel sort-disable" id="p0">
+     <div class="panel-heading">
+      <span class="panel-title">@lang('admin.label.stats', 'İstatistikler')</span>
+     </div>
+     <div class="panel-body mnw700 of-a">
+      <div class="row">
+       <div class="col-md-8 pln br-r mvn15">
+        <h5 class="ml5 mt20 ph10 pb5 br-b fw700">
+         @lang('admin.label.visitiors', 'Ziyaretçiler')
+         <small class="pull-right fw600">
+          {{ $stats['access'] or 0 }}
+          <span class="text-primary">({{ lang('admin.label.unique_access', [isset($stats['unique']) ? $stats['unique'] : 0], 'tekil %s') }})</span>
+         </small>
+        </h5>
+        <div id="stat1" style="width: 100%; height: 255px; margin: 0 auto"></div>
+       </div>
+       <div class="col-md-4 br-r">
+        <h5 class="mt5 mbn ph10 pb5 br-b fw700">@lang('admin.label.referrals', 'Kaynak Siteler')</h5>
+        @if (isset($stats['referrals']) && count($stats['referrals']))
+        <table class="table mbn tc-med-1 tc-bold-last tc-fs13-last">
+         <thead>
+          <tr class="hidden">
+           <th>@lang('admin.label.source', 'Kaynak')</th>
+           <th>@lang('admin.label.total', 'Toplam')</th>
+          </tr>
+         </thead>
+         <tbody>
+          @foreach ($stats['referrals'] as $referral)
+          <tr>
+           <td><i class="fa fa-circle text-warning fs8 pr15"></i>
+            <span title="{{{ $referral->url }}}">{{{ str_limit($referral->url, 40, 0, true) }}}</span>
+           </td>
+           <td>{{{ $referral->total }}}</td>
+          </tr>
+          @endforeach
+         </tbody>
+        </table>
+        @endif
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+@stop
+
+@section('script')
+@parent
+<script type="text/javascript" src="{{ $root }}/js/plugins/highcharts/highcharts.js"></script>
+<script type="text/javascript">
+ //<![CDATA[
+ var highColors = [bgWarning, bgPrimary, bgInfo, bgAlert, bgDanger, bgSuccess, bgSystem, bgDark];
+
+ $('#stat1').highcharts({
+  credits: false,
+  colors: highColors,
+  chart: {
+   backgroundColor: '#f9f9f9',
+   className: 'br-r',
+   type: 'line',
+   zoomType: 'x',
+   panning: true,
+   panKey: 'shift',
+   marginTop: 25,
+   marginRight: 1
+  },
+  title: {
+   text: null
+  },
+  xAxis: {
+   gridLineColor: '#EEE',
+   lineColor: '#EEE',
+   tickColor: '#EEE',
+   categories: {{ isset($months) ? json_encode($months) : '[]' }}
+  },
+  yAxis: {
+   min: 0,
+   tickInterval: 5,
+   gridLineColor: '#EEE',
+   title: {
+    text: null
+   }
+  },
+  plotOptions: {
+   spline: {
+    lineWidth: 3
+   },
+   area: {
+    fillOpacity: 0.2
+   }
+  },
+  legend: {
+   enabled: false
+  },
+  series: [{
+   name: "@lang('admin.label.directly', 'Doğrudan')",
+   data: {{ isset($stats['data']['access']['directly']) ? json_encode($stats['data']['access']['directly']) : '[]' }}
+  }, {
+   name: "@lang('admin.label.from_referrals', 'Belli Kaynaktan')",
+   data: {{ isset($stats['data']['access']['referral']) ? json_encode($stats['data']['access']['referral']) : '[]' }}
+  }]
+ });
+ //]]>
+</script>
+@stop

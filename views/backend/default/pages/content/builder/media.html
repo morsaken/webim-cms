@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+ <meta charset="utf-8">
+ <title>Images</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <link type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300,600,800" rel="stylesheet">
+ <style>
+  body {font:14px 'Open Sans', Arial, sans-serif}
+  #files a {display:inline-block; width:100px; margin:10px; text-decoration:none; color: #000000; }
+  #files p {text-align:center; color:#f0262f; }
+  #files span {display:block; height:20px; line-height:20px; overflow: hidden; text-align:center; color:#000000; }
+ </style>
+</head>
+<body>
+
+<div id="files">
+ @if (isset($files) && count($files))
+ @foreach ($files as $file)
+ <a href="{{ $file->src }}" title="{{{ $file->title }}}">
+  <img src="{{ $file->poster }}" alt="{{{ $file->title }}}">
+  <span>{{{ $file->title }}}</span>
+ </a>
+ @endforeach
+ @else
+ <p>@lang('admin.message.no_content_found', 'İçerik bulunamadı!')</p>
+ @endif
+</div>
+
+<script type="text/javascript" src="{{ $root }}/js/lib/jquery/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+ jQuery(document).ready(function ($) {
+  //Optional: specify custom height
+  window.frameElement.style.height = '500px';
+
+  $('#files a').click(function() {
+   selectAsset($(this).attr('href'));
+   return false;
+  });
+ });
+
+ /*
+  USE THIS FUNCTION TO SELECT CUSTOM ASSET WITH CUSTOM VALUE TO RETURN
+  An asset can be a file, an image or a page in your own CMS
+  */
+ function selectAsset(assetValue) {
+  //Get selected URL
+  var inp = window.parent.$('#active-input').val();
+  window.parent.$('#' + inp).val(assetValue);
+
+  //Close dialog
+  if (window.frameElement.id == 'ifrFileBrowse') window.parent.$("#md-fileselect").data('simplemodal').hide();
+  if (window.frameElement.id == 'ifrImageBrowse') window.parent.$("#md-imageselect").data('simplemodal').hide();
+ }
+</script>
+</body>
+</html>

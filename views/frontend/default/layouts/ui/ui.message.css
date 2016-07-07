@@ -1,0 +1,49 @@
+/* Message */
+.ui-message {
+ text-align: left;
+ padding: 10px;
+}
+
+.ui-message-icon {
+ float: left;
+ margin: 0 10px;
+ width: 32px;
+ height: 32px;
+ background: url(img/ui-message.png) no-repeat;
+}
+
+.ui-message-info {
+ background-position: 0 0;
+}
+
+.ui-message-error {
+ background-position: -32px 0;
+}
+
+.ui-message-ok {
+ background-position: -64px 0;
+}
+
+.ui-message-warning {
+ background-position: 0 -32px;
+}
+
+.ui-message-forbidden {
+ background-position: -32px -32px;
+}
+
+.ui-message-delete {
+ background-position: -64px -32px;
+}
+
+.ui-message-caution {
+ background-position: 0 -64px;
+}
+
+.ui-message-confirm {
+ background-position: -32px -64px;
+}
+
+.ui-message-find {
+ background-position: -64px -64px;
+}

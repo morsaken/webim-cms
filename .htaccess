@@ -1,0 +1,7 @@
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_URI} !\.(.*)+$ [NC]
+RewriteRule . index.php [QSA,L]
+RewriteRule \.html$ - [F]
+RewriteCond %{REQUEST_FILENAME} !-f
+ErrorDocument 404 /

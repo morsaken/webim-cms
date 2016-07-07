@@ -1,0 +1,106 @@
+@extends('default', ['clear' => true, 'bodyClass' => 'external-page sb-l-c sb-r-c'])
+
+@section('title') @lang('admin.menu.login', 'Giriş Ekranı') :: @parent @stop
+
+@section('content')
+<div id="canvas-wrapper">
+ <canvas id="demo-canvas"></canvas>
+</div>
+<section id="content">
+ <div class="admin-form theme-info" id="login1">
+  <div class="row mb15 table-layout">
+   <div class="col-xs-6 va-m pln">
+    <a href="javascript:void(0)" title="{{{ $title }}}">
+     <img class="img-responsive w250" src="{{ $root }}/img/logo-white.png" title="{{{ $title }}}" alt="{{{ $title }}}">
+    </a>
+   </div>
+   <div class="col-xs-6 text-right va-b pr5">
+    <div class="login-links">
+     <span class="text-white">v.11.0</span>
+    </div>
+   </div>
+  </div>
+  <div class="panel panel-info mt10 br-n">
+   <form id="login-form" method="post" action="@url()">
+    <input type="hidden" name="redirect" value="{{ input('redirect') }}">
+    <div class="panel-body bg-light p30">
+     @if (isset($error))
+     <div class="alert alert-danger fade in">
+      <button data-dismiss="alert" class="close">×</button>
+      <i class="fa-fw fa fa-times"></i>
+      <strong>@lang('admin.label.error', 'Hata'):</strong> {{{ $error }}}
+     </div>
+     @endif
+     <div class="row">
+      <div class="col-sm-7 pr30">
+       <div class="section">
+        <label for="name" class="field-label text-muted fs18 mb10">@lang('admin.label.login_name', 'Kullanıcı Adı')</label>
+        <label class="field prepend-icon">
+         <input type="text" id="name" name="name" class="gui-input" placeholder="@lang('admin.hint.enter_login_name', 'Kullanıcı adınızı yazın')">
+         <span class="field-icon">
+          <i class="fa fa-user"></i>
+         </span>
+        </label>
+       </div>
+       <div class="section">
+        <label for="pass" class="field-label text-muted fs18 mb10">@lang('admin.label.login_pass', 'Parola')</label>
+        <label class="field prepend-icon">
+         <input type="password" id="pass" name="pass" class="gui-input" placeholder="@lang('admin.hint.enter_login_pass', 'Parolanızı yazın')">
+         <span class="field-icon">
+          <i class="fa fa-lock"></i>
+         </span>
+        </label>
+       </div>
+      </div>
+      <div class="col-sm-5 br-l br-grey pl30">
+       <h3 class="mb25">Webim XI versiyonu ile yayında:</h3>
+       <p class="mb15">
+        <span class="fa fa-check text-success pr5"></span> Kolay içerik yönetimi</p>
+       <p class="mb15">
+        <span class="fa fa-check text-success pr5"></span> Görev ve ajanda yönetimi</p>
+       <p class="mb15">
+        <span class="fa fa-check text-success pr5"></span> Kullanıcı dostu arayüz</p>
+       <p class="mb15">
+        <span class="fa fa-check text-success pr5"></span> Responsive dizayn</p>
+      </div>
+     </div>
+    </div>
+    <div class="panel-footer clearfix p10 ph15">
+     <button type="submit" class="button btn-primary mr10 pull-right">
+      <i class="fa fa-unlock"></i>
+      @lang('admin.button.login', 'Giriş Yap')
+     </button>
+     <span class="switch block switch-primary pull-left input-align mt10">
+      <input type="checkbox" id="stay-signed-in" name="stay-signed-in" checked>
+      <label for="stay-signed-in" data-on="@lang('admin.button.yes', 'Evet')" data-off="@lang('admin.button.no', 'Hayır')"></label>
+      <span>@lang('admin.label.stay_signed_in', 'Oturumu Açık Bırak')</span>
+     </span>
+    </div>
+   </form>
+  </div>
+ </div>
+</section>
+@stop
+
+@section('script')
+@parent
+<script type="text/javascript" src="{{ $root }}/js/pages/login/EasePack.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/pages/login/rAF.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/pages/login/TweenLite.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/pages/login/login.js"></script>
+<script type="text/javascript">
+ //<![CDATA[
+ $(function() {
+  'use strict';
+
+  // Init CanvasBG and pass target starting location
+  CanvasBG.init({
+   Loc: {
+    x: window.innerWidth / 2,
+    y: window.innerHeight / 3.3
+   }
+  });
+ });
+ //]]>
+</script>
+@stop
