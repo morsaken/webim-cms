@@ -48,7 +48,7 @@ App::make()->group('(/:lang#[a-z]{2}#)?', function () {
  $this->post('/', function() {
   $this->response->setContentType('json');
 
-  $message = Message::result('Geçersiz doğrulama kodu!');
+  $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
   if (filter_var(input('email'), FILTER_VALIDATE_EMAIL) !== false) {
    //File
