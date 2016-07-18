@@ -21,7 +21,7 @@
    </div>
    <section id="content">
     <a href="@url('/')" title="{{{ $title or 'Web-IM XI' }}}">
-     <img class="img-responsive w200 ml10" src="{{ $root }}/img/logo-white.png" title="{{{ $title or 'Web-IM XI' }}}">
+     <img class="img-responsive w200 ml10" src="{{ $root }}/img/logo-white.png" title="{{{ $title or 'Web-IM XI' }}}" alt="{{{ $title or 'Web-IM XI' }}}">
     </a>
     <div id="login" class="admin-form theme-info" style="margin-top: 6%;">
      <div id="counter"></div>
@@ -33,9 +33,9 @@
          <div class="col-md-9">
           <label class="field prepend-icon">
            <input id="email" type="text" name="email" class="gui-input" placeholder="@lang('label.your_email_address', 'E-Posta Adresiniz')">
-           <label class="field-icon">
+           <span class="field-icon">
             <i class="fa fa-envelope-o"></i>
-           </label>
+           </span>
           </label>
          </div>
          <div class="col-md-3">
