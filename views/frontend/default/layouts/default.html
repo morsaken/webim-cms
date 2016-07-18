@@ -3,122 +3,103 @@
 <head>
  <title>{{{ $title or 'Web-IM XI' }}}</title>
  <meta charset="@lang('charset')">
- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
  <meta name="author" content="{{{ AUTHOR }}}">
  <meta name="description" content="{{{ $description or '' }}}">
  <meta name="keywords" content="{{{ $keywords or '' }}}">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
- <link type="image/x-icon" href="{{ $root }}/img/sun.png" rel="icon">
- <link type="text/css" href="{{ $root }}/css/bootstrap.css" rel="stylesheet">
+ <link href="{{ $root }}/img/favicon.ico" rel="shortcut icon">
+ <link type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
  <link type="text/css" href="{{ $root }}/css/style.css" rel="stylesheet">
- <link type="text/css" href="{{ $root }}/ui/ui.css" rel="stylesheet">
- <link type="text/css" href="{{ $root }}/ui/ui.message.css" rel="stylesheet">
-
- <script type="text/javascript" src="{{ $root }}/js/jquery.js"></script>
- <script type="text/javascript" src="{{ $root }}/js/jquery.spritely.js"></script>
- <script type="text/javascript" src="{{ $root }}/js/jquery.countdown.js"></script>
- <script type="text/javascript" src="{{ $root }}/js/jquery.ui.js"></script>
- <script type="text/javascript" src="{{ $root }}/js/jquery.blockui.js"></script>
- <script type="text/javascript" src="{{ $root }}/js/scripts.js"></script>
+ <link type="text/css" href="{{ $root }}/css/forms.css" rel="stylesheet">
 </head>
-<body data-date="{{ $date }}">
- <div class="top_container">
-  <div class="container">
-   <div style="background-position: -234.7px 102px;" id="far-clouds" class="far-clouds stage"></div>
-   <div style="background-position: -465px 102px;" id="near-clouds" class="near-clouds stage"></div>
-   <div class="sun">
-    <img src="{{ $root }}/img/sun.png" alt="{{{ $title }}}" />
+<body class="external-page sb-l-c sb-r-c" data-date="{{ $date }}">
+ <div id="main" class="animated fadeIn">
+  <section id="content_wrapper">
+   <div id="canvas-wrapper">
+    <canvas id="demo-canvas"></canvas>
    </div>
-   <div class="cloudy_countdown">
-    <div class="toLaunch">
-     <img src="{{ $root }}/img/to_launch.png" alt="{{{ $title }}}" />
-    </div>
-    <div id="countdown_dashboard">
-     <div class="dash days_dash">
-      <span class="dash_title">@lang('label.day', 'GÜN')</span>
-      <div class="digit">
-       <div style="display: none;" class="top">8</div>
-       <div style="display: block;" class="bottom">8</div>
-      </div>
-      <div class="digit">
-       <div style="display: none;" class="top">7</div>
-       <div style="display: block;" class="bottom">7</div>
-      </div>
-     </div>
-     <div class="dash hours_dash">
-      <span class="dash_title">@lang('label.hour', 'SAAT')</span>
-      <div class="digit">
-       <div style="display: none;" class="top">1</div>
-       <div style="display: block;" class="bottom">1</div>
-      </div>
-      <div class="digit">
-       <div style="display: none;" class="top">7</div>
-       <div style="display: block;" class="bottom">7</div>
-      </div>
-     </div>
-     <div class="dash minutes_dash">
-      <span class="dash_title">@lang('label.minute', 'DAKİKA')</span>
-      <div class="digit">
-       <div style="display: none;" class="top">4</div>
-       <div style="display: block;" class="bottom">4</div>
-      </div>
-      <div class="digit">
-       <div style="display: none;" class="top">3</div>
-       <div style="display: block;" class="bottom">3</div>
-      </div>
-     </div>
-     <div class="dash seconds_dash">
-      <span class="dash_title">@lang('label.second', 'SANİYE')</span>
-      <div class="digit">
-       <div style="display: none;" class="top">3</div>
-       <div style="display: block;" class="bottom">3</div>
-      </div>
-      <div class="digit">
-       <div style="display: block; overflow: hidden; height: 1px; padding-top: 0px; margin-top: 0px; padding-bottom: 0px; margin-bottom: 0px;" class="top">1</div>
-       <div style="display: block; overflow: hidden; height: 71px;" class="bottom">2</div>
-      </div>
+   <section id="content">
+    <a href="@url('/')" title="{{{ $title or 'Web-IM XI' }}}">
+     <img class="img-responsive w200 ml10" src="{{ $root }}/img/logo-white.png" title="{{{ $title or 'Web-IM XI' }}}">
+    </a>
+    <div id="login" class="admin-form theme-info" style="margin-top: 6%;">
+     <div id="counter"></div>
+     <h1 class="coming-soon-title">@conf('system.' . lang() . '.offline_message', lang('message.coming_soon', 'Yakında buradayız!'))</h1>
+     <div class="panel panel-info bw10">
+      <form id="contact" method="post" action="@url()">
+       <div class="panel-menu">
+        <div class="row">
+         <div class="col-md-9">
+          <label class="field prepend-icon">
+           <input id="email" type="text" name="email" class="gui-input" placeholder="@lang('label.your_email_address', 'E-Posta Adresiniz')">
+           <label class="field-icon">
+            <i class="fa fa-envelope-o"></i>
+           </label>
+          </label>
+         </div>
+         <div class="col-md-3">
+          <button type="submit" class="button btn-info mr10 btn-block">@lang('button.subscribe', 'Kaydol')</button>
+         </div>
+        </div>
+       </div>
+      </form>
      </div>
     </div>
-   </div>
-  </div>
- </div>
- <div class="middle_container">
-  <div class="container">
-   <div class="info">{{{ conf('system.' . lang() . '.offline_message', lang('message.coming_soon', 'YAKINDA BURADAYIZ')) }}}</div>
-   <div class="newsletter">
-    <a id="newsletter-btn" href="javascript:void(0)">@lang('message.leave_your_email', 'e-posta adresinizi bırakın, sizi haberdar edelim')</a>
-   </div>
-  </div>
- </div>
- <div class="footer_container">
-  <div class="container">
-   <div class="social">
-    <a href="{{ strlen(conf('social.facebook')) ? conf('social.facebook') : '#' }}" target="_blank"><img src="{{ $root }}/img/facebook.png" alt="Facebook"></a>
-    <a href="{{ strlen(conf('social.twitter')) ? conf('social.twitter') : '#' }}" target="_blank"><img src="{{ $root }}/img/twitter.png" alt="Twitter"></a>
-    <a href="{{ strlen(conf('social.linkedin')) ? conf('social.linkedin') : '#' }}" target="_blank"><img src="{{ $root }}/img/linkedin.png" alt="LinkedIn"></a>
-   </div>
-   <span>&copy; 2015 Masters Corp.</span>
-   <div>&nbsp;</div>
-  </div>
+   </section>
+  </section>
  </div>
 
- <div id="dialog" style="display: none">
-  <form id="dialog-form" method="post" action="@url()">
-   <div class="form-group">
-    <label for="email">@lang('label.type_your_valid_email_address', 'Geçerli e-posta adresinizi yazınız'):</label>
-    <input type="email" id="email" name="email" class="form-control">
-   </div>
-   <div class="form-group">
-    <label for="code">@lang('label.captcha_code', 'Doğrulama Kodu'):</label>
-    <div class="input-group">
-     <input type="text" id="code" name="code" class="form-control">
-     <div class="input-group-addon">
-      <img id="captcha" src="@url('captcha')" alt="">
-     </div>
-    </div>
-   </div>
-  </form>
- </div>
+ <script type="text/javascript" src="{{ $root }}/js/lib/jquery-1.11.1.min.js"></script>
+ <script type="text/javascript" src="{{ $root }}/js/lib/jquery-ui.min.js"></script>
+ <script type="text/javascript" src="{{ $root }}/js/plugins/countdown/jquery.plugin.min.js"></script>
+ <script type="text/javascript" src="{{ $root }}/js/plugins/countdown/jquery.countdown.min.js"></script>
+ <script type="text/javascript" src="{{ $root }}/js/plugins/countdown/i18n/jquery.countdown-@lang().js"></script>
+ <script type="text/javascript" src="{{ $root }}/js/plugins/canvasbg.js"></script>
+ <script type="text/javascript" src="{{ $root }}/js/plugins/utility.js"></script>
+ <script type="text/javascript" src="{{ $root }}/js/webim.js"></script>
+ <script type="text/javascript">
+  //<![CDATA[
+  $(document).ready(function() {
+   'use strict';
+
+   // Init Theme Core
+   Core.init();
+
+   // Init CanvasBG and pass target starting location
+   CanvasBG.init({
+    Loc: {
+     x: window.innerWidth / 10,
+     y: window.innerHeight / 20
+    }
+   });
+
+   // Init Countdown Plugin
+   var newYear = new Date($('body').data('date'));
+
+   $('#counter').countdown({
+    until: newYear
+   });
+
+   $('#contact').submit(function(e) {
+    e.preventDefault();
+
+    var form = $(this);
+
+    $.ajax({
+     'type': form.attr('method'),
+     'url': form.attr('action'),
+     'data': form.serialize()
+    }).done(function(result) {
+     if (result.success) {
+      form.get(0).reset();
+     }
+
+     alert(result.text);
+    });
+   });
+  });
+  //]]>
+ </script>
 </body>
 </html>
