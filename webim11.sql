@@ -136,6 +136,28 @@ CREATE TABLE `sys_content_meta` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci;
 
 -- ----------------------------
+-- Table structure for sys_object
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_object`;
+CREATE TABLE `sys_object` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `type` enum('user','group') COLLATE utf8_turkish_ci NOT NULL,
+  `role` varchar(25) COLLATE utf8_turkish_ci NOT NULL,
+  `name` varchar(100) COLLATE utf8_turkish_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8_turkish_ci DEFAULT NULL,
+  `first_name` varchar(50) COLLATE utf8_turkish_ci DEFAULT NULL,
+  `last_name` varchar(50) COLLATE utf8_turkish_ci DEFAULT NULL,
+  `version` int(10) unsigned DEFAULT '1',
+  `active` enum('true','false') COLLATE utf8_turkish_ci DEFAULT 'true',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `email` (`email`),
+  KEY `name_group` (`type`,`name`,`active`),
+  KEY `email_group` (`type`,`email`,`active`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci;
+
+-- ----------------------------
 -- Table structure for sys_content_permission
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_content_permission`;
@@ -305,28 +327,6 @@ CREATE TABLE `sys_mail_recipient` (
   KEY `mail_id` (`mail_id`) USING BTREE,
   CONSTRAINT `mai_rec_mail_id` FOREIGN KEY (`mail_id`) REFERENCES `sys_mail` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `mai_rec_recipient_id` FOREIGN KEY (`recipient_id`) REFERENCES `sys_object` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci;
-
--- ----------------------------
--- Table structure for sys_object
--- ----------------------------
-DROP TABLE IF EXISTS `sys_object`;
-CREATE TABLE `sys_object` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `type` enum('user','group') COLLATE utf8_turkish_ci NOT NULL,
-  `role` varchar(25) COLLATE utf8_turkish_ci NOT NULL,
-  `name` varchar(100) COLLATE utf8_turkish_ci NOT NULL,
-  `email` varchar(100) COLLATE utf8_turkish_ci DEFAULT NULL,
-  `first_name` varchar(50) COLLATE utf8_turkish_ci DEFAULT NULL,
-  `last_name` varchar(50) COLLATE utf8_turkish_ci DEFAULT NULL,
-  `version` int(10) unsigned DEFAULT '1',
-  `active` enum('true','false') COLLATE utf8_turkish_ci DEFAULT 'true',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
-  UNIQUE KEY `email` (`email`),
-  KEY `name_group` (`type`,`name`,`active`),
-  KEY `email_group` (`type`,`email`,`active`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci;
 
 -- ----------------------------
