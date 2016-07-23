@@ -48,7 +48,7 @@ class Content extends Controller {
   $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
   try {
-   if (!parent::unique('parent_id', 'type', 'url')) {
+   if (!parent::unique('parent_id', 'type', 'language', 'url')) {
     throw new \Exception(lang('message.duplicate_entry', [array_get($this->data, 'url')], 'Bu isimde bir kayıt var: %s'));
    }
 
