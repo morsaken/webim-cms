@@ -39,7 +39,10 @@
           </label>
          </div>
          <div class="col-md-3">
-          <button type="submit" class="button btn-info mr10 btn-block">@lang('button.subscribe', 'Kaydol')</button>
+          <button type="submit" class="button btn-info mr10 btn-block">
+           <i class="fa fa-envelope-o"></i>
+           @lang('button.subscribe', 'Kaydol')
+          </button>
          </div>
         </div>
        </div>
@@ -85,6 +88,13 @@
     e.preventDefault();
 
     var form = $(this);
+    var inp = form.find('input');
+    var btn = form.find('button[type="submit"]');
+    var icn = btn.find('i.fa');
+
+    inp.prop('disabled', true);
+    btn.prop('disabled', true);
+    icn.removeClass('fa-envelope-o').addClass('fa-spin fa-spinner');
 
     $.ajax({
      'type': form.attr('method'),
@@ -94,6 +104,10 @@
      if (result.success) {
       form.get(0).reset();
      }
+
+     inp.prop('disabled', false);
+     btn.prop('disabled', false);
+     icn.removeClass('fa-spin fa-spinner').addClass('fa-envelope-o');
 
      alert(result.text);
     });
