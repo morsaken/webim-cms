@@ -64,40 +64,63 @@ class ContentSettings {
 
   $manager->app->response->setContentType('json');
 
-  $settings = array(
-   'contact.address_title1' => input('contact_address_title1'),
-   'contact.address_title2' => input('contact_address_title2'),
-   'contact.address1' => input('contact_address1'),
-   'contact.address2' => input('contact_address2'),
-   'contact.phone1' => input('contact_phone1'),
-   'contact.phone2' => input('contact_phone2'),
-   'contact.fax1' => input('contact_fax1'),
-   'contact.fax2' => input('contact_fax2'),
-   'contact.email1' => input('contact_email1'),
-   'contact.email2' => input('contact_email2'),
-   'contact.web1' => input('contact_web1'),
-   'contact.web2' => input('contact_web2'),
-   'map.key' => input('map_key', ''),
-   'map.geo_lat' => input('map_geo_lat', 0.0),
-   'map.geo_lon' => input('map_geo_lon', 0.0),
-   'map.marker_geo_lat' => input('map_marker_geo_lat', input('map_geo_lat', 0.0)),
-   'map.marker_geo_lon' => input('map_marker_geo_lon', input('map_geo_lon', 0.0)),
-   'map.marker_content' => raw_input('map_marker_content'),
-   'social.facebook' => input('social_facebook'),
-   'social.twitter' => input('social_twitter'),
-   'social.google_plus' => input('social_google_plus'),
-   'social.linkedin' => input('social_linkedin'),
-   'social.instagram' => input('social_instagram'),
-   'social.youtube' => input('social_youtube'),
-   'social.flickr' => input('social_flickr'),
-   'social.pinterest' => input('social_pinterest'),
-   'social.skype' => input('social_skype'),
-   'social.vimeo' => input('social_vimeo'),
-   'social.github' => input('social_github'),
-   'google.search_console' => raw_input('google_search_console'),
-   'google.analytics' => raw_input('google_analytics'),
-   'google.adsense' => raw_input('google_adsense')
+  //Make settings part by part
+  $contacts = array();
+  $maps = array();
+  $socials = array(
+   'facebook' => input('social_facebook'),
+   'twitter' => input('social_twitter'),
+   'google_plus' => input('social_google_plus'),
+   'linkedin' => input('social_linkedin'),
+   'instagram' => input('social_instagram'),
+   'youtube' => input('social_youtube'),
+   'flickr' => input('social_flickr'),
+   'pinterest' => input('social_pinterest'),
+   'skype' => input('social_skype'),
+   'vimeo' => input('social_vimeo'),
+   'github' => input('social_github')
   );
+  $google = array(
+   'map_key' => input('google_map_key'),
+   'search_console' => input('google_search_console'),
+   'analytics' => raw_input('google_analytics'),
+   'adsense' => raw_input('google_adsense')
+  );
+
+  foreach (explode(',', input('contact_title')) as $key => $contact) {
+   $contacts[] = array(
+    'title' => $contact,
+    'address' => array_get(explode(',', input('contact_address')), $key),
+    'phone' => array_get(explode(',', input('contact_phone')), $key),
+    'fax' => array_get(explode(',', input('contact_fax')), $key),
+    'email' => array_get(explode(',', input('contact_email')), $key),
+    'web' => array_get(explode(',', input('contact_web')), $key)
+   );
+  }
+
+  foreach (explode(',', input('map_title')) as $key => $map) {
+   $maps[] = array(
+    'title' => $map,
+    'lat' => array_get(explode(',', input('map_lat')), $key),
+    'lon' => array_get(explode(',', input('map_lon')), $key),
+    'zoom' => array_get(explode(',', input('map_zoom')), $key),
+    'marker_lat' => array_get(explode(',', input('map_marker_lat')), $key),
+    'marker_lon' => array_get(explode(',', input('map_marker_lon')), $key),
+    'marker_content' => array_get(explode(',', input('map_marker_content')), $key),
+   );
+  }
+
+  //Settings container
+  $settings = array(
+   'contact' => $contacts,
+   'map' => $maps,
+   'social' => $socials,
+   'google' => $google
+  );
+
+  //Remove first
+  SysSettings::init()->remove('system', 'contact');
+  SysSettings::init()->remove('system', 'map');
 
   return SysSettings::init()->saveAll('system', $settings)->forData();
  }

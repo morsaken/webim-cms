@@ -43,7 +43,6 @@
    <form id="menu-form" class="admin-form" method="post" action="@url()">
     <input type="hidden" id="id" name="id" value="0">
     <input type="hidden" id="language" name="language" value="@lang()">
-    <input type="hidden" id="version" name="version" value="0">
     <div class="modal-body">
      <div class="section mb15">
       <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
@@ -54,14 +53,29 @@
        </span>
       </label>
      </div>
-     <div class="section mb15">
-      <h6 class="fw400">@lang('admin.label.url', 'URL')</h6>
-      <label class="field prepend-icon">
-       <input type="text" id="url" name="url" class="gui-input" maxlength="255">
-       <span class="field-icon">
-        <i class="fa fa-tag"></i>
-       </span>
-      </label>
+     <div class="row">
+      <div class="col-xs-8">
+       <div class="section mb15">
+        <h6 class="fw400">@lang('admin.label.url', 'URL')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="url" name="url" class="gui-input" maxlength="255">
+         <span class="field-icon">
+          <i class="fa fa-tag"></i>
+         </span>
+        </label>
+       </div>
+      </div>
+      <div class="col-xs-4">
+       <div class="section mb15">
+        <h6 class="fw400">@lang('admin.label.target', 'Hedefi')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="target" name="target" class="gui-input" maxlength="25">
+         <span class="field-icon">
+          <i class="fa fa-bullseye"></i>
+         </span>
+        </label>
+       </div>
+      </div>
      </div>
     </div>
     <div class="modal-footer">
@@ -144,27 +158,41 @@
   if (li.length) {
    li.find('.dd-handle').text(menu.title);
    li.find('.dd-url').text(menu.url);
+   li.find('.dd-target').text((menu.meta && menu.meta.target) ? menu.meta.target : '-');
+
+   li.find('a[href="#edit"]').attr({
+    'data-title': menu.title,
+    'data-url': menu.url,
+    'data-target': ((menu.meta && menu.meta.target) ? menu.meta.target : '')
+   });
   } else {
    li = $('<li/>', {
     'data-id': menu.id
    }).addClass('dd-item dd-primary').append(
     $('<div/>').addClass('dd-handle').text(menu.title),
     $('<div/>').addClass('dd-content').append(
-     $('<div/>').addClass('p5 mb10 br-a').html('URL: <span class="dd-url">' + menu.url + '</span>'),
+     $('<div/>').addClass('row').append(
+      $('<div/>').addClass('col-xs-8').append(
+       $('<div/>').addClass('p5 mb10 br-a').html('URL: <span class="dd-url">' + menu.url + '</span>')
+      ),
+      $('<div/>').addClass('col-xs-4').append(
+       $('<div/>').addClass('p5 mb10 br-a').html('@lang("admin.label.target", "Hedefi"): <span class="dd-target">' + (menu.meta && menu.meta.target ? menu.meta.target : '-') + '</span>')
+      )
+     ),
      $('<a/>', {
       'href': '#edit',
       'data-id': menu.id,
-      'data-url': menu.url,
       'data-title': menu.title,
-      'data-version': menu.version
+      'data-url': menu.url,
+      'data-target': ((menu.meta && menu.meta.target) ? menu.meta.target : '')
      }).addClass('btn btn-info btn-sm mr10').click(function (e) {
       e.preventDefault();
 
-      $('#id').val($(this).data('id'));
+      $('#id').val($(this).attr('data-id'));
       $('#language').val(language);
-      $('#url').val($(this).data('url'));
-      $('#title').val($(this).data('title'));
-      $('#version').val($(this).data('version'));
+      $('#title').val($(this).attr('data-title'));
+      $('#url').val($(this).attr('data-url'));
+      $('#target').val($(this).attr('data-target'));
 
       $('#menu-modal').modal();
 
@@ -184,7 +212,7 @@
       confirm: function() {
        $.ajax({
         type: 'DELETE',
-        url: "@url()/" + $(this).data('id')
+        url: "@url()/" + $(this).attr('data-id')
        }).done(function(result) {
         if (result.success) {
          getList();
@@ -215,7 +243,7 @@
     'url': "@url('#current/orders')",
     'data': 'list=' + JSON.stringify(list.nestable('serialize'))
    }).done(function(result) {
-    console.log(result);
+    //console.log(result);
    });
   } else {
    message('JSON browser support required');
@@ -235,9 +263,7 @@
 
    $('#id').val(0);
    $('#language').val(language);
-   $('#url').val('');
-   $('#title').val('');
-   $('#version').val(0);
+   $('#title, #url, #target').val('');
 
    $('#menu-form').validate().resetForm();
 
@@ -250,19 +276,19 @@
 
   $('#menu-form').validate({
    'rules': {
-    'url': {
+    'title': {
      'required': true
     },
-    'title': {
+    'url': {
      'required': true
     }
    },
    'messages': {
-    url : {
-     required : "@lang('admin.message.content_url_required', 'İçerik URL\'yi girin!')"
-    },
     'title': {
      'required': "@lang('admin.message.content_title_required', 'İçerik başlığını girin!')"
+    },
+    url : {
+     required : "@lang('admin.message.content_url_required', 'İçerik URL\'yi girin!')"
     }
    },
    'errorPlacement': function (error, element) {
@@ -277,9 +303,11 @@
      if (result.success) {
       add({
        'id': result.return.id,
-       'url': $('#url').val(),
        'title': $('#title').val(),
-       'version': result.return.version
+       'url': $('#url').val(),
+       'meta': {
+        'target': $('#target').val()
+       }
       });
 
       $('#menu-modal').modal('hide');

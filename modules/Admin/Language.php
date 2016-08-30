@@ -173,27 +173,31 @@ class Language {
 
   $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
-  if (strlen(input('language-alias')) == 2) {
-   if (!Lang::has(input('language-alias'))) {
+  $alias = str_case(input('language-alias'), 'lower');
+  $abbr = input('language-abbr');
+  $name = input('language-name');
+
+  if (strlen($alias) == 2) {
+   if (!Lang::has($alias)) {
     $values = array(
-     'abbr' => input('language-abbr'),
-     'name' => input('language-name'),
+     'abbr' => $abbr,
+     'name' => $name,
      'charset' => 'utf-8',
      'dir' => 'ltr',
      'order' => (count(langs()) + 1),
-     'locale' => input('language-alias') . '_' . str_case(input('language-alias')),
+     'locale' => $alias . '_' . str_case($alias),
      'time_zone' => 'Europe/Istanbul'
     );
 
     $text = '<?php' . "\n" . 'return ' . var_export($values, true) . ';';
 
-    $written = File::path('language.' . input('language-alias'), input('language-alias') . EXT)->create()->write($text);
+    $written = File::path('language.' . $alias, $alias . EXT)->create()->write($text);
 
     if ($written > 0) {
      $message->success = true;
      $message->text = lang('admin.message.new_language_created', 'Yeni dil oluşturuldu...');
      $message->return = array(
-      'alias' => input('language-alias')
+      'alias' => $alias
      );
     } else {
      $message->text = lang('admin.message.new_language_cannot_created', 'Yeni dil kaydı oluşturulamadı!');

@@ -53,7 +53,11 @@ class Menu {
    ->where('language', input('language', $lang))
    ->only('root')
    ->orderBy('order')
-   ->load()->with('children')->get('rows');
+   ->load()->with('meta')->with('children', array(
+    'with' => array(
+     'meta'
+    )
+   ))->get('rows');
 
   if ($manager->app->request->isAjax()) {
    $manager->app->response->setContentType('json');
@@ -106,6 +110,9 @@ class Menu {
    ->set('publish_date', Carbon::createFromTimestamp(strtotime(input('publish_date'))))
    ->set('order', $order)
    ->save(function($id) use ($manager) {
+    $this->saveMeta($id, array(
+     'target' => input('target')
+    ));
     $this->saveOrders($id);
    })->forData();
  }

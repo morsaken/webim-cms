@@ -97,21 +97,32 @@ class Settings extends Controller {
   }
 
   foreach ($settings as $key => $value) {
-   if (isset($list[$key])) {
-    $toUpdate[$key] = array(
-     'id' => $list[$key]['id'],
-     'value' => $value,
-     'version' => $list[$key]['version']
-    );
+   //Value may come as array
+   $values = array();
+
+   if (is_array($value)) {
+    $values = array_dot(array($key => $value));
    } else {
-    $toInsert[$key] = array(
-     'id' => 0,
-     'value' => $value,
-     'version' => 1
-    );
+    $values[$key] = $value;
    }
 
-   unset($list[$key]);
+   foreach ($values as $k => $v) {
+    if (isset($list[$k])) {
+     $toUpdate[$k] = array(
+      'id' => $list[$k]['id'],
+      'value' => $v,
+      'version' => $list[$k]['version']
+     );
+    } else {
+     $toInsert[$k] = array(
+      'id' => 0,
+      'value' => $v,
+      'version' => 1
+     );
+    }
+
+    unset($list[$k]);
+   }
   }
 
   foreach ($list as $key => $values) {
