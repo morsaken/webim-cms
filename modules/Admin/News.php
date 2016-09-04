@@ -33,6 +33,8 @@ class News {
   $manager->addRoute($manager->prefix . '/content/news/form/:id+', __CLASS__ . '::deleteForm', 'DELETE');
   $manager->addRoute($manager->prefix . '/content/news/rename/:id+', __CLASS__ . '::renameURL', 'POST');
   $manager->addRoute($manager->prefix . '/content/news/duplicate', __CLASS__ . '::duplicate', 'POST');
+  $manager->addRoute($manager->prefix . '/content/news/orders', __CLASS__ . '::getOrders');
+  $manager->addRoute($manager->prefix . '/content/news/orders', __CLASS__ . '::postOrders', 'POST');
 
   $parent = $manager->addMenu(lang('admin.menu.system', 'Sistem'), $manager->prefix . '/content', lang('admin.menu.content', 'İçerik'), null, 'fa fa-edit');
   $manager->addMenu(lang('admin.menu.system', 'Sistem'), $manager->prefix . '/content/news', lang('admin.menu.news', 'Haberler'), $parent, 'fa fa-pencil');
@@ -43,13 +45,9 @@ class News {
  public function getIndex($lang = null) {
   $manager = static::$manager;
 
-  $nav = new \stdClass();
-  $nav->title = lang('admin.menu.create', 'Yeni Oluştur');
-  $nav->url = url($manager->prefix . '/content/news/form');
-  $nav->icon = 'fa-plus';
-
   $manager->put('subnavs', array(
-   $nav
+   btn(lang('admin.menu.create', 'Yeni Oluştur'), url($manager->prefix . '/content/news/form'), 'fa-plus'),
+   btn(lang('admin.menu.orders', 'Sıralamalar'), url($manager->prefix . '/content/news/orders'), 'fa-sort')
   ));
 
   $manager->set('caption', lang('admin.menu.news', 'Haberler'));
@@ -320,6 +318,64 @@ class News {
   }
 
   return $message->forData();
+ }
+
+ public function getOrders($lang = null) {
+  $manager = static::$manager;
+
+  $manager->set('caption', lang('admin.menu.orders', 'Sıralamalar'));
+  $manager->breadcrumb($manager->prefix . '/content', lang('admin.menu.content', 'İçerik'));
+  $manager->breadcrumb($manager->prefix . '/content/news', lang('admin.menu.news', 'Haberler'));
+  $manager->breadcrumb($manager->prefix . '/content/news/orders', lang('admin.menu.orders', 'Sıralamalar'));
+
+  $manager->put('categories',
+   Content::init()
+    ->where('type', 'category')
+    ->load()
+    ->getListIndented('&nbsp;&nbsp;')
+  );
+
+  if ($manager->app->request->isAjax()) {
+   $manager->app->response->setContentType('json');
+
+   $order = db()->table('sys_content_category as cat_c')
+    ->join('sys_content as cat', function ($join) {
+     $join->on('cat.id', '=', 'cat_c.category_id');
+     $join->on('cat.type', '=', db()->raw('category'));
+     $join->on('cat.active', '=', db()->raw('true'));
+    })->where('cat.id', input('category_id', 0))
+    ->where('cat_c.content_id', db()->func(null, 'sys_content.id'))
+    ->addSelect('cat_c.order')
+    ->toSql(true);
+
+   return array_to(Content::init()
+    ->only('type', 'news')
+    ->only('category', input('category_id', 0))
+    ->orderBy(db()->raw('(' . $order . ')'), 'asc')
+    ->orderBy('order', 'asc')
+    ->load()->with('poster', array(
+     'size' => '150x150',
+     'default' => View::getPath()->folder('layouts.assets.poster')->file('image.png')
+    ))
+    ->with(function ($rows) {
+     return array_map(function (&$row) use ($rows) {
+      $row->poster = $row->poster->image->src();
+      $row->language = lang('name', $row->language, $row->language);
+      $row->active = $row->active == 'true';
+      $row->status = $row->active ? lang('admin.label.active', 'Aktif') : lang('admin.label.passive', 'Pasif');
+     }, $rows);
+    })->get());
+  }
+
+  return View::create('content.news.orders')->data($manager::data())->render();
+ }
+
+ public function postOrders($lang = null, $id = null) {
+  $manager = static::$manager;
+
+  $manager->app->response->setContentType('json');
+
+  return array_to(Content::saveCategoryOrders(input('category_id', 0), explode(',', input('content_ids'))));
  }
 
 }

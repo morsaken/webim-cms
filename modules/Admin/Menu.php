@@ -39,13 +39,8 @@ class Menu {
  public function getIndex($lang = null) {
   $manager = static::$manager;
 
-  $nav = new \stdClass();
-  $nav->title = lang('admin.menu.add', 'Ekle');
-  $nav->url = '#add';
-  $nav->icon = 'fa-plus';
-
   $manager->put('subnavs', array(
-   $nav
+   btn(lang('admin.menu.add', 'Ekle'), '#add', 'fa-plus')
   ));
 
   $list = Content::init()

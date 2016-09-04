@@ -38,13 +38,8 @@ class Group {
  public function getIndex($lang = null) {
   $manager = static::$manager;
 
-  $nav = new \stdClass();
-  $nav->title = lang('admin.menu.create', 'Yeni Oluştur');
-  $nav->url = url($manager->prefix . '/system/groups/form');
-  $nav->icon = 'fa-plus';
-
   $manager->put('subnavs', array(
-   $nav
+   btn(lang('admin.menu.create', 'Yeni Oluştur'), url($manager->prefix . '/system/groups/form'), 'fa-plus')
   ));
 
   $manager->set('roles', array(

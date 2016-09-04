@@ -245,6 +245,41 @@ class Content extends Controller {
 
   if (count($categories) > 0) {
    $content->only('category', $categories);
+
+   //Split params into id and url params
+   $category_ids = array();
+   $category_urls = array();
+
+   foreach ((array) $categories as $category) {
+    if (is_numeric($category) && ($category > 0)) {
+     $category_ids[$category] = $category;
+    } elseif (is_scalar($category) && strlen($category)) {
+     $category_urls[$category] = $category;
+    }
+   }
+
+   if (count($category_ids) || count($category_urls)) {
+    $order = DB::table('sys_content_category as cat_c')
+     ->join('sys_content as cat', function ($join) {
+      $join->on('cat.id', '=', 'cat_c.category_id');
+      $join->on('cat.type', '=', DB::raw('category'));
+      $join->on('cat.active', '=', DB::raw('true'));
+     });
+
+    if (count($category_ids)) {
+     $order->whereIn('cat.id', $category_ids);
+    }
+
+    if (count($category_urls)) {
+     $order->whereIn('cat.url', $category_urls);
+    }
+
+    $order = $order->where('cat_c.content_id', DB::func(null, 'sys_content.id'))
+    ->addSelect('cat_c.order')
+    ->toSql(true);
+
+    $content->orderBy(DB::raw('(' . $order . ')'), 'asc');
+   }
   }
 
   if ($filters instanceof \Closure) {
@@ -814,7 +849,7 @@ class Content extends Controller {
       $list[$content_id][$order] = $row;
 
       //Sort
-      asort($list[$content_id]);
+      ksort($list[$content_id]);
      }
     }
    }
@@ -1609,17 +1644,33 @@ class Content extends Controller {
   *
   * @return array
   */
- public function saveCategoryOrders($category_id, $content_ids = array()) {
+ public static function saveCategoryOrders($category_id, $content_ids = array()) {
+  //Order list
+  $orders = array();
+
   if ($category_id > 0) {
    //Get current category contents
-   $content_ids[] = DB::table('sys_content_category')
-                     ->where('category_id', $category_id)
-                     ->orderBy('order')->lists('content_id');
+   $list = DB::table('sys_content_category')
+    ->where('category_id', $category_id)
+    ->whereIn('content_id', (array) $content_ids)
+    ->orderBy('order')->lists('content_id');
+
+   foreach ($content_ids as $content_id) {
+    if (in_array($content_id, $list)) {
+     $orders[] = $content_id;
+    }
+   }
+
+   foreach ($list as $content_id) {
+    if (!in_array($content_id, $orders)) {
+     $orders[] = $content_id;
+    }
+   }
 
    //Start order
    $order = 0;
 
-   foreach (array_unique($content_ids, SORT_REGULAR) as $content_id) {
+   foreach ($orders as $content_id) {
     DB::table('sys_content_category')
      ->where('content_id', $content_id)
      ->where('category_id', $category_id)
@@ -1629,7 +1680,7 @@ class Content extends Controller {
    }
   }
 
-  return $content_ids;
+  return $orders;
  }
 
  /**
@@ -1642,7 +1693,7 @@ class Content extends Controller {
   *
   * @return array
   */
- public function saveContentOrders($content_type, $content_id, $id = null, $order = null) {
+ public static function saveContentOrders($content_type, $content_id, $id = null, $order = null) {
   //Return
   $orders = array();
 

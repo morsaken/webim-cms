@@ -44,13 +44,8 @@ class Page {
  public function getIndex($lang = null) {
   $manager = static::$manager;
 
-  $nav = new \stdClass();
-  $nav->title = lang('admin.menu.create', 'Yeni Oluştur');
-  $nav->url = url($manager->prefix . '/content/pages/form');
-  $nav->icon = 'fa-plus';
-
   $manager->put('subnavs', array(
-   $nav
+   btn(lang('admin.menu.create', 'Yeni Oluştur'), url($manager->prefix . '/content/pages/form'), 'fa-plus')
   ));
 
   $manager->set('caption', lang('admin.menu.pages', 'Sayfalar'));
