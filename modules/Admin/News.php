@@ -338,20 +338,10 @@ class News {
   if ($manager->app->request->isAjax()) {
    $manager->app->response->setContentType('json');
 
-   $order = db()->table('sys_content_category as cat_c')
-    ->join('sys_content as cat', function ($join) {
-     $join->on('cat.id', '=', 'cat_c.category_id');
-     $join->on('cat.type', '=', db()->raw('category'));
-     $join->on('cat.active', '=', db()->raw('true'));
-    })->where('cat.id', input('category_id', 0))
-    ->where('cat_c.content_id', db()->func(null, 'sys_content.id'))
-    ->addSelect('cat_c.order')
-    ->toSql(true);
-
    return array_to(Content::init()
     ->only('type', 'news')
     ->only('category', input('category_id', 0))
-    ->orderBy(db()->raw('(' . $order . ')'), 'asc')
+    ->orderByCategory(input('category_id', 0), 'asc')
     ->orderBy('order', 'asc')
     ->load()->with('poster', array(
      'size' => '150x150',

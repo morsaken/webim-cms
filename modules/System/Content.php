@@ -229,6 +229,48 @@ class Content extends Controller {
  }
 
  /**
+  * Order by category order
+  *
+  * @param mixed $category
+  *
+  * @return $this
+  */
+ public function orderByCategory($category) {
+  //Split params into id and url params
+  $category_id = 0;
+  $category_url = null;
+
+  if (is_numeric($category) && ($category > 0)) {
+   $category_id = $category;
+  } elseif (is_scalar($category) && strlen($category)) {
+   $category_url = $category;
+  }
+
+  if ($category_id || $category_url) {
+   $order = DB::table('sys_content_category as cat_c')
+    ->join('sys_content as cat', function ($join) {
+     $join->on('cat.id', '=', 'cat_c.category_id');
+     $join->on('cat.type', '=', DB::raw('category'));
+     $join->on('cat.active', '=', DB::raw('true'));
+    });
+
+   if ($category_id) {
+    $order->where('cat.id', $category_id);
+   } elseif (strlen($category_url)) {
+    $order->where('cat.url', $category_url);
+   }
+
+   $order = $order->where('cat_c.content_id', DB::func(null, 'sys_content.id'))
+    ->addSelect('cat_c.order')
+    ->toSql(true);
+
+   $this->orderBy(DB::raw('(' . $order . ')'), 'asc');
+  }
+
+  return $this;
+ }
+
+ /**
   * Shortcut for published content
   *
   * @param string $type
@@ -243,43 +285,13 @@ class Content extends Controller {
   $content->only('type', $type);
   $content->only('language');
 
-  if (count($categories) > 0) {
+  if (!is_array($categories)) {
+   $categories = array($categories);
+  }
+
+  if (count($categories)) {
    $content->only('category', $categories);
-
-   //Split params into id and url params
-   $category_ids = array();
-   $category_urls = array();
-
-   foreach ((array) $categories as $category) {
-    if (is_numeric($category) && ($category > 0)) {
-     $category_ids[$category] = $category;
-    } elseif (is_scalar($category) && strlen($category)) {
-     $category_urls[$category] = $category;
-    }
-   }
-
-   if (count($category_ids) || count($category_urls)) {
-    $order = DB::table('sys_content_category as cat_c')
-     ->join('sys_content as cat', function ($join) {
-      $join->on('cat.id', '=', 'cat_c.category_id');
-      $join->on('cat.type', '=', DB::raw('category'));
-      $join->on('cat.active', '=', DB::raw('true'));
-     });
-
-    if (count($category_ids)) {
-     $order->whereIn('cat.id', $category_ids);
-    }
-
-    if (count($category_urls)) {
-     $order->whereIn('cat.url', $category_urls);
-    }
-
-    $order = $order->where('cat_c.content_id', DB::func(null, 'sys_content.id'))
-    ->addSelect('cat_c.order')
-    ->toSql(true);
-
-    $content->orderBy(DB::raw('(' . $order . ')'), 'asc');
-   }
+   $content->orderByCategory(array_first($categories));
   }
 
   if ($filters instanceof \Closure) {

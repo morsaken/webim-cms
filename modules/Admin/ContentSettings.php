@@ -81,8 +81,8 @@ class ContentSettings {
    'github' => input('social_github')
   );
   $google = array(
-   'map_key' => input('google_map_key'),
-   'search_console' => input('google_search_console'),
+   'map_key' => raw_input('google_map_key'),
+   'search_console' => raw_input('google_search_console'),
    'analytics' => raw_input('google_analytics'),
    'adsense' => raw_input('google_adsense')
   );
