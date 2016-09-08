@@ -150,6 +150,9 @@
   </form>
  </aside>
 </section>
+
+@include('list.duplicate', ['url' => url($prefix . 'ecommerce/products/duplicate')])
+@include('list.delete', ['url' => url($prefix . 'ecommerce/products/form')])
 @stop
 
 @section('script')
@@ -173,51 +176,6 @@
    },
    dateFormat: 'dd-mm-yy',
    firstDay: 1
-  });
-
-  function _delete(ids) {
-   $.ajax({
-    type: 'DELETE',
-    url: "@url($prefix . 'content/news/form')" + '/' + ids.join(',')
-   }).done(function(result) {
-    result.onAfterClose = function() {
-     if (result.success) {
-      window.location.href = "@url()";
-     }
-    };
-
-    message(result);
-   });
-  }
-
-  $('a[href="#delete"]').click(function() {
-   var ids = [];
-
-   if ($(this).data('id')) {
-    ids.push($(this).data('id'));
-   } else {
-    var checks = $('input[name="check[]"]:checked');
-
-    if (checks.length > 0) {
-     checks.each(function() {
-      ids.push($(this).val());
-     });
-    } else {
-     message("@lang('admin.message.check_at_least_one', 'En az bir kayıt seçmelisiniz!')");
-    }
-   }
-
-   if (ids.length > 0) {
-    message({
-     'type': 'confirm',
-     'text': "@lang('admin.message.are_you_sure_to_delete', 'Silmek istediğinize emin misiniz?')",
-     'onConfirm': function() {
-      _delete(ids);
-     }
-    });
-   }
-
-   return false;
   });
  });
  //]]>

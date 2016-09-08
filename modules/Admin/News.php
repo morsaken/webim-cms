@@ -31,6 +31,7 @@ class News {
   $manager->addRoute($manager->prefix . '/content/news/form/?:id', __CLASS__ . '::getForm');
   $manager->addRoute($manager->prefix . '/content/news/form/?:id', __CLASS__ . '::postForm', 'POST');
   $manager->addRoute($manager->prefix . '/content/news/form/:id+', __CLASS__ . '::deleteForm', 'DELETE');
+  $manager->addRoute($manager->prefix . '/content/news/categories/?:id', __CLASS__ . '::categories', 'POST');
   $manager->addRoute($manager->prefix . '/content/news/rename/:id+', __CLASS__ . '::renameURL', 'POST');
   $manager->addRoute($manager->prefix . '/content/news/duplicate', __CLASS__ . '::duplicate', 'POST');
   $manager->addRoute($manager->prefix . '/content/news/orders', __CLASS__ . '::getOrders');
@@ -42,6 +43,13 @@ class News {
   static::$manager = $manager;
  }
 
+ /**
+  * List
+  *
+  * @param null|string $lang
+  *
+  * @return string
+  */
  public function getIndex($lang = null) {
   $manager = static::$manager;
 
@@ -108,6 +116,14 @@ class News {
   return View::create('content.news.list')->data($manager::data())->render();
  }
 
+ /**
+  * Get form
+  *
+  * @param null|string $lang
+  * @param int $id
+  *
+  * @return string
+  */
  public function getForm($lang = null, $id = 0) {
   $manager = static::$manager;
 
@@ -117,14 +133,6 @@ class News {
    'video' => View::getPath()->folder('layouts.assets.poster')->file('video.png'),
    'audio' => View::getPath()->folder('layouts.assets.poster')->file('audio.png'),
    'link' => View::getPath()->folder('layouts.assets.poster')->file('link.png')
-  );
-
-  $manager->put('categories',
-   Content::init()
-    ->where('type', 'category')
-    ->orderBy('order')
-    ->load()
-    ->getListIndented('&nbsp;&nbsp;')
   );
 
   $action = 'new';
@@ -173,6 +181,14 @@ class News {
   return View::create('content.news.form')->data($manager::data())->render();
  }
 
+ /**
+  * Post form
+  *
+  * @param null|string $lang
+  * @param null|int $id
+  *
+  * @return string
+  */
  public function postForm($lang = null, $id = null) {
   $manager = static::$manager;
 
@@ -247,6 +263,14 @@ class News {
   return $save->forData();
  }
 
+ /**
+  * Delete form
+  *
+  * @param null|string $lang
+  * @param string $ids
+  *
+  * @return string
+  */
  public function deleteForm($lang = null, $ids = '') {
   $manager = static::$manager;
 
@@ -263,6 +287,43 @@ class News {
   return Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'))->forData();
  }
 
+ /**
+  * Category list by language
+  *
+  * @param null|string $lang
+  *
+  * @return string
+  */
+ public function categories($lang = null) {
+  $manager = static::$manager;
+
+  $manager->app->response->setContentType('json');
+
+  $categories = array();
+
+  foreach (Content::init()
+            ->where('id', '<>', input('id', 0))
+            ->only('type', 'category')
+            ->only('language', input('language', $lang))
+            ->orderBy('order')
+            ->load()->getListIndented('&nbsp;&nbsp;') as $id => $title) {
+   $categories[] = array(
+    'id' => $id,
+    'title' => $title
+   );
+  }
+
+  return array_to($categories);
+ }
+
+ /**
+  * Rename
+  *
+  * @param null|string $lang
+  * @param int $id
+  *
+  * @return string
+  */
  public function renameURL($lang = null, $id) {
   $manager = static::$manager;
 
@@ -287,6 +348,13 @@ class News {
   return Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'))->forData();
  }
 
+ /**
+  * Duplicate record by language
+  *
+  * @param null|string $lang
+  *
+  * @return string
+  */
  public function duplicate($lang = null) {
   $manager = static::$manager;
   $manager->app->response->setContentType('json');
@@ -320,6 +388,13 @@ class News {
   return $message->forData();
  }
 
+ /**
+  * Order list
+  *
+  * @param null|string $lang
+  *
+  * @return string
+  */
  public function getOrders($lang = null) {
   $manager = static::$manager;
 
@@ -360,6 +435,14 @@ class News {
   return View::create('content.news.orders')->data($manager::data())->render();
  }
 
+ /**
+  * Order records
+  *
+  * @param null|string $lang
+  * @param null|int $id
+  *
+  * @return string
+  */
  public function postOrders($lang = null, $id = null) {
   $manager = static::$manager;
 

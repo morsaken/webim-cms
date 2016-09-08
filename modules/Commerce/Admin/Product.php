@@ -34,7 +34,9 @@ class Product {
   $manager->addRoute($manager->prefix . '/ecommerce/products/form/?:id', __CLASS__ . '::getForm');
   $manager->addRoute($manager->prefix . '/ecommerce/products/form/?:id', __CLASS__ . '::postForm', 'POST');
   $manager->addRoute($manager->prefix . '/ecommerce/products/form/?:id+', __CLASS__ . '::deleteForm', 'DELETE');
+  $manager->addRoute($manager->prefix . '/ecommerce/products/categories/?:id', __CLASS__ . '::categories', 'POST');
   $manager->addRoute($manager->prefix . '/ecommerce/products/rename/?:id+', __CLASS__ . '::renameURL', 'POST');
+  $manager->addRoute($manager->prefix . '/ecommerce/products/duplicate', __CLASS__ . '::duplicate', 'POST');
 
   $parent = $manager->addMenu(lang('admin.menu.modules', 'Modüller'), $manager->prefix . '/ecommerce', lang('admin.menu.ecommerce', 'E-Ticaret'), null, 'fa fa-shopping-cart');
   $manager->addMenu(lang('admin.menu.modules', 'Modüller'), $manager->prefix . '/ecommerce/products', lang('admin.menu.products', 'Ürünler'), $parent, 'fa fa-tags');
@@ -136,14 +138,6 @@ class Product {
    ->orderBy('title')
    ->load()
    ->getListIndented('&nbsp;&nbsp;', null)
-  );
-
-  $manager->put('categories',
-   Content::init()
-    ->where('type', 'category')
-    ->orderBy('order')
-    ->load()
-    ->getListIndented('&nbsp;&nbsp;')
   );
 
   $manager->put('brands',
@@ -366,6 +360,35 @@ class Product {
  }
 
  /**
+  * Category list by language
+  *
+  * @param null|string $lang
+  *
+  * @return string
+  */
+ public function categories($lang = null) {
+  $manager = static::$manager;
+
+  $manager->app->response->setContentType('json');
+
+  $categories = array();
+
+  foreach (Content::init()
+            ->where('id', '<>', input('id', 0))
+            ->only('type', 'category')
+            ->only('language', input('language', $lang))
+            ->orderBy('order')
+            ->load()->getListIndented('&nbsp;&nbsp;') as $id => $title) {
+   $categories[] = array(
+    'id' => $id,
+    'title' => $title
+   );
+  }
+
+  return array_to($categories);
+ }
+
+ /**
   * Rename
   *
   * @param null|string $lang
@@ -395,6 +418,46 @@ class Product {
   } else {
    return Message::result(lang('message.nothing_done'))->forData();
   }
+ }
+
+ /**
+  * Duplicate record by language
+  *
+  * @param null|string $lang
+  *
+  * @return string
+  */
+ public function duplicate($lang = null) {
+  $manager = static::$manager;
+  $manager->app->response->setContentType('json');
+
+  //Return
+  $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
+
+  $ids = array_filter(explode(',', input('id')), function($id) {
+   return (int) $id > 0;
+  });
+
+  if (count($ids)) {
+   $duplicated = 0;
+
+   foreach ($ids as $id) {
+    $duplicate = Content::duplicate($id, input('lang'));
+
+    if ($duplicate->success()) {
+     $duplicated++;
+    } else {
+     return $duplicate->forData();
+    }
+   }
+
+   if ($duplicated) {
+    $message->success = true;
+    $message->text = lang('admin.message.duplicated_total', [$duplicated], '%s kayıt çoklandı...');
+   }
+  }
+
+  return $message->forData();
  }
 
 }

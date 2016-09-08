@@ -55,11 +55,7 @@
          <div class="col-xs-6">
           <h6 class="fw400">@lang('admin.label.category', 'Kategori')</h6>
           <label class="field select">
-           <select id="category" name="category[]" class="select2" multiple size="5">
-            @foreach ($categories as $categoryId => $categoryTitle)
-            <option value="{{ $categoryId }}"{{ isset($content->categories[$categoryId]) ? ' selected="selected"' : '' }}>{{{ $categoryTitle }}}</option>
-            @endforeach
-           </select>
+           <select id="category" name="category[]" data-value="{{ isset($content->categories) ? implode(',', array_keys($content->categories)) : '' }}" class="select2" multiple size="5"></select>
           </label>
          </div>
         </div>
@@ -269,6 +265,18 @@
  $(function() {
   'use strict';
 
+  // select dropdowns - placeholder like creation
+  var selectList = $('.admin-form select');
+  selectList.each(function(i, e) {
+   $(e).on('change', function() {
+    if ($(e).val() == "0") $(e).addClass("empty");
+    else $(e).removeClass("empty")
+   });
+  });
+  selectList.each(function(i, e) {
+   $(e).change();
+  });
+
   $('#url').data('prefix', $('#parent_id').find('option:selected').data('url'));
 
   $('#parent_id').change(function() {
@@ -283,6 +291,34 @@
     $('a[href="#edit-url"]').text(url);
    }
   });
+
+  function categories(init) {
+   $('#category').empty();
+
+   $.ajax({
+    'url': $('#form').attr('action').replace('/form', '/categories'),
+    'data': {
+     'language': $('#language').val(),
+     'id': init ? $('#id').val() : 0
+    }
+   }).done(function(result) {
+    if (result) {
+     for (var key in result) {
+      $('<option/>', {
+       'value': result[key]['id']
+      }).html(result[key]['title']).appendTo('#category');
+     }
+
+     $('#category').val($('#category').data('value').toString().split(',')).change();
+    }
+   });
+  }
+
+  $('#language').change(function() {
+   categories();
+  });
+
+  categories(true);
 
   $('#publish_date, #expire_date').datetimepicker({
    showOn: 'both',
@@ -303,18 +339,6 @@
     $("#publish_date").datepicker("option", "maxDate", selectedDate);
     $("#expire_date").datepicker("option", "minDate", selectedDate);
    }
-  });
-
-  // select dropdowns - placeholder like creation
-  var selectList = $('.admin-form select');
-  selectList.each(function(i, e) {
-   $(e).on('change', function() {
-    if ($(e).val() == "0") $(e).addClass("empty");
-    else $(e).removeClass("empty")
-   });
-  });
-  selectList.each(function(i, e) {
-   $(e).change();
   });
 
   // Init tagsinput plugin
