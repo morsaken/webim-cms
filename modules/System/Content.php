@@ -611,7 +611,7 @@ class Content extends Controller {
   * @param array $meta
   * @param bool $reset
   */
- public function saveMeta($content_id, $meta = array(), $reset  = true) {
+ public function saveMeta($content_id, $meta = array(), $reset = true) {
   if ($content_id > 0) {
    if ($reset) {
     //Remove all
@@ -880,7 +880,7 @@ class Content extends Controller {
 
    foreach ($list as $id => $media) {
     if ($id == $row->id) {
-     $row->media = $media;
+     $row->media = array_values($media);
 
      foreach ($media as $item) {
       $row->{'media_' . $item->role . 's'}[] = $item;

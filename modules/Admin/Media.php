@@ -31,10 +31,10 @@ class Media {
   */
  public static function register(Manager $manager) {
   $manager->addRoute($manager->prefix . '/content/media', __CLASS__ . '::getIndex');
-  $manager->addRoute($manager->prefix . '/content/media', __CLASS__ . '::postIndex', 'POST');
   $manager->addRoute($manager->prefix . '/content/media/upload', __CLASS__ . '::postUpload', 'POST');
   $manager->addRoute($manager->prefix . '/content/media/link', __CLASS__ . '::postLink', 'POST');
-  $manager->addRoute($manager->prefix . '/content/media/delete/?:id+', __CLASS__ . '::delete', 'DELETE');
+  $manager->addRoute($manager->prefix . '/content/media/save/:id+', __CLASS__ . '::save', 'POST');
+  $manager->addRoute($manager->prefix . '/content/media/delete/:id+', __CLASS__ . '::delete', 'DELETE');
   $manager->addRoute($manager->prefix . '/content/media/settings', __CLASS__ . '::getSettings');
   $manager->addRoute($manager->prefix . '/content/media/settings', __CLASS__ . '::postSettings', 'POST');
 
@@ -104,6 +104,7 @@ class Media {
      'id' => $row->id,
      'role' => $row->role,
      'title' => $row->title,
+     'description' => array_get($row, 'meta.description'),
      'poster' => null,
      'thumb' => null
     );
@@ -354,7 +355,24 @@ class Media {
   return Message::result(lang('media.message.paste_link_first', 'Önce bağlantıyı yapıştırın!'))->forData();
  }
 
- public function delete($lang = null, $ids = '') {
+ public function save($lang = null, $id) {
+  $manager = static::$manager;
+
+  $manager->app->response->setContentType('json');
+
+  $save = Content::init()->set(array(
+   'id' => $id,
+   'title' => input('title')
+  ))->save(function($id) {
+   $this->saveMeta($id, array(
+    'description' => input('description')
+   ), false);
+  });
+
+  return $save->forData();
+ }
+
+ public function delete($lang = null, $ids) {
   $manager = static::$manager;
 
   $manager->app->response->setContentType('json');

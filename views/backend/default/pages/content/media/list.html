@@ -2,12 +2,6 @@
 
 @section('title') {{{ $caption }}} :: @parent @stop
 
-@section('link')
-@parent
-<link rel="stylesheet" type="text/css" href="{{ $root }}/js/plugins/jquery/magnific/magnific-popup.css">
-<link rel="stylesheet" type="text/css" href="{{ $root }}/js/plugins/fileinput/css/fileinput.min.css">
-@stop
-
 @section('content')
 @include('topbar')
 <section id="content" class="table-layout">
@@ -115,6 +109,43 @@
 <div id="audio-modal" class="popup-block black mfp-hide"></div>
 <div id="video-modal" class="popup-block black mfp-hide"></div>
 
+<div id="edit-dialog" class="modal fade">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h4>
+     <i class="fa fa-edit"></i>
+     @lang('admin.label.edit', 'Düzenle')
+    </h4>
+   </div>
+   <form id="edit-form" method="post" action="@url($prefix . 'content/media/save')">
+    <input type="hidden" id="id" name="id" class="form-control" value="0">
+    <div class="modal-body">
+     <div class="form-group">
+      <label for="title">@lang('admin.label.title', 'Başlık')</label>
+      <input type="text" id="title" name="title" class="form-control">
+     </div>
+     <div class="form-group">
+      <label for="description">@lang('admin.label.description', 'Açıklama')</label>
+      <textarea id="description" name="description" rows="4" class="form-control"></textarea>
+     </div>
+    </div>
+    <div class="modal-footer">
+     <button type="submit" class="btn btn-sm btn-success">
+      <i class="fa fa-save"></i>
+      @lang('admin.button.save', 'Kaydet')
+     </button>
+     <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+      <i class="fa fa-close"></i>
+      @lang('admin.button.close', 'Kapat')
+     </button>
+    </div>
+   </form>
+  </div>
+ </div>
+</div>
+
 <div id="upload-dialog" class="modal fade">
  <div class="modal-dialog">
   <div class="modal-content">
@@ -212,6 +243,12 @@
   </div>
  </div>
 </div>
+@stop
+
+@section('link')
+@parent
+<link rel="stylesheet" type="text/css" href="{{ $root }}/js/plugins/jquery/magnific/magnific-popup.css">
+<link rel="stylesheet" type="text/css" href="{{ $root }}/js/plugins/fileinput/css/fileinput.min.css">
 @stop
 
 @section('script')
@@ -449,7 +486,9 @@
   });
 
   function preview(r) {
-   return $('<div/>').addClass('mix ' + r.role).append(
+   return $('<div/>', {
+    'data-id': r.id
+   }).addClass('mix ' + r.role).append(
     $('<div/>').addClass('panel p6 pbn').append(
      $('<div/>').addClass('of-h').append(
       $('<img/>', {
@@ -462,8 +501,12 @@
        $('<div/>').addClass('col-xs-4 va-m prn text-right').append(
         $('<span/>', {
          'data-id': r.id,
+         'data-button': 'edit'
+        }).addClass('fa fa-edit fs12 text-info'),
+        $('<span/>', {
+         'data-id': r.id,
          'data-button': 'delete'
-        }).addClass('fa fa-trash-o fs12 text-danger'),
+        }).addClass('fa fa-trash-o fs12 ml10 text-danger'),
         $('<span/>').addClass('fa fa-circle fs12 ml10 text' + (r.active ? 'info' : 'muted'))
        )
       )
@@ -517,6 +560,67 @@
   });
 
   function event() {
+   $('[data-button="edit"]').css('cursor', 'pointer').off('click').click(function () {
+    var $this = $(this);
+
+    $.ajax({
+     type: 'get',
+     url: "@url('#current')",
+     data: 'id=' + $this.data('id')
+    }).done(function (result) {
+     if (result.total) {
+      var info = result.rows[0];
+
+      $('#id').val(info.id);
+      $('#title').val(info.title);
+      $('#description').val(info.description);
+
+      $('#edit-dialog').modal();
+     } else {
+      new PNotify({
+       title: "@lang('message.result', 'İşlem Sonucu')",
+       text: "@lang('admin.message.item_not_found', 'Nesne bulunamadı!')",
+       type: 'error',
+       buttons: {
+        closer: true,
+        sticker: false
+       },
+       history: {
+        history: false
+       }
+      });
+     }
+    });
+   });
+
+   $('#edit-form').submit(function(e) {
+    e.preventDefault();
+
+    $.ajax({
+     'type': $(this).attr('method'),
+     'url': $(this).attr('action') + '/' + $('#id').val(),
+     'data': $(this).serialize()
+    }).done(function(result) {
+     if (result.success) {
+      $('.mix[data-id="' + $('#id').val() + '"]').find('h6').text($('#title').val());
+      $('#edit-dialog').modal('hide');
+     }
+
+     new PNotify({
+      title: "@lang('message.result', 'İşlem Sonucu')",
+      text: result.text,
+      type: result.success ? 'success' : 'error',
+      buttons: {
+       closer: true,
+       sticker: false
+      },
+      history: {
+       history: false
+      }
+     });
+    });
+   });
+
    $('[data-button="delete"]').css('cursor', 'pointer').off('click').click(function () {
     var $this = $(this);
 
@@ -533,7 +637,7 @@
       text: result.text,
       type: result.success ? 'success' : 'error',
       buttons: {
-       closer: false,
+       closer: true,
        sticker: false
       },
       history: {

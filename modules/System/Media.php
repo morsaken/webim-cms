@@ -228,60 +228,75 @@ class Media extends Content {
      //Poster url
      $url = uniqid();
 
-     $destination = File::path(
-      'assets.' . $role . '.' . Carbon::now()->format('Y.m') . '.' . $url,
-      slug($path['title']) . strrchr($path['url'], '.')
-     )->create();
+     //Create curl
+     $ch = @curl_init($path['url']);
+     @curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+     @curl_exec($ch);
 
-     if (@copy($path['url'], $destination->getPath())) {
-      $media = parent::init()
-       ->set('type', 'media')
-       ->set('language', Language::current()->alias())
-       ->set('url', $url)
-       ->set('title', $path['title'])
-       ->set('publish_date', Carbon::now())
-       ->save(function ($id) use ($destination, $role, $params) {
-        if (array_get($params, 'max_size') && (array_get($params, 'max_size') < $destination->size())) {
-         throw new \Exception(lang('message.file.size_exceeded', 'Dosya boyutu çok büyük!'));
-        }
+     //Get target url's mime type
+     $mime = @curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
 
-        if (($role == 'image') && ($size = array_get($params, 'image_max_size'))) {
-         list($width, $height) = explode('x', $size);
+     if ($mime && (strpos($mime, 'image/') == 0)) {
+      //Extension
+      $extension = '.' . strtolower(str_replace('image/', '', $mime));
 
-         //Current resolution
-         Picture::file($destination)->fit($width, $height);
-        }
+      $destination = File::path(
+       'assets.' . $role . '.' . Carbon::now()->format('Y.m') . '.' . $url,
+       slug($path['title']) . $extension
+      )->create();
 
-        $meta = array(
-         'role' => $role,
-         'path' => $destination->rawPath,
-         'name' => $destination->baseName,
-         'extension' => $destination->extension(),
-         'file_size' => $destination->size()
+      if (@copy($path['url'], $destination->getPath())) {
+       $media = parent::init()
+        ->set('type', 'media')
+        ->set('language', Language::current()->alias())
+        ->set('url', $url)
+        ->set('title', $path['title'])
+        ->set('publish_date', Carbon::now())
+        ->save(function ($id) use ($destination, $role, $params) {
+         if (array_get($params, 'max_size') && (array_get($params, 'max_size') < $destination->size())) {
+          throw new \Exception(lang('message.file.size_exceeded', 'Dosya boyutu çok büyük!'));
+         }
+
+         if (($role == 'image') && ($size = array_get($params, 'image_max_size'))) {
+          list($width, $height) = explode('x', $size);
+
+          //Current resolution
+          Picture::file($destination)->fit($width, $height);
+         }
+
+         $meta = array(
+          'role' => $role,
+          'path' => $destination->rawPath,
+          'name' => $destination->baseName,
+          'extension' => $destination->extension(),
+          'file_size' => $destination->size()
+         );
+
+         if ($role == 'image') {
+          $meta['image_size'] = Picture::file($destination)->resolution();
+         }
+
+         $this->saveMeta($id, $meta);
+        });
+
+       if ($media->success()) {
+        $message->success = true;
+        $message->text = $media->text();
+        $message->return = array(
+         'id' => $media->returns('id'),
+         'src' => $destination->src()
         );
-
-        if ($role == 'image') {
-         $meta['image_size'] = Picture::file($destination)->resolution();
-        }
-
-        $this->saveMeta($id, $meta);
-       });
-
-      if ($media->success()) {
-       $message->success = true;
-       $message->text = $media->text();
-       $message->return = array(
-        'id' => $media->returns('id'),
-        'src' => $destination->src()
-       );
+       } else {
+        $message->text = $media->text();
+       }
       } else {
-       $message->text = $media->text();
+       //Remove created destination
+       $destination->folder()->remove();
+
+       $message->text = lang('message.target_not_copied_into_system', 'Hedef sisteme kopyalanamadı!');
       }
      } else {
-      //Remove created destination
-      $destination->folder()->remove();
-
-      $message->text = lang('message.target_not_copied_into_system', 'Hedef sisteme kopyalanamadı!');
+      $message->text = lang('message.target_is_not_an_image', 'Hedef resim değil!');
      }
     } else {
      $message->text = lang('message.type_target', 'Hedefi yazınız!');
