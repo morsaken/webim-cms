@@ -59,27 +59,28 @@ class Media {
 
    $list = array();
 
-   $media = SystemMedia::init()->only(function($query) {
+   $media = SystemMedia::init()->only(function($content) {
     if (input('id', 0) > 0) {
-     $query->where('id', input('id', 0));
-    } elseif (strlen(input('filter'))) {
-     $filter = explode(',', input('filter'), 2);
+     $content->where('id', input('id', 0));
+    }
 
-     if (count($filter) == 1) {
-      $query->where(function($q) use ($filter) {
-       $q->where('url', $filter[0]);
-       $q->orWhere('title', 'like', '%' . $filter[0] . '%');
-      });
-     } else {
-      $query->only('meta', array(
-       'role' => $filter[0]
-      ));
+    if (strlen(input('publish_date-start')) && strlen(input('publish_date-end'))) {
+     $content->whereBetween('publish_date', array(
+      Carbon::createFromTimestamp(strtotime(input('publish_date-start'))),
+      Carbon::createFromTimestamp(strtotime(input('publish_date-end')))
+     ));
+    } elseif (strlen(input('publish_date-start'))) {
+     $content->where('publish_date', Carbon::createFromTimestamp(strtotime(input('publish_date-start'))));
+    }
 
-      $query->where(function($q) use ($filter) {
-       $q->where('url', $filter[1]);
-       $q->orWhere('title', 'like', '%' . $filter[1] . '%');
-      });
-     }
+    if (strlen(input('title'))) {
+     $content->where('title', 'like', '%' . input('title') . '%');
+    }
+
+    if (strlen(input('meta-role'))) {
+     $content->only('meta', array(
+      'role' => input('meta-role')
+     ));
     }
    })->orderBy('id', 'desc')->load(input('offset', 0), input('limit', 20))->with('files', array(
     'poster' => array(

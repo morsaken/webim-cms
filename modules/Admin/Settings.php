@@ -87,6 +87,7 @@ class Settings {
    $settings['frontend.' . $alias . '.title'] = input('frontend_' . $alias . '_title', 'Web-IM XI');
    $settings['frontend.' . $alias . '.description'] = input('frontend_' . $alias . '_description');
    $settings['frontend.' . $alias . '.keywords'] = input('frontend_' . $alias . '_keywords');
+   $settings['frontend.' . $alias . '.copyright'] = input('frontend_' . $alias . '_copyright');
    $settings['backend.' . $alias . '.template'] = input('backend_' . $alias . '_template', 'default');
    $settings['backend.' . $alias . '.title'] = input('backend_' . $alias . '_title', 'Web-IM XI');
    $settings['backend.' . $alias . '.description'] = input('backend_' . $alias . '_description');

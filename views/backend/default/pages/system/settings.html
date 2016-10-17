@@ -142,6 +142,15 @@
            </div>
            <span class="help-block mt10">@lang('admin.hint.type_keyword_and_hit_enter', 'Kelimeyi yazarak "enter" tuşuna basın')</span>
           </div>
+          <div class="section">
+           <h6 class="fw400">@lang('admin.label.page_copyright', 'Sayfa Altlığı')</h6>
+           <label class="field prepend-icon">
+            <input type="text" id="frontend_{{ $alias }}_copyright" name="frontend_{{ $alias }}_copyright" class="gui-input" value="{{{ conf('frontend.' . $alias . '.copyright', '&copy; Powered by Masters') }}}">
+            <span class="field-icon">
+             <i class="fa fa-copyright"></i>
+            </span>
+           </label>
+          </div>
          </div>
          @endforeach
         </div>

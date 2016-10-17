@@ -99,7 +99,9 @@
     $.ajax({
      'type': form.attr('method'),
      'url': form.attr('action'),
-     'data': form.serialize()
+     'data': {
+      'email': $('#email').val()
+     }
     }).done(function(result) {
      if (result.success) {
       form.get(0).reset();

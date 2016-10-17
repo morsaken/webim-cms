@@ -259,7 +259,7 @@ class Portfolio {
         ->set('order', input('order', 1))
         ->set('version', $post['version'])
         ->set('active', input('active', array('false', 'true')))
-        ->save(function ($id) use ($manager, $poster, $post, $parent_id) {
+        ->save(function ($id) use ($manager, $lang, $poster, $post, $parent_id) {
          $this->saveCategory($id, explode(',', input('category')));
 
          $this->saveMeta($id, array(
@@ -270,7 +270,7 @@ class Portfolio {
          ));
 
          $this->saveMedia($id, explode(',', input('media_id')));
-         $this->saveOrders($id);
+         $this->setOrders('portfolio', $lang, null, $id, input('order', 1), false);
         });
 
        if (!$postSave->success()) {

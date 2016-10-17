@@ -1535,22 +1535,29 @@ class Content extends Controller {
   * Set orders
   *
   * @param string $type
+  * @param string $language
   * @param null|int $parent_id
   * @param null|int $id
   * @param null|int $order
+  * @param bool $use_parent_id
   *
   * @return array
   */
- public function setOrders($type, $parent_id = null, $id = null, $order = null) {
+ public function setOrders($type, $language, $parent_id = null, $id = null, $order = null, $use_parent_id = true) {
   //Return
   $orders = array();
 
   //List
-  $list = DB::table('sys_content')
-            ->where('parent_id', $parent_id)
-            ->where('type', $type)
-            ->where('id', '<>', intval($id))
-            ->orderBy('order')->lists('id');
+  $list = DB::table('sys_content');
+
+  if ($use_parent_id) {
+   $list = $list->where('parent_id', $parent_id);
+  }
+
+  $list = $list->where('type', $type)
+   ->where('language', $language)
+   ->where('id', '<>', intval($id))
+   ->orderBy('order')->lists('id');
 
   //Start from beginning
   $new_order = 1;
@@ -1561,9 +1568,14 @@ class Content extends Controller {
     $new_order++;
    }
 
-   DB::table('sys_content')
-    ->where('parent_id', $parent_id)
-    ->where('type', $type)
+   $update = DB::table('sys_content');
+
+   if ($use_parent_id) {
+    $update = $update->where('parent_id', $parent_id);
+   }
+
+   $update->where('type', $type)
+    ->where('language', $language)
     ->where('id', $target_id)
     ->update(array(
      'order' => $new_order
@@ -1586,12 +1598,13 @@ class Content extends Controller {
   */
  public function saveOrders($id) {
   $content = DB::table('sys_content')->where('id', $id)->first(array(
-   'id', 'type', 'parent_id', 'order'
+   'id', 'type', 'language', 'parent_id', 'order'
   ));
 
   if ($content) {
    return $this->setOrders(
     array_get($content, 'type'),
+    array_get($content, 'language'),
     array_get($content, 'parent_id'),
     array_get($content, 'id'),
     array_get($content, 'order')
@@ -1884,7 +1897,11 @@ class Content extends Controller {
      $delete = DB::table('sys_content')->whereIn('id', $id)->delete();
 
      foreach ($contents as $content) {
-      $this->setOrders(array_get($content, 'type'), array_get($content, 'parent_id'));
+      $this->setOrders(
+       array_get($content, 'type'),
+       array_get($content, 'language'),
+       array_get($content, 'parent_id')
+      );
      }
 
      return $delete->return;

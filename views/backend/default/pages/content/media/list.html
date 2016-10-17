@@ -13,32 +13,15 @@
       <form id="select-filters" class="controls">
        <div class="btn-group ib mr10">
         <button type="button" class="btn btn-default hidden-xs">
-         <span class="fa fa-folder"></span>
-        </button>
-        <div class="btn-group">
-         <fieldset>
-          <select id="filter1">
-           <option value="">@lang('admin.label.all', 'Tümü')</option>
-           <option value=".image">@lang('admin.label.image', 'Resim')</option>
-           <option value=".file">@lang('admin.label.file', 'Dosya')</option>
-           <option value=".video">@lang('admin.label.video', 'Görüntü')</option>
-           <option value=".audio">@lang('admin.label.audio', 'Ses')</option>
-           <option value=".link">@lang('admin.label.link', 'Bağlantı')</option>
-          </select>
-         </fieldset>
-        </div>
-       </div>
-       <div class="btn-group ib mr10">
-        <button type="button" class="btn btn-default hidden-xs">
          <span class="fa fa-tag"></span>
         </button>
         <div class="btn-group">
          <fieldset>
           <select id="filter2">
            <option value="">@lang('admin.label.labels', 'Etiketler')</option>
-           <option value=".label1">Work</option>
+           <!--<option value=".label1">Work</option>
            <option value=".label3">Clients</option>
-           <option value=".label2">Family</option>
+           <option value=".label2">Family</option>-->
           </select>
          </fieldset>
         </div>
@@ -72,6 +55,20 @@
      </span>
     </label>
    </div>
+   <h6 class="fw400">@lang('admin.label.media_role', 'Türü')</h6>
+   <div class="section">
+    <label class="field select">
+     <select id="filter-meta-role" name="filter-meta-role">
+      <option value="">@lang('admin.label.all', 'Tümü')</option>
+      <option value="image">@lang('admin.label.image', 'Resim')</option>
+      <option value="file">@lang('admin.label.file', 'Dosya')</option>
+      <option value="video">@lang('admin.label.video', 'Görüntü')</option>
+      <option value="audio">@lang('admin.label.audio', 'Ses')</option>
+      <option value="link">@lang('admin.label.link', 'Bağlantı')</option>
+     </select>
+     <i class="arrow double"></i>
+    </label>
+   </div>
    <h6 class="fw400">@lang('admin.label.content.publish_date', 'Yayın Tarihi')</h6>
    <div class="section row">
     <div class="col-md-6">
@@ -97,7 +94,7 @@
    <hr class="short">
    <div class="section row">
     <div class="col-sm-12">
-     <button class="btn btn-default btn-sm ph25" type="button">
+     <button type="submit" class="btn btn-default btn-sm ph25">
       @lang('admin.button.filter', 'Filtrele')
      </button>
     </div>
@@ -496,7 +493,7 @@
       }).data('info', r).addClass('h-170 center-block'),
       $('<div/>').addClass('row table-layout').append(
        $('<div/>').addClass('col-xs-8 va-m pln').append(
-        $('<h6/>').text(r.title)
+        $('<h6/>').html(r.title.length ? r.title : '&nbsp;')
        ),
        $('<div/>').addClass('col-xs-4 va-m prn text-right').append(
         $('<span/>', {
@@ -515,19 +512,27 @@
    );
   }
 
-  function loadList() {
-   if (((offset + limit) < total) && !running) {
+  function loadList(strict) {
+   if ((((offset + limit) < total) || strict) && !running) {
     running = true;
+
+    var filters = [];
+
+    filters.push('offset=' + (limit && !strict ? offset + limit : 0));
+
+    $('#filter-form').find('input, select').each(function() {
+     if (($(this).is('input') && $(this).val().length) || ($(this).is('select') && $(this).val() != '0')) {
+      filters.push($(this).attr('name').replace('filter-', '') + '=' + $(this).val());
+     }
+    });
 
     $.ajax({
      'type': 'GET',
      'url': '@url()',
-     'data': {
-      'offset': limit ? offset + limit : 0
-     }
+     'data': filters.join('&')
     }).done(function (result) {
      if (result && result.rows) {
-      if (!limit) {
+      if (!limit || strict) {
        $container.empty();
       }
 
@@ -557,6 +562,35 @@
    if (c + 50 > t) {
     loadList();
    }
+  });
+
+  $('#edit-form').submit(function(e) {
+   e.preventDefault();
+
+   $.ajax({
+    'type': $(this).attr('method'),
+    'url': $(this).attr('action') + '/' + $('#id').val(),
+    'data': $(this).serialize()
+   }).done(function(result) {
+    if (result.success) {
+     var title = $('#title').val();
+     $('.mix[data-id="' + $('#id').val() + '"]').find('h6').text(title.length ? title : '&nbsp;');
+     $('#edit-dialog').modal('hide');
+    }
+
+    new PNotify({
+     title: "@lang('message.result', 'İşlem Sonucu')",
+     text: result.text,
+     type: result.success ? 'success' : 'error',
+     buttons: {
+      closer: true,
+      sticker: false
+     },
+     history: {
+      history: false
+     }
+    });
+   });
   });
 
   function event() {
@@ -590,34 +624,6 @@
        }
       });
      }
-    });
-   });
-
-   $('#edit-form').submit(function(e) {
-    e.preventDefault();
-
-    $.ajax({
-     'type': $(this).attr('method'),
-     'url': $(this).attr('action') + '/' + $('#id').val(),
-     'data': $(this).serialize()
-    }).done(function(result) {
-     if (result.success) {
-      $('.mix[data-id="' + $('#id').val() + '"]').find('h6').text($('#title').val());
-      $('#edit-dialog').modal('hide');
-     }
-
-     new PNotify({
-      title: "@lang('message.result', 'İşlem Sonucu')",
-      text: result.text,
-      type: result.success ? 'success' : 'error',
-      buttons: {
-       closer: true,
-       sticker: false
-      },
-      history: {
-       history: false
-      }
-     });
     });
    });
 
@@ -997,7 +1003,7 @@
       $('body').removeClass('mfp-bg-open');
      },
      elementParse: function (item) {
-      var s;
+      var ext;
 
       // Function will fire for each target element
       // "item.el" is a target DOM element (if present)
@@ -1011,10 +1017,10 @@
         'autoplay': true
        }).appendTo($(item.src).empty());
 
-       for (s in info.sources) {
+       for (ext in info.sources) {
         $('<source/>', {
-         'src': info.sources[s],
-         'type': 'audio/' + s
+         'src': info.sources[ext],
+         'type': 'audio/' + ext
         }).appendTo(audio);
        }
       } else if (info.role == 'video') {
@@ -1025,10 +1031,10 @@
         'autoplay': true
        }).appendTo($(item.src).empty());
 
-       for (s in info.sources) {
+       for (ext in info.sources) {
         $('<source/>', {
-         'src': info.sources[s],
-         'type': 'video/' + s
+         'src': info.sources[ext],
+         'type': 'video/' + ext
         }).appendTo(video);
        }
       }
@@ -1036,6 +1042,12 @@
     }
    });
   }
+
+  $('#filter-form').submit(function(e) {
+   e.preventDefault();
+
+   loadList(true);
+  });
  });
  //]]>
 </script>
