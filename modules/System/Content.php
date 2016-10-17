@@ -833,7 +833,7 @@ class Content extends Controller {
      'default' => array(
       'image' => array_get($params, 'poster.default.image'),
       'file' => array_get($params, 'poster.default.file'),
-      'movie' => array_get($params, 'poster.default.movie'),
+      'video' => array_get($params, 'poster.default.video'),
       'audio' => array_get($params, 'poster.default.audio'),
       'link' => array_get($params, 'poster.default.link')
      ),

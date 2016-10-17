@@ -411,7 +411,14 @@ class Media extends Content {
      $poster->image = $poster->image->size($width, $height);
     }
    } elseif (!strlen($poster->image)) {
-    $default = array_get($params, 'poster.default.' . $row->role, array_get($params, 'poster.default'));
+    //Default image
+    $default = null;
+
+    if (isset($params['poster']['default'][$row->role]) && !is_array($params['poster']['default'][$row->role])) {
+     $default = $params['poster']['default'][$row->role];
+    } elseif (isset($params['poster']['default']) && !is_array($params['poster']['default'])) {
+     $default = $params['poster']['default'];
+    }
 
     if ($default instanceof File) {
      $poster->image = Picture::file($default);
