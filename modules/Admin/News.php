@@ -254,7 +254,7 @@ class News {
 
     $this->saveMedia($id, input('media_id'));
 
-    $this->saveTags($id, input('tags'));
+    $this->saveTags($id, explode(',', input('tags')));
    });
 
   //Set poster

@@ -254,7 +254,7 @@ class Estate {
 
     $this->saveMedia($id, input('media_id'));
 
-    $this->saveTags($id, input('tags'));
+    $this->saveTags($id, explode(',', input('tags')));
 
     //Incoming fields and values
     $fields = array();
