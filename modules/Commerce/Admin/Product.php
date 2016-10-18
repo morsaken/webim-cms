@@ -86,7 +86,7 @@ class Product {
   $manager->put('list',
    Content::init()
     ->only('type', 'product')
-    ->only('category', explode(',', input('categories')))
+    ->only('category', input('categories'))
     ->only(function($content) {
      if (input('id', 0) > 0) {
       $content->where('id', input('id', 0));
@@ -272,7 +272,7 @@ class Product {
      }
     }
 
-    $this->saveCategory($id, explode(',', input('category')));
+    $this->saveCategory($id, input('category'));
 
     $this->saveMeta($id, array(
      'poster_id' => $poster['id'],
@@ -290,9 +290,9 @@ class Product {
      'form_id' => input('meta-form_id', 0)
     ));
 
-    $this->saveMedia($id, explode(',', input('media_id')));
+    $this->saveMedia($id, input('media_id'));
 
-    $this->saveTags($id, explode(',', input('tags')));
+    $this->saveTags($id, input('tags'));
 
     //Incoming fields and values
     $fields = array();
@@ -434,7 +434,7 @@ class Product {
   //Return
   $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
-  $ids = array_filter(explode(',', input('id')), function($id) {
+  $ids = array_filter(input('id'), function($id) {
    return (int) $id > 0;
   });
 

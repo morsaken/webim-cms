@@ -228,14 +228,14 @@ class Language {
   $list = array();
   $values = array();
 
-  foreach (explode(',', input('paths')) as $path) {
+  foreach (input('paths') as $path) {
    $fullPath = (($path == 'modules') ? 'modules' : 'views.' . $path . '.' . conf($path . '.' . $alias . '.template', 'default'));
 
    $values = array_merge_distinct($values, Lang::crawl(File::path($fullPath)));
   }
 
-  foreach ($values as $key => $values) {
-   $list[$key] = array_dot($values);
+  foreach ($values as $key => $value) {
+   $list[$key] = array_dot($value);
   }
 
   return array_to($list);

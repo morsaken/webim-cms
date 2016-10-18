@@ -151,7 +151,7 @@ class User {
      ));
     }
 
-    $this->saveGroups($id, explode(',', input('groups')));
+    $this->saveGroups($id, input('groups'));
    })->forData();
  }
 

@@ -204,9 +204,9 @@ class Currency {
 
   $settings = array();
 
-  $ratios = explode(',', input('ratio'));
+  $ratios = input('ratio');
 
-  foreach (explode(',', input('currency')) as $key => $currency) {
+  foreach (input('currency') as $key => $currency) {
    $settings['currency.' . $currency] = array_get($ratios, $key);
   }
 

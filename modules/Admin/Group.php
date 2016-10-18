@@ -122,7 +122,7 @@ class Group {
    ->set('version', input('version'))
    ->set('active', input('active', array('false', 'true')))
    ->save(function($id) use ($manager) {
-    $this->saveMembers($id, explode(',', input('members')));
+    $this->saveMembers($id, input('members'));
    })->forData();
  }
 

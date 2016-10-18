@@ -87,26 +87,26 @@ class ContentSettings {
    'adsense' => raw_input('google_adsense')
   );
 
-  foreach (explode(',', input('contact_title')) as $key => $contact) {
+  foreach (input('contact_title') as $key => $contact) {
    $contacts[] = array(
     'title' => $contact,
-    'address' => array_get(explode(',', input('contact_address')), $key),
-    'phone' => array_get(explode(',', input('contact_phone')), $key),
-    'fax' => array_get(explode(',', input('contact_fax')), $key),
-    'email' => array_get(explode(',', input('contact_email')), $key),
-    'web' => array_get(explode(',', input('contact_web')), $key)
+    'address' => array_get(input('contact_address'), $key),
+    'phone' => array_get(input('contact_phone'), $key),
+    'fax' => array_get(input('contact_fax'), $key),
+    'email' => array_get(input('contact_email'), $key),
+    'web' => array_get(input('contact_web'), $key)
    );
   }
 
-  foreach (explode(',', input('map_title')) as $key => $map) {
+  foreach (input('map_title') as $key => $map) {
    $maps[] = array(
     'title' => $map,
-    'lat' => array_get(explode(',', input('map_lat')), $key),
-    'lon' => array_get(explode(',', input('map_lon')), $key),
-    'zoom' => array_get(explode(',', input('map_zoom')), $key),
-    'marker_lat' => array_get(explode(',', input('map_marker_lat')), $key),
-    'marker_lon' => array_get(explode(',', input('map_marker_lon')), $key),
-    'marker_content' => array_get(explode(',', input('map_marker_content')), $key),
+    'lat' => array_get(input('map_lat'), $key),
+    'lon' => array_get(input('map_lon'), $key),
+    'zoom' => array_get(input('map_zoom'), $key),
+    'marker_lat' => array_get(input('map_marker_lat'), $key),
+    'marker_lon' => array_get(input('map_marker_lon'), $key),
+    'marker_content' => array_get(input('map_marker_content'), $key)
    );
   }
 

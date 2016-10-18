@@ -217,7 +217,7 @@ class Portfolio {
      ->set('order', input('order', 1))
      ->set('active', input('active', array('false', 'true')))
      ->save(function ($id) use ($manager, &$poster, $posts, &$langs) {
-      $this->saveCategory($id, explode(',', input('category')));
+      $this->saveCategory($id, input('category'));
 
       if ($file = $manager->app->request->file('poster-file')) {
        //Upload and save
@@ -240,7 +240,7 @@ class Portfolio {
        'client' => input('meta-client')
       ));
 
-      $this->saveMedia($id, explode(',', input('media_id')));
+      $this->saveMedia($id, input('media_id'));
 
       $this->saveOrders($id);
 
@@ -260,7 +260,7 @@ class Portfolio {
         ->set('version', $post['version'])
         ->set('active', input('active', array('false', 'true')))
         ->save(function ($id) use ($manager, $lang, $poster, $post, $parent_id) {
-         $this->saveCategory($id, explode(',', input('category')));
+         $this->saveCategory($id, input('category'));
 
          $this->saveMeta($id, array(
           'poster_id' => $poster['id'],
@@ -269,7 +269,7 @@ class Portfolio {
           'content' => $post['content']
          ));
 
-         $this->saveMedia($id, explode(',', input('media_id')));
+         $this->saveMedia($id, input('media_id'));
          $this->setOrders('portfolio', $lang, null, $id, input('order', 1), false);
         });
 
