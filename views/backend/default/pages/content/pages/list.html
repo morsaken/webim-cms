@@ -139,7 +139,7 @@
  </aside>
 </section>
 
-@include('list.duplicate', ['url' => url($prefix . 'content/pages/duplicate')])
+@include('list.duplicate', ['url' => url($prefix . 'content/pages/duplicate'), 'categoryless' => true])
 @include('list.delete', ['url' => url($prefix . 'content/pages/form')])
 @stop
 

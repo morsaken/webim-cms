@@ -197,11 +197,6 @@ class Category {
 
   $parents = array();
 
-  $parents[] = array(
-   'id' => 0,
-   'title' => '.'
-  );
-
   foreach (Content::init()
             ->where('id', '<>', input('id', 0))
             ->only('type', 'category')
@@ -293,20 +288,21 @@ class Category {
 
   if (count($ids)) {
    $duplicated = 0;
+   $error = 0;
 
    foreach ($ids as $id) {
-    $duplicate = Content::duplicate($id, input('lang'));
+    $duplicate = Content::duplicate($id, input('lang'), input('category'));
 
     if ($duplicate->success()) {
      $duplicated++;
     } else {
-     return $duplicate->forData();
+     $error++;
     }
    }
 
    if ($duplicated) {
     $message->success = true;
-    $message->text = lang('admin.message.duplicated_total', [$duplicated], '%s kayıt çoklandı...');
+    $message->text = lang('admin.message.duplicated_total', [$error, $duplicated], '%s hata ile %s kayıt çoklandı...');
    }
   }
 

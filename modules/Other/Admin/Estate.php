@@ -339,8 +339,10 @@ class Estate {
 
  public function duplicate($lang = null) {
   $manager = static::$manager;
-
   $manager->app->response->setContentType('json');
+
+  //Return
+  $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
   $ids = array_filter(explode(',', input('id')), function($id) {
    return (int) $id > 0;
@@ -348,25 +350,25 @@ class Estate {
 
   if (count($ids)) {
    $duplicated = 0;
+   $error = 0;
 
    foreach ($ids as $id) {
-    $duplicate = Content::duplicate($id, input('lang'));
+    $duplicate = Content::duplicate($id, input('lang'), input('category'));
 
     if ($duplicate->success()) {
      $duplicated++;
     } else {
-     return $duplicate->forData();
+     $error++;
     }
    }
 
    if ($duplicated) {
-    return Message::result(lang('admin.message.duplicated_total', [$duplicated], '%s kayıt çoklandı...'), true)->forData();
-   } else {
-    return Message::result(lang('message.nothing_done'))->forData();
+    $message->success = true;
+    $message->text = lang('admin.message.duplicated_total', [$error, $duplicated], '%s hata ile %s kayıt çoklandı...');
    }
-  } else {
-   return Message::result(lang('message.nothing_done'))->forData();
   }
+
+  return $message->forData();
  }
 
 }

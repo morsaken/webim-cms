@@ -348,10 +348,11 @@ class Content extends Controller {
   *
   * @param int $id
   * @param string $language
+  * @param array $category
   *
   * @return Message
   */
- public static function duplicate($id, $language) {
+ public static function duplicate($id, $language, $category = array()) {
   //Default return
   $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
@@ -361,17 +362,21 @@ class Content extends Controller {
   if ($content) {
    if ($language != array_get($content, 'language')) {
     //Meta
-    $meta = DB::table('sys_content_meta')->where('content_id', $id)->get();
+    $meta = array();
+
+    foreach (DB::table('sys_content_meta')->where('content_id', $id)->get() as $row) {
+     $meta[array_get($row, 'key')] = array_get($row, 'value');
+    }
 
     //Media
-    $media = DB::table('sys_content_media')->where('content_id', $id)->get();
+    $media = array();
 
-    //Start transaction
-    DB::beginTransaction();
+    foreach (DB::table('sys_content_media')->where('content_id', $id)->orderBy('order')->get() as $row) {
+     $media[] = array_get($row, 'media_id');
+    }
 
     try {
-     //Duplicate
-     $insert = DB::table('sys_content')->insertGetId(array(
+     $save = static::init()->set(array(
       'type' => array_get($content, 'type'),
       'language' => $language,
       'url' => array_get($content, 'url'),
@@ -379,43 +384,26 @@ class Content extends Controller {
       'publish_date' => array_get($content, 'publish_date'),
       'expire_date' => array_get($content, 'expire_date'),
       'active' => array_get($content, 'active')
-     ));
+     ))->save();
 
-     if ($insert->success) {
-      $new_id = $insert->return;
+     if ($save->success()) {
+      $id = $save->returns('id');
 
-      foreach ($meta as $row) {
-       DB::table('sys_content_meta')->insert(array(
-        'content_id' => $new_id,
-        'key' => array_get($row, 'key'),
-        'value' => array_get($row, 'value')
-       ));
-      }
-
-      foreach ($media as $row) {
-       DB::table('sys_content_media')->insert(array(
-        'content_id' => $new_id,
-        'media_id' => array_get($row, 'media_id'),
-        'order' => array_get($row, 'order'),
-        'name' => array_get($row, 'name')
-       ));
-      }
+      static::init()->saveCategory($id, $category);
+      static::init()->saveMeta($id, $meta);
+      static::init()->saveMedia($id, $media);
+     } else {
+      throw new \ErrorException($save->text());
      }
 
      $message->success = true;
-     $message->text = lang('admin.message.duplicated_successfully', 'İçerik çoklandı...');
-
-     //Commit
-     DB::commit();
-    } catch (\Exception $e) {
-     $message->text = lang('message.an_error_occured', [$e->getMessage()], 'Bir hata oluştu: %s');
-
-     //Rollback
-     DB::rollBack();
+     $message->text = $save->text();
+    } catch (\ErrorException $e) {
+     $message->text = $e->getMessage();
     }
+   } else {
+    $message->text = lang('admin.message.given_language_same_as_content_language', 'Çoklanacak dil ile seçilen dil aynı!');
    }
-
-   $message->text = lang('admin.message.given_language_same_as_content_language', 'Çoklanacak dil ile seçilen dil aynı!');
   } else {
    $message->text = lang('message.content_not_found', 'İçerik bulunamadı!');
   }

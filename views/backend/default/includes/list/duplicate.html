@@ -19,6 +19,12 @@
        @endforeach
       </select>
      </div>
+     @if (!isset($categoryless) || !$categoryless)
+     <div class="form-group">
+      <label>@lang('admin.label.category', 'Kategori')</label>
+      <select id="duplicate-category" name="duplicate-category[]" class="select2" multiple size="5"></select>
+     </div>
+     @endif
     </div>
     <div class="modal-footer">
      <button type="submit" class="btn btn-sm btn-info">
@@ -42,6 +48,42 @@
  $(function() {
   'use strict';
 
+  function categories(callback) {
+   var lang = $('#duplicate-language');
+   var cat = $('#duplicate-category');
+
+   if (cat.length && (cat.data('lang') != lang.val())) {
+    cat.empty();
+
+    $.ajax({
+     'url': "@url($prefix . 'content/categories/parents')",
+     'data': {
+      'language': lang.val()
+     }
+    }).done(function (result) {
+     if (result) {
+      for (var key in result) {
+       $('<option/>', {
+        'value': result[key]['id']
+       }).html(result[key]['title']).appendTo(cat);
+      }
+
+      cat.data('lang', lang.val());
+
+      if (callback) {
+       callback();
+      }
+     }
+    });
+   } else if (callback) {
+    callback();
+   }
+  }
+
+  $('#duplicate-language').change(function() {
+   categories();
+  });
+
   $('a[href="#duplicate"]').click(function() {
    var ids = [];
 
@@ -61,8 +103,10 @@
 
    if (ids.length > 0) {
     if ($('#duplicate-language > option').length > 1) {
-     $('#duplicate-ids').val(ids.join(','));
-     $('#duplicate-dialog').modal();
+     categories(function() {
+      $('#duplicate-ids').val(ids.join(','));
+      $('#duplicate-dialog').modal();
+     });
     } else {
      message("@lang('admin.message.only_one_language_in_system', 'Sistemde zaten tek dil var!')");
     }
@@ -80,7 +124,8 @@
      url: $('#duplicate-form').attr('action'),
      data: {
       'lang': $('#duplicate-language').val(),
-      'id': $('#duplicate-ids').val()
+      'id': $('#duplicate-ids').val(),
+      'category': $('#duplicate-category').val()
      }
     }).done(function(result) {
      result.onAfterClose = function() {
