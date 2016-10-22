@@ -281,7 +281,7 @@ class Page {
   //Return
   $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
-  $ids = array_filter(input('id'), function($id) {
+  $ids = array_filter(explode(',', input('id')), function($id) {
    return (int) $id > 0;
   });
 

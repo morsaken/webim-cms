@@ -271,7 +271,7 @@ class Event {
 
   $manager->app->response->setContentType('json');
 
-  $ids = array_filter(input('id'), function($id) {
+  $ids = array_filter(explode(',', input('id')), function($id) {
    return (int) $id > 0;
   });
 
