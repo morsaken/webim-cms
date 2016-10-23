@@ -228,7 +228,7 @@ class Language {
   $list = array();
   $values = array();
 
-  foreach (input('paths') as $path) {
+  foreach (explode(',', input('paths')) as $path) {
    $fullPath = (($path == 'modules') ? 'modules' : 'views.' . $path . '.' . conf($path . '.' . $alias . '.template', 'default'));
 
    $values = array_merge_distinct($values, Lang::crawl(File::path($fullPath)));

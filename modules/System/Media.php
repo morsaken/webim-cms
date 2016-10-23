@@ -412,12 +412,14 @@ class Media extends Content {
     }
    } elseif (!strlen($poster->image)) {
     //Default image
-    $default = null;
+    $default = array_get($params, 'poster.default.' . $row->role);
 
-    if (isset($params['poster']['default'][$row->role]) && !is_array($params['poster']['default'][$row->role])) {
-     $default = $params['poster']['default'][$row->role];
-    } elseif (isset($params['poster']['default']) && !is_array($params['poster']['default'])) {
-     $default = $params['poster']['default'];
+    if (is_array($default)) {
+     $default = array_get($params, 'poster.default');
+    }
+
+    if (is_array($default)) {
+     $default = null;
     }
 
     if ($default instanceof File) {

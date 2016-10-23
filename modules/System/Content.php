@@ -376,7 +376,9 @@ class Content extends Controller {
     }
 
     try {
-     $save = static::init()->set(array(
+     $content = static::init();
+
+     $save = $content->set(array(
       'type' => array_get($content, 'type'),
       'language' => $language,
       'url' => array_get($content, 'url'),
@@ -389,9 +391,9 @@ class Content extends Controller {
      if ($save->success()) {
       $id = $save->returns('id');
 
-      static::init()->saveCategory($id, $category);
-      static::init()->saveMeta($id, $meta);
-      static::init()->saveMedia($id, $media);
+      $content->saveCategory($id, $category);
+      $content->saveMeta($id, $meta);
+      $content->saveMedia($id, $media);
      } else {
       throw new \ErrorException($save->text());
      }
