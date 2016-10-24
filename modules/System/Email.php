@@ -39,18 +39,18 @@ class Email {
   $this->mailer->isHTML(true);
 
   //SMTP Mailing
-  if (conf('email.smtp', 'no') == 'yes') {
+  if (conf('email.smtp.active', 'no') == 'yes') {
    $this->mailer->isSMTP();
-   $this->mailer->Host = conf('email.smtp_host');
-   $this->mailer->Port = conf('email.smtp_port');
+   $this->mailer->Host = conf('email.smtp.host');
+   $this->mailer->Port = conf('email.smtp.port');
 
-   if (in_array(conf('email.smtp_secure'), array('ssl', 'tls'))) {
-    $this->mailer->SMTPSecure = conf('email.smtp_secure');
+   if (in_array(conf('email.smtp.secure'), array('ssl', 'tls'), true)) {
+    $this->mailer->SMTPSecure = conf('email.smtp.secure');
    }
 
-   $this->mailer->SMTPAuth = (conf('email.smtp_auth') == 'yes');
-   $this->mailer->Username = conf('email.smtp_user');
-   $this->mailer->Password = conf('email.smtp_pass');
+   $this->mailer->SMTPAuth = (conf('email.smtp.auth') == 'yes');
+   $this->mailer->Username = conf('email.smtp.user');
+   $this->mailer->Password = conf('email.smtp.pass');
   }
 
   //Set default from
