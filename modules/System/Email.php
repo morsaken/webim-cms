@@ -238,7 +238,7 @@ class Email {
    $message->success = true;
    $message->text = lang('message.email_sent', 'E-posta iletildi...');
   } else {
-   $message->text = $this->mailer->ErrorInfo;
+   $message->text = lang('message.email_not_sent', [$this->mailer->ErrorInfo], 'E-posta iletim hatası: "%s"');
   }
 
   return $message;
@@ -300,7 +300,7 @@ class Email {
 
   if (preg_match_all('/{{img\(([a-zA-Z0-9\-_\/.]+)\)}}/s', $content, $matches)) {
    foreach ($matches[1] as $src) {
-    $path = View::getPath() . 'layouts';
+    $path = View::getPath()->folder('layouts');
     $image = File::in($path)->file($src);
 
     if ($image->exists()) {
