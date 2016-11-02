@@ -265,6 +265,10 @@ if ($.ui){
 })(jQuery);
 
 (function($) {
+ var lang = $('html').attr('lang');
+ moment.locale(lang);
+ //moment.tz.setDefault('Europe/Istanbul');
+
  $('input[name="check-all"]', '#list > table').click(function() {
   $('input[name="check[]"]', '#list > table').click(function() {
    $('input[name="check-all"]', '#list > table').prop('checked',

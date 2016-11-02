@@ -119,7 +119,7 @@ class Group {
    ->set('role', input('role', array('sys', 'app')))
    ->set('name', input('name'))
    ->set('first_name', input('first_name'))
-   ->set('version', input('version'))
+   ->set('version', input('version', 0))
    ->set('active', input('active', array('false', 'true')))
    ->save(function($id) use ($manager) {
     $this->saveMembers($id, input('members'));

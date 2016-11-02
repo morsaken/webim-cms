@@ -86,6 +86,16 @@ class ContentSettings {
    'analytics' => raw_input('google_analytics'),
    'adsense' => raw_input('google_adsense')
   );
+  $logins = array(
+   'facebook' => array(
+    'app_id' => input('facebook_app_id'),
+    'secret' => input('facebook_secret')
+   ),
+   'twitter' => array(
+    'app_id' => input('twitter_app_id'),
+    'secret' => input('twitter_secret')
+   )
+  );
 
   foreach (input('contact_title') as $key => $contact) {
    $contacts[] = array(
@@ -115,7 +125,8 @@ class ContentSettings {
    'contact' => $contacts,
    'map' => $maps,
    'social' => $socials,
-   'google' => $google
+   'google' => $google,
+   'login' => $logins
   );
 
   //Remove first

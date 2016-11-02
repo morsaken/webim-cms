@@ -213,7 +213,7 @@ class Portfolio {
 
     $save = $save->set('title', array_get(array_first($posts), 'title'))
      ->set('publish_date', Carbon::now())
-     ->set('version', input('version'))
+     ->set('version', input('version', 0))
      ->set('order', input('order', 1))
      ->set('active', input('active', array('false', 'true')))
      ->save(function ($id) use ($manager, &$poster, $posts, &$langs) {

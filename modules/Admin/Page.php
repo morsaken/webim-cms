@@ -167,7 +167,7 @@ class Page {
    ->set('publish_date', Carbon::createFromTimestamp(strtotime(input('publish_date'))))
    ->set('expire_date', (strlen(input('expire_date')) ? Carbon::createFromTimestamp(strtotime(input('expire_date'))) : null))
    ->set('order', (input('order', 0) > 0 ? input('order', 0) : null))
-   ->set('version', input('version'))
+   ->set('version', input('version', 0))
    ->set('active', input('active', array('false', 'true')))
    ->save(function($id) use ($manager) {
     $this->saveOrders($id);

@@ -45,7 +45,7 @@
        <td title="{{ $row->url }}">
         <a href="@url('#current/form/' . $row->id)">{{{ $row->title }}}</a>
        </td>
-       <td class="text-center hidden-xs" title="{{{ date_show($row->meta->date, 'long', true) }}}">{{{ date_ago($row->meta->date) }}}</td>
+       <td class="text-center hidden-xs" data-livestamp="{{ strtotime($row->meta->date) }}" title="{{{ date_show($row->meta->date, 'long', true) }}}">{{{ date_ago($row->meta->date) }}}</td>
        <td class="text-center">
         <div class="btn-group text-right">
          <button type="button" class="btn btn-{{ $row->active ? 'primary' : 'inverse' }} btn-xs br2 dropdown-toggle" data-toggle="dropdown" aria-expanded="false">

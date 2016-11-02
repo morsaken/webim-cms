@@ -140,7 +140,7 @@ class Brand {
    ->set('url', Content::makeUrl('', input('title')))
    ->set('title', input('title'))
    ->set('publish_date', Carbon::now())
-   ->set('version', input('version'))
+   ->set('version', input('version', 0))
    ->set('active', input('active', array('true', 'false')))
    ->save(function($id) use ($manager, &$poster) {
     if ($file = $manager->app->request->file('poster-file')) {

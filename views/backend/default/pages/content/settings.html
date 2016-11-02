@@ -22,6 +22,9 @@
      <li>
       <a href="#google-tab" data-toggle="tab">@lang('admin.menu.google', 'Google')</a>
      </li>
+     <li>
+      <a href="#logins-tab" data-toggle="tab">@lang('admin.menu.logins', 'Girişler')</a>
+     </li>
     </ul>
    </div>
    <div class="panel-body p20 pb10">
@@ -519,6 +522,48 @@
           <i class="fa fa-globe"></i>
          </span>
         </label>
+       </div>
+      </div>
+      <div id="logins-tab" class="tab-pane fade">
+       <div class="section mb15 row">
+        <div class="col-md-6">
+         <h6 class="fw400">@lang('admin.label.facebook_app_id', 'Facebook App Id')</h6>
+         <label class="field prepend-icon">
+          <input type="text" id="facebook_app_id" name="facebook_app_id" class="gui-input" value="{{{ conf('login.facebook.app_id') }}}">
+          <span class="field-icon">
+           <i class="fa fa-lock"></i>
+          </span>
+         </label>
+        </div>
+        <div class="col-md-6">
+         <h6 class="fw400">@lang('admin.label.facebook_secret', 'Facebook Secret')</h6>
+         <label class="field prepend-icon">
+          <input type="text" id="facebook_secret" name="facebook_secret" class="gui-input" value="{{{ conf('login.facebook.secret') }}}">
+          <span class="field-icon">
+           <i class="fa fa-lock"></i>
+          </span>
+         </label>
+        </div>
+       </div>
+       <div class="section mb15 row">
+        <div class="col-md-6">
+         <h6 class="fw400">@lang('admin.label.twitter_app_id', 'Twitter App Id')</h6>
+         <label class="field prepend-icon">
+          <input type="text" id="twitter_app_id" name="twitter_app_id" class="gui-input" value="{{{ conf('login.twitter.app_id') }}}">
+          <span class="field-icon">
+           <i class="fa fa-lock"></i>
+          </span>
+         </label>
+        </div>
+        <div class="col-md-6">
+         <h6 class="fw400">@lang('admin.label.twitter_secret', 'Twitter Secret')</h6>
+         <label class="field prepend-icon">
+          <input type="text" id="twitter_secret" name="twitter_secret" class="gui-input" value="{{{ conf('login.twitter.secret') }}}">
+          <span class="field-icon">
+           <i class="fa fa-lock"></i>
+          </span>
+         </label>
+        </div>
        </div>
       </div>
       <hr class="short alt">

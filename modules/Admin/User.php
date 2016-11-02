@@ -140,7 +140,7 @@ class User {
    ->set('email', input('email'))
    ->set('first_name', input('first_name'))
    ->set('last_name', input('last_name'))
-   ->set('version', input('version'))
+   ->set('version', input('version', 0))
    ->set('active', input('active', array('false', 'true')))
    ->save(function($id) {
     if (!input('id', 0) && !strlen(raw_input('meta-pass'))) {

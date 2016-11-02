@@ -26,6 +26,7 @@
        </th>
        <th class="text-center w40 hidden-xs sorting sorting_desc" data-orderby="id" data-order="desc">#ID</th>
        <th class="text-center w100 hidden-xs">@lang('admin.label.languages', 'Diller')</th>
+       <th class="text-center w100 hidden-xs sorting" data-orderby="created_at">@lang('admin.label.created_at', 'Oluşturma')</th>
        <th class="sorting" data-orderby="title">@lang('admin.label.title', 'Başlık')</th>
        <th class="w150 hidden-xs">@lang('admin.label.category', 'Kategori')</th>
        <th class="w100 text-center sorting" data-orderby="active">@lang('admin.label.status', 'Durum')</th>
@@ -42,6 +43,7 @@
        </td>
        <td class="text-center hidden-xs">{{ $row->id }}</td>
        <td class="text-center hidden-xs">{{{ $row->languages }}}</td>
+       <td class="text-center hidden-xs" data-livestamp="{{ strtotime($row->created_at) }}" title="{{{ date_show($row->created_at, 'long', true) }}}">{{{ date_ago($row->created_at) }}}</td>
        <td title="{{ $row->url }}">
         <a href="@url('#current/form/' . $row->id)">{{{ $row->title }}}</a>
        </td>

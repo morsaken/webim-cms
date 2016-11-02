@@ -158,7 +158,7 @@ class Category {
    ->set('title', input('title'))
    ->set('publish_date', Carbon::now())
    ->set('order', (input('order', 0) > 0 ? input('order', 0) : null))
-   ->set('version', input('version'))
+   ->set('version', input('version', 0))
    ->set('active', input('active', array('false', 'true')))
    ->save(function($id) use ($manager, &$poster) {
     if ($file = $manager->app->request->file('poster-file')) {

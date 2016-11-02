@@ -254,7 +254,7 @@ class Product {
    ->set('title', input('title'))
    ->set('publish_date', Carbon::createFromTimestamp(strtotime(input('publish_date'))))
    ->set('expire_date', (strlen(input('expire_date')) ? Carbon::createFromTimestamp(strtotime(input('expire_date'))) : null))
-   ->set('version', input('version'))
+   ->set('version', input('version', 0))
    ->set('active', input('active', array('false', 'true')))
    ->save(function($id) use ($manager, &$poster) {
     if ($file = $manager->app->request->file('poster-file')) {

@@ -159,7 +159,7 @@ class Question extends Controller {
    'question.required' => 'Soruyu yazın!'
   ))->set('id', !is_null($id) ? $id : input('id', 0))
    ->set('question', input('question'))
-   ->set('version', input('version'))
+   ->set('version', input('version', 0))
    ->set('active', input('active', array('false', 'true')))
    ->save(function($id) use ($politicians) {
     DB::table('app_poll_politician_think')->where('question_id', $id)->delete();

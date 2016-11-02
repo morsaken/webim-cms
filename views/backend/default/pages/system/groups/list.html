@@ -42,7 +42,7 @@
         </label>
        </td>
        <td class="text-center hidden-xs">{{ $row->id }}</td>
-       <td class="text-center hidden-xs" title="{{{ date_show($row->created_at, 'long', true) }}}">{{{ date_ago($row->created_at) }}}</td>
+       <td class="text-center hidden-xs" data-livestamp="{{ strtotime($row->created_at) }}" title="{{{ date_show($row->created_at, 'long', true) }}}">{{{ date_ago($row->created_at) }}}</td>
        <td title="{{ $row->name }}">
         <a href="@url('#current/form/' . $row->id)">{{{ $row->first_name }}}</a>
        </td>

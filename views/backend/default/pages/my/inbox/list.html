@@ -199,7 +199,7 @@
       <span class="badge badge-warning mr10 fs11"> Work </span>
      </td>
      <td class="hidden-xs">{{ $row->attachmentTotal ? '<i class="fa fa-paperclip fs15 text-muted va-b"></i>' : '&nbsp;' }}</td>
-     <td class="text-right fw600" title="{{{ date_show($row->date, 'long', true) }}}">{{{ date_show($row->date, '{day} {month_name}') }}}</td>
+     <td class="text-right fw600" data-livestamp="{{ strtotime($row->date) }}" title="{{{ date_show($row->date, 'long', true) }}}">{{{ date_show($row->date, '{day} {month_name}') }}}</td>
     </tr>
     @endforeach
    </tbody>
