@@ -536,7 +536,7 @@
     $('<div/>', {
      'id': 'meta-' + field.property_id
     }).addClass('p10 br-b').html(property_meta.replace(/[\n]/g, '<br>')),
-    $('<div/>').addClass('p10').html(meta.replace(/[\n]/g, '<br>'))
+    $('<div/>').addClass('p10').html(meta.replace(/[\n]/g, '<br>').replace(/[\s]/g, '&nbsp;'))
    ),
    $('<td/>').addClass('col-sm-2 text-center').append(
     $('<a/>', {

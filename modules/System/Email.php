@@ -229,12 +229,11 @@ class Email {
  public function send($alsoMail = true) {
   $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
-  //Send
-  if ($this->mailer->Send()) {
-   if ($alsoMail) {
-    Mail::create($this->mailer->Subject, $this->html)->to('forsaken')->send();
-   }
+  if ($alsoMail) {
+   Mail::create($this->mailer->Subject, $this->html)->to('forsaken')->send();
+  }
 
+  if ($this->mailer->Send()) {
    $message->success = true;
    $message->text = lang('message.email_sent', 'E-posta iletildi...');
   } else {

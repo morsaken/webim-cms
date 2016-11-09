@@ -17,7 +17,7 @@ App::make(array(
  'mode' => 'development',
  'root' => PUB_ROOT,
  'ext' => EXT
-))->with('lang')->with('cache')->with('db')->with(function() {
+))->with(array('lang', 'cache', 'db'))->with(function() {
  Settings::init()->setGlobalConf();
  Access::write();
 })->with(function() {
