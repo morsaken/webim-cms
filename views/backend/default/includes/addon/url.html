@@ -1,7 +1,7 @@
 <div class="field mt10">
  <label class="fw600">@lang('admin.label.url', 'URL'):</label>
- @if (isset($base))<span id="base-url">@url($base)</span>/@endif<a href="#edit-url">{{{ strlen($url) ? $url : 'untitled' }}}</a>
- @if (isset($content->url) && isset($base) && (!isset($hideLink) || !$hideLink))
+ @if (isset($base))<span id="base-url">@url($base)</span>/@endif<span id="parent-url">{{ $parentUrl or '' }}</span><a href="#edit-url">{{{ strlen($url) ? $url : 'untitled' }}}</a>
+ @if (isset($content->url) && isset($base) && (isset($link) && $link))
  <a class="ml10 text-danger" href="#open-url" data-base-url="@url($base)" title="@lang('admin.hint.open_url', 'URL\'yi görüntüle')">
   <i class="fa fa-link"></i>
  </a>
@@ -70,10 +70,6 @@
   url += prefix;
   @endif
 
-  if ($('#url').data('prefix') && $('#url').data('prefix').length) {
-   url += $('#url').data('prefix') + '/';
-  }
-
   url += u;
 
   return url;
@@ -87,10 +83,6 @@
     url = url.substring(11);
    }
   @endif
-
-  if ($('#url').data('prefix') && $('#url').data('prefix').length) {
-   url = url.substring($('#url').data('prefix').length + 1);
-  }
 
   return url;
  };
@@ -137,7 +129,7 @@
 
  $('a[href="#open-url"]').click(function() {
   if ($('#id').val() > 0) {
-   window.open($(this).data('base-url') + '/' + $('#url').val());
+   window.open($(this).data('base-url') + '/' + $('#parent-url').text() + $('#url').val());
   }
 
   return false;

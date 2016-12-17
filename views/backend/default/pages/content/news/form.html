@@ -64,7 +64,7 @@
            <i class="fa fa-tag"></i>
           </span>
          </label>
-         @include('addon.url', ['base' => 'news', 'url' => isset($content->url) ? $content->url : '', 'withDate' => (conf('news.url_with_date', 'no') == 'yes')])
+         @include('addon.url', ['base' => 'news', 'url' => (isset($content->url) ? $content->url : ''), 'link' => true, 'withDate' => (conf('news.url_with_date', 'no') == 'yes')])
         </div>
         <div class="section mb15">
          <h6 class="fw400">@lang('admin.label.summary', 'Özet')</h6>
@@ -232,8 +232,8 @@
      inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
     }
    },
-   dateFormat: 'dd-mm-yy',
-   firstDay: 1,
+   dateFormat: '{{ str_replace('{day}', 'dd', str_replace('{month}', 'mm', str_replace('{year}', 'yy', lang('date.format.short')))) }}',
+   firstDay: @lang('date.first_day', 1),
    onClose: function( selectedDate ) {
     $('#publish_date').datepicker('option', 'maxDate', selectedDate);
     $('#expire_date').datepicker('option', 'minDate', selectedDate);

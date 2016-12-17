@@ -2,7 +2,7 @@
 return array (
   'label' => 
   array (
-    'phone' => 'Telefon',
+    'phone' => 'Phone',
     'fax' => 'Faks',
     'write_us' => 'Bize Yazın',
     'your_name' => 'İsminiz',

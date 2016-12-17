@@ -86,6 +86,72 @@ function cascade($list, $simple = true, $level = 0) {
 }
 
 /**
+ * Cascase page menu
+ *
+ * @param array $pages
+ * @param string $url
+ * @param null|int $parent_id
+ * @param int $level
+ *
+ * @return array
+ */
+function cascadePageMenu($url, $pages, $parent_id = null, $level = 0) {
+ $list = array();
+
+ foreach ($pages as $page) {
+  $use = false;
+
+  if ($parent_id) {
+   if ($page->parent_id == $parent_id) {
+    $use = true;
+   }
+  } elseif ($page->url == $url) {
+   $use = true;
+  }
+
+  if ($use) {
+   //Menu item
+   $menu = new \stdClass();
+   $menu->url = isset($page->full_url) ? $page->full_url : $page->url;
+   $menu->title = $page->title;
+   $menu->level = $level;
+
+   $list[$menu->url] = $menu;
+   $list += call_user_func(__FUNCTION__, $url, $pages, $page->id, ($level + 1));
+  }
+ }
+
+ return $list;
+}
+
+/**
+ * Page menu
+ *
+ * @param object $page
+ * @param array $pages
+ *
+ * @return array
+ */
+function makePageMenu($page, $pages) {
+ $root = $page;
+ $parent_id = $page->parent_id;
+
+ while ($parent_id) {
+  foreach ($pages as $item) {
+   if ($item->id == $parent_id) {
+    $root = $item;
+    $parent_id = $item->parent_id;
+   }
+  }
+ }
+
+ //Cascade menu list
+ $menu = cascadePageMenu($root->url, $pages);
+
+ return count($menu) > 1 ? $menu : array();
+}
+
+/**
  * Make pages
  *
  * @param array $pages
@@ -131,7 +197,7 @@ function makeMenu($menus, $sub = false, $init = true) {
  $html = array();
 
  if (count($menus) && ($sub || $init)) {
-  $html[] = '<ul class="nav ' . ($sub ? 'sub-nav' : 'sidebar-menu') .'">';
+  $html[] = '<ul class="nav ' . ($sub ? 'sub-nav' : 'sidebar-menu') . '">';
  }
 
  if ($init) {

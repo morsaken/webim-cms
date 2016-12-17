@@ -528,7 +528,7 @@
   var meta = field.meta || '-';
 
   $('<tr/>', {
-   'data-id': field.property_id
+   'data-id': field.id
   }).append(
    $('<td/>').addClass('col-sm-2').html('<i class="fa fa-info mr5"></i> ' + field.label + (field.name && field.name.length ? ' (' + field.name  + ')' : '')),
    $('<td/>').addClass('col-sm-2 text-center').html(field.type),

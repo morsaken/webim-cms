@@ -269,8 +269,8 @@
   var selectList = $('.admin-form select');
   selectList.each(function(i, e) {
    $(e).on('change', function() {
-    if ($(e).val() == "0") $(e).addClass("empty");
-    else $(e).removeClass("empty")
+    if ($(e).val() == '0') $(e).addClass('empty');
+    else $(e).removeClass('empty')
    });
   });
   selectList.each(function(i, e) {
@@ -333,8 +333,8 @@
      inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
     }
    },
-   dateFormat: 'dd-mm-yy',
-   firstDay: 1,
+   dateFormat: '{{ str_replace('{day}', 'dd', str_replace('{month}', 'mm', str_replace('{year}', 'yy', lang('date.format.short')))) }}',
+   firstDay: @lang('date.first_day', 1),
    onClose: function( selectedDate ) {
     $("#publish_date").datepicker("option", "maxDate", selectedDate);
     $("#expire_date").datepicker("option", "minDate", selectedDate);

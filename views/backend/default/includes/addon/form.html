@@ -2,7 +2,7 @@
 <div class="section mb15">
  <h6 class="fw400">@lang('admin.label.form', 'Form')</h6>
  <label class="field select">
-  <select id="meta-form_id" name="meta-form_id">
+  <select id="{{ $id or 'meta' }}-form_id" name="{{ $id or 'meta' }}-form_id">
    <option value="0">@lang('admin.label.pick', 'Seçin')</option>
    @foreach ($forms as $formId => $formTitle)
    <option value="{{ $formId }}"{{ $formId == $form_id ? ' selected="selected"' : '' }}>{{{ $formTitle }}}</option>
@@ -12,7 +12,7 @@
  </label>
 </div>
 @endif
-<div id="form-elements"></div>
+<div id="{{ $id or 'form' }}-elements"></div>
 
 @section('script')
 @parent
@@ -27,7 +27,7 @@
    $('#language').change(function() {
     language = $(this).val();
 
-    $('#meta-form_id > option').each(function() {
+    $('#{{ $id or 'meta' }}-form_id > option').each(function() {
      if ($(this).attr('value') != '0') {
       $(this).remove();
      }
@@ -44,7 +44,7 @@
      for (var k in forms) {
       $('<option/>', {
        'value': forms[k].id
-      }).text(forms[k].label).appendTo('#meta-form_id')
+      }).text(forms[k].label).appendTo('#{{ $id or 'meta' }}-form_id')
      }
 
      setForm();
@@ -54,17 +54,17 @@
 
   var values = {{ json_encode($values) }};
 
-  $('#meta-form_id').change(function() {
+  $('#{{ $id or 'meta' }}-form_id').change(function() {
    setForm();
   });
 
   function setForm() {
-   $('#form-elements').empty();
+   $('#{{ $id or 'form' }}-elements').empty();
 
-   if ($('#meta-form_id').val() != '0') {
-    Form.create($('#form-elements'), $('#meta-form_id').val(), function () {
+   if ($('#{{ $id or 'meta' }}-form_id').val() != '0') {
+    Form.create($('#{{ $id or 'form' }}-elements'), $('#{{ $id or 'meta' }}-form_id').val(), function () {
      for (var id in values) {
-      setValue('field-' + id, values[id].value);
+      setValue('{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + id, values[id].value);
      }
     });
    }
@@ -168,8 +168,8 @@
      case 'select':
 
       field = $('<select/>', {
-       'id': prefix + 'field-' + el.property_id,
-       'name': prefix + 'field-' + el.property_id
+       'id': prefix + '{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + el.property_id,
+       'name': prefix + '{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + el.property_id
       }).addClass('form-control');
 
       if (el.meta.options) {
@@ -190,8 +190,8 @@
        $('<label/>').addClass('option option-primary').append(
         $('<input/>', {
          'type': el.type,
-         'id': prefix + 'field-' + el.property_id + '-' + k,
-         'name': prefix + 'field-' + el.property_id,
+         'id': prefix + '{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + el.property_id + '-' + k,
+         'name': prefix + '{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + el.property_id,
          'value': k
         }).prop('checked', ((k == el.value) || (k == el.default))),
         $('<span/>').addClass(el.type),
@@ -203,8 +203,8 @@
      case 'textarea':
 
       field = $('<textarea/>', {
-       'id': prefix + 'field-' + el.property_id,
-       'name': prefix + 'field-' + el.property_id,
+       'id': prefix + '{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + el.property_id,
+       'name': prefix + '{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + el.property_id,
        'placeholder': el.meta.placeholder || ''
       }).val(el.value || el.default).addClass('form-control');
 
@@ -213,8 +213,8 @@
 
       field = $('<input/>', {
        'type': 'text',
-       'id': prefix + 'field-' + el.property_id,
-       'name': prefix + 'field-' + el.property_id,
+       'id': prefix + '{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + el.property_id,
+       'name': prefix + '{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + el.property_id,
        'placeholder': el.meta.placeholder || ''
       }).val(el.value || el.default).addClass('form-control');
 

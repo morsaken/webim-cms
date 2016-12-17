@@ -79,8 +79,10 @@ class Page {
     })->orderBy(input('orderby', 'id'), input('order', ['desc', 'asc']))
     ->load(input('offset', 0), input('limit', 20))
     ->with('parents')
+    ->with('fullUrl')
     ->with(function($rows) {
      return array_map(function (&$row) use ($rows) {
+      $row->url = $row->full_url;
       $row->language = lang('name', $row->language, $row->language);
       $row->active = $row->active == 'true';
       $row->status = $row->active ? lang('admin.label.active', 'Aktif') : lang('admin.label.passive', 'Pasif');
@@ -113,7 +115,7 @@ class Page {
      ),
      'size' => '150x150'
     )
-   ))->with('poster')->with('tags')->with(function($rows) {
+   ))->with('fullUrl')->with('tags')->with(function($rows) {
     return array_map(function (&$row) use ($rows) {
      $row->tags = implode(', ', $row->tags);
     }, $rows);
@@ -139,21 +141,6 @@ class Page {
 
   $manager->app->response->setContentType('json');
 
-  //Page url
-  $url = implode('/', array_map(function($part) {
-   return slug($part);
-  }, explode('/', input('url'))));
-  $url = strlen($url) ? $url : slug(input('title'));
-
-  if (input('parent_id', 0) > 0) {
-   //Get shop
-   $parent = Content::init()->where('id', input('parent_id', 0))->where('type', 'page')->load()->get('rows.0');
-
-   if ($parent && (array_get(explode('/', $url), 0) != $parent->url)) {
-    $url = $parent->url . '/' . $url;
-   }
-  }
-
   return Content::init()->validation(array(
    'title' => 'required'
   ), array(
@@ -162,7 +149,7 @@ class Page {
    ->set('parent_id', (input('parent_id', 0) > 0 ? input('parent_id', 0) : null))
    ->set('type', 'page')
    ->set('language', input('language', lang()))
-   ->set('url', $url)
+   ->set('url', Content::makeUrl(input('url'), input('title')))
    ->set('title', input('title'))
    ->set('publish_date', Carbon::createFromTimestamp(strtotime(input('publish_date'))))
    ->set('expire_date', (strlen(input('expire_date')) ? Carbon::createFromTimestamp(strtotime(input('expire_date'))) : null))
@@ -203,6 +190,7 @@ class Page {
             ->load()->getListIndented('', null) as $id => $row) {
    $parents[] = array(
     'id' => $id,
+    'parent_id' => $row->parent_id,
     'url' => $row->url,
     'title' => str_repeat('&nbsp;&nbsp;', $row->level) . $row->title
    );

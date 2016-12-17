@@ -7,6 +7,9 @@ namespace Other\Admin;
 
 use \Admin\Manager;
 use \System\Content;
+use \System\Property\Field;
+use \System\Property\Form;
+use \System\Property\Manager as Property;
 use \System\Media;
 use \Webim\Library\Carbon;
 use \Webim\Library\Message;
@@ -94,6 +97,18 @@ class Portfolio {
     ->getListIndented('&nbsp;&nbsp;')
   );
 
+  $forms = array();
+
+  foreach (langs() as $code => $lang) {
+   $forms[$code] = array();
+  }
+
+  foreach (Form::init()->where('active', 'true')->load()->get('rows') as $form) {
+   $forms[$form->language][$form->id] = $form->label;
+  }
+
+  $manager->put('forms', $forms);
+
   $action = 'new';
   $actionTitle = lang('admin.label.create_new', 'Yeni Oluştur');
 
@@ -109,7 +124,7 @@ class Portfolio {
    ->where('id', $id)
    ->load()
    ->with('children', array(
-    'with' => array('meta')
+    'with' => array('meta', 'formValues')
    ))->with('meta')->with('category')->with('media', array(
     'poster' => array(
      'default' => array(
@@ -175,7 +190,9 @@ class Portfolio {
      'version' => input($alias . '-version', 0),
      'url' => slug(input('url')),
      'title' => input($alias . '-title'),
-     'content' => raw_input($alias . '-meta-content')
+     'description' => input($alias . '-description'),
+     'content' => raw_input($alias . '-content'),
+     'form_id' => input($alias . '-form_id', 0)
     );
 
     $langs[$alias] = array(
@@ -266,11 +283,47 @@ class Portfolio {
           'poster_id' => $poster['id'],
           'link' => input('meta-link'),
           'client' => input('meta-client'),
-          'content' => $post['content']
+          'description' => $post['description'],
+          'content' => $post['content'],
+          'form_id' => $post['form_id']
          ));
 
          $this->saveMedia($id, input('media_id'));
          $this->setOrders('portfolio', $lang, null, $id, input('order', 1), false);
+
+         //Incoming fields and values
+         $fields = array();
+         $values = array();
+
+         foreach (Property::init()
+                   ->where('form_id', $post['form_id'])
+                   ->load()->with('elements')->get('rows') as $property) {
+          //Field
+          $field = $property->field;
+
+          //Meta data for validation and features
+          $meta = array();
+
+          foreach ((object) @json_decode($property->meta) as $key => $value) {
+           $meta[$key] = $value;
+          }
+
+          foreach ((object) @json_decode($field->meta) as $key => $value) {
+           $meta[$key] = $value;
+          }
+
+          $field->meta = $meta;
+
+          $fields[$property->id] = $field;
+          $values[$property->id] = input($lang . '-field-' . $property->id);
+         }
+
+         //First reset
+         $this->resetFormValues($id);
+
+         Field::checkValues($fields, $values, function($property_id, $value, $text) use ($id) {
+          $this->saveFormValue($id, $property_id, $value, $text);
+         });
         });
 
        if (!$postSave->success()) {

@@ -53,7 +53,7 @@
          <i class="fa fa-tag"></i>
         </span>
        </label>
-       @include('addon.url', ['base' => '/', 'url' => (isset($content->url) ? $content->url : ''), 'hideLink' => true])
+       @include('addon.url', ['base' => '/', 'parentUrl' => (isset($content->full_url) ? str_replace($content->url, '', $content->full_url) : ''), 'url' => (isset($content->url) ? $content->url : ''), 'link' => true])
       </div>
       <div class="section mb15">
        <h6 class="fw400">@lang('admin.label.description', 'Açıklama')</h6>
@@ -165,8 +165,8 @@
      inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
     }
    },
-   dateFormat: 'dd-mm-yy',
-   firstDay: 1,
+   dateFormat: '{{ str_replace('{day}', 'dd', str_replace('{month}', 'mm', str_replace('{year}', 'yy', lang('date.format.short')))) }}',
+   firstDay: @lang('date.first_day', 1),
    onClose: function( selectedDate ) {
     $('#publish_date').datepicker('option', 'maxDate', selectedDate);
     $('#expire_date').datepicker('option', 'minDate', selectedDate);
@@ -206,6 +206,7 @@
      for (var key in result) {
       $('<option/>', {
        'value': result[key]['id'],
+       'data-parent-id': result[key]['parent_id'],
        'data-url': result[key]['url']
       }).html(result[key]['title']).appendTo('#parent_id');
      }
@@ -218,8 +219,7 @@
       $('#parent_id').val(0);
      }
 
-     $('#url').data('prefix', $('#parent_id').find('option:selected').data('url'));
-
+     setParentUrl();
      orders(init);
     }
    });
@@ -254,22 +254,30 @@
    });
   }
 
+  function setParentUrl() {
+   var parent = $('#parent_id'), prefix = '', parent_id;
+   var selected = parent.find('option:selected');
+
+   if (selected && selected.data('url')) {
+    prefix = selected.data('url') + '/';
+    parent_id = selected.data('parent-id');
+
+    while (parent_id) {
+     selected = parent.find('option[value="' + parent_id + '"]');
+     prefix = selected.data('url') + '/' + prefix;
+     parent_id = selected.data('parent-id');
+    }
+   }
+
+   $('#parent-url').text(prefix);
+  }
+
   $('#language').change(function() {
    parents();
   });
 
   $('#parent_id').change(function() {
-   var cur = $.fn.clearUrl();
-   var dat = $(this).find('option:selected').data('url');
-
-   $('#url').data('prefix', (dat ? dat : ''));
-
-   if ($('#url').val().length) {
-    var url = $.fn.makeUrl(cur);
-    $('#url').val(url);
-    $('a[href="#edit-url"]').text(url);
-   }
-
+   setParentUrl();
    orders();
   });
 

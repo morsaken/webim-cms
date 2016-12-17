@@ -111,7 +111,7 @@
       @endif
       <input type="hidden" id="{{ $alias }}-id" name="{{ $alias }}-id" value="{{{ $content->children[$alias]->id or 0 }}}">
       <input type="hidden" id="{{ $alias }}-version" name="{{ $alias }}-version" value="{{ $content->children[$alias]->version or 0 }}">
-      <input type="hidden" id="{{ $alias }}-meta-content" name="{{ $alias }}-meta-content" value="{{{ $content->children[$alias]->meta->content or '' }}}">
+      <input type="hidden" id="{{ $alias }}-content" name="{{ $alias }}-meta-content" value="{{{ $content->children[$alias]->meta->content or '' }}}">
       <div class="section mb15">
        <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
        <label class="field prepend-icon">
@@ -121,9 +121,19 @@
         </span>
        </label>
       </div>
-      <div class="section">
-       @include('addon.editor', ['id' => $alias . '-html-content', 'target' => $alias . '-meta-content'])
+      <div class="section mb15">
+       <h6 class="fw400">@lang('admin.label.description', 'Açıklama')</h6>
+       <label class="field prepend-icon">
+        <textarea id="{{ $alias }}-description" name="{{ $alias }}-description" class="gui-textarea">{{{ $content->children[$alias]->description or '' }}}</textarea>
+        <span class="field-icon">
+         <i class="fa fa-tag"></i>
+        </span>
+       </label>
       </div>
+      <div class="section mb15">
+       @include('addon.editor', ['id' => $alias . '-html-content', 'target' => $alias . '-content'])
+      </div>
+      @include('addon.form', ['id' => $alias, 'forms' => $forms[$alias], 'form_id' => (isset($content->children[$alias]->meta->form_id) ? $content->children[$alias]->meta->form_id : 0), 'values' => isset($content->children[$alias]->form_values) ? $content->children[$alias]->form_values : []])
      </div>
      @endforeach
      <div id="tab-media" class="tab-pane">

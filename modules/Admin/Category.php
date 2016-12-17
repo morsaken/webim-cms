@@ -85,9 +85,10 @@ class Category {
      }
     })->orderBy(input('orderby', 'id'), input('order', ['desc', 'asc']))
     ->load(input('offset', 0), input('limit', 20))
-    ->with('parents')
+    ->with('parents')->with('fullUrl')
     ->with(function($rows) {
      return array_map(function (&$row) use ($rows) {
+      $row->url = $row->full_url;
       $row->language = lang('name', $row->language, $row->language);
       $row->active = $row->active == 'true';
       $row->status = $row->active ? lang('admin.label.active', 'Aktif') : lang('admin.label.passive', 'Pasif');
@@ -107,13 +108,9 @@ class Category {
   $content = Content::init()
    ->where('type', 'category')
    ->where('id', $id)
-   ->load()
-   ->with('meta')
-   ->with('poster', array(
+   ->load()->with('meta')->with('poster', array(
     'source' => true
-   ))
-   ->with('tags')
-   ->with(function($rows) {
+   ))->with('fullUrl')->with('tags')->with(function($rows) {
     return array_map(function (&$row) use ($rows) {
      $row->tags = $row->tags ? implode(', ', $row->tags) : '';
     }, $rows);
@@ -197,15 +194,22 @@ class Category {
 
   $parents = array();
 
+  $parents[] = array(
+   'id' => 0,
+   'title' => '.'
+  );
+
   foreach (Content::init()
             ->where('id', '<>', input('id', 0))
             ->only('type', 'category')
             ->only('language', input('language', $lang))
             ->orderBy('order')
-            ->load()->getListIndented('&nbsp;&nbsp;') as $id => $title) {
+            ->load()->getListIndented('', null) as $id => $row) {
    $parents[] = array(
     'id' => $id,
-    'title' => $title
+    'parent_id' => $row->parent_id,
+    'url' => $row->url,
+    'title' => str_repeat('&nbsp;&nbsp;', $row->level) . $row->title
    );
   }
 

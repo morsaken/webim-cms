@@ -55,7 +55,7 @@
            <i class="fa fa-tag"></i>
           </span>
          </label>
-         @include('addon.url', ['base' => 'news/category', 'url' => isset($content->url) ? $content->url : '', 'hideLink' => true])
+         @include('addon.url', ['base' => 'category', 'parentUrl' => (isset($content->full_url) ? str_replace($content->url, '', $content->full_url) : ''), 'url' => (isset($content->url) ? $content->url : '')])
         </div>
         <div class="section mb15">
          <h6 class="fw400">@lang('admin.label.description', 'Açıklama')</h6>
@@ -135,11 +135,7 @@
   });
 
   function parents(init) {
-   $('#parent_id').empty().append(
-    $('<option/>', {
-     'value': '0'
-    }).html('.')
-   );
+   $('#parent_id').empty();
 
    $.ajax({
     'url': $('#form').attr('action').replace('/form', '/parents'),
@@ -151,7 +147,9 @@
     if (result) {
      for (var key in result) {
       $('<option/>', {
-       'value': result[key]['id']
+       'value': result[key]['id'],
+       'data-parent-id': result[key]['parent_id'],
+       'data-url': result[key]['url']
       }).html(result[key]['title']).appendTo('#parent_id');
      }
 
@@ -165,9 +163,28 @@
 
      $('#url').data('prefix', $('#parent_id').find('option:selected').data('url'));
 
+     setParentUrl();
      orders(init);
     }
    });
+  }
+
+  function setParentUrl() {
+   var parent = $('#parent_id'), prefix = '', parent_id;
+   var selected = parent.find('option:selected');
+
+   if (selected && selected.data('url')) {
+    prefix = selected.data('url') + '/';
+    parent_id = selected.data('parent-id');
+
+    while (parent_id) {
+     selected = parent.find('option[value="' + parent_id + '"]');
+     prefix = selected.data('url') + '/' + prefix;
+     parent_id = selected.data('parent-id');
+    }
+   }
+
+   $('#parent-url').text(prefix);
   }
 
   function orders(init) {
@@ -204,6 +221,7 @@
   });
 
   $('#parent_id').change(function() {
+   setParentUrl();
    orders();
   });
 

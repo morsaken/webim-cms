@@ -1,6 +1,5 @@
 <?php
 return array (
-  'first_day' => '0',
   'format' => 
   array (
     'long' => '{month_name} {day}, {year}, {day_name}',

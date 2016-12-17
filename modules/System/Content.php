@@ -1498,6 +1498,69 @@ class Content extends Controller {
  }
 
  /**
+  * Full url using parents
+  *
+  * @param array $rows
+  * @param array $params
+  *
+  * @return array
+  */
+ protected function fullUrl($rows, $params = array()) {
+  if (in_array(__FUNCTION__, $this->called)) {
+   return $rows;
+  }
+
+  //Add called class
+  $this->called[] = __FUNCTION__;
+
+  //All types
+  $types = array();
+
+  foreach ($rows as $row) {
+   $types[$row->type] = $row->type;
+  }
+
+  //List of all content
+  $list = DB::table('sys_content')->whereIn('type', $types)->get('id', 'parent_id', 'url');
+
+  return array_map(function (&$row) use ($list) {
+   $row->full_url = static::createFullUrl($row, $list);
+  }, $rows);
+ }
+
+ /**
+  * Create full url for item
+  *
+  * @param array $item
+  * @param array $list
+  *
+  * @return string
+  */
+ public static function createFullUrl($item, $list) {
+  $parent_id = array_get($item, 'parent_id');
+  $full_url = array(
+   array_get($item, 'url')
+  );
+
+  while ($parent_id) {
+   if (array_filter($list, function($item) use ($parent_id) {
+    return array_get($item, 'id') == $parent_id;
+   })) {
+    foreach ($list as $row) {
+     if (array_get($row, 'id') == $parent_id) {
+      $parent_id = array_get($row, 'parent_id');
+      $full_url[] = array_get($row, 'url');
+     }
+    }
+   } else {
+    $parent_id = null;
+   }
+  }
+
+  return implode('/', array_reverse($full_url));
+ }
+
+ /**
   * Set comment
   *
   * @param int|string $comment_id
