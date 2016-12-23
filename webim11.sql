@@ -85,6 +85,7 @@ CREATE TABLE `sys_content_comment` (
 -- ----------------------------
 -- Table structure for sys_content_form_value
 -- ----------------------------
+DROP TABLE IF EXISTS `sys_content_form_value`;
 CREATE TABLE `sys_content_form_value` (
   `content_id` int(10) unsigned NOT NULL,
   `property_id` int(10) unsigned NOT NULL,

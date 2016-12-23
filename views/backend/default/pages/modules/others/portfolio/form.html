@@ -124,7 +124,7 @@
       <div class="section mb15">
        <h6 class="fw400">@lang('admin.label.description', 'Açıklama')</h6>
        <label class="field prepend-icon">
-        <textarea id="{{ $alias }}-description" name="{{ $alias }}-description" class="gui-textarea">{{{ $content->children[$alias]->description or '' }}}</textarea>
+        <textarea id="{{ $alias }}-description" name="{{ $alias }}-description" class="gui-textarea">{{{ $content->children[$alias]->meta->description or '' }}}</textarea>
         <span class="field-icon">
          <i class="fa fa-tag"></i>
         </span>

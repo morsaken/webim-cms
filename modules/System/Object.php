@@ -27,7 +27,7 @@ class Object extends Controller {
  /**
   * Static creator
   *
-  * @return Object
+  * @return \System\Object
   */
  public static function init() {
   return new self();

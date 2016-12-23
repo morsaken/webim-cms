@@ -26,7 +26,7 @@ class Manager extends \System\Manager {
   $path = File::path('views.backend.' . conf('backend.' . lang() . '.template', 'default'));
 
   //Root
-  $root = File::path('views.backend.' . conf('backend.' . lang() . '.template', 'default') . '.layouts')->src();
+  $root = $path->folder('layouts')->src();
 
   //Set default path
   View::setPath($path);
@@ -34,11 +34,8 @@ class Manager extends \System\Manager {
   //Admin prefix
   $this->prefix = '/' . conf('default.admin.prefix', 'admin');
 
-  //Config
-  $config = File::path($path)->folder('includes')->file('config.php')->load();
-
   //Common conf
-  $this->conf = array_merge_recursive((array) $config, array(
+  $this->conf = array(
    'root' => $root,
    'title' => conf('backend.' . lang() . '.title', 'Web-IM XI'),
    'description' => conf('backend.' . lang() . '.description', 'Web Internet Manager'),
@@ -48,7 +45,7 @@ class Manager extends \System\Manager {
    'newInboxTotal' => Mail::inbox(function($mail) {
     $mail->where('r.read', 'false');
    })->count()
-  ));
+  );
 
   //Add default home to breadcrumb
   $this->breadcrumb($this->prefix, lang('admin.menu.home', 'Anasayfa'));

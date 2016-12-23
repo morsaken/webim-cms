@@ -86,7 +86,7 @@ function cascade($list, $simple = true, $level = 0) {
 }
 
 /**
- * Cascase page menu
+ * Cascade page menu
  *
  * @param array $pages
  * @param string $url
