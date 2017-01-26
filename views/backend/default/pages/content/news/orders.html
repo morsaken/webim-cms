@@ -5,123 +5,124 @@
 @section('content')
 @include('topbar')
 <section id="content" class="table-layout">
- <div class="tray tray-center pn va-t posr">
-  <div class="panel m15">
-   <div id="list" class="p25">
-    <div class="m10 alert alert-info fade in">
-     <i class="fa-fw fa fa-info"></i>
-     <strong>@lang('admin.label.info', 'Bilgi'):</strong> @lang('admin.message.pick_a_category', 'Kategori seçin!')
+  <div class="tray tray-center pn va-t posr">
+    <div class="panel m15">
+      <div id="list" class="p25">
+        <div class="m10 alert alert-info fade in">
+          <i class="fa-fw fa fa-info"></i>
+          <strong>@lang('admin.label.info', 'Bilgi'):</strong> @lang('admin.message.pick_a_category', 'Kategori seçin!')
+        </div>
+      </div>
     </div>
-   </div>
   </div>
- </div>
- <aside class="tray tray-right tray250 va-t pn" data-tray-height="match">
-  <form id="list-form" class="p15 admin-form" method="get" action="@url()">
-   <h4 class="mt5 text-muted fw500">@lang('admin.label.filters', 'Filtreler')</h4>
-   <hr class="short">
-   <h6 class="fw400">@lang('admin.label.categories', 'Kategoriler')</h6>
-   <div class="section mb15">
-    <label class="field select">
-     <select id="category_id" name="category_id">
-      @foreach ($categories as $categoryId => $categoryTitle)
-      <option value="{{ $categoryId }}"{{ input('categories') == $categoryId ? ' selected="selected"' : '' }}>{{{ $categoryTitle }}}</option>
-      @endforeach
-     </select>
-     <i class="arrow double"></i>
-    </label>
-   </div>
-   <hr class="short">
-   <div class="section row">
-    <div class="col-sm-12">
-     <button type="submit" class="btn btn-default btn-sm ph25">
-      @lang('admin.button.filter', 'Filtrele')
-     </button>
-    </div>
-   </div>
-  </form>
- </aside>
+  <aside class="tray tray-right tray250 va-t pn" data-tray-height="match">
+    <form id="list-form" class="p15 admin-form" method="get" action="@url()">
+      <h4 class="mt5 text-muted fw500">@lang('admin.label.filters', 'Filtreler')</h4>
+      <hr class="short">
+      <h6 class="fw400">@lang('admin.label.categories', 'Kategoriler')</h6>
+      <div class="section mb15">
+        <label class="field select">
+          <select id="category_id" name="category_id">
+            @foreach ($categories as $categoryId => $categoryTitle)
+            <option value="{{ $categoryId }}" {{ input(
+            'categories') == $categoryId ? ' selected="selected"' : '' }}>{{{ $categoryTitle }}}</option>
+            @endforeach
+          </select>
+          <i class="arrow double"></i>
+        </label>
+      </div>
+      <hr class="short">
+      <div class="section row">
+        <div class="col-sm-12">
+          <button type="submit" class="btn btn-default btn-sm ph25">
+            @lang('admin.button.filter', 'Filtrele')
+          </button>
+        </div>
+      </div>
+    </form>
+  </aside>
 </section>
 @stop
 
 @section('script')
 @parent
 <script type="text/javascript">
- //<![CDATA[
- $(function() {
-  'use strict';
+  //<![CDATA[
+  $(function () {
+    'use strict';
 
-  function item(r) {
-   return $('<div/>').addClass('preview').data('id', r.id).append(
-    $('<a/>', {
-     'href': '#item'
-    }).click(function (e) {
-     e.preventDefault();
-     e.stopPropagation();
-    }).append(
-     $('<img/>', {
-      'src': r.poster,
-      'width': 150,
-      'height': 150,
-      'alt': r.title
-     }),
-     $('<div/>').addClass('tags').append(
-      $('<span/>').addClass('label label-info br0').text(r.title)
-     )
-    ),
-    $('<input/>', {
-     'type': 'hidden',
-     'name': 'content_id[]'
-    }).val(r.id)
-   );
-  }
-
-  $('#list-form').submit(function(e) {
-   e.preventDefault();
-
-   $.ajax({
-    'type': $(this).attr('method'),
-    'url': $(this).attr('action'),
-    'data': $(this).serialize()
-   }).done(function(result) {
-    $('#list').empty();
-
-    if (result.total) {
-     for (var k in result.rows) {
-      item(result.rows[k]).appendTo('#list');
-     }
-
-     $('#list').sortable({
-      revert: true,
-      update: function(event, ui) {
-       var ids = [];
-
-       $('#list').find('input[name="content_id[]"]').each(function() {
-        ids.push($(this).val());
-       });
-
-       $.ajax({
-        'url': '@url()',
-        'data': {
-         'category_id': $('#category_id').val(),
-         'content_ids': ids.join(',')
-        }
-       });
-      }
-     });
-    } else {
-     $('<div/>').addClass('m10 alert alert-info fade in').append(
-      $('<i/>').addClass('fa-fw fa fa-info'),
-      $('<strong/>').text("@lang('admin.label.info', 'Bilgi'): "),
-      "@lang('admin.message.pick_a_category', 'Kategori seçin!')"
-     ).appendTo('#list');
-
-     message("@lang('admin.message.no_record_found', 'Kayıt bulunamadı!')");
+    function item(r) {
+      return $('<div/>').addClass('preview').data('id', r.id).append(
+        $('<a/>', {
+          'href': '#item'
+        }).click(function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }).append(
+          $('<img/>', {
+            'src': r.poster,
+            'width': 150,
+            'height': 150,
+            'alt': r.title
+          }),
+          $('<div/>').addClass('tags').append(
+            $('<span/>').addClass('label label-info br0').text(r.title)
+          )
+        ),
+        $('<input/>', {
+          'type': 'hidden',
+          'name': 'content_id[]'
+        }).val(r.id)
+      );
     }
-   });
-  });
 
-  $('#list-form').submit();
- });
- //]]>
+    $('#list-form').submit(function (e) {
+      e.preventDefault();
+
+      $.ajax({
+        'type': $(this).attr('method'),
+        'url': $(this).attr('action'),
+        'data': $(this).serialize()
+      }).done(function (result) {
+        $('#list').empty();
+
+        if (result.total) {
+          for (var k in result.rows) {
+            item(result.rows[k]).appendTo('#list');
+          }
+
+          $('#list').sortable({
+            revert: true,
+            update: function (event, ui) {
+              var ids = [];
+
+              $('#list').find('input[name="content_id[]"]').each(function () {
+                ids.push($(this).val());
+              });
+
+              $.ajax({
+                'url': '@url()',
+                'data': {
+                  'category_id': $('#category_id').val(),
+                  'content_ids': ids.join(',')
+                }
+              });
+            }
+          });
+        } else {
+          $('<div/>').addClass('m10 alert alert-info fade in').append(
+            $('<i/>').addClass('fa-fw fa fa-info'),
+            $('<strong/>').text("@lang('admin.label.info', 'Bilgi'): "),
+            "@lang('admin.message.pick_a_category', 'Kategori seçin!')"
+          ).appendTo('#list');
+
+          message("@lang('admin.message.no_record_found', 'Kayıt bulunamadı!')");
+        }
+      });
+    });
+
+    $('#list-form').submit();
+  });
+  //]]>
 </script>
 @stop

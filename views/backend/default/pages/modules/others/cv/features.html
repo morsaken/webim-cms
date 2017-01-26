@@ -5,140 +5,141 @@
 @section('content')
 @include('topbar')
 <section id="content" class="table-layout">
- <div class="tray tray-center pn va-t posr">
-  <div class="panel m15">
-   <div class="panel-menu p12 admin-form theme-primary">
-    <div class="row">
-     <div class="col-md-3">
-      <label class="field select">
-       <select id="filter-language" name="filter-language">
-        @foreach (langs() as $langCode => $langTitle)
-        <option value="{{ $langCode }}"{{ input('language', lang()) == $langCode ? ' selected="selected"' : '' }}>{{{ $langTitle }}}</option>
-        @endforeach
-       </select>
-       <i class="arrow"></i>
-      </label>
-     </div>
-     <div class="col-md-9">
-      <div class="text-right">
-       <a class="btn btn-dark" href="#add">
-        <i class="fa fa-plus mr5"></i>
-        @lang('admin.button.add', 'Ekle')
-       </a>
+  <div class="tray tray-center pn va-t posr">
+    <div class="panel m15">
+      <div class="panel-menu p12 admin-form theme-primary">
+        <div class="row">
+          <div class="col-md-3">
+            <label class="field select">
+              <select id="filter-language" name="filter-language">
+                @foreach (langs() as $langCode => $langTitle)
+                <option value="{{ $langCode }}" {{ input(
+                'language', lang()) == $langCode ? ' selected="selected"' : '' }}>{{{ $langTitle }}}</option>
+                @endforeach
+              </select>
+              <i class="arrow"></i>
+            </label>
+          </div>
+          <div class="col-md-9">
+            <div class="text-right">
+              <a class="btn btn-dark" href="#add">
+                <i class="fa fa-plus mr5"></i>
+                @lang('admin.button.add', 'Ekle')
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
-     </div>
+      <div class="panel-body">
+        <div id="list" class="row">
+          @foreach ($categories as $categoryId => $categoryTitle)
+          <div class="col-sm-6">
+            <h2>{{{ $categoryTitle }}}</h2>
+            <div id="category-{{ $categoryId }}" class="dd mt20"></div>
+            <hr>
+          </div>
+          @endforeach
+        </div>
+      </div>
     </div>
-   </div>
-   <div class="panel-body">
-    <div id="list" class="row">
-     @foreach ($categories as $categoryId => $categoryTitle)
-     <div class="col-sm-6">
-      <h2>{{{ $categoryTitle }}}</h2>
-      <div id="category-{{ $categoryId }}" class="dd mt20"></div>
-      <hr>
-     </div>
-     @endforeach
-    </div>
-   </div>
   </div>
- </div>
 </section>
 
 <div id="dialog" class="modal fade">
- <div class="modal-dialog">
-  <div class="modal-content">
-   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">×</button>
-    <h4>
-     <i class="fa fa-info"></i>
-     @lang('label.feature', 'Özellik')
-    </h4>
-   </div>
-   <form id="form" class="admin-form" method="post" action="@url()">
-    <input type="hidden" id="id" name="id" value="0">
-    <input type="hidden" id="version" name="version" value="0">
-    <input type="hidden" id="language" name="language" value="@lang()">
-    <div class="modal-body">
-     <div class="section mb15">
-      <h6 class="fw400">@lang('admin.label.category', 'Kategorisi')</h6>
-      <label class="field select">
-       <select id="parent_id" name="parent_id">
-        <option value="">&nbsp;</option>
-        @foreach ($categories as $categoryId => $categoryTitle)
-        <option value="{{ $categoryId }}">{{{ $categoryTitle }}}</option>
-        @endforeach
-       </select>
-       <i class="arrow double"></i>
-      </label>
-     </div>
-     <div class="section mb15">
-      <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
-      <label class="field prepend-icon">
-       <input type="text" id="title" name="title" class="gui-input">
-       <span class="field-icon">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4>
+          <i class="fa fa-info"></i>
+          @lang('label.feature', 'Özellik')
+        </h4>
+      </div>
+      <form id="form" class="admin-form" method="post" action="@url()">
+        <input type="hidden" id="id" name="id" value="0">
+        <input type="hidden" id="version" name="version" value="0">
+        <input type="hidden" id="language" name="language" value="@lang()">
+        <div class="modal-body">
+          <div class="section mb15">
+            <h6 class="fw400">@lang('admin.label.category', 'Kategorisi')</h6>
+            <label class="field select">
+              <select id="parent_id" name="parent_id">
+                <option value="">&nbsp;</option>
+                @foreach ($categories as $categoryId => $categoryTitle)
+                <option value="{{ $categoryId }}">{{{ $categoryTitle }}}</option>
+                @endforeach
+              </select>
+              <i class="arrow double"></i>
+            </label>
+          </div>
+          <div class="section mb15">
+            <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
+            <label class="field prepend-icon">
+              <input type="text" id="title" name="title" class="gui-input">
+              <span class="field-icon">
         <i class="fa fa-tag"></i>
        </span>
-      </label>
-     </div>
-     <div class="section mb15">
-      <h6 class="fw400">@lang('admin.label.subtitle', 'Alt Başlık')</h6>
-      <label class="field prepend-icon">
-       <input type="text" id="subtitle" name="subtitle" class="gui-input">
-       <span class="field-icon">
+            </label>
+          </div>
+          <div class="section mb15">
+            <h6 class="fw400">@lang('admin.label.subtitle', 'Alt Başlık')</h6>
+            <label class="field prepend-icon">
+              <input type="text" id="subtitle" name="subtitle" class="gui-input">
+              <span class="field-icon">
         <i class="fa fa-tag"></i>
        </span>
-      </label>
-     </div>
-     <div class="section mb15">
-      <h6 class="fw400">@lang('admin.label.description', 'Açıklama')</h6>
-      <label class="field prepend-icon">
-       <textarea id="description" name="description" class="gui-textarea"></textarea>
-       <span class="field-icon">
+            </label>
+          </div>
+          <div class="section mb15">
+            <h6 class="fw400">@lang('admin.label.description', 'Açıklama')</h6>
+            <label class="field prepend-icon">
+              <textarea id="description" name="description" class="gui-textarea"></textarea>
+              <span class="field-icon">
         <i class="fa fa-edit"></i>
        </span>
-      </label>
-     </div>
-     <div class="section mb15 row">
-      <div class="col-sm-6">
-       <h6 class="fw400">@lang('label.start_date', 'Başlangıç Tarihi')</h6>
-       <label class="field prepend-icon">
-        <input type="text" id="date-start" name="date-start" class="gui-input">
-        <span class="field-icon">
+            </label>
+          </div>
+          <div class="section mb15 row">
+            <div class="col-sm-6">
+              <h6 class="fw400">@lang('label.start_date', 'Başlangıç Tarihi')</h6>
+              <label class="field prepend-icon">
+                <input type="text" id="date-start" name="date-start" class="gui-input">
+                <span class="field-icon">
          <i class="fa fa-calendar"></i>
         </span>
-       </label>
-      </div>
-      <div class="col-sm-6">
-       <h6 class="fw400">@lang('label.end_date', 'Bitiş Tarihi')</h6>
-       <label class="field prepend-icon">
-        <input type="text" id="date-end" name="date-end" class="gui-input">
-        <span class="field-icon">
+              </label>
+            </div>
+            <div class="col-sm-6">
+              <h6 class="fw400">@lang('label.end_date', 'Bitiş Tarihi')</h6>
+              <label class="field prepend-icon">
+                <input type="text" id="date-end" name="date-end" class="gui-input">
+                <span class="field-icon">
          <i class="fa fa-calendar"></i>
         </span>
-       </label>
-      </div>
-     </div>
-     <div class="section mb15">
-      <h6 class="fw400">@lang('admin.label.content.order', 'Sırası')</h6>
-      <label class="field select">
-       <select id="order" name="order"></select>
-       <i class="arrow double"></i>
-      </label>
-     </div>
+              </label>
+            </div>
+          </div>
+          <div class="section mb15">
+            <h6 class="fw400">@lang('admin.label.content.order', 'Sırası')</h6>
+            <label class="field select">
+              <select id="order" name="order"></select>
+              <i class="arrow double"></i>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-sm btn-primary">
+            <i class="fa fa-save"></i>
+            @lang('admin.button.save', 'Kaydet')
+          </button>
+          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+            <i class="fa fa-close"></i>
+            @lang('admin.button.close', 'Kapat')
+          </button>
+        </div>
+      </form>
     </div>
-    <div class="modal-footer">
-     <button type="submit" class="btn btn-sm btn-primary">
-      <i class="fa fa-save"></i>
-      @lang('admin.button.save', 'Kaydet')
-     </button>
-     <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
-      <i class="fa fa-close"></i>
-      @lang('admin.button.close', 'Kapat')
-     </button>
-    </div>
-   </form>
   </div>
- </div>
 </div>
 @stop
 
@@ -151,241 +152,241 @@
 @parent
 <script type="text/javascript" src="{{ $root }}/js/plugins/jquery/nestable/jquery.nestable.js"></script>
 <script type="text/javascript">
- //<![CDATA[
- $('a[href="#add"]').click(function() {
-  $('#order').empty();
-  $('#language').val($('#filter-language').val());
-  $('#id, #version').val(0);
-  $('#form').find('input[type="text"], select, textarea').val('');
-  $('#form').validate().resetForm();
-  $('#dialog').modal();
-
-  return false;
- });
-
- function events() {
-  $('a[href="#edit"]').off('click').on('click', function() {
-   $.ajax({
-    'type': 'GET',
-    'url': '@url()',
-    'data': {
-     'id': $(this).data('id'),
-     'language': $('#filter-language').val()
-    }
-   }).done(function(result) {
-    if (result) {
-     for (var k in result) {
-      if (k == 'order') {
-       $('#' + k).data('value', result[k]);
-      } else {
-       $('#' + k).val(result[k]);
-      }
-     }
-    }
-   });
-
-   $('#dialog').modal();
-
-   return false;
-  });
-
-  $('a[href="#delete"]').off('click').on('click', function() {
-   var id = $(this).data('id');
-
-   message({
-    'type': 'confirm',
-    'text': 'Silmek istediğinize emin misiniz?',
-    'onConfirm': function() {
-     $.ajax({
-      type: 'DELETE',
-      url: '@url()/' + id
-     }).done(function(result) {
-      if (result.success) {
-       $('.dd-item[data-id="' + id + '"]').remove();
-      } else {
-       message(result);
-      }
-     });
-    }
-   });
-
-   return false;
-  });
- }
-
- $('#dialog').on('shown.bs.modal', function() {
-  orders(true);
- });
-
- $('#list > div > div').each(function(k) {
-  $(this).nestable({
-   maxDepth: 1,
-   group: k
-  })
- });
-
- function orders(init) {
-  $.ajax({
-   'url': "@url('#current/orders')",
-   'data': {
-    'language': $('#language').val(),
-    'parent_id': $('#parent_id').val(),
-    'id': init ? $('#id').val() : 0
-   }
-  }).done(function(result) {
-   if (result) {
+  //<![CDATA[
+  $('a[href="#add"]').click(function () {
     $('#order').empty();
+    $('#language').val($('#filter-language').val());
+    $('#id, #version').val(0);
+    $('#form').find('input[type="text"], select, textarea').val('');
+    $('#form').validate().resetForm();
+    $('#dialog').modal();
 
-    for (var order in result) {
-     $('<option/>', {
-      'value': order
-     }).text(result[order]).appendTo('#order');
-    }
-
-    var val = $('#order').data('value');
-
-    if (val > 0 && $('#order > option[value="' + val + '"]').get(0)) {
-     $('#order').val(val);
-    } else {
-     $('#order').val($('#order').children().last().val());
-    }
-   }
+    return false;
   });
- }
 
- $('#filter-language').change(function() {
-  window.location.href = "@url()?language=" + $(this).val();
- });
+  function events() {
+    $('a[href="#edit"]').off('click').on('click', function () {
+      $.ajax({
+        'type': 'GET',
+        'url': '@url()',
+        'data': {
+          'id': $(this).data('id'),
+          'language': $('#filter-language').val()
+        }
+      }).done(function (result) {
+        if (result) {
+          for (var k in result) {
+            if (k == 'order') {
+              $('#' + k).data('value', result[k]);
+            } else {
+              $('#' + k).val(result[k]);
+            }
+          }
+        }
+      });
 
- $('#parent_id').change(function() {
-  orders();
- });
+      $('#dialog').modal();
 
- function getList() {
-  $.ajax({
-   'type': 'GET',
-   'url': '@url()',
-   'data': {
-    'language': $('#filter-language').val()
-   }
-  }).done(function(result) {
-   for (var t in result) {
-    $('#category-' + t).empty();
+      return false;
+    });
 
-    if (result[t].length > 0) {
-     for (var k in result[t]) {
-      setItem(t, result[t][k]);
-     }
-    } else {
-     $('#category-' + t).append(
-      $('<div/>').addClass('alert alert-warning').append(
-       $('<i/>').addClass('fa fa-warning pr10'),
-       $('<strong/>').text('Uyarı: '),
-       "@lang('message.no_content_found', 'İçerik bulunamadı!')"
-      )
-     );
-    }
-   }
-  });
- }
+    $('a[href="#delete"]').off('click').on('click', function () {
+      var id = $(this).data('id');
 
- function setItem(target, item) {
-  var t = $('#category-' + target), u;
+      message({
+        'type': 'confirm',
+        'text': 'Silmek istediğinize emin misiniz?',
+        'onConfirm': function () {
+          $.ajax({
+            type: 'DELETE',
+            url: '@url()/' + id
+          }).done(function (result) {
+            if (result.success) {
+              $('.dd-item[data-id="' + id + '"]').remove();
+            } else {
+              message(result);
+            }
+          });
+        }
+      });
 
-  if (t.find('ol').length) {
-   u = t.find('ol');
-  } else {
-   t.empty();
-   u = $('<ol/>').addClass('dd-list').appendTo(t);
+      return false;
+    });
   }
 
-  var li = $('<li/>', {
-   'data-id': item['id']
-  }).addClass('dd-item').append(
-   $('<div/>').addClass('dd-handle').text(item['title'] + ' (' + item['subtitle'] + ')'),
-   $('<div/>').addClass('dd-content').append(
-    $('<div/>').addClass('media').append(
-     $('<a/>', {
-      'href': '#delete',
-      'data-id': item['id']
-     }).addClass('text-danger pull-right fw600').text('Sil'),
-     $('<a/>', {
-      'href': '#edit',
-      'data-id': item['id']
-     }).addClass('pull-right fw600').text('Düzenle'),
-     $('<div/>').addClass('media-body').append(
-      $('<h4/>').addClass('media-heading').text(item['description']),
-      $('<p/>').addClass('mb5').text(
-       "@lang('label.start_date', 'Başlangıç Tarihi'): " + item['date']['start'] + ' - ' +
-       "@lang('label.end_date', 'Bitiş Tarihi'): " + item['date']['end']
-      )
-     )
-    )
-   )
-  );
+  $('#dialog').on('shown.bs.modal', function () {
+    orders(true);
+  });
 
-  var c = $('.dd-item[data-id="' + item['id'] + '"]');
+  $('#list > div > div').each(function (k) {
+    $(this).nestable({
+      maxDepth: 1,
+      group: k
+    })
+  });
 
-  if (c.length) {
-   li.insertBefore(c);
-   c.remove();
-  } else {
-   li.appendTo(u);
+  function orders(init) {
+    $.ajax({
+      'url': "@url('#current/orders')",
+      'data': {
+        'language': $('#language').val(),
+        'parent_id': $('#parent_id').val(),
+        'id': init ? $('#id').val() : 0
+      }
+    }).done(function (result) {
+      if (result) {
+        $('#order').empty();
+
+        for (var order in result) {
+          $('<option/>', {
+            'value': order
+          }).text(result[order]).appendTo('#order');
+        }
+
+        var val = $('#order').data('value');
+
+        if (val > 0 && $('#order > option[value="' + val + '"]').get(0)) {
+          $('#order').val(val);
+        } else {
+          $('#order').val($('#order').children().last().val());
+        }
+      }
+    });
   }
 
+  $('#filter-language').change(function () {
+    window.location.href = "@url()?language=" + $(this).val();
+  });
+
+  $('#parent_id').change(function () {
+    orders();
+  });
+
+  function getList() {
+    $.ajax({
+      'type': 'GET',
+      'url': '@url()',
+      'data': {
+        'language': $('#filter-language').val()
+      }
+    }).done(function (result) {
+      for (var t in result) {
+        $('#category-' + t).empty();
+
+        if (result[t].length > 0) {
+          for (var k in result[t]) {
+            setItem(t, result[t][k]);
+          }
+        } else {
+          $('#category-' + t).append(
+            $('<div/>').addClass('alert alert-warning').append(
+              $('<i/>').addClass('fa fa-warning pr10'),
+              $('<strong/>').text('Uyarı: '),
+              "@lang('message.no_content_found', 'İçerik bulunamadı!')"
+            )
+          );
+        }
+      }
+    });
+  }
+
+  function setItem(target, item) {
+    var t = $('#category-' + target), u;
+
+    if (t.find('ol').length) {
+      u = t.find('ol');
+    } else {
+      t.empty();
+      u = $('<ol/>').addClass('dd-list').appendTo(t);
+    }
+
+    var li = $('<li/>', {
+      'data-id': item['id']
+    }).addClass('dd-item').append(
+      $('<div/>').addClass('dd-handle').text(item['title'] + ' (' + item['subtitle'] + ')'),
+      $('<div/>').addClass('dd-content').append(
+        $('<div/>').addClass('media').append(
+          $('<a/>', {
+            'href': '#delete',
+            'data-id': item['id']
+          }).addClass('text-danger pull-right fw600').text('Sil'),
+          $('<a/>', {
+            'href': '#edit',
+            'data-id': item['id']
+          }).addClass('pull-right fw600').text('Düzenle'),
+          $('<div/>').addClass('media-body').append(
+            $('<h4/>').addClass('media-heading').text(item['description']),
+            $('<p/>').addClass('mb5').text(
+              "@lang('label.start_date', 'Başlangıç Tarihi'): " + item['date']['start'] + ' - ' +
+              "@lang('label.end_date', 'Bitiş Tarihi'): " + item['date']['end']
+            )
+          )
+        )
+      )
+    );
+
+    var c = $('.dd-item[data-id="' + item['id'] + '"]');
+
+    if (c.length) {
+      li.insertBefore(c);
+      c.remove();
+    } else {
+      li.appendTo(u);
+    }
+
+    events();
+  }
+
+  getList();
   events();
- }
 
- getList();
- events();
+  $('#form').validate({
+    // Rules for form validation
+    rules: {
+      parent_id: {
+        required: true
+      },
+      title: {
+        required: true
+      }
+    },
+    // Messages for form validation
+    messages: {
+      parent_id: {
+        required: "@lang('admin.message.category_required', 'Kategori seçilmelidir!')"
+      },
+      title: {
+        required: "@lang('admin.message.content_title_required', 'İçerik başlığını girin!')"
+      }
+    },
+    // Do not change code below
+    errorPlacement: function (error, element) {
+      error.insertAfter(element.parent());
+    },
+    submitHandler: function (form) {
+      var formData = new FormData(form);
 
- $('#form').validate({
-  // Rules for form validation
-  rules: {
-   parent_id: {
-    required: true
-   },
-   title: {
-    required : true
-   }
-  },
-  // Messages for form validation
-  messages: {
-   parent_id: {
-    required: "@lang('admin.message.category_required', 'Kategori seçilmelidir!')"
-   },
-   title: {
-    required: "@lang('admin.message.content_title_required', 'İçerik başlığını girin!')"
-   }
-  },
-  // Do not change code below
-  errorPlacement : function(error, element) {
-   error.insertAfter(element.parent());
-  },
-  submitHandler: function(form) {
-   var formData = new FormData(form);
+      $.ajax({
+        'type': $(form).attr('method'),
+        'url': $(form).attr('action'),
+        'cache': false,
+        'dataType': 'json',
+        'contentType': false,
+        'processData': false,
+        'data': formData
+      }).done(function (result) {
+        if (result.success) {
+          setItem(result.return.parent_id, result.return);
 
-   $.ajax({
-    'type': $(form).attr('method'),
-    'url': $(form).attr('action'),
-    'cache': false,
-    'dataType': 'json',
-    'contentType': false,
-    'processData': false,
-    'data': formData
-   }).done(function(result) {
-    if (result.success) {
-     setItem(result.return.parent_id, result.return);
+          result.onAfterClose = function () {
+            $('#dialog').modal('hide');
+          };
+        }
 
-     result.onAfterClose = function() {
-      $('#dialog').modal('hide');
-     };
+        message(result);
+      });
     }
-
-    message(result);
-   });
-  }
- });
- //]]>
+  });
+  //]]>
 </script>
 @stop

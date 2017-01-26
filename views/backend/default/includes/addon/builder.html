@@ -3,59 +3,72 @@
 @section('script')
 @parent
 <script type="text/javascript">
- //<![CDATA[
- $('a[href="#builder"]').click(function() {
-  $('#builder').remove();
-  $('body').css('overflow', 'hidden');
+  //<![CDATA[
+  $('a[href="#builder"]').click(function () {
+    $('#builder').remove();
+    $('body').css('overflow', 'hidden');
 
-  if ($.blockUI) {
-   $.blockUI({
-    'css': {
-     backgroundColor: '#f2f2f2',
-     color: '#000000',
-     border: 'none',
-     padding: '10px',
-     fontSize: '16px'
-    },
-    'baseZ': 10000,
-    'message': '<i class="fa fa-spinner fa-spin"></i> ' + lang('please-wait')
-   });
-  }
-
-  localStorage.setItem('content', $('#{{ $target or 'meta-content' }}').val());
-
-  $('<div/>', {
-   'id': 'builder'
-  }).css({
-   'position': 'fixed',
-   'top': 0,
-   'left': 0,
-   'width': '100%',
-   'height': '100%',
-   'backgroundColor': '#ffffff',
-   'zIndex': 1040
-  }).appendTo('body').append(
-   $('<iframe/>', {
-    'src': '@url($prefix . 'content/builder')'
-   }).css({
-    'width': '100%',
-    'height': '100%',
-    'border': 'none'
-   }).load(function() {
     if ($.blockUI) {
-     $.unblockUI();
+      $.blockUI({
+        'css': {
+          backgroundColor: '#f2f2f2',
+          color: '#000000',
+          border: 'none',
+          padding: '10px',
+          fontSize: '16px'
+        },
+        'baseZ': 10000,
+        'message': '<i class="fa fa-spinner fa-spin"></i> ' + lang('please-wait')
+      });
     }
-   })
-  ).on('close', function() {
-   $('#builder').remove();
-   $('body').css('overflow', 'auto');
 
-   var html = localStorage.getItem('content');
-   $('#{{ $id or 'html-content' }}').destroy().html(html).summernote();
+    localStorage.setItem('content', $('#{{ $target or '
+    meta - content
+    ' }}'
+    ).
+    val()
+    )
+    ;
+
+    $('<div/>', {
+      'id': 'builder'
+    }).css({
+      'position': 'fixed',
+      'top': 0,
+      'left': 0,
+      'width': '100%',
+      'height': '100%',
+      'backgroundColor': '#ffffff',
+      'zIndex': 1040
+    }).appendTo('body').append(
+      $('<iframe/>', {
+          'src': '@url($prefix . 'content / builder
+    ')'
+  }).
+    css({
+      'width': '100%',
+      'height': '100%',
+      'border': 'none'
+    }).load(function () {
+      if ($.blockUI) {
+        $.unblockUI();
+      }
+    })
+    ).
+    on('close', function () {
+      $('#builder').remove();
+      $('body').css('overflow', 'auto');
+
+      var html = localStorage.getItem('content');
+      $('#{{ $id or '
+      html - content
+      ' }}'
+      ).
+      destroy().html(html).summernote();
+    });
+
+    return false;
   });
-
-  return false;
- });
- //]]>
+  //]]>
 </script>
 @stop

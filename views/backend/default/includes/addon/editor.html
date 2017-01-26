@@ -3,34 +3,68 @@
 @section('script')
 @parent
 <script type="text/javascript">
- //<![CDATA[
- @if (conf('system.editor', 'summernote') == 'innova')
- window.setInterval(function() {
-  //$('#{{ $target or 'meta-content' }}').val(oEditor.getHTMLBody());
- }, 500);
- @else
- loadScript('{{ $root }}/js/lib/editors/summernote/summernote.min.js', function() {
-  loadCSS('{{ $root }}/js/lib/editors/summernote/summernote.css', function() {
-   $('#{{ $id or 'html-content' }}').html($('#{{ $target or 'meta-content' }}').val()).summernote({
-    height: 500,
-    focus: false,
-    onChange: function(contents) {
-     $('#{{ $target or 'meta-content' }}').val(contents);
-    },
-    onFocus: function(contents) {
-     $('#{{ $target or 'meta-content' }}').val(contents);
-    },
-    onBlur: function(contents) {
-     $('#{{ $target or 'meta-content' }}').val(contents);
-    }
-   });
+  //<![CDATA[
+  @
+  if (conf('system.editor', 'summernote') == 'innova')
+    window.setInterval(function () {
+      //$('#{{ $target or 'meta-content' }}').val(oEditor.getHTMLBody());
+    }, 500);
+  @else
+  loadScript('{{ $root }}/js/lib/editors/summernote/summernote.min.js', function () {
+    loadCSS('{{ $root }}/js/lib/editors/summernote/summernote.css', function () {
+      $('#{{ $id or '
+      html - content
+      ' }}'
+      ).
+      html($('#{{ $target or '
+      meta - content
+      ' }}'
+      ).
+      val()
+      ).
+      summernote({
+        height: 500,
+        focus: false,
+        onChange: function (contents) {
+          $('#{{ $target or '
+          meta - content
+          ' }}'
+          ).
+          val(contents);
+        },
+        onFocus: function (contents) {
+          $('#{{ $target or '
+          meta - content
+          ' }}'
+          ).
+          val(contents);
+        },
+        onBlur: function (contents) {
+          $('#{{ $target or '
+          meta - content
+          ' }}'
+          ).
+          val(contents);
+        }
+      });
 
-   window.setInterval(function() {
-    $('#{{ $target or 'meta-content' }}').val($('#{{ $id or 'html-content' }}').code());
-   }, 500);
+      window.setInterval(function () {
+        $('#{{ $target or '
+        meta - content
+        ' }}'
+        ).
+        val($('#{{ $id or '
+        html - content
+        ' }}'
+        ).
+        code()
+        )
+        ;
+      }, 500);
+    });
   });
- });
- @endif
- //]]>
+  @
+  endif
+  //]]>
 </script>
 @stop

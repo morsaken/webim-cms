@@ -5,202 +5,203 @@
 @section('content')
 @include('topbar')
 <section id="content" class="table-layout">
- <div class="tray tray-center pn va-t posr">
-  <div class="panel m15">
-   <div class="panel-menu p12 admin-form theme-primary">
-    <div class="row">
-     <div class="col-md-3">
-      <label class="field select">
-       <select id="filter-language" name="filter-language">
-        @foreach (langs() as $langCode => $langTitle)
-        <option value="{{ $langCode }}"{{ input('language', lang()) == $langCode ? ' selected="selected"' : '' }}>{{{ $langTitle }}}</option>
-        @endforeach
-       </select>
-       <i class="arrow"></i>
-      </label>
-     </div>
-     <div class="col-md-9">
-      <div class="text-right">
-       <a class="btn btn-dark" href="#add">
-        <i class="fa fa-plus mr5"></i>
-        @lang('admin.button.add', 'Ekle')
-       </a>
+  <div class="tray tray-center pn va-t posr">
+    <div class="panel m15">
+      <div class="panel-menu p12 admin-form theme-primary">
+        <div class="row">
+          <div class="col-md-3">
+            <label class="field select">
+              <select id="filter-language" name="filter-language">
+                @foreach (langs() as $langCode => $langTitle)
+                <option value="{{ $langCode }}" {{ input(
+                'language', lang()) == $langCode ? ' selected="selected"' : '' }}>{{{ $langTitle }}}</option>
+                @endforeach
+              </select>
+              <i class="arrow"></i>
+            </label>
+          </div>
+          <div class="col-md-9">
+            <div class="text-right">
+              <a class="btn btn-dark" href="#add">
+                <i class="fa fa-plus mr5"></i>
+                @lang('admin.button.add', 'Ekle')
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
-     </div>
+      <div class="panel-body">
+        <form id="form" class="admin-form hide" method="post" action="@url()">
+          <input type="hidden" name="language" value="{{ input('language', lang()) }}">
+          <table id="list" class="table">
+            <thead>
+            <tr>
+              <th class="text-center col-xs-1">#</th>
+              <th class="col-xs-3">@lang('label.key', 'Anahtar')</th>
+              <th class="col-xs-8">@lang('label.value', 'Değer')</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (conf('cv.' . input('language', lang()), array()) as $key => $value)
+            <tr>
+              <td class="text-center">
+                <button type="button" data-key="{{ $key }}" class="btn btn-danger">
+                  <i class="fa fa-trash-o"></i>
+                </button>
+              </td>
+              <td>
+                <input type="text" name="key[]" class="gui-input" value="{{ $key }}">
+              </td>
+              <td>
+                <input type="text" name="value[]" class="gui-input" value="{{{ $value }}}">
+              </td>
+            </tr>
+            @endforeach
+            </tbody>
+          </table>
+          <hr class="short alt">
+          <div class="section mbn text-right">
+            <button type="submit" class="btn btn-primary">
+              <i class="fa fa-save"></i>
+              @lang('admin.button.save', 'Kaydet')
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-   </div>
-   <div class="panel-body">
-    <form id="form" class="admin-form hide" method="post" action="@url()">
-     <input type="hidden" name="language" value="{{ input('language', lang()) }}">
-     <table id="list" class="table">
-      <thead>
-      <tr>
-       <th class="text-center col-xs-1">#</th>
-       <th class="col-xs-3">@lang('label.key', 'Anahtar')</th>
-       <th class="col-xs-8">@lang('label.value', 'Değer')</th>
-      </tr>
-      </thead>
-      <tbody>
-       @foreach (conf('cv.' . input('language', lang()), array()) as $key => $value)
-       <tr>
-        <td class="text-center">
-         <button type="button" data-key="{{ $key }}" class="btn btn-danger">
-          <i class="fa fa-trash-o"></i>
-         </button>
-        </td>
-        <td>
-         <input type="text" name="key[]" class="gui-input" value="{{ $key }}">
-        </td>
-        <td>
-         <input type="text" name="value[]" class="gui-input" value="{{{ $value }}}">
-        </td>
-       </tr>
-       @endforeach
-      </tbody>
-     </table>
-     <hr class="short alt">
-     <div class="section mbn text-right">
-      <button type="submit" class="btn btn-primary">
-       <i class="fa fa-save"></i>
-       @lang('admin.button.save', 'Kaydet')
-      </button>
-     </div>
-    </form>
-   </div>
   </div>
- </div>
 </section>
 @stop
 
 @section('script')
 @parent
 <script type="text/javascript">
- //<![CDATA[
- $('#filter-language').change(function() {
-  window.location.href = '@url()?language=' + $(this).val();
- });
+  //<![CDATA[
+  $('#filter-language').change(function () {
+    window.location.href = '@url()?language=' + $(this).val();
+  });
 
- function events() {
-  $('#form').removeClass('hide');
+  function events() {
+    $('#form').removeClass('hide');
 
-  if (!$('button[data-key]').length) {
-   $('#form').addClass('hide');
-  }
-
-  $('button[data-key]').off('click').click(function() {
-   var tr = $(this).closest('tr');
-
-   $.ajax({
-    type: 'DELETE',
-    url: '@url()/' + $('#filter-language').val() + '/' + $(this).data('key')
-   }).done(function(result) {
-    if (result.success) {
-     tr.remove();
-    } else {
-     message(result.text);
+    if (!$('button[data-key]').length) {
+      $('#form').addClass('hide');
     }
-   });
+
+    $('button[data-key]').off('click').click(function () {
+      var tr = $(this).closest('tr');
+
+      $.ajax({
+        type: 'DELETE',
+        url: '@url()/' + $('#filter-language').val() + '/' + $(this).data('key')
+      }).done(function (result) {
+        if (result.success) {
+          tr.remove();
+        } else {
+          message(result.text);
+        }
+      });
+    });
+
+    $('input[name="value[]"]:last').blur(function (e) {
+      $('a[href="#add"]').click();
+    });
+  }
+
+  $('a[href="#add"]').click(function () {
+    var key = 'undefined';
+
+    if (!$('button[data-key="' + key + '"]').get(0)) {
+      $('<tr/>').append(
+        $('<td/>').addClass('text-center').append(
+          $('<button/>', {
+            'type': 'button',
+            'data-key': key
+          }).addClass('btn btn-danger').append(
+            $('<i/>').addClass('fa fa-trash-o')
+          )
+        ),
+        $('<td/>').append(
+          $('<input/>', {
+            'type': 'text',
+            'name': 'key[]'
+          }).addClass('gui-input').blur(function () {
+            var t = $(this);
+            var v = $.normalizeString($(this).val());
+
+            if (v.length) {
+              if ($('button[data-key="' + v + '"]').not(this).get(0)) {
+                message({
+                  'text': "@lang('message.type_different_key', 'Başka bir anahtar seçin!')",
+                  'onAfterClose': function () {
+                    t.select();
+                  }
+                });
+              } else {
+                $(this).val(v).closest('tr').find('button').attr('data-key', v);
+              }
+            } else {
+              $(this).attr('data-key', key);
+            }
+          })
+        ),
+        $('<td/>').append(
+          $('<input/>', {
+            'type': 'text',
+            'name': 'value[]'
+          }).addClass('gui-input')
+        )
+      ).appendTo('#list tbody');
+
+      events();
+
+      $('input[name="key[]"]:last').focus();
+    }
+
+    return false;
   });
 
-  $('input[name="value[]"]:last').blur(function(e) {
-   $('a[href="#add"]').click();
-  });
- }
+  events();
 
- $('a[href="#add"]').click(function() {
-  var key = 'undefined';
-
-  if (!$('button[data-key="' + key + '"]').get(0)) {
-   $('<tr/>').append(
-    $('<td/>').addClass('text-center').append(
-     $('<button/>', {
-      'type': 'button',
-      'data-key': key
-     }).addClass('btn btn-danger').append(
-      $('<i/>').addClass('fa fa-trash-o')
-     )
-    ),
-    $('<td/>').append(
-     $('<input/>', {
-      'type': 'text',
-      'name': 'key[]'
-     }).addClass('gui-input').blur(function() {
-      var t = $(this);
-      var v = $.normalizeString($(this).val());
-
-      if (v.length) {
-       if ($('button[data-key="' + v + '"]').not(this).get(0)) {
-        message({
-         'text': "@lang('message.type_different_key', 'Başka bir anahtar seçin!')",
-         'onAfterClose': function() {
-          t.select();
-         }
-        });
-       } else {
-        $(this).val(v).closest('tr').find('button').attr('data-key', v);
-       }
-      } else {
-       $(this).attr('data-key', key);
+  $('#form').validate({
+    // Rules for form validation
+    rules: {
+      'key[]': {
+        required: true
+      },
+      'value[]': {
+        required: true
       }
-     })
-    ),
-    $('<td/>').append(
-     $('<input/>', {
-      'type': 'text',
-      'name': 'value[]'
-     }).addClass('gui-input')
-    )
-   ).appendTo('#list tbody');
+    },
+    // Messages for form validation
+    messages: {
+      'key[]': {
+        required: "@lang('admin.message.key_required', 'Anahtarını girin!')"
+      },
+      'value[]': {
+        required: "@lang('admin.message.value_required', 'Değeri girin!')"
+      }
+    },
+    // Do not change code below
+    errorPlacement: function (error, element) {
+      error.insertAfter(element);
+    },
+    submitHandler: function (form) {
+      var formData = new FormData(form);
 
-   events();
-
-   $('input[name="key[]"]:last').focus();
-  }
-
-  return false;
- });
-
- events();
-
- $('#form').validate({
-  // Rules for form validation
-  rules: {
-   'key[]': {
-    required : true
-   },
-   'value[]': {
-    required : true
-   }
-  },
-  // Messages for form validation
-  messages: {
-   'key[]': {
-    required: "@lang('admin.message.key_required', 'Anahtarını girin!')"
-   },
-   'value[]': {
-    required: "@lang('admin.message.value_required', 'Değeri girin!')"
-   }
-  },
-  // Do not change code below
-  errorPlacement : function(error, element) {
-   error.insertAfter(element);
-  },
-  submitHandler: function(form) {
-   var formData = new FormData(form);
-
-   $.ajax({
-    'type': $(form).attr('method'),
-    'url': $(form).attr('action'),
-    'cache': false,
-    'dataType': 'json',
-    'contentType': false,
-    'processData': false,
-    'data': formData
-   }).done(function(result) {
-    message(result);
-   });
-  }
- });
- //]]>
+      $.ajax({
+        'type': $(form).attr('method'),
+        'url': $(form).attr('action'),
+        'cache': false,
+        'dataType': 'json',
+        'contentType': false,
+        'processData': false,
+        'data': formData
+      }).done(function (result) {
+        message(result);
+      });
+    }
+  });
+  //]]>
 </script>
 @stop

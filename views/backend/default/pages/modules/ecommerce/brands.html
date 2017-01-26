@@ -5,274 +5,276 @@
 @section('content')
 @include('topbar')
 <section id="content" class="table-layout">
- <div class="tray tray-center pn va-t posr" data-tray-height="match">
-  <div class="panel m15">
-   <div class="panel-body">
-    <div id="list">
-     <div class="alert alert-default w400 mv20 center-block text-center">@lang('admin.label.loading', 'Yükleniyor...')</div>
+  <div class="tray tray-center pn va-t posr" data-tray-height="match">
+    <div class="panel m15">
+      <div class="panel-body">
+        <div id="list">
+          <div class="alert alert-default w400 mv20 center-block text-center">@lang('admin.label.loading',
+            'Yükleniyor...')
+          </div>
+        </div>
+      </div>
     </div>
-   </div>
   </div>
- </div>
 </section>
 
 <div id="brand-modal" class="modal fade">
- <div class="modal-dialog modal-sm">
-  <div class="modal-content">
-   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">×</button>
-    <h4>
-     <i class="fa fa-info"></i>
-     @lang('admin.label.brand', 'Marka')
-    </h4>
-   </div>
-   <form id="brand-form" class="admin-form" method="post" action="@url()">
-    <input type="hidden" id="id" name="id" value="0">
-    <input type="hidden" id="version" name="version" value="0">
-    <input type="hidden" id="meta-poster_id" name="meta-poster_id" value="0">
-    <div class="modal-body">
-     @include('addon.poster', ['posterTitle' => lang('admin.label.logo', 'Logo'), 'posterHeight' => 200])
-     <div class="section mb15">
-      <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
-      <label class="field prepend-icon">
-       <input type="text" id="title" name="title" class="gui-input" maxlength="255">
-       <span class="field-icon">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4>
+          <i class="fa fa-info"></i>
+          @lang('admin.label.brand', 'Marka')
+        </h4>
+      </div>
+      <form id="brand-form" class="admin-form" method="post" action="@url()">
+        <input type="hidden" id="id" name="id" value="0">
+        <input type="hidden" id="version" name="version" value="0">
+        <input type="hidden" id="meta-poster_id" name="meta-poster_id" value="0">
+        <div class="modal-body">
+          @include('addon.poster', ['posterTitle' => lang('admin.label.logo', 'Logo'), 'posterHeight' => 200])
+          <div class="section mb15">
+            <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
+            <label class="field prepend-icon">
+              <input type="text" id="title" name="title" class="gui-input" maxlength="255">
+              <span class="field-icon">
         <i class="fa fa-tag"></i>
        </span>
-      </label>
-     </div>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-sm btn-primary">
+            <i class="fa fa-save"></i>
+            @lang('admin.button.save', 'Kaydet')
+          </button>
+          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+            <i class="fa fa-close"></i>
+            @lang('admin.button.close', 'Kapat')
+          </button>
+        </div>
+      </form>
     </div>
-    <div class="modal-footer">
-     <button type="submit" class="btn btn-sm btn-primary">
-      <i class="fa fa-save"></i>
-      @lang('admin.button.save', 'Kaydet')
-     </button>
-     <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
-      <i class="fa fa-close"></i>
-      @lang('admin.button.close', 'Kapat')
-     </button>
-    </div>
-   </form>
   </div>
- </div>
 </div>
 @stop
 
 @section('script')
 @parent
 <script type="text/javascript">
- //<![CDATA[
- function getList() {
-  $.ajax({
-   'type': 'get',
-   'url': "@url()"
-  }).done(function(result) {
-   $('#list').empty();
-
-   if (result.length) {
-    for (var k in result) {
-     add({
-      'id': result[k].id,
-      'title': result[k].title,
-      'poster': result[k].poster.image,
-      'active': result[k].active
-     });
-    }
-   } else {
-    $('<div/>').text("@lang('admin.message.no_content_found', 'Kayıt bulunamadı!')")
-     .addClass('alert alert-default w400 mv20 center-block text-center')
-     .appendTo('#list');
-   }
-  });
- }
-
- function add(item) {
-  var target = $('#list > div.row');
-
-  if (!target.length) {
-   target = $('<div/>').addClass('row').appendTo($('#list').empty());
-  }
-
-  target = $('<div/>').addClass('col-sm-4 col-md-3').appendTo(target);
-
-  if ($('.panel[data-id="'+ item.id +'"]').length) {
-   target = $('.panel[data-id="'+ item.id +'"]').parent().empty();
-  }
-
-  $('<div/>', {
-   'data-id': item.id
-  }).addClass('panel panel-tile text-center br-a br-light').append(
-   $('<div/>').addClass('panel-body bg-light').append(
-    $('<img/>', {
-     'src': item.poster,
-     'alt': item.title
-    }).addClass('img-responsive'),
-    $('<h2/>').addClass('mbn fs25').text(item.title)
-   ),
-   $('<div/>').addClass('panel-footer bg-light dark br-t br-light').append(
-    $('<a/>', {
-     'href': 'javascript:void(0)',
-     'data-id': item.id
-    }).click(function(e) {
-     e.preventDefault();
-
-     $.ajax({
-      'type': 'get',
-      'url': '@url()/' + $(this).data('id')
-     }).done(function(result) {
-      if (result.id) {
-       $('a[href="#add"]').click();
-
-       $('#id').val(result.id);
-       $('#title').val(result.title);
-       $('#version').val(result.version);
-       $('#meta-poster_id').val(result.poster.id);
-
-       $.fn.posterSet(result.poster);
-      } else {
-       new PNotify({
-        title: "@lang('admin.label.error', 'Hata')",
-        text: "@lang('admin.message.not_found', 'Kayıt bulunamadı!')",
-        type: 'danger'
-       });
-      }
-     });
-    }).addClass('btn btn-primary mr10').append(
-     $('<i/>').addClass('fa fa-edit')
-    ),
-    $('<a/>', {
-     'href': 'javascript:void(0)',
-     'data-id': item.id
-    }).click(function(e) {
-     e.preventDefault();
-
-     var target = $(this);
-
-     $.ajax({
-      'type': 'put',
-      'url': '@url()/' + $(this).data('id')
-     }).done(function(result) {
-      if (result.success) {
-       target.removeClass('btn-success btn-dark')
-        .addClass('btn-' + ((result.return == 'true') ? 'success' : 'dark'));
-
-       target.find('>i').removeClass('fa-check fa-times')
-        .addClass('fa-' + ((result.return == 'true') ? 'check' : 'times'));
-      } else {
-       new PNotify({
-        title: "@lang('admin.label.error', 'Hata')",
-        text: result.text,
-        type: 'danger'
-       });
-      }
-     });
-    }).addClass('btn btn-' + ((item.active == 'true') ? 'success' : 'dark') + ' mr10').append(
-     $('<i/>').addClass('fa fa-' + ((item.active == 'true') ? 'check' : 'times'))
-    ),
-    $('<a/>', {
-     'href': 'javascript:void(0)',
-     'data-id': item.id
-    }).addClass('btn btn-danger').append(
-     $('<i/>').addClass('fa fa-trash-o')
-    ).popConfirm({
-      title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
-      content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
-      placement: "top",
-      yesBtn: "@lang('admin.button.yes', 'Evet')",
-      noBtn: "@lang('admin.button.no', 'Hayır')",
-      confirm: function() {
-       var target = $(this).closest('.panel').parent();
-
-       $.ajax({
-        type: 'DELETE',
-        url: '@url()/' + $(this).data('id')
-       }).done(function (result) {
-        if (result.success) {
-         target.remove();
-
-         if (!$('#list .panel').length) {
-          $('<div/>').text("@lang('admin.message.no_content_found', 'Kayıt bulunamadı!')")
-           .addClass('alert alert-default w400 mv20 center-block text-center')
-           .appendTo($('#list').empty());
-         }
-        } else {
-         message(result.text);
-        }
-       });
-      }
-     })
-   )
-  ).appendTo(target);
- }
-
- $(function() {
-  //Get list
-  getList();
-
-  $('a[href="#add"]').click(function(e) {
-   e.preventDefault();
-
-   $('#id').val(0);
-   $('#meta-poster_id').val(0);
-   $('#title').val('');
-   $('#version').val(0);
-
-   $.fn.posterReset();
-   $('#brand-form').validate().resetForm();
-
-   $('#brand-modal').modal();
-
-   window.setTimeout(function() {
-    $('#title').focus();
-   }, 200);
-  });
-
-  $('#brand-form').validate({
-   'rules': {
-    'title': {
-     'required': true
-    }
-   },
-   'messages': {
-    'title': {
-     'required': "@lang('admin.message.content_title_required', 'İçerik başlığını girin!')"
-    }
-   },
-   'errorPlacement': function (error, element) {
-    error.insertAfter(element.parent());
-   },
-   'submitHandler': function (form) {
-    var formData = new FormData(form);
-
+  //<![CDATA[
+  function getList() {
     $.ajax({
-     'type': $(form).attr('method'),
-     'url': $(form).attr('action'),
-     'cache': false,
-     'dataType': 'json',
-     'contentType': false,
-     'processData': false,
-     'data': formData
-    }).done(function(result) {
-     if (result.success) {
-      add({
-       'id': result.return.id,
-       'title': $('#title').val(),
-       'poster': result.return.poster.image,
-       'active': result.return.active
-      });
+      'type': 'get',
+      'url': "@url()"
+    }).done(function (result) {
+      $('#list').empty();
 
-      $('#brand-modal').modal('hide');
-     } else {
-      new PNotify({
-       title: "@lang('admin.label.error', 'Hata')",
-       text: result.text,
-       type: 'danger'
-      });
-     }
+      if (result.length) {
+        for (var k in result) {
+          add({
+            'id': result[k].id,
+            'title': result[k].title,
+            'poster': result[k].poster.image,
+            'active': result[k].active
+          });
+        }
+      } else {
+        $('<div/>').text("@lang('admin.message.no_content_found', 'Kayıt bulunamadı!')")
+          .addClass('alert alert-default w400 mv20 center-block text-center')
+          .appendTo('#list');
+      }
     });
-   }
+  }
+
+  function add(item) {
+    var target = $('#list > div.row');
+
+    if (!target.length) {
+      target = $('<div/>').addClass('row').appendTo($('#list').empty());
+    }
+
+    target = $('<div/>').addClass('col-sm-4 col-md-3').appendTo(target);
+
+    if ($('.panel[data-id="' + item.id + '"]').length) {
+      target = $('.panel[data-id="' + item.id + '"]').parent().empty();
+    }
+
+    $('<div/>', {
+      'data-id': item.id
+    }).addClass('panel panel-tile text-center br-a br-light').append(
+      $('<div/>').addClass('panel-body bg-light').append(
+        $('<img/>', {
+          'src': item.poster,
+          'alt': item.title
+        }).addClass('img-responsive'),
+        $('<h2/>').addClass('mbn fs25').text(item.title)
+      ),
+      $('<div/>').addClass('panel-footer bg-light dark br-t br-light').append(
+        $('<a/>', {
+          'href': 'javascript:void(0)',
+          'data-id': item.id
+        }).click(function (e) {
+          e.preventDefault();
+
+          $.ajax({
+            'type': 'get',
+            'url': '@url()/' + $(this).data('id')
+          }).done(function (result) {
+            if (result.id) {
+              $('a[href="#add"]').click();
+
+              $('#id').val(result.id);
+              $('#title').val(result.title);
+              $('#version').val(result.version);
+              $('#meta-poster_id').val(result.poster.id);
+
+              $.fn.posterSet(result.poster);
+            } else {
+              new PNotify({
+                title: "@lang('admin.label.error', 'Hata')",
+                text: "@lang('admin.message.not_found', 'Kayıt bulunamadı!')",
+                type: 'danger'
+              });
+            }
+          });
+        }).addClass('btn btn-primary mr10').append(
+          $('<i/>').addClass('fa fa-edit')
+        ),
+        $('<a/>', {
+          'href': 'javascript:void(0)',
+          'data-id': item.id
+        }).click(function (e) {
+          e.preventDefault();
+
+          var target = $(this);
+
+          $.ajax({
+            'type': 'put',
+            'url': '@url()/' + $(this).data('id')
+          }).done(function (result) {
+            if (result.success) {
+              target.removeClass('btn-success btn-dark')
+                .addClass('btn-' + ((result.return == 'true') ? 'success' : 'dark'));
+
+              target.find('>i').removeClass('fa-check fa-times')
+                .addClass('fa-' + ((result.return == 'true') ? 'check' : 'times'));
+            } else {
+              new PNotify({
+                title: "@lang('admin.label.error', 'Hata')",
+                text: result.text,
+                type: 'danger'
+              });
+            }
+          });
+        }).addClass('btn btn-' + ((item.active == 'true') ? 'success' : 'dark') + ' mr10').append(
+          $('<i/>').addClass('fa fa-' + ((item.active == 'true') ? 'check' : 'times'))
+        ),
+        $('<a/>', {
+          'href': 'javascript:void(0)',
+          'data-id': item.id
+        }).addClass('btn btn-danger').append(
+          $('<i/>').addClass('fa fa-trash-o')
+        ).popConfirm({
+          title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+          content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
+          placement: "top",
+          yesBtn: "@lang('admin.button.yes', 'Evet')",
+          noBtn: "@lang('admin.button.no', 'Hayır')",
+          confirm: function () {
+            var target = $(this).closest('.panel').parent();
+
+            $.ajax({
+              type: 'DELETE',
+              url: '@url()/' + $(this).data('id')
+            }).done(function (result) {
+              if (result.success) {
+                target.remove();
+
+                if (!$('#list .panel').length) {
+                  $('<div/>').text("@lang('admin.message.no_content_found', 'Kayıt bulunamadı!')")
+                    .addClass('alert alert-default w400 mv20 center-block text-center')
+                    .appendTo($('#list').empty());
+                }
+              } else {
+                message(result.text);
+              }
+            });
+          }
+        })
+      )
+    ).appendTo(target);
+  }
+
+  $(function () {
+    //Get list
+    getList();
+
+    $('a[href="#add"]').click(function (e) {
+      e.preventDefault();
+
+      $('#id').val(0);
+      $('#meta-poster_id').val(0);
+      $('#title').val('');
+      $('#version').val(0);
+
+      $.fn.posterReset();
+      $('#brand-form').validate().resetForm();
+
+      $('#brand-modal').modal();
+
+      window.setTimeout(function () {
+        $('#title').focus();
+      }, 200);
+    });
+
+    $('#brand-form').validate({
+      'rules': {
+        'title': {
+          'required': true
+        }
+      },
+      'messages': {
+        'title': {
+          'required': "@lang('admin.message.content_title_required', 'İçerik başlığını girin!')"
+        }
+      },
+      'errorPlacement': function (error, element) {
+        error.insertAfter(element.parent());
+      },
+      'submitHandler': function (form) {
+        var formData = new FormData(form);
+
+        $.ajax({
+          'type': $(form).attr('method'),
+          'url': $(form).attr('action'),
+          'cache': false,
+          'dataType': 'json',
+          'contentType': false,
+          'processData': false,
+          'data': formData
+        }).done(function (result) {
+          if (result.success) {
+            add({
+              'id': result.return.id,
+              'title': $('#title').val(),
+              'poster': result.return.poster.image,
+              'active': result.return.active
+            });
+
+            $('#brand-modal').modal('hide');
+          } else {
+            new PNotify({
+              title: "@lang('admin.label.error', 'Hata')",
+              text: result.text,
+              type: 'danger'
+            });
+          }
+        });
+      }
+    });
   });
- });
- //]]>
+  //]]>
 </script>
 @stop

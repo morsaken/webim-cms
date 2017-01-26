@@ -1,121 +1,122 @@
 <!DOCTYPE html>
 <html lang="@lang('abbr')">
 <head>
- <title>{{{ $title or 'Web-IM XI' }}}</title>
- <meta charset="@lang('charset')">
- <meta name="author" content="{{{ AUTHOR }}}">
- <meta name="description" content="{{{ $description or '' }}}">
- <meta name="keywords" content="{{{ $keywords or '' }}}">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{{ $title or 'Web-IM XI' }}}</title>
+  <meta charset="@lang('charset')">
+  <meta name="author" content="{{{ AUTHOR }}}">
+  <meta name="description" content="{{{ $description or '' }}}">
+  <meta name="keywords" content="{{{ $keywords or '' }}}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
- <link href="{{ $root }}/img/favicon.ico" rel="shortcut icon">
- <link type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
- <link type="text/css" href="{{ $root }}/css/style.css" rel="stylesheet">
- <link type="text/css" href="{{ $root }}/css/forms.css" rel="stylesheet">
+  <link href="{{ $root }}/img/favicon.ico" rel="shortcut icon">
+  <link type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/style.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/forms.css" rel="stylesheet">
 </head>
 <body class="external-page sb-l-c sb-r-c" data-date="{{ $date }}">
- <div id="main" class="animated fadeIn">
+<div id="main" class="animated fadeIn">
   <section id="content_wrapper">
-   <div id="canvas-wrapper">
-    <canvas id="demo-canvas"></canvas>
-   </div>
-   <section id="content">
-    <a href="@url('/')" title="{{{ $title or 'Web-IM XI' }}}">
-     <img class="img-responsive w200 ml10" src="{{ $root }}/img/logo-white.png" title="{{{ $title or 'Web-IM XI' }}}" alt="{{{ $title or 'Web-IM XI' }}}">
-    </a>
-    <div id="login" class="admin-form theme-info" style="margin-top: 6%;">
-     <div id="counter"></div>
-     <h1 class="coming-soon-title">@conf('system.' . lang() . '.offline_message', lang('message.coming_soon', 'Yakında buradayız!'))</h1>
-     <div class="panel panel-info bw10">
-      <form id="contact" method="post" action="@url()">
-       <div class="panel-menu">
-        <div class="row">
-         <div class="col-md-9">
-          <label class="field prepend-icon">
-           <input id="email" type="text" name="email" class="gui-input" placeholder="@lang('label.your_email_address', 'E-Posta Adresiniz')">
-           <span class="field-icon">
+    <div id="canvas-wrapper">
+      <canvas id="demo-canvas"></canvas>
+    </div>
+    <section id="content">
+      <a href="@url('/')" title="{{{ $title or 'Web-IM XI' }}}">
+        <img class="img-responsive w200 ml10" src="{{ $root }}/img/logo-white.png" title="{{{ $title or 'Web-IM XI' }}}" alt="{{{ $title or 'Web-IM XI' }}}">
+      </a>
+      <div id="login" class="admin-form theme-info" style="margin-top: 6%;">
+        <div id="counter"></div>
+        <h1 class="coming-soon-title">@conf('system.' . lang() . '.offline_message', lang('message.coming_soon',
+          'Yakında buradayız!'))</h1>
+        <div class="panel panel-info bw10">
+          <form id="contact" method="post" action="@url()">
+            <div class="panel-menu">
+              <div class="row">
+                <div class="col-md-9">
+                  <label class="field prepend-icon">
+                    <input id="email" type="text" name="email" class="gui-input" placeholder="@lang('label.your_email_address', 'E-Posta Adresiniz')">
+                    <span class="field-icon">
             <i class="fa fa-envelope-o"></i>
            </span>
-          </label>
-         </div>
-         <div class="col-md-3">
-          <button type="submit" class="button btn-info mr10 btn-block">
-           <i class="fa fa-envelope-o"></i>
-           @lang('button.subscribe', 'Kaydol')
-          </button>
-         </div>
+                  </label>
+                </div>
+                <div class="col-md-3">
+                  <button type="submit" class="button btn-info mr10 btn-block">
+                    <i class="fa fa-envelope-o"></i>
+                    @lang('button.subscribe', 'Kaydol')
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
-       </div>
-      </form>
-     </div>
-    </div>
-   </section>
+      </div>
+    </section>
   </section>
- </div>
+</div>
 
- <script type="text/javascript" src="{{ $root }}/js/lib/jquery-1.11.1.min.js"></script>
- <script type="text/javascript" src="{{ $root }}/js/lib/jquery-ui.min.js"></script>
- <script type="text/javascript" src="{{ $root }}/js/plugins/countdown/jquery.plugin.min.js"></script>
- <script type="text/javascript" src="{{ $root }}/js/plugins/countdown/jquery.countdown.min.js"></script>
- <script type="text/javascript" src="{{ $root }}/js/plugins/countdown/i18n/jquery.countdown-@lang().js"></script>
- <script type="text/javascript" src="{{ $root }}/js/plugins/canvasbg.js"></script>
- <script type="text/javascript" src="{{ $root }}/js/plugins/utility.js"></script>
- <script type="text/javascript" src="{{ $root }}/js/webim.js"></script>
- <script type="text/javascript">
+<script type="text/javascript" src="{{ $root }}/js/lib/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/lib/jquery-ui.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/countdown/jquery.plugin.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/countdown/jquery.countdown.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/countdown/i18n/jquery.countdown-@lang().js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/canvasbg.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/utility.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/webim.js"></script>
+<script type="text/javascript">
   //<![CDATA[
-  $(document).ready(function() {
-   'use strict';
+  $(document).ready(function () {
+    'use strict';
 
-   // Init Theme Core
-   Core.init();
+    // Init Theme Core
+    Core.init();
 
-   // Init CanvasBG and pass target starting location
-   CanvasBG.init({
-    Loc: {
-     x: window.innerWidth / 10,
-     y: window.innerHeight / 20
-    }
-   });
-
-   // Init Countdown Plugin
-   var newYear = new Date($('body').data('date'));
-
-   $('#counter').countdown({
-    until: newYear
-   });
-
-   $('#contact').submit(function(e) {
-    e.preventDefault();
-
-    var form = $(this);
-    var inp = form.find('input');
-    var btn = form.find('button[type="submit"]');
-    var icn = btn.find('i.fa');
-
-    inp.prop('disabled', true);
-    btn.prop('disabled', true);
-    icn.removeClass('fa-envelope-o').addClass('fa-spin fa-spinner');
-
-    $.ajax({
-     'type': form.attr('method'),
-     'url': form.attr('action'),
-     'data': {
-      'email': $('#email').val()
-     }
-    }).done(function(result) {
-     if (result.success) {
-      form.get(0).reset();
-     }
-
-     inp.prop('disabled', false);
-     btn.prop('disabled', false);
-     icn.removeClass('fa-spin fa-spinner').addClass('fa-envelope-o');
-
-     alert(result.text);
+    // Init CanvasBG and pass target starting location
+    CanvasBG.init({
+      Loc: {
+        x: window.innerWidth / 10,
+        y: window.innerHeight / 20
+      }
     });
-   });
+
+    // Init Countdown Plugin
+    var newYear = new Date($('body').data('date'));
+
+    $('#counter').countdown({
+      until: newYear
+    });
+
+    $('#contact').submit(function (e) {
+      e.preventDefault();
+
+      var form = $(this);
+      var inp = form.find('input');
+      var btn = form.find('button[type="submit"]');
+      var icn = btn.find('i.fa');
+
+      inp.prop('disabled', true);
+      btn.prop('disabled', true);
+      icn.removeClass('fa-envelope-o').addClass('fa-spin fa-spinner');
+
+      $.ajax({
+        'type': form.attr('method'),
+        'url': form.attr('action'),
+        'data': {
+          'email': $('#email').val()
+        }
+      }).done(function (result) {
+        if (result.success) {
+          form.get(0).reset();
+        }
+
+        inp.prop('disabled', false);
+        btn.prop('disabled', false);
+        icn.removeClass('fa-spin fa-spinner').addClass('fa-envelope-o');
+
+        alert(result.text);
+      });
+    });
   });
   //]]>
- </script>
+</script>
 </body>
 </html>

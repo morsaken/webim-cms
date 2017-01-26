@@ -1,41 +1,41 @@
 <aside id="sidebar_left" class="nano nano-primary affix">
- <div class="sidebar-left-content nano-content">
-  <header class="sidebar-header">
-   <div class="user-menu">
-    <div class="row text-center mbn">
-     <div class="col-xs-4">
-      <a href="@url($prefix)" class="text-primary" data-toggle="tooltip" data-placement="top" title="@lang('admin.menu.dashboard', 'Panel')">
-       <span class="glyphicons glyphicons-home"></span>
+  <div class="sidebar-left-content nano-content">
+    <header class="sidebar-header">
+      <div class="user-menu">
+        <div class="row text-center mbn">
+          <div class="col-xs-4">
+            <a href="@url($prefix)" class="text-primary" data-toggle="tooltip" data-placement="top" title="@lang('admin.menu.dashboard', 'Panel')">
+              <span class="glyphicons glyphicons-home"></span>
+            </a>
+          </div>
+          <div class="col-xs-4">
+            <a href="@url($prefix . 'my/inbox')" class="text-info" data-toggle="tooltip" data-placement="top" title="@lang('admin.menu.messages', 'Mesajlar')">
+              <span class="glyphicons glyphicons-inbox"></span>
+            </a>
+          </div>
+          <div class="col-xs-4">
+            <a href="@url($prefix . 'my/tasks')" class="text-alert" data-toggle="tooltip" data-placement="top" title="@lang('admin.menu.tasks', 'Görevler')">
+              <span class="glyphicons glyphicons-bell"></span>
+            </a>
+          </div>
+          <div class="col-xs-4">
+            <a href="@url($prefix . 'my/activity')" class="text-system" data-toggle="tooltip" data-placement="top" title="@lang('admin.menu.activities', 'Aktiviteler')">
+              <span class="glyphicons glyphicons-imac"></span>
+            </a>
+          </div>
+          <div class="col-xs-4">
+            <a href="@url($prefix . 'my/profile')" class="text-danger" data-toggle="tooltip" data-placement="top" title="@lang('admin.menu.profile', 'Profil')">
+              <span class="glyphicons glyphicons-settings"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+    {{ isset($menu) ? makeMenu($menu) : '' }}
+    <div class="sidebar-toggle-mini">
+      <a href="#">
+        <span class="fa fa-sign-out"></span>
       </a>
-     </div>
-     <div class="col-xs-4">
-      <a href="@url($prefix . 'my/inbox')" class="text-info" data-toggle="tooltip" data-placement="top" title="@lang('admin.menu.messages', 'Mesajlar')">
-       <span class="glyphicons glyphicons-inbox"></span>
-      </a>
-     </div>
-     <div class="col-xs-4">
-      <a href="@url($prefix . 'my/tasks')" class="text-alert" data-toggle="tooltip" data-placement="top" title="@lang('admin.menu.tasks', 'Görevler')">
-       <span class="glyphicons glyphicons-bell"></span>
-      </a>
-     </div>
-     <div class="col-xs-4">
-      <a href="@url($prefix . 'my/activity')" class="text-system" data-toggle="tooltip" data-placement="top" title="@lang('admin.menu.activities', 'Aktiviteler')">
-       <span class="glyphicons glyphicons-imac"></span>
-      </a>
-     </div>
-     <div class="col-xs-4">
-      <a href="@url($prefix . 'my/profile')" class="text-danger" data-toggle="tooltip" data-placement="top" title="@lang('admin.menu.profile', 'Profil')">
-       <span class="glyphicons glyphicons-settings"></span>
-      </a>
-     </div>
     </div>
-   </div>
-  </header>
-  {{ isset($menu) ? makeMenu($menu) : '' }}
-  <div class="sidebar-toggle-mini">
-   <a href="#">
-    <span class="fa fa-sign-out"></span>
-   </a>
   </div>
- </div>
 </aside>

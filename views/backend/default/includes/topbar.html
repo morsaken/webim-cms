@@ -1,33 +1,33 @@
 <header id="topbar" class="affix">
- <div class="topbar-left">
-  <ol class="breadcrumb">
-   <li class="crumb-active">
-    <a href="@url()">{{{ $caption or $title }}}</a>
-   </li>
-   <li class="crumb-icon">
-    <a href="@url($prefix)">
-     <span class="glyphicon glyphicon-home"></span>
+  <div class="topbar-left">
+    <ol class="breadcrumb">
+      <li class="crumb-active">
+        <a href="@url()">{{{ $caption or $title }}}</a>
+      </li>
+      <li class="crumb-icon">
+        <a href="@url($prefix)">
+          <span class="glyphicon glyphicon-home"></span>
+        </a>
+      </li>
+      @foreach ($breadcrumb as $crumb)
+      @if ($crumb->active)
+      <li class="crumb-trail">{{{ $crumb->title }}}</li>
+      @else
+      <li class="crumb-link">
+        <a href="{{ $crumb->url }}">{{{ $crumb->title }}}</a>
+      </li>
+      @endif
+      @endforeach
+    </ol>
+  </div>
+  <div class="topbar-right">
+    @if (isset($subnavs))
+    @foreach ($subnavs as $nav)
+    <a href="{{ $nav->url }}" class="btn btn-dark btn-sm light fw600 ml10">
+      <span class="fa {{ $nav->icon }} pr5"></span>
+      {{{ $nav->title }}}
     </a>
-   </li>
-   @foreach ($breadcrumb as $crumb)
-   @if ($crumb->active)
-   <li class="crumb-trail">{{{ $crumb->title }}}</li>
-   @else
-   <li class="crumb-link">
-    <a href="{{ $crumb->url }}">{{{ $crumb->title }}}</a>
-   </li>
-   @endif
-   @endforeach
-  </ol>
- </div>
- <div class="topbar-right">
-  @if (isset($subnavs))
-  @foreach ($subnavs as $nav)
-  <a href="{{ $nav->url }}" class="btn btn-dark btn-sm light fw600 ml10">
-   <span class="fa {{ $nav->icon }} pr5"></span>
-   {{{ $nav->title }}}
-  </a>
-  @endforeach
-  @endif
- </div>
+    @endforeach
+    @endif
+  </div>
 </header>

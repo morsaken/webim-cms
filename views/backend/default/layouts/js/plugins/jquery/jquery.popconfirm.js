@@ -56,7 +56,7 @@
         }
 
         if ($.isFunction(options.confirm)) {
-         arrayActions.push(options.confirm);
+          arrayActions.push(options.confirm);
         }
 
         // If there are jquery click events

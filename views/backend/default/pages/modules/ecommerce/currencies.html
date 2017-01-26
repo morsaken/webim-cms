@@ -5,152 +5,152 @@
 @section('content')
 @include('topbar')
 <section id="content" class="table-layout">
- <div class="tray tray-center pn va-t posr" data-tray-height="match">
-  <div class="panel m15">
-   <div class="panel-menu p12 admin-form theme-primary">
-    <div class="row">
-     <div class="col-md-4">
-      <label class="field select">
-       <select id="currencies" name="currencies">
-        @foreach ($currencyList as $currencyCode => $currencyTitle)
-        <option value="{{ $currencyCode }}">{{{ $currencyTitle }}}</option>
-        @endforeach
-       </select>
-       <i class="arrow"></i>
-      </label>
-     </div>
-     <div class="col-md-8">
-      <a class="btn btn-dark" href="#add">
-       <i class="fa fa-plus"></i>
-       @lang('button.add', 'Ekle')
-      </a>
-     </div>
+  <div class="tray tray-center pn va-t posr" data-tray-height="match">
+    <div class="panel m15">
+      <div class="panel-menu p12 admin-form theme-primary">
+        <div class="row">
+          <div class="col-md-4">
+            <label class="field select">
+              <select id="currencies" name="currencies">
+                @foreach ($currencyList as $currencyCode => $currencyTitle)
+                <option value="{{ $currencyCode }}">{{{ $currencyTitle }}}</option>
+                @endforeach
+              </select>
+              <i class="arrow"></i>
+            </label>
+          </div>
+          <div class="col-md-8">
+            <a class="btn btn-dark" href="#add">
+              <i class="fa fa-plus"></i>
+              @lang('button.add', 'Ekle')
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <form id="form" class="admin-form hide" method="post" action="@url()">
+          <table id="list" class="table">
+            <thead>
+            <tr>
+              <th class="text-center col-xs-1">#</th>
+              <th class="col-xs-3">@lang('admin.label.currency', 'Para Birimi')</th>
+              <th class="col-xs-8">@lang('admin.label.ratio', 'Oran')</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (conf('currency', array()) as $currency => $ratio)
+            <tr>
+              <td class="text-center">
+                <button type="button" data-key="{{ $currency }}" class="btn btn-danger">
+                  <i class="fa fa-trash-o"></i>
+                </button>
+              </td>
+              <td>{{{ $currencyList[$currency] }}}</td>
+              <td>
+                <input type="hidden" name="currency[]" value="{{ $currency }}">
+                <input type="text" name="ratio[]" class="gui-input" value="{{ $ratio }}">
+              </td>
+            </tr>
+            @endforeach
+            </tbody>
+          </table>
+          <hr class="short alt">
+          <div class="section mbn text-right">
+            <button type="submit" class="btn btn-primary">
+              <i class="fa fa-save"></i>
+              @lang('admin.button.save', 'Kaydet')
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-   </div>
-   <div class="panel-body">
-    <form id="form" class="admin-form hide" method="post" action="@url()">
-     <table id="list" class="table">
-      <thead>
-       <tr>
-        <th class="text-center col-xs-1">#</th>
-        <th class="col-xs-3">@lang('admin.label.currency', 'Para Birimi')</th>
-        <th class="col-xs-8">@lang('admin.label.ratio', 'Oran')</th>
-       </tr>
-      </thead>
-      <tbody>
-       @foreach (conf('currency', array()) as $currency => $ratio)
-       <tr>
-        <td class="text-center">
-         <button type="button" data-key="{{ $currency }}" class="btn btn-danger">
-          <i class="fa fa-trash-o"></i>
-         </button>
-        </td>
-        <td>{{{ $currencyList[$currency] }}}</td>
-        <td>
-         <input type="hidden" name="currency[]" value="{{ $currency }}">
-         <input type="text" name="ratio[]" class="gui-input" value="{{ $ratio }}">
-        </td>
-       </tr>
-       @endforeach
-      </tbody>
-     </table>
-     <hr class="short alt">
-     <div class="section mbn text-right">
-      <button type="submit" class="btn btn-primary">
-       <i class="fa fa-save"></i>
-       @lang('admin.button.save', 'Kaydet')
-      </button>
-     </div>
-    </form>
-   </div>
   </div>
- </div>
 </section>
 @stop
 
 @section('script')
 @parent
 <script type="text/javascript">
- //<![CDATA[
- function events() {
-  $('#form').removeClass('hide');
+  //<![CDATA[
+  function events() {
+    $('#form').removeClass('hide');
 
-  if (!$('button[data-key]').length) {
-   $('#form').addClass('hide');
-  }
+    if (!$('button[data-key]').length) {
+      $('#form').addClass('hide');
+    }
 
-  $('button[data-key]').off('click').popConfirm({
-   title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
-   content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
-   placement: "top",
-   yesBtn: "@lang('admin.button.yes', 'Evet')",
-   noBtn: "@lang('admin.button.no', 'Hayır')",
-   confirm: function() {
-    var tr = $(this).closest('tr');
+    $('button[data-key]').off('click').popConfirm({
+      title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+      content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
+      placement: "top",
+      yesBtn: "@lang('admin.button.yes', 'Evet')",
+      noBtn: "@lang('admin.button.no', 'Hayır')",
+      confirm: function () {
+        var tr = $(this).closest('tr');
 
-    $.ajax({
-     type: 'DELETE',
-     url: '@url()/' + $(this).data('key')
-    }).done(function(result) {
-     if (result.success) {
-      tr.remove();
-      events();
-     } else {
-      message(result.text);
-     }
+        $.ajax({
+          type: 'DELETE',
+          url: '@url()/' + $(this).data('key')
+        }).done(function (result) {
+          if (result.success) {
+            tr.remove();
+            events();
+          } else {
+            message(result.text);
+          }
+        });
+      }
     });
-   }
-  });
- }
-
- $('a[href="#add"]').click(function() {
-  var key = $('#currencies').val();
-  var val = $('#currencies > option:selected').text();
-
-  if (!$('button[data-key="' + key + '"]').get(0)) {
-   $('<tr/>').append(
-    $('<td/>').addClass('text-center').append(
-     $('<button/>', {
-      'type': 'button',
-      'data-key': key
-     }).addClass('btn btn-danger').append(
-      $('<i/>').addClass('fa fa-trash-o')
-     )
-    ),
-    $('<td/>').text(val),
-    $('<td/>').append(
-     $('<input/>', {
-      'type': 'hidden',
-      'name': 'currency[]'
-     }).val(key),
-     $('<input/>', {
-      'type': 'text',
-      'name': 'ratio[]'
-     }).addClass('gui-input')
-    )
-   ).appendTo('#list tbody');
-
-   events();
-
-   $('input[name="ratio[]"]:last').focus();
   }
 
-  return false;
- });
+  $('a[href="#add"]').click(function () {
+    var key = $('#currencies').val();
+    var val = $('#currencies > option:selected').text();
 
- events();
+    if (!$('button[data-key="' + key + '"]').get(0)) {
+      $('<tr/>').append(
+        $('<td/>').addClass('text-center').append(
+          $('<button/>', {
+            'type': 'button',
+            'data-key': key
+          }).addClass('btn btn-danger').append(
+            $('<i/>').addClass('fa fa-trash-o')
+          )
+        ),
+        $('<td/>').text(val),
+        $('<td/>').append(
+          $('<input/>', {
+            'type': 'hidden',
+            'name': 'currency[]'
+          }).val(key),
+          $('<input/>', {
+            'type': 'text',
+            'name': 'ratio[]'
+          }).addClass('gui-input')
+        )
+      ).appendTo('#list tbody');
 
- $('#form').submit(function() {
-  $.ajax({
-   'type': $(this).attr('method'),
-   'url': $(this).attr('action'),
-   'data': $(this).serialize()
-  }).done(function(result) {
-   message(result);
+      events();
+
+      $('input[name="ratio[]"]:last').focus();
+    }
+
+    return false;
   });
 
-  return false;
- });
- //]]>
+  events();
+
+  $('#form').submit(function () {
+    $.ajax({
+      'type': $(this).attr('method'),
+      'url': $(this).attr('action'),
+      'data': $(this).serialize()
+    }).done(function (result) {
+      message(result);
+    });
+
+    return false;
+  });
+  //]]>
 </script>
 @stop

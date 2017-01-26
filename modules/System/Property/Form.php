@@ -10,20 +10,20 @@ use \Webim\Library\Controller;
 
 class Form extends Controller {
 
- /**
-  * Constructor
-  */
- public function __construct() {
-  parent::__construct(DB::table('sys_form'));
- }
+  /**
+   * Constructor
+   */
+  public function __construct() {
+    parent::__construct(DB::table('sys_form'));
+  }
 
- /**
-  * Static creator
-  *
-  * @return self
-  */
- public static function init() {
-  return new self();
- }
+  /**
+   * Static creator
+   *
+   * @return self
+   */
+  public static function init() {
+    return new self();
+  }
 
 }
