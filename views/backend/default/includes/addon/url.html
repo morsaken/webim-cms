@@ -1,193 +1,187 @@
 <div class="field mt10">
-  <label class="fw600">@lang('admin.label.url', 'URL'):</label>
-  @if (isset($base))<span id="base-url">@url($base)</span>/@endif<span id="parent-url">{{ $parentUrl or '' }}</span>
-  <a href="#edit-url">{{{ strlen($url) ? $url : 'untitled' }}}</a>
-  @if (isset($content->url) && isset($base) && (isset($link) && $link))
-  <a class="ml10 text-danger" href="#open-url" data-base-url="@url($base)" title="@lang('admin.hint.open_url', 'URL\'yi görüntüle')">
-    <i class="fa fa-link"></i>
-  </a>
-  @endif
+ <label class="fw600">@lang('admin.label.url', 'URL'):</label>
+ @if (isset($base))<span id="base-url">@url($base)</span>/@endif<span id="parent-url">{{ $parentUrl or '' }}</span><a href="#edit-url">{{{ strlen($url) ? $url : 'untitled' }}}</a>
+ @if (isset($content->url) && isset($base) && (isset($link) && $link))
+ <a class="ml10 text-danger" href="#open-url" data-base-url="@url($base)" title="@lang('admin.hint.open_url', 'URL\'yi görüntüle')">
+  <i class="fa fa-link"></i>
+ </a>
+ @endif
 </div>
 
 @section('content')
 @parent
 <div id="url-dialog" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h4>
-          <i class="fa fa-link"></i>
-          @lang('admin.label.change_url', 'URL Değiştir')
-        </h4>
-      </div>
-      <form id="url-form" class="admin-form" method="post" action="{{ str_replace('form/', 'rename/', url()) }}">
-        <div class="modal-body">
-          <label class="field prepend-icon">
-            <input type="text" id="new-url" name="new-url" class="gui-input">
-            <span class="field-icon">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h4>
+     <i class="fa fa-link"></i>
+     @lang('admin.label.change_url', 'URL Değiştir')
+    </h4>
+   </div>
+   <form id="url-form" class="admin-form" method="post" action="{{ str_replace('form/', 'rename/', url()) }}">
+    <div class="modal-body">
+     <label class="field prepend-icon">
+      <input type="text" id="new-url" name="new-url" class="gui-input">
+      <span class="field-icon">
        <i class="fa fa-link"></i>
       </span>
-          </label>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-sm btn-primary">
-            <i class="fa fa-save"></i>
-            @lang('admin.button.save', 'Kaydet')
-          </button>
-          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
-            <i class="fa fa-close"></i>
-            @lang('admin.button.close', 'Kapat')
-          </button>
-        </div>
-      </form>
+     </label>
     </div>
+    <div class="modal-footer">
+     <button type="submit" class="btn btn-sm btn-primary">
+      <i class="fa fa-save"></i>
+      @lang('admin.button.save', 'Kaydet')
+     </button>
+     <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+      <i class="fa fa-close"></i>
+      @lang('admin.button.close', 'Kapat')
+     </button>
+    </div>
+   </form>
   </div>
+ </div>
 </div>
 @stop
 
 @section('script')
 @parent
 <script type="text/javascript">
-  //<![CDATA[
-  @
-  if (isset($base))
-    var base = '@url($base)', bases = {};
+ //<![CDATA[
+ @if (isset($base))
+ var base = '@url($base)', bases = {};
 
-  @
-  foreach(langs() as $lang = > $title
-  )
-  bases['{{ $lang }}'] = '@url($lang . ' / ' . $base)';
-  @
-  endforeach
+ @foreach (langs() as $lang => $title)
+ bases['{{ $lang }}'] = '@url($lang . '/' . $base)';
+ @endforeach
 
-  $.fn.makeUrl = function (u) {
-    var url = '';
+ $.fn.makeUrl = function(u) {
+  var url = '';
 
   @if (isset($withDate) && $withDate)
-      if ($('#publish_date').get(0)) {
-        var date = new Date($('#publish_date').datetimepicker('getDate')),
-          prefix = date.getFullYear()
-            + '/' + ('0' + (date.getMonth() + 1)).slice(-2)
-            + '/' + ('0' + date.getDate()).slice(-2)
-            + '/';
-      }
-    url += prefix;
-  @endif
-
-    url += u;
-
-    return url;
-  };
-
-  $.fn.clearUrl = function () {
-    var url = $('#url').val();
-
-  @if (isset($withDate) && $withDate)
-      if (/^[0-9]{4}[\/\-_]{1}[0-9]{2}[\/\-_]{1}[0-9]{2}[\/\-_]{1}/.test(url)) {
-        url = url.substring(11);
-      }
-  @endif
-
-    return url;
-  };
-
-  if ($('#language').get(0)) {
-    $('#language').change(function () {
-      base = bases[$(this).val()];
-
-      $('#base-url').text(base);
-      $('a[href="#open-url"]').data('base-url', base);
-    }).trigger('change');
+  if ($('#publish_date').get(0)) {
+   var date = new Date($('#publish_date').datetimepicker('getDate')),
+    prefix = date.getFullYear()
+     + '/' + ('0' + (date.getMonth() + 1)).slice(-2)
+     + '/' + ('0' + date.getDate()).slice(-2)
+     + '/';
   }
-  @
-  endif
+  url += prefix;
+  @endif
 
-  $('a[href="#edit-url"]').click(function () {
-    $('#new-url').val($.fn.clearUrl());
+  url += u;
 
-    $('#url-dialog').modal().on('shown.bs.modal', function () {
-      $('#new-url').select();
+  return url;
+ };
+
+ $.fn.clearUrl = function() {
+  var url = $('#url').val();
+
+  @if (isset($withDate) && $withDate)
+   if (/^[0-9]{4}[\/\-_]{1}[0-9]{2}[\/\-_]{1}[0-9]{2}[\/\-_]{1}/.test(url)) {
+    url = url.substring(11);
+   }
+  @endif
+
+  return url;
+ };
+
+ if ($('#language').get(0)) {
+  $('#language').change(function() {
+   base = bases[$(this).val()];
+
+   $('#base-url').text(base);
+   $('a[href="#open-url"]').data('base-url', base);
+  }).trigger('change');
+ }
+ @endif
+
+ $('a[href="#edit-url"]').click(function() {
+  $('#new-url').val($.fn.clearUrl());
+
+  $('#url-dialog').modal().on('shown.bs.modal', function() {
+   $('#new-url').select();
+  });
+
+  return false;
+ });
+
+ $('#new-url').blur(function() {
+  $(this).val($.normalizeString($(this).val(), "{{ $except or '' }}"));
+ });
+
+ $('#title').blur(function() {
+  if (($('#url').val().length == 0) && $(this).val().length) {
+   var url = $.normalizeString($(this).val(), "{{ $except or '' }}");
+
+   if (!url.length) {
+    url = 'untitled';
+   } else {
+    url = $.fn.makeUrl(url);
+
+    $('#url').val(url);
+   }
+
+   $('a[href="#edit-url"]').text(url);
+  }
+ });
+
+ $('a[href="#open-url"]').click(function() {
+  if ($('#id').val() > 0) {
+   window.open($(this).data('base-url') + '/' + $('#parent-url').text() + $('#url').val());
+  }
+
+  return false;
+ });
+
+ $('#url-form').validate({
+  'rules': {
+   'new-url': {
+    'required': true
+   }
+  },
+  'messages': {
+   'new-url': {
+    'required': "@lang('admin.message.url_required', 'İçerik URL\'sini girin!')"
+   }
+  },
+  'errorPlacement': function(error, element) {
+   error.insertAfter(element.parent());
+  },
+  'submitHandler': function(form) {
+   var url = $.normalizeString($('#new-url').val(), "{{ $except or '' }}");
+
+   $('#new-url').val(url);
+
+   url = $.fn.makeUrl(url);
+
+   if ($('#id').val() > 0) {
+    $.ajax({
+     'type': $(form).attr('method'),
+     'url': $(form).attr('action'),
+     'data': {
+      'version': $('#version').val(),
+      'url': url
+     }
+    }).done(function (result) {
+     if (result.success) {
+      $('#url').val(result.return.url);
+      $('#version').val(result.return.version);
+
+      $('a[href="#edit-url"]').text(result.return.url);
+      $('#url-dialog').modal('hide');
+     } else {
+      message(result);
+     }
     });
-
-    return false;
-  });
-
-  $('#new-url').blur(function () {
-    $(this).val($.normalizeString($(this).val(), "{{ $except or '' }}"));
-  });
-
-  $('#title').blur(function () {
-    if (($('#url').val().length == 0) && $(this).val().length) {
-      var url = $.normalizeString($(this).val(), "{{ $except or '' }}");
-
-      if (!url.length) {
-        url = 'untitled';
-      } else {
-        url = $.fn.makeUrl(url);
-
-        $('#url').val(url);
-      }
-
-      $('a[href="#edit-url"]').text(url);
-    }
-  });
-
-  $('a[href="#open-url"]').click(function () {
-    if ($('#id').val() > 0) {
-      window.open($(this).data('base-url') + '/' + $('#parent-url').text() + $('#url').val());
-    }
-
-    return false;
-  });
-
-  $('#url-form').validate({
-    'rules': {
-      'new-url': {
-        'required': true
-      }
-    },
-    'messages': {
-      'new-url': {
-        'required': "@lang('admin.message.url_required', 'İçerik URL\'sini girin!')"
-      }
-    },
-    'errorPlacement': function (error, element) {
-      error.insertAfter(element.parent());
-    },
-    'submitHandler': function (form) {
-      var url = $.normalizeString($('#new-url').val(), "{{ $except or '' }}");
-
-      $('#new-url').val(url);
-
-      url = $.fn.makeUrl(url);
-
-      if ($('#id').val() > 0) {
-        $.ajax({
-          'type': $(form).attr('method'),
-          'url': $(form).attr('action'),
-          'data': {
-            'version': $('#version').val(),
-            'url': url
-          }
-        }).done(function (result) {
-          if (result.success) {
-            $('#url').val(result.return.url);
-            $('#version').val(result.return.version);
-
-            $('a[href="#edit-url"]').text(result.return.url);
-            $('#url-dialog').modal('hide');
-          } else {
-            message(result);
-          }
-        });
-      } else {
-        $('#url').val(url);
-        $('a[href="#edit-url"]').text(url);
-        $('#url-dialog').modal('hide');
-      }
-    }
-  });
-  //]]>
+   } else {
+    $('#url').val(url);
+    $('a[href="#edit-url"]').text(url);
+    $('#url-dialog').modal('hide');
+   }
+  }
+ });
+ //]]>
 </script>
 @stop

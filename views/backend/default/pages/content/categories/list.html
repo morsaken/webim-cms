@@ -10,136 +10,133 @@
 @section('content')
 @include('topbar')
 <section id="content" class="table-layout">
-  <div class="tray tray-center pn va-t posr">
-    <div class="panel m15">
-      @include('list.header')
-      <div id="list" class="panel-body pn">
-        @if (isset($list) && $list->total)
-        <table class="table table-hover admin-form fs13 dataTable">
-          <thead>
-          <tr class="bg-light">
-            <th class="text-center w30">
-              <label class="option block mn pn">
-                <input type="checkbox" name="check-all" value="all">
-                <span class="checkbox mn"></span>
-              </label>
-            </th>
-            <th class="text-center w40 hidden-xs sorting sorting_desc" data-orderby="id" data-order="desc">#ID</th>
-            <th class="text-center w50 hidden-xs sorting">@lang('admin.label.language', 'Dil')</th>
-            <th class="text-center w100 hidden-xs sorting">@lang('admin.label.created_at', 'Oluşturma')</th>
-            <th class="sorting">@lang('admin.label.title', 'Başlık')</th>
-            <th class="w150 hidden-xs">@lang('admin.label.parent_title', 'Üst Başlık')</th>
-            <th class="w100 text-center sorting">@lang('admin.label.status', 'Durum')</th>
-          </tr>
-          </thead>
-          <tbody>
-          @foreach ($list->rows as $row)
-          <tr>
-            <td class="text-center">
-              <label class="option block mn pn">
-                <input type="checkbox" name="check[]" value="{{ $row->id }}">
-                <span class="checkbox mn"></span>
-              </label>
-            </td>
-            <td class="text-center hidden-xs">{{ $row->id }}</td>
-            <td class="text-center hidden-xs">{{{ $row->language }}}</td>
-            <td class="text-center hidden-xs" data-livestamp="{{ strtotime($row->created_at) }}" title="{{{ date_show($row->created_at, 'long', true) }}}">
-              {{{ date_ago($row->created_at) }}}
-            </td>
-            <td title="{{ $row->url }}">
-              <a href="@url('#current/form/' . $row->id)">{{{ $row->title }}}</a>
-            </td>
-            <td class="hidden-xs">{{{ $row->parent->title or '.' }}}</td>
-            <td class="text-center">
-              <div class="btn-group text-right">
-                <button type="button" class="btn btn-{{ $row->active ? 'primary' : 'inverse' }} btn-xs br2 dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                  {{{ $row->status }}}
-                  <span class="caret ml5"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                  <li>
-                    <a href="@url('#current/form/' . $row->id)">@lang('admin.button.edit', 'Düzenle')</a>
-                  </li>
-                  <li>
-                    <a href="#delete" data-id="{{ $row->id }}">@lang('admin.button.delete', 'Sil')</a>
-                  </li>
-                  <li class="divider"></li>
-                  <li>
-                    <a href="#archive" data-id="{{ $row->id }}">@lang('admin.button.archive', 'Arşivle')</a>
-                  </li>
-                  <li>
-                    <a href="#duplicate" data-id="{{ $row->id }}">@lang('admin.button.duplicate', 'Çokla')</a>
-                  </li>
-                </ul>
-              </div>
-            </td>
-          </tr>
-          @endforeach
-          </tbody>
-        </table>
-        @else
-        @include('list.empty')
-        @endif
-      </div>
-    </div>
+ <div class="tray tray-center pn va-t posr">
+  <div class="panel m15">
+   @include('list.header')
+   <div id="list" class="panel-body pn">
+    @if (isset($list) && $list->total)
+    <table class="table table-hover admin-form fs13 dataTable">
+     <thead>
+      <tr class="bg-light">
+       <th class="text-center w30">
+        <label class="option block mn pn">
+         <input type="checkbox" name="check-all" value="all">
+         <span class="checkbox mn"></span>
+        </label>
+       </th>
+       <th class="text-center w40 hidden-xs sorting sorting_desc" data-orderby="id" data-order="desc">#ID</th>
+       <th class="text-center w50 hidden-xs sorting">@lang('admin.label.language', 'Dil')</th>
+       <th class="text-center w100 hidden-xs sorting">@lang('admin.label.created_at', 'Oluşturma')</th>
+       <th class="sorting">@lang('admin.label.title', 'Başlık')</th>
+       <th class="w150 hidden-xs">@lang('admin.label.parent_title', 'Üst Başlık')</th>
+       <th class="w100 text-center sorting">@lang('admin.label.status', 'Durum')</th>
+      </tr>
+     </thead>
+     <tbody>
+      @foreach ($list->rows as $row)
+      <tr>
+       <td class="text-center">
+        <label class="option block mn pn">
+         <input type="checkbox" name="check[]" value="{{ $row->id }}">
+         <span class="checkbox mn"></span>
+        </label>
+       </td>
+       <td class="text-center hidden-xs">{{ $row->id }}</td>
+       <td class="text-center hidden-xs">{{{ $row->language }}}</td>
+       <td class="text-center hidden-xs" data-livestamp="{{ strtotime($row->created_at) }}" title="{{{ date_show($row->created_at, 'long', true) }}}">{{{ date_ago($row->created_at) }}}</td>
+       <td title="{{ $row->url }}">
+        <a href="@url('#current/form/' . $row->id)">{{{ $row->title }}}</a>
+       </td>
+       <td class="hidden-xs">{{{ $row->parent->title or '.' }}}</td>
+       <td class="text-center">
+        <div class="btn-group text-right">
+         <button type="button" class="btn btn-{{ $row->active ? 'primary' : 'inverse' }} btn-xs br2 dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          {{{ $row->status }}}
+          <span class="caret ml5"></span>
+         </button>
+         <ul class="dropdown-menu" role="menu">
+          <li>
+           <a href="@url('#current/form/' . $row->id)">@lang('admin.button.edit', 'Düzenle')</a>
+          </li>
+          <li>
+           <a href="#delete" data-id="{{ $row->id }}">@lang('admin.button.delete', 'Sil')</a>
+          </li>
+          <li class="divider"></li>
+          <li>
+           <a href="#archive" data-id="{{ $row->id }}">@lang('admin.button.archive', 'Arşivle')</a>
+          </li>
+          <li>
+           <a href="#duplicate" data-id="{{ $row->id }}">@lang('admin.button.duplicate', 'Çokla')</a>
+          </li>
+         </ul>
+        </div>
+       </td>
+      </tr>
+      @endforeach
+     </tbody>
+    </table>
+    @else
+    @include('list.empty')
+    @endif
+   </div>
   </div>
-  <aside class="tray tray-right tray250 va-t pn" data-tray-height="match">
-    <form id="filter-form" class="p15 admin-form" method="post" action="@url()">
-      <h4 class="mt5 text-muted fw500">@lang('admin.label.filters', 'Filtreler')</h4>
-      <hr class="short">
-      <div class="section mb15">
-        <label class="field prepend-icon">
-          <input type="text" id="filter-id" name="filter-id" class="gui-input" placeholder="# ID">
-          <span class="field-icon">
+ </div>
+ <aside class="tray tray-right tray250 va-t pn" data-tray-height="match">
+  <form id="filter-form" class="p15 admin-form" method="post" action="@url()">
+   <h4 class="mt5 text-muted fw500">@lang('admin.label.filters', 'Filtreler')</h4>
+   <hr class="short">
+   <div class="section mb15">
+    <label class="field prepend-icon">
+     <input type="text" id="filter-id" name="filter-id" class="gui-input" placeholder="# ID">
+     <span class="field-icon">
       <i class="fa fa-info"></i>
      </span>
-        </label>
-      </div>
-      <h6 class="fw400">@lang('admin.label.content.publish_date', 'Yayın Tarihi')</h6>
-      <div class="section row">
-        <div class="col-md-6">
-          <label class="field">
-            <input type="text" id="filter-publish_date-start" name="filter-publish_date-start" class="gui-input" placeholder="{{{ now('short') }}}" value="{{{ input('publish_date-start') }}}">
-          </label>
-        </div>
-        <div class="col-md-6">
-          <label class="field">
-            <input type="text" id="filter-publish_date-end" name="filter-publish_date-end" class="gui-input" placeholder="{{{ now('short') }}}" value="{{{ input('publish_date-end') }}}">
-          </label>
-        </div>
-      </div>
-      <h6 class="fw400">@lang('admin.label.language', 'Dil')</h6>
-      <div class="section mb15">
-        <label class="field select">
-          <select id="filter-language" name="filter-language">
-            <option value="0" selected="selected">@lang('admin.label.filter_by_language', 'Dile Göre Filtrele')</option>
-            @foreach (langs() as $langAlias => $langTitle)
-            <option value="{{ $langAlias }}" {{ input(
-            'language') == $langAlias ? ' selected="selected"' : '' }}>{{{ $langTitle }}}</option>
-            @endforeach
-          </select>
-          <i class="arrow double"></i>
-        </label>
-      </div>
-      <h6 class="fw400">@lang('admin.label.content.title', 'Başlık')</h6>
-      <div class="section mb15">
-        <label class="field prepend-icon">
-          <input type="text" id="filter-title" name="filter-title" class="gui-input" value="{{{ input('title') }}}">
-          <span class="field-icon">
+    </label>
+   </div>
+   <h6 class="fw400">@lang('admin.label.content.publish_date', 'Yayın Tarihi')</h6>
+   <div class="section row">
+    <div class="col-md-6">
+     <label class="field">
+      <input type="text" id="filter-publish_date-start" name="filter-publish_date-start" class="gui-input" placeholder="{{{ now('short') }}}" value="{{{ input('publish_date-start') }}}">
+     </label>
+    </div>
+    <div class="col-md-6">
+     <label class="field">
+      <input type="text" id="filter-publish_date-end" name="filter-publish_date-end" class="gui-input" placeholder="{{{ now('short') }}}" value="{{{ input('publish_date-end') }}}">
+     </label>
+    </div>
+   </div>
+   <h6 class="fw400">@lang('admin.label.language', 'Dil')</h6>
+   <div class="section mb15">
+    <label class="field select">
+     <select id="filter-language" name="filter-language">
+      <option value="0" selected="selected">@lang('admin.label.filter_by_language', 'Dile Göre Filtrele')</option>
+      @foreach (langs() as $langAlias => $langTitle)
+      <option value="{{ $langAlias }}"{{ input('language') == $langAlias ? ' selected="selected"' : '' }}>{{{ $langTitle }}}</option>
+      @endforeach
+     </select>
+     <i class="arrow double"></i>
+    </label>
+   </div>
+   <h6 class="fw400">@lang('admin.label.content.title', 'Başlık')</h6>
+   <div class="section mb15">
+    <label class="field prepend-icon">
+     <input type="text" id="filter-title" name="filter-title" class="gui-input" value="{{{ input('title') }}}">
+     <span class="field-icon">
       <i class="fa fa-pencil"></i>
      </span>
-        </label>
-      </div>
-      <hr class="short">
-      <div class="section row">
-        <div class="col-sm-12">
-          <button type="submit" class="btn btn-default btn-sm ph25">
-            @lang('admin.button.filter', 'Filtrele')
-          </button>
-        </div>
-      </div>
-    </form>
-  </aside>
+    </label>
+   </div>
+   <hr class="short">
+   <div class="section row">
+    <div class="col-sm-12">
+     <button type="submit" class="btn btn-default btn-sm ph25">
+      @lang('admin.button.filter', 'Filtrele')
+     </button>
+    </div>
+   </div>
+  </form>
+ </aside>
 </section>
 
 @include('list.duplicate', ['url' => url($prefix . 'content/categories/duplicate')])
@@ -149,26 +146,26 @@
 @section('script')
 @parent
 <script type="text/javascript">
-  //<![CDATA[
-  $(function () {
-    'use strict';
+ //<![CDATA[
+ $(function() {
+  'use strict';
 
-    $('#filter-publish_date-start, #filter-publish_date-end').datepicker({
-      buttonText: '<i class="fa fa-calendar-o"></i>',
-      prevText: '<i class="fa fa-chevron-left"></i>',
-      nextText: '<i class="fa fa-chevron-right"></i>',
-      beforeShow: function (input, inst) {
-        var newclass = 'admin-form';
-        var themeClass = $(this).parents('.admin-form').attr('class');
-        var smartpikr = inst.dpDiv.parent();
-        if (!smartpikr.hasClass(themeClass)) {
-          inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
-        }
-      },
-      dateFormat: 'dd-mm-yy',
-      firstDay: 1
-    });
+  $('#filter-publish_date-start, #filter-publish_date-end').datepicker({
+   buttonText: '<i class="fa fa-calendar-o"></i>',
+   prevText: '<i class="fa fa-chevron-left"></i>',
+   nextText: '<i class="fa fa-chevron-right"></i>',
+   beforeShow: function(input, inst) {
+    var newclass = 'admin-form';
+    var themeClass = $(this).parents('.admin-form').attr('class');
+    var smartpikr = inst.dpDiv.parent();
+    if (!smartpikr.hasClass(themeClass)) {
+     inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
+    }
+   },
+   dateFormat: 'dd-mm-yy',
+   firstDay: 1
   });
-  //]]>
+ });
+ //]]>
 </script>
 @stop

@@ -5,812 +5,498 @@
 @section('content')
 @include('topbar', ['caption' => lang('admin.menu.search_results', 'Arama Sonuçları')])
 <section id="content" class="table-layout">
-  <div class="tray tray-center">
+ <div class="tray tray-center">
 
-    <!-- Search Results Panel  -->
-    <div class="panel">
-      <div class="panel-heading">
-        <span class="panel-title text-muted hidden-xs">Returned 13,628 results (0.15 seconds)</span>
-        <ul class="nav panel-tabs-border panel-tabs-merge panel-tabs">
-          <li class="active">
-            <a href="#search" data-toggle="tab">Classic Search</a>
-          </li>
-          <li>
-            <a href="#users" data-toggle="tab">User Search</a>
-          </li>
-        </ul>
-      </div>
-      <div class="panel-menu">
-        <div class="input-group input-hero input-hero-sm">
+  <!-- Search Results Panel  -->
+  <div class="panel">
+   <div class="panel-heading">
+    <span class="panel-title text-muted hidden-xs">Returned 13,628 results (0.15 seconds)</span>
+    <ul class="nav panel-tabs-border panel-tabs-merge panel-tabs">
+     <li class="active"><a href="#search" data-toggle="tab">Classic Search</a></li>
+     <li><a href="#users" data-toggle="tab">User Search</a></li>
+    </ul>
+   </div>
+   <div class="panel-menu">
+    <div class="input-group input-hero input-hero-sm">
                   <span class="input-group-addon">
                     <i class="fa fa-search"></i>
                   </span>
-          <input type="text" id="icon-filter" class="form-control" placeholder="Enter search terms..">
-        </div>
-      </div>
-      <div class="panel-body ph20">
-        <div class="tab-content">
-
-          <!-- Classic Search Pane -->
-          <div id="search" class="tab-pane active">
-
-            <!-- Search Pane Title -->
-            <h3>Displaying <b class="text-primary">872</b> results for 'Admin Themes'</h3>
-            <hr class="alt">
-
-            <!-- Begin Search Result Entries -->
-            <div class="search-result">
-              <h3>
-                <a href="http://themeforest.net/user/AdminDesigns">AdminDesigns - A Responsive Admin UI Framework
-                  Toolkit
-                </a>
-              </h3>
-              <ul class="result-meta">
-                <li>
-                  <a href="#">http://www.themeforest.com</a>
-                </li>
-                <li>
-                  <a href="#"> 45 ratings</a>
-                </li>
-                <li>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                </li>
-                <li>
-                  <a href="#"> $22.99</a>
-                </li>
-              </ul>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, obcaecati consequuntur aspernatur
-                neque voluptatum mollitia eaque tenetur ea tempora itaque dolore incidunt explicabo voluptate quaerat at
-                reprehenderit iste iusto asperiores?</p>
-              <ul class="result-meta">
-                <li>
-                  <a href="#"> Home</a>
-                </li>
-                <li>
-                  <a href="#"> Our Products</a>
-                </li>
-                <li>
-                  <a href="#"> About Us</a>
-                </li>
-                <li>
-                  <a href="#"> Customer Support</a>
-                </li>
-              </ul>
-            </div>
-            <div class="search-result">
-              <h3>
-                <a href="http://themeforest.net/user/AdminDesigns">AdminDesigns - A Responsive Admin UI Framework
-                  Toolkit
-                </a>
-              </h3>
-              <ul class="result-meta">
-                <li>
-                  <a href="#">http://www.themeforest.com</a>
-                </li>
-                <li>
-                  <a href="#"> 45 ratings</a>
-                </li>
-                <li>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                </li>
-                <li>
-                  <a href="#"> $22.99</a>
-                </li>
-              </ul>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, obcaecati consequuntur aspernatur
-                neque voluptatum mollitia eaque tenetur ea tempora itaque dolore incidunt explicabo voluptate quaerat at
-                reprehenderit iste iusto asperiores?</p>
-              <ul class="result-meta">
-                <li>
-                  <a href="#"> Home</a>
-                </li>
-                <li>
-                  <a href="#"> Our Products</a>
-                </li>
-                <li>
-                  <a href="#"> About Us</a>
-                </li>
-                <li>
-                  <a href="#"> Customer Support</a>
-                </li>
-              </ul>
-            </div>
-            <div class="search-result">
-              <h3>
-                <a href="http://themeforest.net/user/AdminDesigns">AdminDesigns - A Responsive Admin UI Framework
-                  Toolkit
-                </a>
-              </h3>
-              <ul class="result-meta">
-                <li>
-                  <a href="#">http://www.themeforest.com</a>
-                </li>
-                <li>
-                  <a href="#"> 45 ratings</a>
-                </li>
-                <li>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                </li>
-                <li>
-                  <a href="#"> $22.99</a>
-                </li>
-              </ul>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, obcaecati consequuntur aspernatur
-                neque voluptatum mollitia eaque tenetur ea tempora itaque dolore incidunt explicabo voluptate quaerat at
-                reprehenderit iste iusto asperiores?</p>
-              <ul class="result-meta">
-                <li>
-                  <a href="#"> Home</a>
-                </li>
-                <li>
-                  <a href="#"> Our Products</a>
-                </li>
-                <li>
-                  <a href="#"> About Us</a>
-                </li>
-                <li>
-                  <a href="#"> Customer Support</a>
-                </li>
-              </ul>
-            </div>
-            <div class="search-result">
-              <h3>
-                <a href="http://themeforest.net/user/AdminDesigns">AdminDesigns - A Responsive Admin UI Framework
-                  Toolkit
-                </a>
-              </h3>
-              <ul class="result-meta">
-                <li>
-                  <a href="#">http://www.themeforest.com</a>
-                </li>
-                <li>
-                  <a href="#"> 45 ratings</a>
-                </li>
-                <li>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                </li>
-                <li>
-                  <a href="#"> $22.99</a>
-                </li>
-              </ul>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, obcaecati consequuntur aspernatur
-                neque voluptatum mollitia eaque tenetur ea tempora itaque dolore incidunt explicabo voluptate quaerat at
-                reprehenderit iste iusto asperiores?</p>
-              <ul class="result-meta">
-                <li>
-                  <a href="#"> Home</a>
-                </li>
-                <li>
-                  <a href="#"> Our Products</a>
-                </li>
-                <li>
-                  <a href="#"> About Us</a>
-                </li>
-                <li>
-                  <a href="#"> Customer Support</a>
-                </li>
-              </ul>
-            </div>
-            <div class="search-result">
-              <h3>
-                <a href="http://themeforest.net/user/AdminDesigns">AdminDesigns - A Responsive Admin UI Framework
-                  Toolkit
-                </a>
-              </h3>
-              <ul class="result-meta">
-                <li>
-                  <a href="#">http://www.themeforest.com</a>
-                </li>
-                <li>
-                  <a href="#"> 45 ratings</a>
-                </li>
-                <li>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                </li>
-                <li>
-                  <a href="#"> $22.99</a>
-                </li>
-              </ul>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, obcaecati consequuntur aspernatur
-                neque voluptatum mollitia eaque tenetur ea tempora itaque dolore incidunt explicabo voluptate quaerat at
-                reprehenderit iste iusto asperiores?</p>
-              <ul class="result-meta">
-                <li>
-                  <a href="#"> Home</a>
-                </li>
-                <li>
-                  <a href="#"> Our Products</a>
-                </li>
-                <li>
-                  <a href="#"> About Us</a>
-                </li>
-                <li>
-                  <a href="#"> Customer Support</a>
-                </li>
-              </ul>
-            </div>
-            <div class="search-result">
-              <h3>
-                <a href="http://themeforest.net/user/AdminDesigns">AdminDesigns - A Responsive Admin UI Framework
-                  Toolkit
-                </a>
-              </h3>
-              <ul class="result-meta">
-                <li>
-                  <a href="#">http://www.themeforest.com</a>
-                </li>
-                <li>
-                  <a href="#"> 45 ratings</a>
-                </li>
-                <li>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                  <i class="fa fa-star-o text-warning"></i>
-                </li>
-                <li>
-                  <a href="#"> $22.99</a>
-                </li>
-              </ul>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, obcaecati consequuntur aspernatur
-                neque voluptatum mollitia eaque tenetur ea tempora itaque dolore incidunt explicabo voluptate quaerat at
-                reprehenderit iste iusto asperiores?</p>
-              <ul class="result-meta">
-                <li>
-                  <a href="#"> Home</a>
-                </li>
-                <li>
-                  <a href="#"> Our Products</a>
-                </li>
-                <li>
-                  <a href="#"> About Us</a>
-                </li>
-                <li>
-                  <a href="#"> Customer Support</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- User Search Pane -->
-          <div id="users" class="tab-pane">
-            <div class="table-responsive mhn20 mvn15">
-              <table class="table admin-form theme-warning fs13">
-                <thead>
-                <tr class="bg-light">
-                  <th class="">Avatar</th>
-                  <th class="">Name</th>
-                  <th class="">Email</th>
-                  <th class="">Registered</th>
-                  <th class="">Purchases</th>
-                  <th class="">Total Spent</th>
-                  <th class="text-right">Status</th>
-
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td class="w50">
-                    <img class="img-responsive" title="user" src="assets/img/avatars/2.jpg">
-                  </td>
-                  <td class="">Dave Robert</td>
-                  <td class="">
-                    <a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="137772657653707c7e63727d6a3d707c7e">
-                      [email&#160;protected]
-                    </a>
-                    <script cf-hash='f9e31' type="text/javascript">
-                      /* <![CDATA[ */
-                      !function () {
-                        try {
-                          var t = "currentScript" in document ? document.currentScript : function () {
-                              for (var t = document.getElementsByTagName("script"), e = t.length; e--;)if (t[e].getAttribute("cf-hash"))return t[e]
-                            }();
-                          if (t && t.previousSibling) {
-                            var e, r, n, i, c = t.previousSibling, a = c.getAttribute("data-cfemail");
-                            if (a) {
-                              for (e = "", r = parseInt(a.substr(0, 2), 16), n = 2; a.length - n; n += 2)i = parseInt(a.substr(n, 2), 16) ^ r, e += String.fromCharCode(i);
-                              e = document.createTextNode(e), c.parentNode.replaceChild(e, c)
-                            }
-                          }
-                        } catch (u) {
-                        }
-                      }();
-                      /* ]]> */</script>
-                  </td>
-                  <td class="">12/03/2014</td>
-                  <td class="">222</td>
-                  <td class="">$3,600</td>
-                  <td class="text-right">
-                    <div class="btn-group text-right">
-                      <button type="button" class="btn btn-success br2 btn-xs fs12 dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        Active
-                        <span class="caret ml5"></span>
-                      </button>
-                      <ul class="dropdown-menu dropdown-menu-right dropdown-menu dropdown-menu-right-right" role="menu">
-                        <li>
-                          <a href="#">Edit</a>
-                        </li>
-                        <li>
-                          <a href="#">Contact</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li class="active">
-                          <a href="#">Active</a>
-                        </li>
-                        <li>
-                          <a href="#">Suspend</a>
-                        </li>
-                        <li>
-                          <a href="#">Remove</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="w50">
-                    <img class="img-responsive" title="user" src="assets/img/avatars/2.jpg">
-                  </td>
-                  <td class="">Sara Marshall</td>
-                  <td class="">
-                    <a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="1c6f7d6e7d5c7f73716c7d7265327f7371">
-                      [email&#160;protected]
-                    </a>
-                    <script cf-hash='f9e31' type="text/javascript">
-                      /* <![CDATA[ */
-                      !function () {
-                        try {
-                          var t = "currentScript" in document ? document.currentScript : function () {
-                              for (var t = document.getElementsByTagName("script"), e = t.length; e--;)if (t[e].getAttribute("cf-hash"))return t[e]
-                            }();
-                          if (t && t.previousSibling) {
-                            var e, r, n, i, c = t.previousSibling, a = c.getAttribute("data-cfemail");
-                            if (a) {
-                              for (e = "", r = parseInt(a.substr(0, 2), 16), n = 2; a.length - n; n += 2)i = parseInt(a.substr(n, 2), 16) ^ r, e += String.fromCharCode(i);
-                              e = document.createTextNode(e), c.parentNode.replaceChild(e, c)
-                            }
-                          }
-                        } catch (u) {
-                        }
-                      }();
-                      /* ]]> */</script>
-                  </td>
-                  <td class="">12/03/2014</td>
-                  <td class="">16</td>
-                  <td class="">$4,200</td>
-                  <td class="text-right">
-                    <div class="btn-group text-right">
-                      <button type="button" class="btn btn-success br2 btn-xs fs12 dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        Active
-                        <span class="caret ml5"></span>
-                      </button>
-                      <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                        <li>
-                          <a href="#">Edit</a>
-                        </li>
-                        <li>
-                          <a href="#">Contact</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li class="active">
-                          <a href="#">Active</a>
-                        </li>
-                        <li>
-                          <a href="#">Suspend</a>
-                        </li>
-                        <li>
-                          <a href="#">Remove</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="w50">
-                    <img class="img-responsive" title="user" src="assets/img/avatars/2.jpg">
-                  </td>
-                  <td class="">Larry Kingster</td>
-                  <td class="">
-                    <a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="9ef2ffecece7defdf1f3eefff0e7b0fdf1f3">
-                      [email&#160;protected]
-                    </a>
-                    <script cf-hash='f9e31' type="text/javascript">
-                      /* <![CDATA[ */
-                      !function () {
-                        try {
-                          var t = "currentScript" in document ? document.currentScript : function () {
-                              for (var t = document.getElementsByTagName("script"), e = t.length; e--;)if (t[e].getAttribute("cf-hash"))return t[e]
-                            }();
-                          if (t && t.previousSibling) {
-                            var e, r, n, i, c = t.previousSibling, a = c.getAttribute("data-cfemail");
-                            if (a) {
-                              for (e = "", r = parseInt(a.substr(0, 2), 16), n = 2; a.length - n; n += 2)i = parseInt(a.substr(n, 2), 16) ^ r, e += String.fromCharCode(i);
-                              e = document.createTextNode(e), c.parentNode.replaceChild(e, c)
-                            }
-                          }
-                        } catch (u) {
-                        }
-                      }();
-                      /* ]]> */</script>
-                  </td>
-                  <td class="">12/03/2014</td>
-                  <td class="">46</td>
-                  <td class="">$16,200</td>
-                  <td class="text-right">
-                    <div class="btn-group text-right">
-                      <button type="button" class="btn btn-success br2 btn-xs fs12 dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        Active
-                        <span class="caret ml5"></span>
-                      </button>
-                      <ul class="dropdown-menu dropdown-menu-right dropdown-menu dropdown-menu-right-right" role="menu">
-                        <li>
-                          <a href="#">Edit</a>
-                        </li>
-                        <li>
-                          <a href="#">Contact</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li class="active">
-                          <a href="#">Active</a>
-                        </li>
-                        <li>
-                          <a href="#">Suspend</a>
-                        </li>
-                        <li>
-                          <a href="#">Remove</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="w50">
-                    <img class="img-responsive" title="user" src="assets/img/avatars/2.jpg">
-                  </td>
-                  <td class="">Emily Roundwheel</td>
-                  <td class="">
-                    <a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="5e3b333732271e3d31332e3f3027703d3133">
-                      [email&#160;protected]
-                    </a>
-                    <script cf-hash='f9e31' type="text/javascript">
-                      /* <![CDATA[ */
-                      !function () {
-                        try {
-                          var t = "currentScript" in document ? document.currentScript : function () {
-                              for (var t = document.getElementsByTagName("script"), e = t.length; e--;)if (t[e].getAttribute("cf-hash"))return t[e]
-                            }();
-                          if (t && t.previousSibling) {
-                            var e, r, n, i, c = t.previousSibling, a = c.getAttribute("data-cfemail");
-                            if (a) {
-                              for (e = "", r = parseInt(a.substr(0, 2), 16), n = 2; a.length - n; n += 2)i = parseInt(a.substr(n, 2), 16) ^ r, e += String.fromCharCode(i);
-                              e = document.createTextNode(e), c.parentNode.replaceChild(e, c)
-                            }
-                          }
-                        } catch (u) {
-                        }
-                      }();
-                      /* ]]> */</script>
-                  </td>
-                  <td class="">12/03/2014</td>
-                  <td class="">06</td>
-                  <td class="">$1,400</td>
-                  <td class="text-right">
-                    <div class="btn-group text-right">
-                      <button type="button" class="btn btn-success br2 btn-xs fs12 dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        Active
-                        <span class="caret ml5"></span>
-                      </button>
-                      <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                        <li>
-                          <a href="#">Edit</a>
-                        </li>
-                        <li>
-                          <a href="#">Contact</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li class="active">
-                          <a href="#">Active</a>
-                        </li>
-                        <li>
-                          <a href="#">Suspend</a>
-                        </li>
-                        <li>
-                          <a href="#">Remove</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="w50">
-                    <img class="img-responsive" title="user" src="assets/img/avatars/2.jpg">
-                  </td>
-                  <td class="">Nick Cannoneer</td>
-                  <td class="">
-                    <a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="245745564564474b4954454a5d0a474b49">
-                      [email&#160;protected]
-                    </a>
-                    <script cf-hash='f9e31' type="text/javascript">
-                      /* <![CDATA[ */
-                      !function () {
-                        try {
-                          var t = "currentScript" in document ? document.currentScript : function () {
-                              for (var t = document.getElementsByTagName("script"), e = t.length; e--;)if (t[e].getAttribute("cf-hash"))return t[e]
-                            }();
-                          if (t && t.previousSibling) {
-                            var e, r, n, i, c = t.previousSibling, a = c.getAttribute("data-cfemail");
-                            if (a) {
-                              for (e = "", r = parseInt(a.substr(0, 2), 16), n = 2; a.length - n; n += 2)i = parseInt(a.substr(n, 2), 16) ^ r, e += String.fromCharCode(i);
-                              e = document.createTextNode(e), c.parentNode.replaceChild(e, c)
-                            }
-                          }
-                        } catch (u) {
-                        }
-                      }();
-                      /* ]]> */</script>
-                  </td>
-                  <td class="">12/03/2014</td>
-                  <td class="">43</td>
-                  <td class="">$13,600</td>
-                  <td class="text-right">
-                    <div class="btn-group text-right">
-                      <button type="button" class="btn btn-success br2 btn-xs fs12 dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        Active
-                        <span class="caret ml5"></span>
-                      </button>
-                      <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                        <li>
-                          <a href="#">Edit</a>
-                        </li>
-                        <li>
-                          <a href="#">Contact</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li class="active">
-                          <a href="#">Active</a>
-                        </li>
-                        <li>
-                          <a href="#">Suspend</a>
-                        </li>
-                        <li>
-                          <a href="#">Remove</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="w50">
-                    <img class="img-responsive" title="user" src="assets/img/avatars/2.jpg">
-                  </td>
-                  <td class="">Morgan Lunar</td>
-                  <td class="">
-                    <a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="127f7d6075737c52717d7f62737c6b3c717d7f">
-                      [email&#160;protected]
-                    </a>
-                    <script cf-hash='f9e31' type="text/javascript">
-                      /* <![CDATA[ */
-                      !function () {
-                        try {
-                          var t = "currentScript" in document ? document.currentScript : function () {
-                              for (var t = document.getElementsByTagName("script"), e = t.length; e--;)if (t[e].getAttribute("cf-hash"))return t[e]
-                            }();
-                          if (t && t.previousSibling) {
-                            var e, r, n, i, c = t.previousSibling, a = c.getAttribute("data-cfemail");
-                            if (a) {
-                              for (e = "", r = parseInt(a.substr(0, 2), 16), n = 2; a.length - n; n += 2)i = parseInt(a.substr(n, 2), 16) ^ r, e += String.fromCharCode(i);
-                              e = document.createTextNode(e), c.parentNode.replaceChild(e, c)
-                            }
-                          }
-                        } catch (u) {
-                        }
-                      }();
-                      /* ]]> */</script>
-                  </td>
-                  <td class="">12/03/2014</td>
-                  <td class="">11</td>
-                  <td class="">$3,200</td>
-                  <td class="text-right">
-                    <div class="btn-group text-right">
-                      <button type="button" class="btn btn-success br2 btn-xs fs12 dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        Active
-                        <span class="caret ml5"></span>
-                      </button>
-                      <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                        <li>
-                          <a href="#">Edit</a>
-                        </li>
-                        <li>
-                          <a href="#">Contact</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li class="active">
-                          <a href="#">Active</a>
-                        </li>
-                        <li>
-                          <a href="#">Suspend</a>
-                        </li>
-                        <li>
-                          <a href="#">Remove</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="w50">
-                    <img class="img-responsive" title="user" src="assets/img/avatars/2.jpg">
-                  </td>
-                  <td class="">Emily Roundwheel</td>
-                  <td class="">
-                    <a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="fe9b93979287be9d91938e9f9087d09d9193">
-                      [email&#160;protected]
-                    </a>
-                    <script cf-hash='f9e31' type="text/javascript">
-                      /* <![CDATA[ */
-                      !function () {
-                        try {
-                          var t = "currentScript" in document ? document.currentScript : function () {
-                              for (var t = document.getElementsByTagName("script"), e = t.length; e--;)if (t[e].getAttribute("cf-hash"))return t[e]
-                            }();
-                          if (t && t.previousSibling) {
-                            var e, r, n, i, c = t.previousSibling, a = c.getAttribute("data-cfemail");
-                            if (a) {
-                              for (e = "", r = parseInt(a.substr(0, 2), 16), n = 2; a.length - n; n += 2)i = parseInt(a.substr(n, 2), 16) ^ r, e += String.fromCharCode(i);
-                              e = document.createTextNode(e), c.parentNode.replaceChild(e, c)
-                            }
-                          }
-                        } catch (u) {
-                        }
-                      }();
-                      /* ]]> */</script>
-                  </td>
-                  <td class="">12/03/2014</td>
-                  <td class="">06</td>
-                  <td class="">$1,400</td>
-                  <td class="text-right">
-                    <div class="btn-group text-right">
-                      <button type="button" class="btn btn-warning br2 btn-xs fs12 dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        In-Active
-                        <span class="caret ml5"></span>
-                      </button>
-                      <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                        <li>
-                          <a href="#">Edit</a>
-                        </li>
-                        <li>
-                          <a href="#">Contact</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li class="active">
-                          <a href="#">Active</a>
-                        </li>
-                        <li>
-                          <a href="#">Suspend</a>
-                        </li>
-                        <li>
-                          <a href="#">Remove</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="w50">
-                    <img class="img-responsive" title="user" src="assets/img/avatars/2.jpg">
-                  </td>
-                  <td class="">Sara Marshall</td>
-                  <td class="">
-                    <a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="1d6e7c6f7c5d7e72706d7c7364337e7270">
-                      [email&#160;protected]
-                    </a>
-                    <script cf-hash='f9e31' type="text/javascript">
-                      /* <![CDATA[ */
-                      !function () {
-                        try {
-                          var t = "currentScript" in document ? document.currentScript : function () {
-                              for (var t = document.getElementsByTagName("script"), e = t.length; e--;)if (t[e].getAttribute("cf-hash"))return t[e]
-                            }();
-                          if (t && t.previousSibling) {
-                            var e, r, n, i, c = t.previousSibling, a = c.getAttribute("data-cfemail");
-                            if (a) {
-                              for (e = "", r = parseInt(a.substr(0, 2), 16), n = 2; a.length - n; n += 2)i = parseInt(a.substr(n, 2), 16) ^ r, e += String.fromCharCode(i);
-                              e = document.createTextNode(e), c.parentNode.replaceChild(e, c)
-                            }
-                          }
-                        } catch (u) {
-                        }
-                      }();
-                      /* ]]> */</script>
-                  </td>
-                  <td class="">12/03/2014</td>
-                  <td class="">16</td>
-                  <td class="">$4,200</td>
-                  <td class="text-right">
-                    <div class="btn-group text-right">
-                      <button type="button" class="btn btn-warning br2 btn-xs fs12 dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        In-Active
-                        <span class="caret ml5"></span>
-                      </button>
-                      <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                        <li>
-                          <a href="#">Edit</a>
-                        </li>
-                        <li>
-                          <a href="#">Contact</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li class="active">
-                          <a href="#">Active</a>
-                        </li>
-                        <li>
-                          <a href="#">Suspend</a>
-                        </li>
-                        <li>
-                          <a href="#">Remove</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-        </div>
-      </div>
-      <div class="panel-footer clearfix">
-        <nav>
-          <ul class="pagination pull-right">
-            <li class="prev disabled">
-              <a href="#"><i class="fa fa-angle-left"></i> Previous</a>
-            </li>
-            <li class="active">
-              <a href="#">1</a>
-            </li>
-            <li>
-              <a href="#">2</a>
-            </li>
-            <li>
-              <a href="#">3</a>
-            </li>
-            <li>
-              <a href="#">4</a>
-            </li>
-            <li>
-              <a href="#">5</a>
-            </li>
-            <li class="next">
-              <a href="#">Next <i class="fa fa-angle-right"></i></a>
-            </li>
-          </ul>
-        </nav>
-      </div>
+     <input type="text" id="icon-filter" class="form-control" placeholder="Enter search terms..">
     </div>
+   </div>
+   <div class="panel-body ph20">
+    <div class="tab-content">
 
+     <!-- Classic Search Pane -->
+     <div id="search" class="tab-pane active">
+
+      <!-- Search Pane Title -->
+      <h3>Displaying <b class="text-primary">872</b> results for 'Admin Themes'</h3>
+      <hr class="alt">
+
+      <!-- Begin Search Result Entries -->
+      <div class="search-result">
+       <h3><a href="http://themeforest.net/user/AdminDesigns">AdminDesigns - A Responsive Admin UI Framework Toolkit</a></h3>
+       <ul class="result-meta">
+        <li><a href="#">http://www.themeforest.com</a></li>
+        <li><a href="#"> 45 ratings </a></li>
+        <li>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+        </li>
+        <li><a href="#"> $22.99 </a></li>
+       </ul>
+       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, obcaecati consequuntur aspernatur neque voluptatum mollitia eaque tenetur ea tempora itaque dolore incidunt explicabo voluptate quaerat at reprehenderit iste iusto asperiores?</p>
+       <ul class="result-meta">
+        <li><a href="#"> Home </a></li>
+        <li><a href="#"> Our Products </a></li>
+        <li><a href="#"> About Us </a></li>
+        <li><a href="#"> Customer Support </a></li>
+       </ul>
+      </div>
+      <div class="search-result">
+       <h3><a href="http://themeforest.net/user/AdminDesigns">AdminDesigns - A Responsive Admin UI Framework Toolkit</a></h3>
+       <ul class="result-meta">
+        <li><a href="#">http://www.themeforest.com</a></li>
+        <li><a href="#"> 45 ratings </a></li>
+        <li>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+        </li>
+        <li><a href="#"> $22.99 </a></li>
+       </ul>
+       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, obcaecati consequuntur aspernatur neque voluptatum mollitia eaque tenetur ea tempora itaque dolore incidunt explicabo voluptate quaerat at reprehenderit iste iusto asperiores?</p>
+       <ul class="result-meta">
+        <li><a href="#"> Home </a></li>
+        <li><a href="#"> Our Products </a></li>
+        <li><a href="#"> About Us </a></li>
+        <li><a href="#"> Customer Support </a></li>
+       </ul>
+      </div>
+      <div class="search-result">
+       <h3><a href="http://themeforest.net/user/AdminDesigns">AdminDesigns - A Responsive Admin UI Framework Toolkit</a></h3>
+       <ul class="result-meta">
+        <li><a href="#">http://www.themeforest.com</a></li>
+        <li><a href="#"> 45 ratings </a></li>
+        <li>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+        </li>
+        <li><a href="#"> $22.99 </a></li>
+       </ul>
+       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, obcaecati consequuntur aspernatur neque voluptatum mollitia eaque tenetur ea tempora itaque dolore incidunt explicabo voluptate quaerat at reprehenderit iste iusto asperiores?</p>
+       <ul class="result-meta">
+        <li><a href="#"> Home </a></li>
+        <li><a href="#"> Our Products </a></li>
+        <li><a href="#"> About Us </a></li>
+        <li><a href="#"> Customer Support </a></li>
+       </ul>
+      </div>
+      <div class="search-result">
+       <h3><a href="http://themeforest.net/user/AdminDesigns">AdminDesigns - A Responsive Admin UI Framework Toolkit</a></h3>
+       <ul class="result-meta">
+        <li><a href="#">http://www.themeforest.com</a></li>
+        <li><a href="#"> 45 ratings </a></li>
+        <li>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+        </li>
+        <li><a href="#"> $22.99 </a></li>
+       </ul>
+       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, obcaecati consequuntur aspernatur neque voluptatum mollitia eaque tenetur ea tempora itaque dolore incidunt explicabo voluptate quaerat at reprehenderit iste iusto asperiores?</p>
+       <ul class="result-meta">
+        <li><a href="#"> Home </a></li>
+        <li><a href="#"> Our Products </a></li>
+        <li><a href="#"> About Us </a></li>
+        <li><a href="#"> Customer Support </a></li>
+       </ul>
+      </div>
+      <div class="search-result">
+       <h3><a href="http://themeforest.net/user/AdminDesigns">AdminDesigns - A Responsive Admin UI Framework Toolkit</a></h3>
+       <ul class="result-meta">
+        <li><a href="#">http://www.themeforest.com</a></li>
+        <li><a href="#"> 45 ratings </a></li>
+        <li>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+        </li>
+        <li><a href="#"> $22.99 </a></li>
+       </ul>
+       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, obcaecati consequuntur aspernatur neque voluptatum mollitia eaque tenetur ea tempora itaque dolore incidunt explicabo voluptate quaerat at reprehenderit iste iusto asperiores?</p>
+       <ul class="result-meta">
+        <li><a href="#"> Home </a></li>
+        <li><a href="#"> Our Products </a></li>
+        <li><a href="#"> About Us </a></li>
+        <li><a href="#"> Customer Support </a></li>
+       </ul>
+      </div>
+      <div class="search-result">
+       <h3><a href="http://themeforest.net/user/AdminDesigns">AdminDesigns - A Responsive Admin UI Framework Toolkit</a></h3>
+       <ul class="result-meta">
+        <li><a href="#">http://www.themeforest.com</a></li>
+        <li><a href="#"> 45 ratings </a></li>
+        <li>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+         <i class="fa fa-star-o text-warning"></i>
+        </li>
+        <li><a href="#"> $22.99 </a></li>
+       </ul>
+       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi, obcaecati consequuntur aspernatur neque voluptatum mollitia eaque tenetur ea tempora itaque dolore incidunt explicabo voluptate quaerat at reprehenderit iste iusto asperiores?</p>
+       <ul class="result-meta">
+        <li><a href="#"> Home </a></li>
+        <li><a href="#"> Our Products </a></li>
+        <li><a href="#"> About Us </a></li>
+        <li><a href="#"> Customer Support </a></li>
+       </ul>
+      </div>
+     </div>
+
+     <!-- User Search Pane -->
+     <div id="users" class="tab-pane">
+      <div class="table-responsive mhn20 mvn15">
+       <table class="table admin-form theme-warning fs13">
+        <thead>
+        <tr class="bg-light">
+         <th class="">Avatar</th>
+         <th class="">Name</th>
+         <th class="">Email</th>
+         <th class="">Registered</th>
+         <th class="">Purchases</th>
+         <th class="">Total Spent</th>
+         <th class="text-right">Status</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+         <td class="w50">
+          <img class="img-responsive" title="user" src="assets/img/avatars/2.jpg">
+         </td>
+         <td class="">Dave Robert</td>
+         <td class=""><a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="137772657653707c7e63727d6a3d707c7e">[email&#160;protected]</a><script cf-hash='f9e31' type="text/javascript">
+          /* <![CDATA[ */!function(){try{var t="currentScript"in document?document.currentScript:function(){for(var t=document.getElementsByTagName("script"),e=t.length;e--;)if(t[e].getAttribute("cf-hash"))return t[e]}();if(t&&t.previousSibling){var e,r,n,i,c=t.previousSibling,a=c.getAttribute("data-cfemail");if(a){for(e="",r=parseInt(a.substr(0,2),16),n=2;a.length-n;n+=2)i=parseInt(a.substr(n,2),16)^r,e+=String.fromCharCode(i);e=document.createTextNode(e),c.parentNode.replaceChild(e,c)}}}catch(u){}}();/* ]]> */</script></td>
+         <td class="">12/03/2014</td>
+         <td class="">222</td>
+         <td class="">$3,600</td>
+         <td class="text-right">
+          <div class="btn-group text-right">
+           <button type="button" class="btn btn-success br2 btn-xs fs12 dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Active
+            <span class="caret ml5"></span>
+           </button>
+           <ul class="dropdown-menu dropdown-menu-right dropdown-menu dropdown-menu-right-right" role="menu">
+            <li>
+             <a href="#">Edit</a>
+            </li>
+            <li>
+             <a href="#">Contact</a>
+            </li>
+            <li class="divider"></li>
+            <li class="active">
+             <a href="#">Active</a>
+            </li>
+            <li>
+             <a href="#">Suspend</a>
+            </li>
+            <li>
+             <a href="#">Remove</a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td class="w50">
+          <img class="img-responsive" title="user" src="assets/img/avatars/2.jpg">
+         </td>
+         <td class="">Sara Marshall</td>
+         <td class=""><a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="1c6f7d6e7d5c7f73716c7d7265327f7371">[email&#160;protected]</a><script cf-hash='f9e31' type="text/javascript">
+          /* <![CDATA[ */!function(){try{var t="currentScript"in document?document.currentScript:function(){for(var t=document.getElementsByTagName("script"),e=t.length;e--;)if(t[e].getAttribute("cf-hash"))return t[e]}();if(t&&t.previousSibling){var e,r,n,i,c=t.previousSibling,a=c.getAttribute("data-cfemail");if(a){for(e="",r=parseInt(a.substr(0,2),16),n=2;a.length-n;n+=2)i=parseInt(a.substr(n,2),16)^r,e+=String.fromCharCode(i);e=document.createTextNode(e),c.parentNode.replaceChild(e,c)}}}catch(u){}}();/* ]]> */</script></td>
+         <td class="">12/03/2014</td>
+         <td class="">16</td>
+         <td class="">$4,200</td>
+         <td class="text-right">
+          <div class="btn-group text-right">
+           <button type="button" class="btn btn-success br2 btn-xs fs12 dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Active
+            <span class="caret ml5"></span>
+           </button>
+           <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            <li>
+             <a href="#">Edit</a>
+            </li>
+            <li>
+             <a href="#">Contact</a>
+            </li>
+            <li class="divider"></li>
+            <li class="active">
+             <a href="#">Active</a>
+            </li>
+            <li>
+             <a href="#">Suspend</a>
+            </li>
+            <li>
+             <a href="#">Remove</a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td class="w50">
+          <img class="img-responsive" title="user" src="assets/img/avatars/2.jpg">
+         </td>
+         <td class="">Larry Kingster</td>
+         <td class=""><a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="9ef2ffecece7defdf1f3eefff0e7b0fdf1f3">[email&#160;protected]</a><script cf-hash='f9e31' type="text/javascript">
+          /* <![CDATA[ */!function(){try{var t="currentScript"in document?document.currentScript:function(){for(var t=document.getElementsByTagName("script"),e=t.length;e--;)if(t[e].getAttribute("cf-hash"))return t[e]}();if(t&&t.previousSibling){var e,r,n,i,c=t.previousSibling,a=c.getAttribute("data-cfemail");if(a){for(e="",r=parseInt(a.substr(0,2),16),n=2;a.length-n;n+=2)i=parseInt(a.substr(n,2),16)^r,e+=String.fromCharCode(i);e=document.createTextNode(e),c.parentNode.replaceChild(e,c)}}}catch(u){}}();/* ]]> */</script></td>
+         <td class="">12/03/2014</td>
+         <td class="">46</td>
+         <td class="">$16,200</td>
+         <td class="text-right">
+          <div class="btn-group text-right">
+           <button type="button" class="btn btn-success br2 btn-xs fs12 dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Active
+            <span class="caret ml5"></span>
+           </button>
+           <ul class="dropdown-menu dropdown-menu-right dropdown-menu dropdown-menu-right-right" role="menu">
+            <li>
+             <a href="#">Edit</a>
+            </li>
+            <li>
+             <a href="#">Contact</a>
+            </li>
+            <li class="divider"></li>
+            <li class="active">
+             <a href="#">Active</a>
+            </li>
+            <li>
+             <a href="#">Suspend</a>
+            </li>
+            <li>
+             <a href="#">Remove</a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td class="w50">
+          <img class="img-responsive" title="user" src="assets/img/avatars/2.jpg">
+         </td>
+         <td class="">Emily Roundwheel</td>
+         <td class=""><a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="5e3b333732271e3d31332e3f3027703d3133">[email&#160;protected]</a><script cf-hash='f9e31' type="text/javascript">
+          /* <![CDATA[ */!function(){try{var t="currentScript"in document?document.currentScript:function(){for(var t=document.getElementsByTagName("script"),e=t.length;e--;)if(t[e].getAttribute("cf-hash"))return t[e]}();if(t&&t.previousSibling){var e,r,n,i,c=t.previousSibling,a=c.getAttribute("data-cfemail");if(a){for(e="",r=parseInt(a.substr(0,2),16),n=2;a.length-n;n+=2)i=parseInt(a.substr(n,2),16)^r,e+=String.fromCharCode(i);e=document.createTextNode(e),c.parentNode.replaceChild(e,c)}}}catch(u){}}();/* ]]> */</script></td>
+         <td class="">12/03/2014</td>
+         <td class="">06</td>
+         <td class="">$1,400</td>
+         <td class="text-right">
+          <div class="btn-group text-right">
+           <button type="button" class="btn btn-success br2 btn-xs fs12 dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Active
+            <span class="caret ml5"></span>
+           </button>
+           <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            <li>
+             <a href="#">Edit</a>
+            </li>
+            <li>
+             <a href="#">Contact</a>
+            </li>
+            <li class="divider"></li>
+            <li class="active">
+             <a href="#">Active</a>
+            </li>
+            <li>
+             <a href="#">Suspend</a>
+            </li>
+            <li>
+             <a href="#">Remove</a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td class="w50">
+          <img class="img-responsive" title="user" src="assets/img/avatars/2.jpg">
+         </td>
+         <td class="">Nick Cannoneer</td>
+         <td class=""><a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="245745564564474b4954454a5d0a474b49">[email&#160;protected]</a><script cf-hash='f9e31' type="text/javascript">
+          /* <![CDATA[ */!function(){try{var t="currentScript"in document?document.currentScript:function(){for(var t=document.getElementsByTagName("script"),e=t.length;e--;)if(t[e].getAttribute("cf-hash"))return t[e]}();if(t&&t.previousSibling){var e,r,n,i,c=t.previousSibling,a=c.getAttribute("data-cfemail");if(a){for(e="",r=parseInt(a.substr(0,2),16),n=2;a.length-n;n+=2)i=parseInt(a.substr(n,2),16)^r,e+=String.fromCharCode(i);e=document.createTextNode(e),c.parentNode.replaceChild(e,c)}}}catch(u){}}();/* ]]> */</script></td>
+         <td class="">12/03/2014</td>
+         <td class="">43</td>
+         <td class="">$13,600</td>
+         <td class="text-right">
+          <div class="btn-group text-right">
+           <button type="button" class="btn btn-success br2 btn-xs fs12 dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Active
+            <span class="caret ml5"></span>
+           </button>
+           <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            <li>
+             <a href="#">Edit</a>
+            </li>
+            <li>
+             <a href="#">Contact</a>
+            </li>
+            <li class="divider"></li>
+            <li class="active">
+             <a href="#">Active</a>
+            </li>
+            <li>
+             <a href="#">Suspend</a>
+            </li>
+            <li>
+             <a href="#">Remove</a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td class="w50">
+          <img class="img-responsive" title="user" src="assets/img/avatars/2.jpg">
+         </td>
+         <td class="">Morgan Lunar</td>
+         <td class=""><a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="127f7d6075737c52717d7f62737c6b3c717d7f">[email&#160;protected]</a><script cf-hash='f9e31' type="text/javascript">
+          /* <![CDATA[ */!function(){try{var t="currentScript"in document?document.currentScript:function(){for(var t=document.getElementsByTagName("script"),e=t.length;e--;)if(t[e].getAttribute("cf-hash"))return t[e]}();if(t&&t.previousSibling){var e,r,n,i,c=t.previousSibling,a=c.getAttribute("data-cfemail");if(a){for(e="",r=parseInt(a.substr(0,2),16),n=2;a.length-n;n+=2)i=parseInt(a.substr(n,2),16)^r,e+=String.fromCharCode(i);e=document.createTextNode(e),c.parentNode.replaceChild(e,c)}}}catch(u){}}();/* ]]> */</script></td>
+         <td class="">12/03/2014</td>
+         <td class="">11</td>
+         <td class="">$3,200</td>
+         <td class="text-right">
+          <div class="btn-group text-right">
+           <button type="button" class="btn btn-success br2 btn-xs fs12 dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Active
+            <span class="caret ml5"></span>
+           </button>
+           <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            <li>
+             <a href="#">Edit</a>
+            </li>
+            <li>
+             <a href="#">Contact</a>
+            </li>
+            <li class="divider"></li>
+            <li class="active">
+             <a href="#">Active</a>
+            </li>
+            <li>
+             <a href="#">Suspend</a>
+            </li>
+            <li>
+             <a href="#">Remove</a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td class="w50">
+          <img class="img-responsive" title="user" src="assets/img/avatars/2.jpg">
+         </td>
+         <td class="">Emily Roundwheel</td>
+         <td class=""><a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="fe9b93979287be9d91938e9f9087d09d9193">[email&#160;protected]</a><script cf-hash='f9e31' type="text/javascript">
+          /* <![CDATA[ */!function(){try{var t="currentScript"in document?document.currentScript:function(){for(var t=document.getElementsByTagName("script"),e=t.length;e--;)if(t[e].getAttribute("cf-hash"))return t[e]}();if(t&&t.previousSibling){var e,r,n,i,c=t.previousSibling,a=c.getAttribute("data-cfemail");if(a){for(e="",r=parseInt(a.substr(0,2),16),n=2;a.length-n;n+=2)i=parseInt(a.substr(n,2),16)^r,e+=String.fromCharCode(i);e=document.createTextNode(e),c.parentNode.replaceChild(e,c)}}}catch(u){}}();/* ]]> */</script></td>
+         <td class="">12/03/2014</td>
+         <td class="">06</td>
+         <td class="">$1,400</td>
+         <td class="text-right">
+          <div class="btn-group text-right">
+           <button type="button" class="btn btn-warning br2 btn-xs fs12 dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> In-Active
+            <span class="caret ml5"></span>
+           </button>
+           <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            <li>
+             <a href="#">Edit</a>
+            </li>
+            <li>
+             <a href="#">Contact</a>
+            </li>
+            <li class="divider"></li>
+            <li class="active">
+             <a href="#">Active</a>
+            </li>
+            <li>
+             <a href="#">Suspend</a>
+            </li>
+            <li>
+             <a href="#">Remove</a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td class="w50">
+          <img class="img-responsive" title="user" src="assets/img/avatars/2.jpg">
+         </td>
+         <td class="">Sara Marshall</td>
+         <td class=""><a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="1d6e7c6f7c5d7e72706d7c7364337e7270">[email&#160;protected]</a><script cf-hash='f9e31' type="text/javascript">
+          /* <![CDATA[ */!function(){try{var t="currentScript"in document?document.currentScript:function(){for(var t=document.getElementsByTagName("script"),e=t.length;e--;)if(t[e].getAttribute("cf-hash"))return t[e]}();if(t&&t.previousSibling){var e,r,n,i,c=t.previousSibling,a=c.getAttribute("data-cfemail");if(a){for(e="",r=parseInt(a.substr(0,2),16),n=2;a.length-n;n+=2)i=parseInt(a.substr(n,2),16)^r,e+=String.fromCharCode(i);e=document.createTextNode(e),c.parentNode.replaceChild(e,c)}}}catch(u){}}();/* ]]> */</script></td>
+         <td class="">12/03/2014</td>
+         <td class="">16</td>
+         <td class="">$4,200</td>
+         <td class="text-right">
+          <div class="btn-group text-right">
+           <button type="button" class="btn btn-warning br2 btn-xs fs12 dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> In-Active
+            <span class="caret ml5"></span>
+           </button>
+           <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            <li>
+             <a href="#">Edit</a>
+            </li>
+            <li>
+             <a href="#">Contact</a>
+            </li>
+            <li class="divider"></li>
+            <li class="active">
+             <a href="#">Active</a>
+            </li>
+            <li>
+             <a href="#">Suspend</a>
+            </li>
+            <li>
+             <a href="#">Remove</a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+
+        </tbody>
+       </table>
+      </div>
+     </div>
+
+    </div>
+   </div>
+   <div class="panel-footer clearfix">
+    <nav>
+     <ul class="pagination pull-right">
+      <li class="prev disabled"><a href="#"><i class="fa fa-angle-left"></i> Previous</a></li>
+      <li class="active"><a href="#">1</a></li>
+      <li><a href="#">2</a></li>
+      <li><a href="#">3</a></li>
+      <li><a href="#">4</a></li>
+      <li><a href="#">5</a></li>
+      <li class="next"><a href="#">Next <i class="fa fa-angle-right"></i></a></li>
+     </ul>
+    </nav>
+   </div>
   </div>
+
+ </div>
 </section>
 @stop

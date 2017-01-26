@@ -12,47 +12,47 @@ use \Webim\Library\Controller;
 
 class Access extends Controller {
 
-  /**
-   * Constructor
-   */
-  public function __construct() {
-    parent::__construct(DB::table('sys_access'));
+ /**
+  * Constructor
+  */
+ public function __construct() {
+  parent::__construct(DB::table('sys_access'));
+ }
+
+ /**
+  * Static creator
+  *
+  * @return self
+  */
+ public static function init() {
+  return new self();
+ }
+
+ /**
+  * Write access info into database
+  *
+  * @return \Webim\Http\Session
+  *
+  * @throws \Exception
+  */
+ public static function write() {
+  $session = Session::current();
+
+  if (!$session->get('access_id')) {
+   $ip = Request::current()->getClientIp();
+
+   $access = static::init()->set(array(
+    'ip_address' => ip2long($ip),
+    'referer' => Request::current()->header('Referer'),
+    'user_agent' => Request::current()->header('User-Agent')
+   ))->save();
+
+   $session->set('access_id', $access['id']);
+   $session->set('ip_address', $ip);
+   $session->set('secret', md5(uniqid(rand(), true)));
   }
 
-  /**
-   * Static creator
-   *
-   * @return self
-   */
-  public static function init() {
-    return new self();
-  }
-
-  /**
-   * Write access info into database
-   *
-   * @return \Webim\Http\Session
-   *
-   * @throws \Exception
-   */
-  public static function write() {
-    $session = Session::current();
-
-    if (!$session->get('access_id')) {
-      $ip = Request::current()->getClientIp();
-
-      $access = static::init()->set(array(
-        'ip_address' => ip2long($ip),
-        'referer' => Request::current()->header('Referer'),
-        'user_agent' => Request::current()->header('User-Agent')
-      ))->save();
-
-      $session->set('access_id', $access['id']);
-      $session->set('ip_address', $ip);
-      $session->set('secret', md5(uniqid(rand(), true)));
-    }
-
-    return $session;
-  }
+  return $session;
+ }
 
 }

@@ -5,344 +5,342 @@
 @section('content')
 @include('topbar')
 <section id="content" class="table-layout">
-  <div class="tray tray-center pn va-t posr">
-    <div class="panel m15">
-      <div class="panel-menu p12 admin-form theme-primary">
-        <div class="row">
-          <div class="col-md-3">
-            <label class="field select">
-              <select id="filter-language" name="filter-language">
-                @foreach (langs() as $langCode => $langTitle)
-                <option value="{{ $langCode }}" {{ input(
-                'language', lang()) == $langCode ? ' selected="selected"' : '' }}>{{{ $langTitle }}}</option>
-                @endforeach
-              </select>
-              <i class="arrow"></i>
-            </label>
-          </div>
-          <div class="col-md-9">
-            <div class="text-right">
-              <a class="btn btn-dark" href="#add-form">
-                <i class="fa fa-plus mr5"></i>
-                @lang('admin.button.add_form', 'Form Ekle')
-              </a>
-            </div>
-          </div>
-        </div>
+ <div class="tray tray-center pn va-t posr">
+  <div class="panel m15">
+   <div class="panel-menu p12 admin-form theme-primary">
+    <div class="row">
+     <div class="col-md-3">
+      <label class="field select">
+       <select id="filter-language" name="filter-language">
+        @foreach (langs() as $langCode => $langTitle)
+        <option value="{{ $langCode }}"{{ input('language', lang()) == $langCode ? ' selected="selected"' : '' }}>{{{ $langTitle }}}</option>
+        @endforeach
+       </select>
+       <i class="arrow"></i>
+      </label>
+     </div>
+     <div class="col-md-9">
+      <div class="text-right">
+       <a class="btn btn-dark" href="#add-form">
+        <i class="fa fa-plus mr5"></i>
+        @lang('admin.button.add_form', 'Form Ekle')
+       </a>
       </div>
-      <div class="panel-body">
-        <div id="forms" class="tab-block mb25">
-          <div class="alert alert-default w400 center-block text-center">@lang('admin.label.loading', 'Yükleniyor...')
-          </div>
-        </div>
-      </div>
+     </div>
     </div>
+   </div>
+   <div class="panel-body">
+    <div id="forms" class="tab-block mb25">
+     <div class="alert alert-default w400 center-block text-center">@lang('admin.label.loading', 'Yükleniyor...')</div>
+    </div>
+   </div>
   </div>
+ </div>
 </section>
 
 <div id="form-modal" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h4>
-          <i class="fa fa-info"></i>
-          @lang('admin.label.form', 'Form')
-        </h4>
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h4>
+     <i class="fa fa-info"></i>
+     @lang('admin.label.form', 'Form')
+    </h4>
+   </div>
+   <form id="form-form" class="admin-form" method="post" action="@url('#current/form')">
+    <input type="hidden" id="form-id" name="form-id" value="0">
+    <input type="hidden" id="form-version" name="form-version" value="0">
+    <div class="modal-body">
+     <div class="row">
+      <div class="col-sm-6">
+       <div class="section mb15">
+        <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="form-label" name="form-label" class="gui-input" maxlength="255">
+         <span class="field-icon">
+          <i class="fa fa-tag"></i>
+         </span>
+        </label>
+       </div>
       </div>
-      <form id="form-form" class="admin-form" method="post" action="@url('#current/form')">
-        <input type="hidden" id="form-id" name="form-id" value="0">
-        <input type="hidden" id="form-version" name="form-version" value="0">
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="section mb15">
-                <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
-                <label class="field prepend-icon">
-                  <input type="text" id="form-label" name="form-label" class="gui-input" maxlength="255">
-                  <span class="field-icon">
+      <div class="col-sm-6">
+       <div class="section mb15">
+        <h6 class="fw400">@lang('admin.label.name', 'Tanımı')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="form-name" name="form-name" class="gui-input" maxlength="50">
+         <span class="field-icon">
           <i class="fa fa-tag"></i>
          </span>
-                </label>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="section mb15">
-                <h6 class="fw400">@lang('admin.label.name', 'Tanımı')</h6>
-                <label class="field prepend-icon">
-                  <input type="text" id="form-name" name="form-name" class="gui-input" maxlength="50">
-                  <span class="field-icon">
-          <i class="fa fa-tag"></i>
-         </span>
-                </label>
-              </div>
-            </div>
-          </div>
-          <div class="section mb15">
-            <h6 class="fw400">@lang('admin.label.status', 'Durumu')</h6>
-            <div class="option-group field">
-              <label class="option option-primary">
-                <input type="radio" id="form-active-true" name="form-active" value="true" checked="checked">
-                <span class="radio"></span>
-                @lang('admin.label.active', 'Aktif')
-              </label>
-              <label class="option option-primary">
-                <input type="radio" id="form-active-false" name="form-active" value="false">
-                <span class="radio"></span>
-                @lang('admin.label.passive', 'Pasif')
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-sm btn-primary">
-            <i class="fa fa-save"></i>
-            @lang('admin.button.save', 'Kaydet')
-          </button>
-          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
-            <i class="fa fa-close"></i>
-            @lang('admin.button.close', 'Kapat')
-          </button>
-        </div>
-      </form>
+        </label>
+       </div>
+      </div>
+     </div>
+     <div class="section mb15">
+      <h6 class="fw400">@lang('admin.label.status', 'Durumu')</h6>
+      <div class="option-group field">
+       <label class="option option-primary">
+        <input type="radio" id="form-active-true" name="form-active" value="true" checked="checked">
+        <span class="radio"></span>
+        @lang('admin.label.active', 'Aktif')
+       </label>
+       <label class="option option-primary">
+        <input type="radio" id="form-active-false" name="form-active" value="false">
+        <span class="radio"></span>
+        @lang('admin.label.passive', 'Pasif')
+       </label>
+      </div>
+     </div>
     </div>
+    <div class="modal-footer">
+     <button type="submit" class="btn btn-sm btn-primary">
+      <i class="fa fa-save"></i>
+      @lang('admin.button.save', 'Kaydet')
+     </button>
+     <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+      <i class="fa fa-close"></i>
+      @lang('admin.button.close', 'Kapat')
+     </button>
+    </div>
+   </form>
   </div>
+ </div>
 </div>
 
 <div id="list-modal" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h4>
-          <i class="fa fa-info"></i>
-          <span id="list-title"></span>
-        </h4>
-      </div>
-      <div class="modal-body">
-        <div class="text-right mb10">
-          <a href="#add" class="btn btn-sm btn-primary">
-            <i class="fa fa-plus"></i>
-            @lang('admin.button.add', 'Ekle')
-          </a>
-        </div>
-        <div id="list" class="h-300 of-a br-a"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
-          <i class="fa fa-close"></i>
-          @lang('admin.button.close', 'Kapat')
-        </button>
-      </div>
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h4>
+     <i class="fa fa-info"></i>
+     <span id="list-title"></span>
+    </h4>
+   </div>
+   <div class="modal-body">
+    <div class="text-right mb10">
+     <a href="#add" class="btn btn-sm btn-primary">
+      <i class="fa fa-plus"></i>
+      @lang('admin.button.add', 'Ekle')
+     </a>
     </div>
+    <div id="list" class="h-300 of-a br-a"></div>
+   </div>
+   <div class="modal-footer">
+    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+     <i class="fa fa-close"></i>
+     @lang('admin.button.close', 'Kapat')
+    </button>
+   </div>
   </div>
+ </div>
 </div>
 
 <div id="group-modal" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h4>
-          <i class="fa fa-info"></i>
-          @lang('admin.label.group', 'Grup')
-        </h4>
-      </div>
-      <form id="group-form" class="admin-form" method="post" action="@url('#current/group')">
-        <input type="hidden" id="group-id" name="group-id" value="0">
-        <input type="hidden" id="group-version" name="group-version" value="0">
-        <div class="modal-body">
-          <div class="section mb15">
-            <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
-            <label class="field prepend-icon">
-              <input type="text" id="group-label" name="group-label" class="gui-input" maxlength="255">
-              <span class="field-icon">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h4>
+     <i class="fa fa-info"></i>
+     @lang('admin.label.group', 'Grup')
+    </h4>
+   </div>
+   <form id="group-form" class="admin-form" method="post" action="@url('#current/group')">
+    <input type="hidden" id="group-id" name="group-id" value="0">
+    <input type="hidden" id="group-version" name="group-version" value="0">
+    <div class="modal-body">
+     <div class="section mb15">
+      <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
+      <label class="field prepend-icon">
+       <input type="text" id="group-label" name="group-label" class="gui-input" maxlength="255">
+       <span class="field-icon">
         <i class="fa fa-tag"></i>
        </span>
-            </label>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-sm btn-primary">
-            <i class="fa fa-save"></i>
-            @lang('admin.button.save', 'Kaydet')
-          </button>
-          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
-            <i class="fa fa-close"></i>
-            @lang('admin.button.close', 'Kapat')
-          </button>
-        </div>
-      </form>
+      </label>
+     </div>
     </div>
+    <div class="modal-footer">
+     <button type="submit" class="btn btn-sm btn-primary">
+      <i class="fa fa-save"></i>
+      @lang('admin.button.save', 'Kaydet')
+     </button>
+     <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+      <i class="fa fa-close"></i>
+      @lang('admin.button.close', 'Kapat')
+     </button>
+    </div>
+   </form>
   </div>
+ </div>
 </div>
 
 <div id="field-modal" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h4>
-          <i class="fa fa-info"></i>
-          @lang('admin.label.field', 'Alan')
-        </h4>
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h4>
+     <i class="fa fa-info"></i>
+     @lang('admin.label.field', 'Alan')
+    </h4>
+   </div>
+   <form id="field-form" class="admin-form" method="post" action="@url('#current/field')">
+    <input type="hidden" id="field-id" name="field-id" value="0">
+    <input type="hidden" id="field-version" name="field-version" value="0">
+    <div class="modal-body">
+     <div class="row">
+      <div class="col-sm-6">
+       <div class="section mb15">
+        <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="field-label" name="field-label" class="gui-input" maxlength="255">
+         <span class="field-icon">
+          <i class="fa fa-tag"></i>
+         </span>
+        </label>
+       </div>
       </div>
-      <form id="field-form" class="admin-form" method="post" action="@url('#current/field')">
-        <input type="hidden" id="field-id" name="field-id" value="0">
-        <input type="hidden" id="field-version" name="field-version" value="0">
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="section mb15">
-                <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
-                <label class="field prepend-icon">
-                  <input type="text" id="field-label" name="field-label" class="gui-input" maxlength="255">
-                  <span class="field-icon">
+      <div class="col-sm-6">
+       <div class="section mb15">
+        <h6 class="fw400">@lang('admin.label.name', 'Tanımı')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="field-name" name="field-name" class="gui-input" maxlength="50">
+         <span class="field-icon">
           <i class="fa fa-tag"></i>
          </span>
-                </label>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="section mb15">
-                <h6 class="fw400">@lang('admin.label.name', 'Tanımı')</h6>
-                <label class="field prepend-icon">
-                  <input type="text" id="field-name" name="field-name" class="gui-input" maxlength="50">
-                  <span class="field-icon">
+        </label>
+       </div>
+      </div>
+     </div>
+     <div class="row">
+      <div class="col-sm-6">
+       <div class="section mb15">
+        <h6 class="fw400">@lang('admin.label.type', 'Türü')</h6>
+        <label class="field select">
+         <select id="field-type" name="field-type" class="empty">
+          <option value=""></option>
+          <option value="text">Text</option>
+          <option value="select">Select</option>
+          <option value="radio">Radio</option>
+          <option value="checkbox">Checkbox</option>
+          <option value="textarea">Textarea</option>
+          <option value="file">File</option>
+         </select>
+         <i class="arrow double"></i>
+        </label>
+       </div>
+      </div>
+      <div class="col-sm-6">
+       <div class="section mb15">
+        <h6 class="fw400">@lang('admin.label.default_value', 'Varsayılan Değeri')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="field-default" name="field-default" class="gui-input" maxlength="255">
+         <span class="field-icon">
           <i class="fa fa-tag"></i>
          </span>
-                </label>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="section mb15">
-                <h6 class="fw400">@lang('admin.label.type', 'Türü')</h6>
-                <label class="field select">
-                  <select id="field-type" name="field-type" class="empty">
-                    <option value=""></option>
-                    <option value="text">Text</option>
-                    <option value="select">Select</option>
-                    <option value="radio">Radio</option>
-                    <option value="checkbox">Checkbox</option>
-                    <option value="textarea">Textarea</option>
-                    <option value="file">File</option>
-                  </select>
-                  <i class="arrow double"></i>
-                </label>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="section mb15">
-                <h6 class="fw400">@lang('admin.label.default_value', 'Varsayılan Değeri')</h6>
-                <label class="field prepend-icon">
-                  <input type="text" id="field-default" name="field-default" class="gui-input" maxlength="255">
-                  <span class="field-icon">
-          <i class="fa fa-tag"></i>
-         </span>
-                </label>
-              </div>
-            </div>
-          </div>
-          <div class="section mb15">
-            <h6 class="fw400">@lang('admin.label.meta', 'Meta')</h6>
-            <textarea id="field-meta" name="field-meta" class="form-control"></textarea>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-sm btn-primary">
-            <i class="fa fa-save"></i>
-            @lang('admin.button.save', 'Kaydet')
-          </button>
-          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
-            <i class="fa fa-close"></i>
-            @lang('admin.button.close', 'Kapat')
-          </button>
-        </div>
-      </form>
+        </label>
+       </div>
+      </div>
+     </div>
+     <div class="section mb15">
+      <h6 class="fw400">@lang('admin.label.meta', 'Meta')</h6>
+      <textarea id="field-meta" name="field-meta" class="form-control"></textarea>
+     </div>
     </div>
+    <div class="modal-footer">
+     <button type="submit" class="btn btn-sm btn-primary">
+      <i class="fa fa-save"></i>
+      @lang('admin.button.save', 'Kaydet')
+     </button>
+     <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+      <i class="fa fa-close"></i>
+      @lang('admin.button.close', 'Kapat')
+     </button>
+    </div>
+   </form>
   </div>
+ </div>
 </div>
 
 <div id="meta-modal" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h4>
-          <i class="fa fa-info"></i>
-          @lang('admin.label.meta', 'Meta')
-        </h4>
-      </div>
-      <form id="meta-form" class="admin-form" method="post" action="@url('#current/meta')">
-        <div class="modal-body">
-          <div class="section mb15">
-            <h6 class="fw400">@lang('admin.label.field_name', 'Alan Adı')</h6>
-            <label class="field prepend-icon">
-              <div id="meta-label" class="gui-input" data-id="0"></div>
-            </label>
-          </div>
-          <div class="section mb15">
-            <h6 class="fw400">@lang('admin.label.meta', 'Meta')</h6>
-            <textarea id="meta" name="meta" class="form-control"></textarea>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-sm btn-primary">
-            <i class="fa fa-save"></i>
-            @lang('admin.button.save', 'Kaydet')
-          </button>
-          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
-            <i class="fa fa-close"></i>
-            @lang('admin.button.close', 'Kapat')
-          </button>
-        </div>
-      </form>
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h4>
+     <i class="fa fa-info"></i>
+     @lang('admin.label.meta', 'Meta')
+    </h4>
+   </div>
+   <form id="meta-form" class="admin-form" method="post" action="@url('#current/meta')">
+    <div class="modal-body">
+     <div class="section mb15">
+      <h6 class="fw400">@lang('admin.label.field_name', 'Alan Adı')</h6>
+      <label class="field prepend-icon">
+       <div id="meta-label" class="gui-input" data-id="0"></div>
+      </label>
+     </div>
+     <div class="section mb15">
+      <h6 class="fw400">@lang('admin.label.meta', 'Meta')</h6>
+      <textarea id="meta" name="meta" class="form-control"></textarea>
+     </div>
     </div>
+    <div class="modal-footer">
+     <button type="submit" class="btn btn-sm btn-primary">
+      <i class="fa fa-save"></i>
+      @lang('admin.button.save', 'Kaydet')
+     </button>
+     <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+      <i class="fa fa-close"></i>
+      @lang('admin.button.close', 'Kapat')
+     </button>
+    </div>
+   </form>
   </div>
+ </div>
 </div>
 
 <div id="order-modal" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h4>
-          <i class="fa fa-info"></i>
-          @lang('admin.label.ordering', 'Sıralama')
-        </h4>
-      </div>
-      <form id="order-form" class="admin-form" method="post" action="@url('#current/order')">
-        <div class="modal-body">
-          <div class="section mb15">
-            <h6 class="fw400">@lang('admin.label.field_name', 'Alan Adı')</h6>
-            <label class="field prepend-icon">
-              <div id="order-label" class="gui-input" data-id="0"></div>
-            </label>
-          </div>
-          <div class="section mb15">
-            <h6 class="fw400">@lang('admin.label.type', 'Türü')</h6>
-            <label class="field select">
-              <select id="order" name="order" class="empty">
-              </select>
-              <i class="arrow double"></i>
-            </label>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-sm btn-primary">
-            <i class="fa fa-save"></i>
-            @lang('admin.button.save', 'Kaydet')
-          </button>
-          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
-            <i class="fa fa-close"></i>
-            @lang('admin.button.close', 'Kapat')
-          </button>
-        </div>
-      </form>
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h4>
+     <i class="fa fa-info"></i>
+     @lang('admin.label.ordering', 'Sıralama')
+    </h4>
+   </div>
+   <form id="order-form" class="admin-form" method="post" action="@url('#current/order')">
+    <div class="modal-body">
+     <div class="section mb15">
+      <h6 class="fw400">@lang('admin.label.field_name', 'Alan Adı')</h6>
+      <label class="field prepend-icon">
+       <div id="order-label" class="gui-input" data-id="0"></div>
+      </label>
+     </div>
+     <div class="section mb15">
+      <h6 class="fw400">@lang('admin.label.type', 'Türü')</h6>
+      <label class="field select">
+       <select id="order" name="order" class="empty">
+       </select>
+       <i class="arrow double"></i>
+      </label>
+     </div>
     </div>
+    <div class="modal-footer">
+     <button type="submit" class="btn btn-sm btn-primary">
+      <i class="fa fa-save"></i>
+      @lang('admin.button.save', 'Kaydet')
+     </button>
+     <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+      <i class="fa fa-close"></i>
+      @lang('admin.button.close', 'Kapat')
+     </button>
+    </div>
+   </form>
   </div>
+ </div>
 </div>
 @stop
 
@@ -357,843 +355,839 @@
 <script type="text/javascript" src="{{ $root }}/js/plugins/codemirror/lib/codemirror.js"></script>
 <script type="text/javascript" src="{{ $root }}/js/plugins/codemirror/mode/javascript/javascript.js"></script>
 <script type="text/javascript">
-  //<![CDATA[
-  var language = $('#filter-language').val();
-  var changed = false;
-  var metaEditor = CodeMirror.fromTextArea($('#meta').get(0), {
-    lineNumbers: true,
-    matchBrackets: true,
-    styleActiveLine: true,
-    theme: 'neat',
-    mode: 'javascript'
-  }), fieldMetaEditor = CodeMirror.fromTextArea($('#field-meta').get(0), {
-    lineNumbers: true,
-    matchBrackets: true,
-    styleActiveLine: true,
-    theme: 'neat',
-    mode: 'javascript'
-  });
+ //<![CDATA[
+ var language = $('#filter-language').val();
+ var changed = false;
+ var metaEditor = CodeMirror.fromTextArea($('#meta').get(0), {
+  lineNumbers: true,
+  matchBrackets: true,
+  styleActiveLine: true,
+  theme: 'neat',
+  mode: 'javascript'
+ }), fieldMetaEditor = CodeMirror.fromTextArea($('#field-meta').get(0), {
+  lineNumbers: true,
+  matchBrackets: true,
+  styleActiveLine: true,
+  theme: 'neat',
+  mode: 'javascript'
+ });
 
-  function setNotFound(targetId) {
-    $('<div/>')
-      .addClass('alert alert-default w400 mv20 center-block text-center')
-      .appendTo('#' + targetId).text("@lang('admin.message.no_content_found', 'Kayıt bulunamadı!')");
+ function setNotFound(targetId) {
+  $('<div/>')
+   .addClass('alert alert-default w400 mv20 center-block text-center')
+   .appendTo('#'+ targetId).text("@lang('admin.message.no_content_found', 'Kayıt bulunamadı!')");
+ }
+
+ function addTab(tab) {
+  var target = $('#forms'), tabs = $('#tabs');
+
+  if (!tabs.length) {
+   target.empty();
+
+   tabs = $('<ul/>', {
+    'id': 'tabs'
+   }).addClass('nav tabs-left tabs-border');
+
+   target.append(
+    tabs,
+    $('<div/>').addClass('tab-content').css('min-height', '500px').append(
+     $('<div/>', {
+      'id': 'form'
+     }).addClass('tab-pane active')
+    )
+   );
   }
 
-  function addTab(tab) {
-    var target = $('#forms'), tabs = $('#tabs');
+  if (tab.active == 'false') {
+   tab.label = tab.label + ' <i class="fa fa-warning" title="@lang('admin.label.passive', 'Pasif')"></i>';
+  }
 
-    if (!tabs.length) {
-      target.empty();
+  var current = tabs.find('a[data-id="' + tab.id + '"]');
 
-      tabs = $('<ul/>', {
-        'id': 'tabs'
-      }).addClass('nav tabs-left tabs-border');
+  if (!current.length) {
+   current = $('<li/>').append(
+    $('<a/>', {
+     'href': '#form',
+     'data-toggle': 'tab',
+     'data-id': tab.id
+    }).click(function (e) {
+     e.preventDefault();
 
-      target.append(
-        tabs,
-        $('<div/>').addClass('tab-content').css('min-height', '500px').append(
-          $('<div/>', {
-            'id': 'form'
-          }).addClass('tab-pane active')
-        )
-      );
-    }
+     load('properties', $(this).data('id'));
+    }).html(tab.label)
+   ).appendTo(tabs);
 
-    if (tab.active == 'false') {
-      tab.label = tab.label + ' <i class="fa fa-warning" title="@lang('
-      admin.label.passive
-      ', '
-      Pasif
-      ')"></i>';
-    }
+   tabs.find('li').removeClass('active');
 
-    var current = tabs.find('a[data-id="' + tab.id + '"]');
+   current.tab().addClass('active');
+  } else {
+   current.html(tab.label);
+  }
+ }
 
-    if (!current.length) {
-      current = $('<li/>').append(
+ function addProperties(properties) {
+  var target = $('#properties').empty(), k;
+
+  if (properties.length) {
+   for (k in properties) {
+    addGroup(properties[k]);
+   }
+  } else {
+   setNotFound('properties');
+  }
+ }
+
+ function addGroup(group) {
+  var target = $('#properties');
+
+  if (!target.find('table').length) {
+   target.empty();
+  }
+
+  if ($('table[data-id="' + group.id + '"]', target).length) {
+   message("@lang('admin.message.group_already_added', 'Grup zaten ekli!')");
+  } else {
+   $('<table/>', {
+    'data-id': group.id
+   }).addClass('table table-striped table-bordered mb20').append(
+    $('<thead/>').append(
+     $('<tr/>').append(
+      $('<th/>', {
+       'colspan': 5
+      }).append(
+       $('<h3/>').addClass('pull-left mv10').html('<i class="fa fa-book"></i> ' + group.label),
+       $('<div/>').addClass('pull-right').append(
         $('<a/>', {
-          'href': '#form',
-          'data-toggle': 'tab',
-          'data-id': tab.id
+         'href': 'javascript:void(0)',
+         'data-id': group.id
         }).click(function (e) {
-          e.preventDefault();
+         e.preventDefault();
 
-          load('properties', $(this).data('id'));
-        }).html(tab.label)
-      ).appendTo(tabs);
+         $('#list-title').text("@lang('admin.button.fields', 'Alanlar')");
+         $('#list-modal').data('type', 'field').data('id', $(this).data('id')).modal();
 
-      tabs.find('li').removeClass('active');
-
-      current.tab().addClass('active');
-    } else {
-      current.html(tab.label);
-    }
-  }
-
-  function addProperties(properties) {
-    var target = $('#properties').empty(), k;
-
-    if (properties.length) {
-      for (k in properties) {
-        addGroup(properties[k]);
-      }
-    } else {
-      setNotFound('properties');
-    }
-  }
-
-  function addGroup(group) {
-    var target = $('#properties');
-
-    if (!target.find('table').length) {
-      target.empty();
-    }
-
-    if ($('table[data-id="' + group.id + '"]', target).length) {
-      message("@lang('admin.message.group_already_added', 'Grup zaten ekli!')");
-    } else {
-      $('<table/>', {
-        'data-id': group.id
-      }).addClass('table table-striped table-bordered mb20').append(
-        $('<thead/>').append(
-          $('<tr/>').append(
-            $('<th/>', {
-              'colspan': 5
-            }).append(
-              $('<h3/>').addClass('pull-left mv10').html('<i class="fa fa-book"></i> ' + group.label),
-              $('<div/>').addClass('pull-right').append(
-                $('<a/>', {
-                  'href': 'javascript:void(0)',
-                  'data-id': group.id
-                }).click(function (e) {
-                  e.preventDefault();
-
-                  $('#list-title').text("@lang('admin.button.fields', 'Alanlar')");
-                  $('#list-modal').data('type', 'field').data('id', $(this).data('id')).modal();
-
-                  grid('field');
-                }).addClass('btn btn-primary mr10').append(
-                  $('<i/>').addClass('fa fa-plus mr5'),
-                  "@lang('admin.button.fields', 'Alanlar')"
-                ),
-                $('<a/>', {
-                  'href': 'javascript:void(0)',
-                  'data-id': group.id
-                }).addClass('btn btn-danger').append(
-                  $('<i/>').addClass('fa fa-minus mr5'),
-                  "@lang('admin.button.remove_group', 'Grubu Sil')"
-                ).popConfirm({
-                  title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
-                  content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
-                  placement: "left",
-                  yesBtn: "@lang('admin.button.yes', 'Evet')",
-                  noBtn: "@lang('admin.button.no', 'Hayır')",
-                  confirm: function (e) {
-                    var id = $(this).data('id');
-                    var ids = [];
-
-                    $(this).closest('table').find('tbody > tr').each(function () {
-                      ids.push($(this).data('id'));
-                    });
-
-                    $.ajax({
-                      type: 'delete',
-                      url: "@url('#current/property')/" + ids.join(',')
-                    }).done(function (result) {
-                      if (result.success) {
-                        $('table[data-id="' + id + '"]', '#properties').remove();
-                      } else {
-                        new PNotify({
-                          title: "@lang('admin.label.error', 'Hata')",
-                          text: result.text,
-                          type: 'danger'
-                        });
-                      }
-                    });
-                  }
-                })
-              )
-            )
-          )
-        )
-      ).appendTo('#properties');
-
-      if (group.fields && group.fields.length) {
-        for (var i in group.fields) {
-          addField(group.fields[i], group.id);
-        }
-      }
-    }
-  }
-
-  function addField(field, group_id) {
-    var target = $('table[data-id="' + group_id + '"]', '#properties');
-
-    var property_meta = field.property_meta || '-';
-    var meta = field.meta || '-';
-
-    $('<tr/>', {
-      'data-id': field.id
-    }).append(
-      $('<td/>').addClass('col-sm-2').html('<i class="fa fa-info mr5"></i> ' + field.label + (field.name && field.name.length ? ' (' + field.name + ')' : '')),
-      $('<td/>').addClass('col-sm-2 text-center').html(field.type),
-      $('<td/>').addClass('col-sm-6').append(
-        $('<div/>', {
-          'id': 'meta-' + field.property_id
-        }).addClass('p10 br-b').html(property_meta.replace(/[\n]/g, '<br>')),
-        $('<div/>').addClass('p10').html(meta.replace(/[\n]/g, '<br>').replace(/[\s]/g, '&nbsp;'))
-      ),
-      $('<td/>').addClass('col-sm-2 text-center').append(
+         grid('field');
+        }).addClass('btn btn-primary mr10').append(
+         $('<i/>').addClass('fa fa-plus mr5'),
+         "@lang('admin.button.fields', 'Alanlar')"
+        ),
         $('<a/>', {
-          'href': 'javascript:void(0)',
-          'data-id': field.property_id,
-          'data-label': field.label
-        }).click(function (e) {
-          e.preventDefault();
-
+         'href': 'javascript:void(0)',
+         'data-id': group.id
+        }).addClass('btn btn-danger').append(
+         $('<i/>').addClass('fa fa-minus mr5'),
+         "@lang('admin.button.remove_group', 'Grubu Sil')"
+        ).popConfirm({
+         title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+         content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
+         placement: "left",
+         yesBtn: "@lang('admin.button.yes', 'Evet')",
+         noBtn: "@lang('admin.button.no', 'Hayır')",
+         confirm: function(e) {
           var id = $(this).data('id');
-          var label = $(this).data('label');
+          var ids = [];
+
+          $(this).closest('table').find('tbody > tr').each(function() {
+           ids.push($(this).data('id'));
+          });
 
           $.ajax({
-            'type': 'get',
-            'url': $('#meta-form').attr('action'),
-            'data': {
-              'id': id
-            }
-          }).done(function (result) {
-            $('#meta-label').data('id', id).text(label);
-            $('#meta-modal').modal();
-            $('#meta').val(result);
-          });
-        }).addClass('btn btn-sm btn-primary mr10').html('<i class="fa fa-circle-o"></i>'),
-        $('<a/>', {
-          'href': 'javascript:void(0)',
-          'data-id': field.property_id
-        }).popConfirm({
-          title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
-          content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
-          placement: "left",
-          yesBtn: "@lang('admin.button.yes', 'Evet')",
-          noBtn: "@lang('admin.button.no', 'Hayır')",
-          confirm: function (e) {
-            var el = $(this);
-
-            $.ajax({
-              'type': 'delete',
-              'url': "@url('#current/property')/" + el.data('id')
-            }).done(function (result) {
-              if (result.success) {
-                var total = el.closest('tbody').find('tr').length - 1;
-                var table = el.closest('table');
-
-                el.closest('tr').remove();
-
-                if (!total) {
-                  table.remove();
-
-                  if (!$('#properties table').length) {
-                    setNotFound('properties');
-                  }
-                }
-              } else {
-                new PNotify({
-                  title: "@lang('admin.label.error', 'Hata')",
-                  text: result.text,
-                  type: 'danger'
-                });
-              }
+           type: 'delete',
+           url: "@url('#current/property')/" + ids.join(',')
+          }).done(function(result) {
+           if (result.success) {
+            $('table[data-id="' + id + '"]', '#properties').remove();
+           } else {
+            new PNotify({
+             title: "@lang('admin.label.error', 'Hata')",
+             text: result.text,
+             type: 'danger'
             });
-          }
-        }).addClass('btn btn-sm btn-danger mr10').html('<i class="fa fa-trash-o"></i>'),
-        $('<a/>', {
-          'href': 'javascript:void(0)',
-          'data-id': field.property_id,
-          'data-label': field.label
-        }).click(function (e) {
-          e.preventDefault();
-
-          var id = $(this).data('id');
-          var label = $(this).data('label');
-
-          $('#order-label').data('id', id).text(label);
-          $('#order').empty();
-
-          $('<option/>', {
-            'value': 1
-          }).text("@lang('admin.label.at_the_beginning', 'En Başta')").appendTo('#order');
-
-          $.ajax({
-            'type': 'get',
-            'url': "@url('#current/orders')",
-            'data': {
-              'id': id
-            }
-          }).done(function (result) {
-            var o = 1, selected = null, optgrp = {};
-
-            for (var k in result) {
-              if (!optgrp[result[k].group.id]) {
-                optgrp[result[k].group.id] = $('<optgroup/>', {
-                  'label': result[k].group.label
-                }).appendTo('#order');
-              }
-
-              if (result[k].id != id) {
-                $('<option/>', {
-                  'value': ++o
-                }).text(result[k].field.label + " @lang('admin.label.after', 'sonrası')").appendTo(
-                  optgrp[result[k].group.id]
-                );
-              }
-
-              if (result[k].id == id) {
-                selected = o;
-              }
-            }
-
-            $('#order-modal').modal();
-            $('#order').val(selected ? selected : o);
+           }
           });
-        }).addClass('btn btn-sm btn-default').html('<i class="fa fa-sort"></i>')
+         }
+        })
+       )
       )
-    ).appendTo(target);
+     )
+    )
+   ).appendTo('#properties');
+
+   if (group.fields && group.fields.length) {
+    for (var i in group.fields) {
+     addField(group.fields[i], group.id);
+    }
+   }
   }
+ }
 
-  function addProperty(field, form_id, group_id) {
-    var target = $('table[data-id="' + group_id + '"]', '#properties');
+ function addField(field, group_id) {
+  var target = $('table[data-id="' + group_id + '"]', '#properties');
 
-    if ($('tr[data-id="' + field.id + '"]', target).length) {
-      message("@lang('admin.message.field_already_added', 'Alan zaten ekli!')");
-    } else {
+  var property_meta = field.property_meta || '-';
+  var meta = field.meta || '-';
+
+  $('<tr/>', {
+   'data-id': field.id
+  }).append(
+   $('<td/>').addClass('col-sm-2').html('<i class="fa fa-info mr5"></i> ' + field.label + (field.name && field.name.length ? ' (' + field.name  + ')' : '')),
+   $('<td/>').addClass('col-sm-2 text-center').html(field.type),
+   $('<td/>').addClass('col-sm-6').append(
+    $('<div/>', {
+     'id': 'meta-' + field.property_id
+    }).addClass('p10 br-b').html(property_meta.replace(/[\n]/g, '<br>')),
+    $('<div/>').addClass('p10').html(meta.replace(/[\n]/g, '<br>').replace(/[\s]/g, '&nbsp;'))
+   ),
+   $('<td/>').addClass('col-sm-2 text-center').append(
+    $('<a/>', {
+     'href': 'javascript:void(0)',
+     'data-id': field.property_id,
+     'data-label': field.label
+    }).click(function(e) {
+     e.preventDefault();
+
+     var id = $(this).data('id');
+     var label = $(this).data('label');
+
+     $.ajax({
+      'type': 'get',
+      'url': $('#meta-form').attr('action'),
+      'data': {
+       'id': id
+      }
+     }).done(function(result) {
+      $('#meta-label').data('id', id).text(label);
+      $('#meta-modal').modal();
+      $('#meta').val(result);
+     });
+    }).addClass('btn btn-sm btn-primary mr10').html('<i class="fa fa-circle-o"></i>'),
+    $('<a/>', {
+     'href': 'javascript:void(0)',
+     'data-id': field.property_id
+    }).popConfirm({
+     title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+     content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
+     placement: "left",
+     yesBtn: "@lang('admin.button.yes', 'Evet')",
+     noBtn: "@lang('admin.button.no', 'Hayır')",
+     confirm: function(e) {
+      var el = $(this);
+
       $.ajax({
-        'type': 'post',
-        'url': "@url('#current/property')",
-        'data': {
-          'form_id': form_id,
-          'group_id': group_id,
-          'field_id': field.id
+       'type': 'delete',
+       'url': "@url('#current/property')/" + el.data('id')
+      }).done(function(result) {
+       if (result.success) {
+        var total = el.closest('tbody').find('tr').length - 1;
+        var table = el.closest('table');
+
+        el.closest('tr').remove();
+
+        if (!total) {
+         table.remove();
+
+         if (!$('#properties table').length) {
+          setNotFound('properties');
+         }
         }
-      }).done(function (result) {
-        if (result.success) {
-          field.property_id = result.return.id;
-
-          addField(field, group_id);
-        } else {
-          message(result.text);
-        }
-      });
-    }
-  }
-
-  function load(type, id, data) {
-    var target;
-
-    switch (type) {
-      case 'forms':
-
-        target = $('#forms').empty();
-
-        $.ajax({
-          'type': 'get',
-          'url': "@url('#current/forms')",
-          'data': {
-            'language': language,
-            'properties': 'true'
-          }
-        }).done(function (result) {
-          if (result.length) {
-            for (var k in result) {
-              addTab(result[k]);
-
-              if (result[k].properties) {
-                load('properties', result[k].id, result[k].properties);
-              }
-            }
-          } else {
-            setNotFound('forms');
-          }
+       } else {
+        new PNotify({
+         title: "@lang('admin.label.error', 'Hata')",
+         text: result.text,
+         type: 'danger'
         });
+       }
+      });
+     }
+    }).addClass('btn btn-sm btn-danger mr10').html('<i class="fa fa-trash-o"></i>'),
+    $('<a/>', {
+     'href': 'javascript:void(0)',
+     'data-id': field.property_id,
+     'data-label': field.label
+    }).click(function(e) {
+     e.preventDefault();
 
-        break;
-      case 'properties':
+     var id = $(this).data('id');
+     var label = $(this).data('label');
 
-        $('#form').empty();
+     $('#order-label').data('id', id).text(label);
+     $('#order').empty();
 
-        //Add buttons
-        $('<div/>').addClass('mb20 text-right').append(
-          $('<a/>', {
-            'href': 'javascript:void(0)',
-            'data-id': id
-          }).click(function (e) {
-            e.preventDefault();
+     $('<option/>', {
+      'value': 1
+     }).text("@lang('admin.label.at_the_beginning', 'En Başta')").appendTo('#order');
 
-            $('#list-title').text("@lang('admin.button.groups', 'Gruplar')");
-            $('#list-modal').data('type', 'group').modal();
+     $.ajax({
+      'type': 'get',
+      'url': "@url('#current/orders')",
+      'data': {
+       'id': id
+      }
+     }).done(function(result) {
+      var o = 1, selected = null, optgrp = {};
 
-            grid('group');
-          }).addClass('btn btn-primary mr10').append(
-            $('<i/>').addClass('fa fa-plus mr5'),
-            "@lang('admin.button.groups', 'Gruplar')"
-          ),
-          $('<a/>', {
-            'href': 'javascript:void(0)',
-            'data-id': id
-          }).click(function (e) {
-            e.preventDefault();
+      for (var k in result) {
+       if (!optgrp[result[k].group.id]) {
+        optgrp[result[k].group.id] = $('<optgroup/>', {
+         'label': result[k].group.label
+        }).appendTo('#order');
+       }
 
-            var id = $(this).data('id');
+       if (result[k].id != id) {
+        $('<option/>', {
+         'value': ++o
+        }).text(result[k].field.label + " @lang('admin.label.after', 'sonrası')").appendTo(
+         optgrp[result[k].group.id]
+        );
+       }
 
-            $.ajax({
-              'type': 'get',
-              'url': "@url('#current/forms')",
-              'data': {
-                'id': id
-              }
-            }).done(function (result) {
-              if (result.id) {
-                $('#form-modal').modal();
+       if (result[k].id == id) {
+        selected = o;
+       }
+      }
 
-                for (var k in result) {
-                  setValue('form-' + k, result[k]);
-                }
-              } else {
-                message("@lang('admin.message.target_not_found', 'Hedef bulunamadı!')");
-              }
-            });
-          }).addClass('btn btn-primary mr10').append(
-            $('<i/>').addClass('fa fa-edit mr5'),
-            "@lang('admin.button.edit_form', 'Formu Düzenle')"
-          ),
-          $('<a/>', {
-            'href': 'javascript:void(0)',
-            'data-id': id
-          }).popConfirm({
-            title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
-            content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
-            placement: "left",
-            yesBtn: "@lang('admin.button.yes', 'Evet')",
-            noBtn: "@lang('admin.button.no', 'Hayır')",
-            confirm: function (e) {
-              var id = $(this).data('id');
+      $('#order-modal').modal();
+      $('#order').val(selected ? selected : o);
+     });
+    }).addClass('btn btn-sm btn-default').html('<i class="fa fa-sort"></i>')
+   )
+  ).appendTo(target);
+ }
 
-              $.ajax({
-                'type': 'delete',
-                'url': "@url('#current/form')/" + id
-              }).done(function (result) {
-                if (result.success) {
-                  load('forms');
-                } else {
-                  new PNotify({
-                    title: "@lang('admin.label.error', 'Hata')",
-                    text: result.text,
-                    type: 'danger'
-                  });
-                }
-              });
-            }
-          }).addClass('btn btn-danger').append(
-            $('<i/>').addClass('fa fa-minus mr5'),
-            "@lang('admin.button.delete_form', 'Formu Sil')"
-          )
-        ).appendTo('#form');
+ function addProperty(field, form_id, group_id) {
+  var target = $('table[data-id="' + group_id + '"]', '#properties');
 
-        target = $('<div/>', {
-          'id': 'properties'
-        }).appendTo('#form');
-
-        if (data) {
-          addProperties(data);
-        } else {
-          $.ajax({
-            'type': 'get',
-            'url': "@url('#current/properties')",
-            'data': {
-              'form_id': id
-            }
-          }).done(function (result) {
-            addProperties(result);
-          });
-        }
-
-        break;
+  if ($('tr[data-id="' + field.id + '"]', target).length) {
+   message("@lang('admin.message.field_already_added', 'Alan zaten ekli!')");
+  } else {
+   $.ajax({
+    'type': 'post',
+    'url': "@url('#current/property')",
+    'data': {
+     'form_id': form_id,
+     'group_id': group_id,
+     'field_id': field.id
     }
-  }
+   }).done(function(result) {
+    if (result.success) {
+     field.property_id = result.return.id;
 
-  function grid(type) {
-    $('#list').empty();
+     addField(field, group_id);
+    } else {
+     message(result.text);
+    }
+   });
+  }
+ }
+
+ function load(type, id, data) {
+  var target;
+
+  switch (type) {
+   case 'forms':
+
+    target = $('#forms').empty();
 
     $.ajax({
-      'type': 'get',
-      'url': "@url()/" + type + 's',
-      'data': {
-        'language': language
+     'type': 'get',
+     'url': "@url('#current/forms')",
+     'data': {
+      'language': language,
+      'properties': 'true'
+     }
+    }).done(function(result) {
+     if (result.length) {
+      for (var k in result) {
+       addTab(result[k]);
+
+       if (result[k].properties) {
+        load('properties', result[k].id, result[k].properties);
+       }
       }
-    }).done(function (result) {
-      if (result.length) {
-        var target = $('<tbody/>').appendTo(
-          $('<table/>').addClass('table table-striped').appendTo('#list')
-        );
+     } else {
+      setNotFound('forms');
+     }
+    });
+
+    break;
+   case 'properties':
+
+    $('#form').empty();
+
+    //Add buttons
+    $('<div/>').addClass('mb20 text-right').append(
+     $('<a/>', {
+      'href': 'javascript:void(0)',
+      'data-id': id
+     }).click(function(e) {
+      e.preventDefault();
+
+      $('#list-title').text("@lang('admin.button.groups', 'Gruplar')");
+      $('#list-modal').data('type', 'group').modal();
+
+      grid('group');
+     }).addClass('btn btn-primary mr10').append(
+      $('<i/>').addClass('fa fa-plus mr5'),
+      "@lang('admin.button.groups', 'Gruplar')"
+     ),
+     $('<a/>', {
+      'href': 'javascript:void(0)',
+      'data-id': id
+     }).click(function(e) {
+      e.preventDefault();
+
+      var id = $(this).data('id');
+
+      $.ajax({
+       'type': 'get',
+       'url': "@url('#current/forms')",
+       'data': {
+        'id': id
+       }
+      }).done(function(result) {
+       if (result.id) {
+        $('#form-modal').modal();
 
         for (var k in result) {
-          $('<tr/>').append(
-            $('<td/>').addClass('col-xs-1 text-center').text(parseFloat(k) + 1),
-            $('<td/>').addClass('col-xs-7').text(result[k].label),
-            $('<td/>').addClass('col-xs-4 text-center').append(
-              $('<a/>', {
-                'href': 'javascript:void(0)',
-                'data-info': JSON.stringify(result[k]),
-                'data-type': type
-              }).click(function (e) {
-                e.preventDefault();
-
-                if ($(this).data('type') == 'group') {
-                  addGroup($(this).data('info'));
-                } else {
-                  addProperty($(this).data('info'), $('#tabs li.active > a').data('id'), $('#list-modal').data('id'));
-                }
-
-                $('#list-modal').modal('hide');
-              }).addClass('btn btn-primary btn-sm mr10').append(
-                $('<i/>').addClass('fa fa-check')
-              ),
-              $('<a/>', {
-                'href': 'javascript:void(0)',
-                'data-id': result[k].id,
-                'data-type': type
-              }).click(function (e) {
-                e.preventDefault();
-
-                var id = $(this).data('id');
-                var type = $(this).data('type');
-
-                $.ajax({
-                  'type': 'get',
-                  'url': "@url()/" + type + 's',
-                  'data': {
-                    'id': id
-                  }
-                }).done(function (result) {
-                  if (result[0]) {
-                    $('#' + type + '-modal').modal();
-
-                    var values = result[0];
-
-                    for (var k in values) {
-                      setValue(type + '-' + k, values[k]);
-                    }
-                  } else {
-                    message("@lang('admin.message.target_not_found', 'Hedef bulunamadı!')");
-                  }
-                });
-              }).addClass('btn btn-default btn-sm mr10').append(
-                $('<i/>').addClass('fa fa-edit')
-              ),
-              $('<a/>', {
-                'href': 'javascript:void(0)',
-                'data-id': result[k].id,
-                'data-type': type
-              }).popConfirm({
-                title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
-                content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
-                placement: "top",
-                yesBtn: "@lang('admin.button.yes', 'Evet')",
-                noBtn: "@lang('admin.button.no', 'Hayır')",
-                confirm: function (e) {
-                  var el = $(this);
-
-                  $.ajax({
-                    'type': 'delete',
-                    'url': "@url()/" + el.data('type') + "/" + el.data('id')
-                  }).done(function (result) {
-                    if (result.success) {
-                      el.closest('tr').remove();
-                    } else {
-                      new PNotify({
-                        title: "@lang('admin.label.error', 'Hata')",
-                        text: result.text,
-                        type: 'danger'
-                      });
-                    }
-                  });
-                }
-              }).addClass('btn btn-danger btn-sm').append(
-                $('<i/>').addClass('fa fa-trash-o')
-              )
-            )
-          ).appendTo(target);
+         setValue('form-' + k, result[k]);
         }
-      } else {
-        setNotFound('list');
+       } else {
+        message("@lang('admin.message.target_not_found', 'Hedef bulunamadı!')");
+       }
+      });
+     }).addClass('btn btn-primary mr10').append(
+      $('<i/>').addClass('fa fa-edit mr5'),
+      "@lang('admin.button.edit_form', 'Formu Düzenle')"
+     ),
+     $('<a/>', {
+      'href': 'javascript:void(0)',
+      'data-id': id
+     }).popConfirm({
+      title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+      content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
+      placement: "left",
+      yesBtn: "@lang('admin.button.yes', 'Evet')",
+      noBtn: "@lang('admin.button.no', 'Hayır')",
+      confirm: function(e) {
+       var id = $(this).data('id');
+
+       $.ajax({
+        'type': 'delete',
+        'url': "@url('#current/form')/" + id
+       }).done(function(result) {
+        if (result.success) {
+         load('forms');
+        } else {
+         new PNotify({
+          title: "@lang('admin.label.error', 'Hata')",
+          text: result.text,
+          type: 'danger'
+         });
+        }
+       });
       }
-    });
+     }).addClass('btn btn-danger').append(
+      $('<i/>').addClass('fa fa-minus mr5'),
+      "@lang('admin.button.delete_form', 'Formu Sil')"
+     )
+    ).appendTo('#form');
+
+    target = $('<div/>', {
+     'id': 'properties'
+    }).appendTo('#form');
+
+    if (data) {
+     addProperties(data);
+    } else {
+     $.ajax({
+      'type': 'get',
+      'url': "@url('#current/properties')",
+      'data': {
+       'form_id': id
+      }
+     }).done(function(result) {
+      addProperties(result);
+     });
+    }
+
+    break;
   }
+ }
 
-  $(function () {
-    load('forms');
+ function grid(type) {
+  $('#list').empty();
 
-    $('#filter-language').change(function () {
-      window.location.href = "@url()?language=" + $(this).val();
-    });
+  $.ajax({
+   'type': 'get',
+   'url': "@url()/" + type + 's',
+   'data': {
+    'language': language
+   }
+  }).done(function(result) {
+   if (result.length) {
+    var target = $('<tbody/>').appendTo(
+     $('<table/>').addClass('table table-striped').appendTo('#list')
+    );
 
-    $('#form-name, #field-name').blur(function () {
-      $(this).val($.normalizeString($(this).val()));
-    });
+    for (var k in result) {
+     $('<tr/>').append(
+      $('<td/>').addClass('col-xs-1 text-center').text(parseFloat(k) + 1),
+      $('<td/>').addClass('col-xs-7').text(result[k].label),
+      $('<td/>').addClass('col-xs-4 text-center').append(
+       $('<a/>', {
+        'href': 'javascript:void(0)',
+        'data-info': JSON.stringify(result[k]),
+        'data-type': type
+       }).click(function(e) {
+        e.preventDefault();
 
-    $('#form-label').blur(function () {
-      if (!$('#form-name').val().length) {
-        $('#form-name').val($.normalizeString($(this).val()));
-      }
-    });
-
-    $('#field-label').blur(function () {
-      if (!$('#field-name').val().length) {
-        $('#field-name').val($.normalizeString($(this).val()));
-      }
-    });
-
-    $('a[href="#add-form"]').click(function (e) {
-      e.preventDefault();
-
-      $('#form-modal').modal();
-    });
-
-    $('#form-form').validate({
-      'rules': {
-        'form-label': {
-          'required': true
-        },
-        'form-name': {
-          'required': true
-        }
-      },
-      'messages': {
-        'form-label': {
-          'required': "@lang('message.form_label_must_set', 'Form için başlık belirtilmelidir!')"
-        },
-        'form-name': {
-          'required': "@lang('message.form_name_must_set', 'Form için isim belirtilmelidir!')"
-        }
-      },
-      'errorPlacement': function (error, element) {
-        error.insertAfter(element.parent());
-      },
-      'submitHandler': function (form) {
-        var data = {
-          'id': $('#form-id').val(),
-          'language': language,
-          'name': $('#form-name').val(),
-          'label': $('#form-label').val(),
-          'version': $('#form-version').val(),
-          'active': $('input[name="form-active"]:checked').val()
-        };
-
-        $.ajax({
-          'type': $(form).attr('method'),
-          'url': $(form).attr('action'),
-          'data': data
-        }).done(function (result) {
-          if (result.success) {
-            //Set id
-            data.id = result.return.id;
-
-            addTab(data);
-
-            if (!$('#form-id').val()) {
-              load('properties', result.return.id, []);
-            }
-
-            $('#form-modal').modal('hide');
-          } else {
-            message({
-              'type': 'error',
-              'text': result.text
-            })
-          }
-        });
-      }
-    });
-
-    $('a[href="#add"]').click(function (e) {
-      e.preventDefault();
-
-      $('#' + $('#list-modal').data('type') + '-modal').modal();
-    });
-
-    $('#group-form').validate({
-      'rules': {
-        'group-label': {
-          'required': true
-        }
-      },
-      'messages': {
-        'group-label': {
-          'required': "@lang('message.group_label_must_set', 'Grup için başlık belirtilmelidir!')"
-        }
-      },
-      'errorPlacement': function (error, element) {
-        error.insertAfter(element.parent());
-      },
-      'submitHandler': function (form) {
-        $.ajax({
-          'type': $(form).attr('method'),
-          'url': $(form).attr('action'),
-          'data': {
-            'id': $('#group-id').val(),
-            'language': language,
-            'label': $('#group-label').val(),
-            'version': $('#group-version').val()
-          }
-        }).done(function (result) {
-          if (result.success) {
-            if ($('#group-id').val()) {
-              changed = true;
-            }
-
-            $('#group-modal').modal('hide');
-            grid('group');
-          } else {
-            message({
-              'type': 'error',
-              'text': result.text
-            })
-          }
-        });
-      }
-    });
-
-    $('#field-form').validate({
-      'rules': {
-        'field-label': {
-          'required': true
-        },
-        'field-type': {
-          'required': true
-        }
-      },
-      'messages': {
-        'field-label': {
-          'required': "@lang('message.field_label_must_set', 'Alan için başlık belirtilmelidir!')"
-        },
-        'field-type': {
-          'required': "@lang('message.field_type_must_set', 'Alan için tür belirtilmelidir!')"
-        }
-      },
-      'errorPlacement': function (error, element) {
-        error.insertAfter(element.parent());
-      },
-      'submitHandler': function (form) {
-        $.ajax({
-          'type': $(form).attr('method'),
-          'url': $(form).attr('action'),
-          'data': {
-            'id': $('#field-id').val(),
-            'language': language,
-            'type': $('#field-type').val(),
-            'name': $('#field-name').val(),
-            'label': $('#field-label').val(),
-            'default': $('#field-default').val(),
-            'meta': $('#field-meta').val(),
-            'version': $('#field-version').val()
-          }
-        }).done(function (result) {
-          if (result.success) {
-            if ($('#field-id').val()) {
-              changed = true;
-            }
-
-            $('#field-modal').modal('hide');
-            grid('field');
-          } else {
-            message({
-              'type': 'error',
-              'text': result.text
-            })
-          }
-        });
-      }
-    });
-
-    $('#meta-form').submit(function (e) {
-      e.preventDefault();
-
-      var id = $('#meta-label').data('id');
-      var val = $('#meta').val();
-
-      $.ajax({
-        'type': $(this).attr('method'),
-        'url': $(this).attr('action'),
-        'data': {
-          'id': id,
-          'meta': val
-        }
-      }).done(function (result) {
-        if (result.success) {
-          $('#meta-modal').modal('hide');
-          $('#meta-' + id).html(val.replace(/[\n]/g, '<br>'));
+        if ($(this).data('type') == 'group') {
+         addGroup($(this).data('info'));
         } else {
-          message(result.text);
+         addProperty($(this).data('info'), $('#tabs li.active > a').data('id'), $('#list-modal').data('id'));
         }
-      });
-    });
 
-    $('#order-form').submit(function (e) {
-      e.preventDefault();
+        $('#list-modal').modal('hide');
+       }).addClass('btn btn-primary btn-sm mr10').append(
+        $('<i/>').addClass('fa fa-check')
+       ),
+       $('<a/>', {
+        'href': 'javascript:void(0)',
+        'data-id': result[k].id,
+        'data-type': type
+       }).click(function(e) {
+        e.preventDefault();
 
-      var id = $('#order-label').data('id');
-      var val = $('#order').val();
+        var id = $(this).data('id');
+        var type = $(this).data('type');
 
-      $.ajax({
-        'type': $(this).attr('method'),
-        'url': $(this).attr('action'),
-        'data': {
-          'id': id,
-          'order': val
+        $.ajax({
+         'type': 'get',
+         'url': "@url()/" + type + 's',
+         'data': {
+          'id': id
+         }
+        }).done(function(result) {
+         if (result[0]) {
+          $('#' + type + '-modal').modal();
+
+          var values = result[0];
+
+          for (var k in values) {
+           setValue(type + '-' + k, values[k]);
+          }
+         } else {
+          message("@lang('admin.message.target_not_found', 'Hedef bulunamadı!')");
+         }
+        });
+       }).addClass('btn btn-default btn-sm mr10').append(
+        $('<i/>').addClass('fa fa-edit')
+       ),
+       $('<a/>', {
+        'href': 'javascript:void(0)',
+        'data-id': result[k].id,
+        'data-type': type
+       }).popConfirm({
+        title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+        content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
+        placement: "top",
+        yesBtn: "@lang('admin.button.yes', 'Evet')",
+        noBtn: "@lang('admin.button.no', 'Hayır')",
+        confirm: function(e) {
+         var el = $(this);
+
+         $.ajax({
+          'type': 'delete',
+          'url': "@url()/" + el.data('type') + "/" + el.data('id')
+         }).done(function(result) {
+          if (result.success) {
+           el.closest('tr').remove();
+          } else {
+           new PNotify({
+            title: "@lang('admin.label.error', 'Hata')",
+            text: result.text,
+            type: 'danger'
+           });
+          }
+         });
         }
-      }).done(function (result) {
-        if (result.success) {
-          changed = true;
-          $('#order-modal').modal('hide');
-        } else {
-          message(result.text);
-        }
-      });
-    });
-
-    $('.modal').on('show.bs.modal', function () {
-      resetForm(this);
-
-      if ($(this).find('form').length) {
-        $(this).find('form').validate().resetForm();
-      }
-    }).on('shown.bs.modal', function () {
-      $(this).find('input[type="text"], textarea').first().focus();
-
-      metaEditor.setValue($('#meta').val());
-      fieldMetaEditor.setValue($('#field-meta').val());
-
-      metaEditor.refresh();
-      fieldMetaEditor.refresh();
-    }).on('hide.bs.modal', function () {
-      metaEditor.setValue('');
-      fieldMetaEditor.setValue('');
-
-      metaEditor.refresh();
-      fieldMetaEditor.refresh();
-    }).on('hidden.bs.modal', function () {
-      if (!$('.modal.in').length && changed) {
-        changed = false;
-
-        load('properties', $('#forms li.active > a').data('id'));
-      }
-
-      resetForm(this);
-
-      if ($(this).find('form').length) {
-        $(this).find('form').validate().resetForm();
-      }
-    });
+       }).addClass('btn btn-danger btn-sm').append(
+        $('<i/>').addClass('fa fa-trash-o')
+       )
+      )
+     ).appendTo(target);
+    }
+   } else {
+    setNotFound('list');
+   }
   });
-  //]]>
+ }
+
+ $(function() {
+  load('forms');
+
+  $('#filter-language').change(function() {
+   window.location.href = "@url()?language=" + $(this).val();
+  });
+
+  $('#form-name, #field-name').blur(function() {
+   $(this).val($.normalizeString($(this).val()));
+  });
+
+  $('#form-label').blur(function() {
+   if (!$('#form-name').val().length) {
+    $('#form-name').val($.normalizeString($(this).val()));
+   }
+  });
+
+  $('#field-label').blur(function() {
+   if (!$('#field-name').val().length) {
+    $('#field-name').val($.normalizeString($(this).val()));
+   }
+  });
+
+  $('a[href="#add-form"]').click(function(e) {
+   e.preventDefault();
+
+   $('#form-modal').modal();
+  });
+
+  $('#form-form').validate({
+   'rules': {
+    'form-label': {
+     'required': true
+    },
+    'form-name': {
+     'required': true
+    }
+   },
+   'messages': {
+    'form-label': {
+     'required': "@lang('message.form_label_must_set', 'Form için başlık belirtilmelidir!')"
+    },
+    'form-name': {
+     'required': "@lang('message.form_name_must_set', 'Form için isim belirtilmelidir!')"
+    }
+   },
+   'errorPlacement': function (error, element) {
+    error.insertAfter(element.parent());
+   },
+   'submitHandler': function (form) {
+    var data = {
+     'id': $('#form-id').val(),
+     'language': language,
+     'name': $('#form-name').val(),
+     'label': $('#form-label').val(),
+     'version': $('#form-version').val(),
+     'active': $('input[name="form-active"]:checked').val()
+    };
+
+    $.ajax({
+     'type': $(form).attr('method'),
+     'url': $(form).attr('action'),
+     'data': data
+    }).done(function(result) {
+     if (result.success) {
+      //Set id
+      data.id = result.return.id;
+
+      addTab(data);
+
+      if (!$('#form-id').val()) {
+       load('properties', result.return.id, []);
+      }
+
+      $('#form-modal').modal('hide');
+     } else {
+      message({
+       'type': 'error',
+       'text': result.text
+      })
+     }
+    });
+   }
+  });
+
+  $('a[href="#add"]').click(function(e) {
+   e.preventDefault();
+
+   $('#' + $('#list-modal').data('type') + '-modal').modal();
+  });
+
+  $('#group-form').validate({
+   'rules': {
+    'group-label': {
+     'required': true
+    }
+   },
+   'messages': {
+    'group-label': {
+     'required': "@lang('message.group_label_must_set', 'Grup için başlık belirtilmelidir!')"
+    }
+   },
+   'errorPlacement': function (error, element) {
+    error.insertAfter(element.parent());
+   },
+   'submitHandler': function (form) {
+    $.ajax({
+     'type': $(form).attr('method'),
+     'url': $(form).attr('action'),
+     'data': {
+      'id': $('#group-id').val(),
+      'language': language,
+      'label': $('#group-label').val(),
+      'version': $('#group-version').val()
+     }
+    }).done(function(result) {
+     if (result.success) {
+      if ($('#group-id').val()) {
+       changed = true;
+      }
+
+      $('#group-modal').modal('hide');
+      grid('group');
+     } else {
+      message({
+       'type': 'error',
+       'text': result.text
+      })
+     }
+    });
+   }
+  });
+
+  $('#field-form').validate({
+   'rules': {
+    'field-label': {
+     'required': true
+    },
+    'field-type': {
+     'required': true
+    }
+   },
+   'messages': {
+    'field-label': {
+     'required': "@lang('message.field_label_must_set', 'Alan için başlık belirtilmelidir!')"
+    },
+    'field-type': {
+     'required': "@lang('message.field_type_must_set', 'Alan için tür belirtilmelidir!')"
+    }
+   },
+   'errorPlacement': function (error, element) {
+    error.insertAfter(element.parent());
+   },
+   'submitHandler': function (form) {
+    $.ajax({
+     'type': $(form).attr('method'),
+     'url': $(form).attr('action'),
+     'data': {
+      'id': $('#field-id').val(),
+      'language': language,
+      'type': $('#field-type').val(),
+      'name': $('#field-name').val(),
+      'label': $('#field-label').val(),
+      'default': $('#field-default').val(),
+      'meta': $('#field-meta').val(),
+      'version': $('#field-version').val()
+     }
+    }).done(function(result) {
+     if (result.success) {
+      if ($('#field-id').val()) {
+       changed = true;
+      }
+
+      $('#field-modal').modal('hide');
+      grid('field');
+     } else {
+      message({
+       'type': 'error',
+       'text': result.text
+      })
+     }
+    });
+   }
+  });
+
+  $('#meta-form').submit(function(e) {
+   e.preventDefault();
+
+   var id = $('#meta-label').data('id');
+   var val = $('#meta').val();
+
+   $.ajax({
+    'type': $(this).attr('method'),
+    'url': $(this).attr('action'),
+    'data': {
+     'id': id,
+     'meta': val
+    }
+   }).done(function(result) {
+    if (result.success) {
+     $('#meta-modal').modal('hide');
+     $('#meta-' + id).html(val.replace(/[\n]/g, '<br>'));
+    } else {
+     message(result.text);
+    }
+   });
+  });
+
+  $('#order-form').submit(function(e) {
+   e.preventDefault();
+
+   var id = $('#order-label').data('id');
+   var val = $('#order').val();
+
+   $.ajax({
+    'type': $(this).attr('method'),
+    'url': $(this).attr('action'),
+    'data': {
+     'id': id,
+     'order': val
+    }
+   }).done(function(result) {
+    if (result.success) {
+     changed = true;
+     $('#order-modal').modal('hide');
+    } else {
+     message(result.text);
+    }
+   });
+  });
+
+  $('.modal').on('show.bs.modal', function() {
+   resetForm(this);
+
+   if ($(this).find('form').length) {
+    $(this).find('form').validate().resetForm();
+   }
+  }).on('shown.bs.modal', function() {
+   $(this).find('input[type="text"], textarea').first().focus();
+
+   metaEditor.setValue($('#meta').val());
+   fieldMetaEditor.setValue($('#field-meta').val());
+
+   metaEditor.refresh();
+   fieldMetaEditor.refresh();
+  }).on('hide.bs.modal', function() {
+   metaEditor.setValue('');
+   fieldMetaEditor.setValue('');
+
+   metaEditor.refresh();
+   fieldMetaEditor.refresh();
+  }).on('hidden.bs.modal', function() {
+   if (!$('.modal.in').length && changed) {
+    changed = false;
+
+    load('properties', $('#forms li.active > a').data('id'));
+   }
+
+   resetForm(this);
+
+   if ($(this).find('form').length) {
+    $(this).find('form').validate().resetForm();
+   }
+  });
+ });
+ //]]>
 </script>
 @stop

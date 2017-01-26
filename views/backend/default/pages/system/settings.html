@@ -5,366 +5,349 @@
 @section('content')
 @include('topbar')
 <section id="content" class="table-layout">
-  <div class="tray tray-center pn va-t posr">
-    <div class="panel m15">
-      <div class="panel-heading">
-        <span class="panel-title">@lang('admin.menu.settings', 'Ayarlar')</span>
-        <ul class="nav panel-tabs-border panel-tabs">
-          <li class="active">
-            <a href="#system-tab" data-toggle="tab">@lang('admin.menu.system', 'Sistem')</a>
-          </li>
-          <li>
-            <a href="#frontend-tab" data-toggle="tab">@lang('admin.menu.frontend', 'Önyüz')</a>
-          </li>
-          <li>
-            <a href="#backend-tab" data-toggle="tab">@lang('admin.menu.backend', 'Arkayüz')</a>
-          </li>
-          <li>
-            <a href="#email-tab" data-toggle="tab">@lang('admin.menu.email', 'E-Posta')</a>
-          </li>
-        </ul>
-      </div>
-      <div class="panel-body p20 pb10">
-        <form id="settings-form" class="admin-form" method="post" autocomplete="off" action="@url()">
-          <div class="tab-content pn br-n">
-            <div id="system-tab" class="tab-pane fade in active">
-              <div class="section mb15">
-                <h6 class="fw400">@lang('admin.label.default_language', 'Varsayılan Dil')</h6>
-                <label class="field prepend-icon">
-                  <input type="text" id="system_language" name="system_language" class="gui-input" readonly="readonly" value="(@lang('abbr')) @lang('name')">
-                  <span class="field-icon">
+ <div class="tray tray-center pn va-t posr">
+  <div class="panel m15">
+   <div class="panel-heading">
+    <span class="panel-title">@lang('admin.menu.settings', 'Ayarlar')</span>
+    <ul class="nav panel-tabs-border panel-tabs">
+     <li class="active">
+      <a href="#system-tab" data-toggle="tab">@lang('admin.menu.system', 'Sistem')</a>
+     </li>
+     <li>
+      <a href="#frontend-tab" data-toggle="tab">@lang('admin.menu.frontend', 'Önyüz')</a>
+     </li>
+     <li>
+      <a href="#backend-tab" data-toggle="tab">@lang('admin.menu.backend', 'Arkayüz')</a>
+     </li>
+     <li>
+      <a href="#email-tab" data-toggle="tab">@lang('admin.menu.email', 'E-Posta')</a>
+     </li>
+    </ul>
+   </div>
+   <div class="panel-body p20 pb10">
+    <form id="settings-form" class="admin-form" method="post" autocomplete="off" action="@url()">
+     <div class="tab-content pn br-n">
+      <div id="system-tab" class="tab-pane fade in active">
+       <div class="section mb15">
+        <h6 class="fw400">@lang('admin.label.default_language', 'Varsayılan Dil')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="system_language" name="system_language" class="gui-input" readonly="readonly" value="(@lang('abbr')) @lang('name')">
+         <span class="field-icon">
           <i class="fa fa-language"></i>
          </span>
-                </label>
-                <span class="help-block mt10">@lang('admin.hint.language_change', ['config/default', 'language'], '"%s" dosyasından "%s" değişkeni değiştirilebilir')</span>
-              </div>
-              <div class="section mb15 row">
-                <div class="col-xs-6">
-                  <h6 class="fw400">@lang('admin.label.system_name', 'Sistem Adı')</h6>
-                  <label class="field prepend-icon">
-                    <input type="text" id="system_name" name="system_name" class="gui-input" value="{{{ conf('system.name', 'Web-IM XI') }}}">
-                    <span class="field-icon">
+        </label>
+        <span class="help-block mt10">@lang('admin.hint.language_change', ['config/default', 'language'], '"%s" dosyasından "%s" değişkeni değiştirilebilir')</span>
+       </div>
+       <div class="section mb15 row">
+        <div class="col-xs-6">
+         <h6 class="fw400">@lang('admin.label.system_name', 'Sistem Adı')</h6>
+         <label class="field prepend-icon">
+          <input type="text" id="system_name" name="system_name" class="gui-input" value="{{{ conf('system.name', 'Web-IM XI') }}}">
+          <span class="field-icon">
            <i class="fa fa-shield"></i>
           </span>
-                  </label>
-                </div>
-                <div class="col-xs-6">
-                  <h6 class="fw400">@lang('admin.label.system_admin', 'Sistem Yöneticisi')</h6>
-                  <label class="field select">
-                    <select id="system_admin" name="system_admin" class="empty">
-                      @foreach ($admins as $admin)
-                      <option value="{{{ $admin->name }}}" {{ $admin->name === conf('system.admin') ? '
-                        selected="selected"' : '' }}>{{{ $admin->first_name . ' ' . $admin->last_name }}}
-                      </option>
-                      @endforeach
-                    </select>
-                    <i class="arrow double"></i>
-                  </label>
-                </div>
-              </div>
-              <hr>
-              <div class="section mb15">
-                <h6 class="fw400">@lang('admin.label.publish_date', 'Yayın Tarihi')</h6>
-                <label for="system_publish_date" class="field prepend-picker-icon">
-                  <input type="text" id="system_publish_date" name="system_publish_date" class="gui-input" placeholder="@lang('admin.hint.pick_date', 'Tarih seçin')" value="{{{ conf('system.publish_date') }}}">
-                </label>
-              </div>
-              <div class="tab-block mb25">
-                <ul class="nav tabs-left">
-                  @foreach (langs() as $alias => $lang)
-                  <li
-                  {{ $alias == lang() ? ' class="active"' : '' }}>
-                  <a href="#system-{{ $alias }}-tab" data-toggle="tab">{{{ $lang }}}</a>
-                  </li>
-                  @endforeach
-                </ul>
-                <div class="tab-content">
-                  @foreach (langs() as $alias => $lang)
-                  <div id="system-{{ $alias }}-tab" class="tab-pane {{ $alias == lang() ? ' active' : '' }}">
-                    <div class="section mb15">
-                      <h6 class="fw400">@lang('admin.label.offline_message', 'Kapalı Mesajı')</h6>
-                      <label class="field prepend-icon">
-                        <textarea id="system_{{ $alias }}_offline_message" name="system_{{ $alias }}_offline_message" class="gui-textarea" rows="4">{{{ conf('system.' . $alias . '.offline_message') }}}</textarea>
-                        <span class="field-icon">
+         </label>
+        </div>
+        <div class="col-xs-6">
+         <h6 class="fw400">@lang('admin.label.system_admin', 'Sistem Yöneticisi')</h6>
+         <label class="field select">
+          <select id="system_admin" name="system_admin" class="empty">
+           @foreach ($admins as $admin)
+           <option value="{{{ $admin->name }}}"{{ $admin->name === conf('system.admin') ? ' selected="selected"' : '' }}>{{{ $admin->first_name . ' ' . $admin->last_name }}}</option>
+           @endforeach
+          </select>
+          <i class="arrow double"></i>
+         </label>
+        </div>
+       </div>
+       <hr>
+       <div class="section mb15">
+        <h6 class="fw400">@lang('admin.label.publish_date', 'Yayın Tarihi')</h6>
+        <label for="system_publish_date" class="field prepend-picker-icon">
+         <input type="text" id="system_publish_date" name="system_publish_date" class="gui-input" placeholder="@lang('admin.hint.pick_date', 'Tarih seçin')" value="{{{ conf('system.publish_date') }}}">
+        </label>
+       </div>
+       <div class="tab-block mb25">
+        <ul class="nav tabs-left">
+         @foreach (langs() as $alias => $lang)
+         <li{{ $alias == lang() ? ' class="active"' : '' }}>
+         <a href="#system-{{ $alias }}-tab" data-toggle="tab">{{{ $lang }}}</a>
+         </li>
+         @endforeach
+        </ul>
+        <div class="tab-content">
+         @foreach (langs() as $alias => $lang)
+         <div id="system-{{ $alias }}-tab" class="tab-pane {{ $alias == lang() ? ' active' : '' }}">
+          <div class="section mb15">
+           <h6 class="fw400">@lang('admin.label.offline_message', 'Kapalı Mesajı')</h6>
+           <label class="field prepend-icon">
+            <textarea id="system_{{ $alias }}_offline_message" name="system_{{ $alias }}_offline_message" class="gui-textarea" rows="4">{{{ conf('system.' . $alias . '.offline_message') }}}</textarea>
+            <span class="field-icon">
              <i class="fa fa-comment"></i>
             </span>
-                      </label>
-                    </div>
-                  </div>
-                  @endforeach
-                </div>
-              </div>
-            </div>
-            <div id="frontend-tab" class="tab-pane fade">
-              <div class="tab-block mb25">
-                <ul class="nav tabs-left">
-                  @foreach (langs() as $alias => $lang)
-                  <li
-                  {{ $alias == lang() ? ' class="active"' : '' }}>
-                  <a href="#frontend-{{ $alias }}-tab" data-toggle="tab">{{{ $lang }}}</a>
-                  </li>
-                  @endforeach
-                </ul>
-                <div class="tab-content">
-                  @foreach (langs() as $alias => $lang)
-                  <div id="frontend-{{ $alias }}-tab" class="tab-pane {{ $alias == lang() ? ' active' : '' }}">
-                    <div class="section mb15 row">
-                      <div class="col-md-6 col-xs-12">
-                        <h6 class="fw400">@lang('admin.label.template', 'Şablon')</h6>
-                        <label class="field select">
-                          <select id="frontend_{{ $alias }}_template" name="frontend_{{ $alias }}_template" class="empty">
-                            @foreach ($frontends as $frontend)
-                            <option value="{{{ $frontend->name }}}" {{ $frontend->name === conf('frontend.' . $alias .
-                              '.template', 'default') ? ' selected="selected"' : '' }}>{{{ $frontend->name }}}
-                            </option>
-                            @endforeach
-                          </select>
-                          <i class="arrow double"></i>
-                        </label>
-                      </div>
-                      <div class="col-md-6 col-xs-12">
-                        <h6 class="fw400">@lang('admin.label.page_title', 'Sayfa Başlığı')</h6>
-                        <label class="field prepend-icon">
-                          <input type="text" id="frontend_{{ $alias }}_title" name="frontend_{{ $alias }}_title" class="gui-input" value="{{{ conf('frontend.' . $alias . '.title', 'Web-IM XI') }}}">
-                          <span class="field-icon">
+           </label>
+          </div>
+         </div>
+         @endforeach
+        </div>
+       </div>
+      </div>
+      <div id="frontend-tab" class="tab-pane fade">
+       <div class="tab-block mb25">
+        <ul class="nav tabs-left">
+         @foreach (langs() as $alias => $lang)
+         <li{{ $alias == lang() ? ' class="active"' : '' }}>
+          <a href="#frontend-{{ $alias }}-tab" data-toggle="tab">{{{ $lang }}}</a>
+         </li>
+         @endforeach
+        </ul>
+        <div class="tab-content">
+         @foreach (langs() as $alias => $lang)
+         <div id="frontend-{{ $alias }}-tab" class="tab-pane {{ $alias == lang() ? ' active' : '' }}">
+          <div class="section mb15 row">
+           <div class="col-md-6 col-xs-12">
+            <h6 class="fw400">@lang('admin.label.template', 'Şablon')</h6>
+            <label class="field select">
+             <select id="frontend_{{ $alias }}_template" name="frontend_{{ $alias }}_template" class="empty">
+              @foreach ($frontends as $frontend)
+              <option value="{{{ $frontend->name }}}"{{ $frontend->name === conf('frontend.' . $alias . '.template', 'default') ? ' selected="selected"' : '' }}>{{{ $frontend->name }}}</option>
+              @endforeach
+             </select>
+             <i class="arrow double"></i>
+            </label>
+           </div>
+           <div class="col-md-6 col-xs-12">
+            <h6 class="fw400">@lang('admin.label.page_title', 'Sayfa Başlığı')</h6>
+            <label class="field prepend-icon">
+             <input type="text" id="frontend_{{ $alias }}_title" name="frontend_{{ $alias }}_title" class="gui-input" value="{{{ conf('frontend.' . $alias . '.title', 'Web-IM XI') }}}">
+             <span class="field-icon">
               <i class="fa fa-ticket"></i>
              </span>
-                        </label>
-                      </div>
-                    </div>
-                    <div class="section mb15">
-                      <h6 class="fw400">@lang('admin.label.page_description', 'Sayfa Açıklaması')</h6>
-                      <label class="field prepend-icon">
-                        <textarea id="frontend_{{ $alias }}_description" name="frontend_{{ $alias }}_description" class="gui-textarea" rows="4">{{{ conf('frontend.' . $alias . '.description') }}}</textarea>
-                        <span class="field-icon">
+            </label>
+           </div>
+          </div>
+          <div class="section mb15">
+           <h6 class="fw400">@lang('admin.label.page_description', 'Sayfa Açıklaması')</h6>
+           <label class="field prepend-icon">
+            <textarea id="frontend_{{ $alias }}_description" name="frontend_{{ $alias }}_description" class="gui-textarea" rows="4">{{{ conf('frontend.' . $alias . '.description') }}}</textarea>
+            <span class="field-icon">
              <i class="fa fa-comment"></i>
             </span>
-                      </label>
-                    </div>
-                    <div class="section mb15">
-                      <h6 class="fw400">@lang('admin.label.page_keywords', 'Sayfa Arama Etiketleri')</h6>
-                      <div>
-                        <input type="text" id="frontend_{{ $alias }}_keywords" name="frontend_{{ $alias }}_keywords" class="tagsinput" value="{{{ conf('frontend.' . $alias . '.keywords') }}}" data-role="tagsinput">
-                      </div>
-                      <span class="help-block mt10">@lang('admin.hint.type_keyword_and_hit_enter', 'Kelimeyi yazarak "enter" tuşuna basın')</span>
-                    </div>
-                    <div class="section">
-                      <h6 class="fw400">@lang('admin.label.page_copyright', 'Sayfa Altlığı')</h6>
-                      <label class="field prepend-icon">
-                        <input type="text" id="frontend_{{ $alias }}_copyright" name="frontend_{{ $alias }}_copyright" class="gui-input" value="{{{ conf('frontend.' . $alias . '.copyright', '&copy; Powered by Masters') }}}">
-                        <span class="field-icon">
+           </label>
+          </div>
+          <div class="section mb15">
+           <h6 class="fw400">@lang('admin.label.page_keywords', 'Sayfa Arama Etiketleri')</h6>
+           <div>
+            <input type="text" id="frontend_{{ $alias }}_keywords" name="frontend_{{ $alias }}_keywords" class="tagsinput" value="{{{ conf('frontend.' . $alias . '.keywords') }}}" data-role="tagsinput">
+           </div>
+           <span class="help-block mt10">@lang('admin.hint.type_keyword_and_hit_enter', 'Kelimeyi yazarak "enter" tuşuna basın')</span>
+          </div>
+          <div class="section">
+           <h6 class="fw400">@lang('admin.label.page_copyright', 'Sayfa Altlığı')</h6>
+           <label class="field prepend-icon">
+            <input type="text" id="frontend_{{ $alias }}_copyright" name="frontend_{{ $alias }}_copyright" class="gui-input" value="{{{ conf('frontend.' . $alias . '.copyright', '&copy; Powered by Masters') }}}">
+            <span class="field-icon">
              <i class="fa fa-copyright"></i>
             </span>
-                      </label>
-                    </div>
-                  </div>
-                  @endforeach
-                </div>
-              </div>
-            </div>
-            <div id="backend-tab" class="tab-pane fade">
-              <div class="tab-block mb25">
-                <ul class="nav tabs-left">
-                  @foreach (langs() as $alias => $lang)
-                  <li
-                  {{ $alias == lang() ? ' class="active"' : '' }}>
-                  <a href="#backend-{{ $alias }}-tab" data-toggle="tab">{{{ $lang }}}</a>
-                  </li>
-                  @endforeach
-                </ul>
-                <div class="tab-content">
-                  @foreach (langs() as $alias => $lang)
-                  <div id="backend-{{ $alias }}-tab" class="tab-pane {{ $alias == lang() ? ' active' : '' }}">
-                    <div class="section mb15 row">
-                      <div class="col-md-6 col-xs-12">
-                        <h6 class="fw400">@lang('admin.label.template', 'Şablon')</h6>
-                        <label class="field select">
-                          <select id="backend_{{ $alias }}_template" name="backend_{{ $alias }}_template" class="empty">
-                            @foreach ($backends as $backend)
-                            <option value="{{{ $backend->name }}}" {{ $backend->name === conf('backend.' . $alias .
-                              '.template', 'default') ? ' selected="selected"' : '' }}>{{{ $backend->name }}}
-                            </option>
-                            @endforeach
-                          </select>
-                          <i class="arrow double"></i>
-                        </label>
-                      </div>
-                      <div class="col-md-6 col-xs-12">
-                        <h6 class="fw400">@lang('admin.label.page_title', 'Sayfa Başlığı')</h6>
-                        <label class="field prepend-icon">
-                          <input type="text" id="backend_{{ $alias }}_title" name="backend_{{ $alias }}_title" class="gui-input" value="{{{ conf('backend.' . $alias . '.title', 'Web-IM XI') }}}">
-                          <span class="field-icon">
+           </label>
+          </div>
+         </div>
+         @endforeach
+        </div>
+       </div>
+      </div>
+      <div id="backend-tab" class="tab-pane fade">
+       <div class="tab-block mb25">
+        <ul class="nav tabs-left">
+         @foreach (langs() as $alias => $lang)
+         <li{{ $alias == lang() ? ' class="active"' : '' }}>
+         <a href="#backend-{{ $alias }}-tab" data-toggle="tab">{{{ $lang }}}</a>
+         </li>
+         @endforeach
+        </ul>
+        <div class="tab-content">
+         @foreach (langs() as $alias => $lang)
+         <div id="backend-{{ $alias }}-tab" class="tab-pane {{ $alias == lang() ? ' active' : '' }}">
+          <div class="section mb15 row">
+           <div class="col-md-6 col-xs-12">
+            <h6 class="fw400">@lang('admin.label.template', 'Şablon')</h6>
+            <label class="field select">
+             <select id="backend_{{ $alias }}_template" name="backend_{{ $alias }}_template" class="empty">
+              @foreach ($backends as $backend)
+              <option value="{{{ $backend->name }}}"{{ $backend->name === conf('backend.' . $alias . '.template', 'default') ? ' selected="selected"' : '' }}>{{{ $backend->name }}}</option>
+              @endforeach
+             </select>
+             <i class="arrow double"></i>
+            </label>
+           </div>
+           <div class="col-md-6 col-xs-12">
+            <h6 class="fw400">@lang('admin.label.page_title', 'Sayfa Başlığı')</h6>
+            <label class="field prepend-icon">
+             <input type="text" id="backend_{{ $alias }}_title" name="backend_{{ $alias }}_title" class="gui-input" value="{{{ conf('backend.' . $alias . '.title', 'Web-IM XI') }}}">
+             <span class="field-icon">
               <i class="fa fa-ticket"></i>
              </span>
-                        </label>
-                      </div>
-                    </div>
-                    <div class="section mb15">
-                      <h6 class="fw400">@lang('admin.label.page_description', 'Sayfa Açıklaması')</h6>
-                      <label class="field prepend-icon">
-                        <textarea id="backend_{{ $alias }}_description" name="backend_{{ $alias }}_description" class="gui-textarea" rows="4">{{{ conf('backend.' . $alias . '.description') }}}</textarea>
-                        <span class="field-icon">
+            </label>
+           </div>
+          </div>
+          <div class="section mb15">
+           <h6 class="fw400">@lang('admin.label.page_description', 'Sayfa Açıklaması')</h6>
+           <label class="field prepend-icon">
+            <textarea id="backend_{{ $alias }}_description" name="backend_{{ $alias }}_description" class="gui-textarea" rows="4">{{{ conf('backend.' . $alias . '.description') }}}</textarea>
+            <span class="field-icon">
              <i class="fa fa-comment"></i>
             </span>
-                      </label>
-                    </div>
-                    <div class="section mb15">
-                      <h6 class="fw400">@lang('admin.label.page_keywords', 'Sayfa Arama Etiketleri')</h6>
-                      <div>
-                        <input type="text" id="backend_{{ $alias }}_keywords" name="backend_{{ $alias }}_keywords" class="tagsinput" value="{{{ conf('backend.' . $alias . '.keywords') }}}" data-role="tagsinput">
-                      </div>
-                      <span class="help-block mt10">@lang('admin.hint.type_keyword_and_hit_enter', 'Kelimeyi yazarak "enter" tuşuna basın')</span>
-                    </div>
-                  </div>
-                  @endforeach
-                </div>
-              </div>
-              <hr>
-              <div class="section mb15 row">
-                <div class="col-xs-6">
-                  <h6 class="fw400">@lang('admin.label.session_timeout', 'Oturum Sonlandırma')</h6>
-                  <div class="option-group field">
-                    <label class="option option-primary">
-                      <input type="checkbox" id="backend_session_timeout_active" name="backend_session_timeout_active" value="yes" {{ conf('backend.session.timeout_active',
-                      'no') == 'yes' ? ' checked="checked"' : '' }}>
-                      <span class="checkbox"></span>
-                      @lang('admin.label.active', 'Aktif')
-                    </label>
-                  </div>
-                  <span class="help-block mt10">@lang('admin.hint.session_timeout', 'Herhangi bir işlem yapılmadığında oturum sonlandırılır')</span>
-                </div>
-                <div class="col-xs-6">
-                  <h6 class="fw400">@lang('admin.label.session_timeout_time', 'Oturum Sonlandırma Süresi')</h6>
-                  <div class="input-group w300">
+           </label>
+          </div>
+          <div class="section mb15">
+           <h6 class="fw400">@lang('admin.label.page_keywords', 'Sayfa Arama Etiketleri')</h6>
+           <div>
+            <input type="text" id="backend_{{ $alias }}_keywords" name="backend_{{ $alias }}_keywords" class="tagsinput" value="{{{ conf('backend.' . $alias . '.keywords') }}}" data-role="tagsinput">
+           </div>
+           <span class="help-block mt10">@lang('admin.hint.type_keyword_and_hit_enter', 'Kelimeyi yazarak "enter" tuşuna basın')</span>
+          </div>
+         </div>
+         @endforeach
+        </div>
+       </div>
+       <hr>
+       <div class="section mb15 row">
+        <div class="col-xs-6">
+         <h6 class="fw400">@lang('admin.label.session_timeout', 'Oturum Sonlandırma')</h6>
+         <div class="option-group field">
+          <label class="option option-primary">
+           <input type="checkbox" id="backend_session_timeout_active" name="backend_session_timeout_active" value="yes"{{ conf('backend.session.timeout_active', 'no') == 'yes' ? ' checked="checked"' : '' }}>
+           <span class="checkbox"></span>
+           @lang('admin.label.active', 'Aktif')
+          </label>
+         </div>
+         <span class="help-block mt10">@lang('admin.hint.session_timeout', 'Herhangi bir işlem yapılmadığında oturum sonlandırılır')</span>
+        </div>
+        <div class="col-xs-6">
+         <h6 class="fw400">@lang('admin.label.session_timeout_time', 'Oturum Sonlandırma Süresi')</h6>
+         <div class="input-group w300">
           <span class="input-group-addon">
            <i class="fa fa-clock-o"></i>
           </span>
-                    <input id="backend_session_timeout_after" name="backend_session_timeout_after" class="form-control ui-spinner-input" value="{{{ conf('backend.session.timeout_after', 15) }}}">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div id="email-tab" class="tab-pane fade">
-              <div class="section mb15 row">
-                <div class="col-xs-6">
-                  <h6 class="fw400">@lang('admin.label.email_from_address', 'Gönderen E-Posta Adresi')</h6>
-                  <label class="field prepend-icon">
-                    <input type="text" id="email_from" name="email_from" class="gui-input" value="{{{ conf('email.from') }}}">
-                    <span class="field-icon">
-           <i class="fa fa-envelope"></i>
-          </span>
-                  </label>
-                </div>
-                <div class="col-xs-6">
-                  <h6 class="fw400">@lang('admin.label.email_from_name', 'Gönderen İsim')</h6>
-                  <label class="field prepend-icon">
-                    <input type="text" id="email_from_name" name="email_from_name" class="gui-input" value="{{{ conf('email.from_name') }}}">
-                    <span class="field-icon">
-           <i class="fa fa-envelope"></i>
-          </span>
-                  </label>
-                </div>
-              </div>
-              <hr>
-              <div class="section mb15">
-                <div class="option-group field">
-                  <label class="option option-primary">
-                    <input type="checkbox" id="email_smtp_active" name="email_smtp_active" value="yes" {{ conf('email.smtp.active',
-                    'no') == 'yes' ? ' checked="checked"' : '' }}>
-                    <span class="checkbox"></span>
-                    @lang('admin.label.use_smtp', 'SMTP Kullan')
-                  </label>
-                </div>
-              </div>
-              <div id="smtp" {{ conf(
-              'email.smtp.active', 'no') == 'no' ? ' class="hide"' : '' }}>
-              <div class="section mb15 row">
-                <div class="col-xs-6">
-                  <h6 class="fw400">@lang('admin.label.host', 'Host')</h6>
-                  <label class="field prepend-icon">
-                    <input type="text" id="email_smtp_host" name="email_smtp_host" class="gui-input" value="{{ conf('email.smtp.host') }}">
-                    <span class="field-icon">
-            <i class="fa fa-info"></i>
-           </span>
-                  </label>
-                </div>
-                <div class="col-xs-6">
-                  <h6 class="fw400">@lang('admin.label.port', 'Port')</h6>
-                  <label class="field prepend-icon">
-                    <input type="text" id="email_smtp_port" name="email_smtp_port" class="gui-input" value="{{ conf('email.smtp.port') }}">
-                    <span class="field-icon">
-            <i class="fa fa-info"></i>
-           </span>
-                  </label>
-                </div>
-              </div>
-              <div class="section mb15 row">
-                <div class="col-xs-6">
-                  <h6 class="fw400">@lang('admin.label.user_name', 'Kullanıcı Adı')</h6>
-                  <label class="field prepend-icon">
-                    <input type="text" id="email_smtp_user" name="email_smtp_user" class="gui-input" value="{{ conf('email.smtp.user') }}">
-                    <span class="field-icon">
-            <i class="fa fa-info"></i>
-           </span>
-                  </label>
-                </div>
-                <div class="col-xs-6">
-                  <h6 class="fw400">@lang('admin.label.pass', 'Parola')</h6>
-                  <label class="field prepend-icon">
-                    <input type="password" id="email_smtp_pass" name="email_smtp_pass" class="gui-input" value="{{ conf('email.smtp.pass') }}">
-                    <span class="field-icon">
-            <i class="fa fa-info"></i>
-           </span>
-                  </label>
-                </div>
-              </div>
-              <div class="section mb15 row">
-                <div class="col-xs-6">
-                  <h6 class="fw400">@lang('admin.label.secure', 'Güvenlik')</h6>
-                  <label class="field select">
-                    <select id="email_smtp_secure" name="email_smtp_secure" class="empty">
-                      <option value="" {{ conf(
-                      'email.smtp.secure') == '' ? ' selected="selected"' : '' }}>&nbsp;</option>
-                      <option value="ssl" {{ conf(
-                      'email.smtp.secure') == 'ssl' ? ' selected="selected"' : '' }}>SSL</option>
-                      <option value="tls" {{ conf(
-                      'email.smtp.secure') == 'tls' ? ' selected="selected"' : '' }}>TLS</option>
-                    </select>
-                    <i class="arrow double"></i>
-                  </label>
-                </div>
-                <div class="col-xs-6">
-                  <h6 class="fw400">@lang('admin.label.auth', 'Doğrulama')</h6>
-                  <div class="option-group field section">
-                    <label class="option option-primary">
-                      <input type="radio" id="email_smtp_auth_yes" name="email_smtp_auth" value="yes" {{ conf('email.smtp.auth',
-                      'no') == 'yes' ? ' checked="checked"' : '' }}>
-                      <i class="radio"></i>
-                      @lang('admin.label.yes', 'Evet')
-                    </label>
-                    <label class="option option-primary">
-                      <input type="radio" id="email_smtp_auth_no" name="email_smtp_auth" value="no" {{ conf('email.smtp.auth',
-                      'no') == 'no' ? ' checked="checked"' : '' }}>
-                      <i class="radio"></i>
-                      @lang('admin.label.no', 'Hayır')
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <hr class="short alt">
-          <div class="section mbn text-right">
-            <button type="submit" class="btn btn-primary">
-              <i class="fa fa-save"></i>
-              @lang('admin.button.save', 'Kaydet')
-            </button>
-          </div>
+          <input id="backend_session_timeout_after" name="backend_session_timeout_after" class="form-control ui-spinner-input" value="{{{ conf('backend.session.timeout_after', 15) }}}">
+         </div>
+        </div>
+       </div>
       </div>
-      </form>
-    </div>
+      <div id="email-tab" class="tab-pane fade">
+       <div class="section mb15 row">
+        <div class="col-xs-6">
+         <h6 class="fw400">@lang('admin.label.email_from_address', 'Gönderen E-Posta Adresi')</h6>
+         <label class="field prepend-icon">
+          <input type="text" id="email_from" name="email_from" class="gui-input" value="{{{ conf('email.from') }}}">
+          <span class="field-icon">
+           <i class="fa fa-envelope"></i>
+          </span>
+         </label>
+        </div>
+        <div class="col-xs-6">
+         <h6 class="fw400">@lang('admin.label.email_from_name', 'Gönderen İsim')</h6>
+         <label class="field prepend-icon">
+          <input type="text" id="email_from_name" name="email_from_name" class="gui-input" value="{{{ conf('email.from_name') }}}">
+          <span class="field-icon">
+           <i class="fa fa-envelope"></i>
+          </span>
+         </label>
+        </div>
+       </div>
+       <hr>
+       <div class="section mb15">
+        <div class="option-group field">
+         <label class="option option-primary">
+          <input type="checkbox" id="email_smtp_active" name="email_smtp_active" value="yes"{{ conf('email.smtp.active', 'no') == 'yes' ? ' checked="checked"' : '' }}>
+          <span class="checkbox"></span>
+          @lang('admin.label.use_smtp', 'SMTP Kullan')
+         </label>
+        </div>
+       </div>
+       <div id="smtp"{{ conf('email.smtp.active', 'no') == 'no' ? ' class="hide"' : '' }}>
+        <div class="section mb15 row">
+         <div class="col-xs-6">
+          <h6 class="fw400">@lang('admin.label.host', 'Host')</h6>
+          <label class="field prepend-icon">
+           <input type="text" id="email_smtp_host" name="email_smtp_host" class="gui-input" value="{{ conf('email.smtp.host') }}">
+           <span class="field-icon">
+            <i class="fa fa-info"></i>
+           </span>
+          </label>
+         </div>
+         <div class="col-xs-6">
+          <h6 class="fw400">@lang('admin.label.port', 'Port')</h6>
+          <label class="field prepend-icon">
+           <input type="text" id="email_smtp_port" name="email_smtp_port" class="gui-input" value="{{ conf('email.smtp.port') }}">
+           <span class="field-icon">
+            <i class="fa fa-info"></i>
+           </span>
+          </label>
+         </div>
+        </div>
+        <div class="section mb15 row">
+         <div class="col-xs-6">
+          <h6 class="fw400">@lang('admin.label.user_name', 'Kullanıcı Adı')</h6>
+          <label class="field prepend-icon">
+           <input type="text" id="email_smtp_user" name="email_smtp_user" class="gui-input" value="{{ conf('email.smtp.user') }}">
+           <span class="field-icon">
+            <i class="fa fa-info"></i>
+           </span>
+          </label>
+         </div>
+         <div class="col-xs-6">
+          <h6 class="fw400">@lang('admin.label.pass', 'Parola')</h6>
+          <label class="field prepend-icon">
+           <input type="password" id="email_smtp_pass" name="email_smtp_pass" class="gui-input" value="{{ conf('email.smtp.pass') }}">
+           <span class="field-icon">
+            <i class="fa fa-info"></i>
+           </span>
+          </label>
+         </div>
+        </div>
+        <div class="section mb15 row">
+         <div class="col-xs-6">
+          <h6 class="fw400">@lang('admin.label.secure', 'Güvenlik')</h6>
+          <label class="field select">
+           <select id="email_smtp_secure" name="email_smtp_secure" class="empty">
+            <option value=""{{ conf('email.smtp.secure') == '' ? ' selected="selected"' : '' }}>&nbsp;</option>
+            <option value="ssl"{{ conf('email.smtp.secure') == 'ssl' ? ' selected="selected"' : '' }}>SSL</option>
+            <option value="tls"{{ conf('email.smtp.secure') == 'tls' ? ' selected="selected"' : '' }}>TLS</option>
+           </select>
+           <i class="arrow double"></i>
+          </label>
+         </div>
+         <div class="col-xs-6">
+          <h6 class="fw400">@lang('admin.label.auth', 'Doğrulama')</h6>
+          <div class="option-group field section">
+           <label class="option option-primary">
+            <input type="radio" id="email_smtp_auth_yes" name="email_smtp_auth" value="yes"{{ conf('email.smtp.auth', 'no') == 'yes' ? ' checked="checked"' : '' }}>
+            <i class="radio"></i>
+            @lang('admin.label.yes', 'Evet')
+           </label>
+           <label class="option option-primary">
+            <input type="radio" id="email_smtp_auth_no" name="email_smtp_auth" value="no"{{ conf('email.smtp.auth', 'no') == 'no' ? ' checked="checked"' : '' }}>
+            <i class="radio"></i>
+            @lang('admin.label.no', 'Hayır')
+           </label>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+      <hr class="short alt">
+      <div class="section mbn text-right">
+       <button type="submit" class="btn btn-primary">
+        <i class="fa fa-save"></i>
+        @lang('admin.button.save', 'Kaydet')
+       </button>
+      </div>
+     </div>
+    </form>
+   </div>
   </div>
-  </div>
+ </div>
 </section>
 @stop
 
@@ -373,107 +356,97 @@
 <script type="text/javascript" src="{{ $root }}/js/plugins/jquery/jquery-ui-timepicker.min.js"></script>
 <script type="text/javascript" src="{{ $root }}/js/plugins/tagsinput/tagsinput.min.js"></script>
 <script type="text/javascript">
-  //<![CDATA[
-  $('#system_publish_date').datetimepicker({
-    showOn: 'both',
-    buttonText: '<i class="fa fa-calendar-o"></i>',
-    prevText: '<i class="fa fa-chevron-left"></i>',
-    nextText: '<i class="fa fa-chevron-right"></i>',
-    beforeShow: function (input, inst) {
-      var newclass = 'admin-form';
-      var themeClass = $(this).parents('.admin-form').attr('class');
-      var smartpikr = inst.dpDiv.parent();
-      if (!smartpikr.hasClass(themeClass)) {
-        inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
-      }
-    },
-    dateFormat: 'dd-mm-yy',
-    firstDay: 1
-  });
+ //<![CDATA[
+ $('#system_publish_date').datetimepicker({
+  showOn: 'both',
+  buttonText: '<i class="fa fa-calendar-o"></i>',
+  prevText: '<i class="fa fa-chevron-left"></i>',
+  nextText: '<i class="fa fa-chevron-right"></i>',
+  beforeShow: function(input, inst) {
+   var newclass = 'admin-form';
+   var themeClass = $(this).parents('.admin-form').attr('class');
+   var smartpikr = inst.dpDiv.parent();
+   if (!smartpikr.hasClass(themeClass)) {
+    inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
+   }
+  },
+  dateFormat: 'dd-mm-yy',
+  firstDay: 1
+ });
 
-  // Init tagsinput plugin
-  $('.tagsinput').tagsinput({
-    tagClass: function (item) {
-      return 'label bg-primary light';
-    }
-  });
+ // Init tagsinput plugin
+ $('.tagsinput').tagsinput({
+  tagClass: function(item) {
+   return 'label bg-primary light';
+  }
+ });
 
-  $.widget('ui.timeSpinner', $.ui.spinner, {
-    _format: function (value) {
-      return value + ' {{ str_case(lang('
-      admin.label.minute
-      ', '
-      dakika
-      '), '
-      lower
-      ') }}';
-    },
-    _parse: function (value) {
-      return parseInt(value);
-    }
-  });
+ $.widget('ui.timeSpinner', $.ui.spinner, {
+  _format: function( value ) { return value + ' {{ str_case(lang('admin.label.minute', 'dakika'), 'lower') }}'; },
+  _parse: function(value) { return parseInt(value); }
+ });
 
-  $('#backend_session_timeout_after').timeSpinner({
-    min: 1,
-    max: 90,
-    step: 1
-  });
+ $('#backend_session_timeout_after').timeSpinner({
+  min: 1,
+  max: 90,
+  step: 1
+ });
 
-  $('#settings-form').validate({
-    // Rules for form validation
-    rules: {
-      email_from: {
-        required: true,
-        email: true
-      },
-      email_from_name: {
-        required: true
-      },
-      system_publish_date: {
-        required: true
-      },
-      system_offline_message: {
-        required: true
-      }
-    },
-    // Messages for form validation
-    messages: {
-      email_from: {
-        required: "@lang('admin.message.type_system_email_address', 'Sistemin gönderen e-posta adresini girin!')",
-        email: "@lang('admin.message.type_valid_system_email_address', 'Sistemin gönderen e-posta adresini geçerli e-posta adresi olarak girin!')"
-      },
-      email_from_name: {
-        required: "@lang('admin.message.type_system_email_from_name', 'Sistemin gönderen ismini girin!')"
-      },
-      system_publish_date: {
-        required: "@lang('admin.message.pick_system_publish_date', 'Sistemin açılış tarihini girin!')"
-      },
-      system_offline_message: {
-        required: "@lang('admin.message.type_system_offline_message', 'Sistemin kapalı mesajını girin!')"
-      }
-    },
-    // Do not change code below
-    errorPlacement: function (error, element) {
-      error.insertAfter(element.parent());
-    },
-    submitHandler: function (form) {
-      $.ajax({
-        'type': $(form).attr('method'),
-        'url': $(form).attr('action'),
-        'data': $(form).serialize()
-      }).done(function (result) {
-        message(result);
-      });
-    }
-  });
+ $('#settings-form').validate({
+  // Rules for form validation
+  rules : {
+   email_from : {
+    required : true,
+    email : true
+   },
+   email_from_name : {
+    required : true
+   },
+   system_publish_date : {
+    required : true
+   },
+   system_offline_message : {
+    required : true
+   }
+  },
+  // Messages for form validation
+  messages : {
+   email_from : {
+    required : "@lang('admin.message.type_system_email_address', 'Sistemin gönderen e-posta adresini girin!')",
+    email : "@lang('admin.message.type_valid_system_email_address', 'Sistemin gönderen e-posta adresini geçerli e-posta adresi olarak girin!')"
+   },
+   email_from_name : {
+    required : "@lang('admin.message.type_system_email_from_name', 'Sistemin gönderen ismini girin!')"
+   },
+   system_publish_date : {
+    required : "@lang('admin.message.pick_system_publish_date', 'Sistemin açılış tarihini girin!')"
+   },
+   system_offline_message : {
+    required : "@lang('admin.message.type_system_offline_message', 'Sistemin kapalı mesajını girin!')"
+   }
+  },
+  // Do not change code below
+  errorPlacement : function(error, element) {
+   error.insertAfter(element.parent());
+  },
+  submitHandler: function(form) {
+   $.ajax({
+    'type': $(form).attr('method'),
+    'url': $(form).attr('action'),
+    'data': $(form).serialize()
+   }).done(function(result) {
+    message(result);
+   });
+  }
+ });
 
-  $('#email_smtp_active').click(function () {
-    if (this.checked) {
-      $('#smtp').removeClass('hide');
-    } else {
-      $('#smtp').addClass('hide');
-    }
-  });
-  //]]>
+ $('#email_smtp_active').click(function() {
+  if (this.checked) {
+   $('#smtp').removeClass('hide');
+  } else {
+   $('#smtp').addClass('hide');
+  }
+ });
+ //]]>
 </script>
 @stop

@@ -5,103 +5,103 @@
 @section('content')
 @include('topbar')
 <section id="content" class="table-layout">
-  <div class="tray tray-center p25 va-t posr">
-    <div class="panel mb25 mt5">
-      <div class="panel-heading">
-        <span class="panel-title">@lang('admin.menu.settings', 'Ayarlar')</span>
-        <ul class="nav panel-tabs-border panel-tabs">
-          <li class="active">
-            <a href="#extensions-tab" data-toggle="tab">@lang('admin.menu.extensions', 'Uzantılar')</a>
-          </li>
-        </ul>
-      </div>
-      <div class="panel-body p20 pb10">
-        <form id="settings-form" class="admin-form" method="post" autocomplete="off" action="@url()">
-          <div class="tab-content pn br-n">
-            <div id="extensions-tab" class="tab-pane fade in active">
-              <div class="section mb15 row">
-                <div class="col-md-6">
-                  <h6 class="fw400">@lang('media.label.thumbnail_image_size', 'Küçük Resim Boyutu')</h6>
-                  <label class="field prepend-icon">
-                    <input type="text" id="media_image_thumbnail_size" name="media_image_thumbnail_size" class="gui-input" placeholder="150x150" value="{{{ conf('media.image_thumbnail_size', '150x150') }}}">
-                    <span class="field-icon">
+ <div class="tray tray-center p25 va-t posr">
+  <div class="panel mb25 mt5">
+   <div class="panel-heading">
+    <span class="panel-title">@lang('admin.menu.settings', 'Ayarlar')</span>
+    <ul class="nav panel-tabs-border panel-tabs">
+     <li class="active">
+      <a href="#extensions-tab" data-toggle="tab">@lang('admin.menu.extensions', 'Uzantılar')</a>
+     </li>
+    </ul>
+   </div>
+   <div class="panel-body p20 pb10">
+    <form id="settings-form" class="admin-form" method="post" autocomplete="off" action="@url()">
+     <div class="tab-content pn br-n">
+      <div id="extensions-tab" class="tab-pane fade in active">
+       <div class="section mb15 row">
+        <div class="col-md-6">
+         <h6 class="fw400">@lang('media.label.thumbnail_image_size', 'Küçük Resim Boyutu')</h6>
+         <label class="field prepend-icon">
+          <input type="text" id="media_image_thumbnail_size" name="media_image_thumbnail_size" class="gui-input" placeholder="150x150" value="{{{ conf('media.image_thumbnail_size', '150x150') }}}">
+          <span class="field-icon">
            <i class="fa fa-picture-o"></i>
           </span>
-                  </label>
-                  <span class="help-block mt5">@lang('admin.hint.example', ['150x150'], 'Örnek: %s')</span>
-                </div>
-                <div class="col-md-6">
-                  <h6 class="fw400">@lang('media.label.max_image_size', 'Maksimum Resim Boyutu')</h6>
-                  <label class="field prepend-icon">
-                    <input type="text" id="media_image_max_size" name="media_image_max_size" class="gui-input" placeholder="1920x1080" value="{{{ conf('media.image_max_size', '1920x1080') }}}">
-                    <span class="field-icon">
+         </label>
+         <span class="help-block mt5">@lang('admin.hint.example', ['150x150'], 'Örnek: %s')</span>
+        </div>
+        <div class="col-md-6">
+         <h6 class="fw400">@lang('media.label.max_image_size', 'Maksimum Resim Boyutu')</h6>
+         <label class="field prepend-icon">
+          <input type="text" id="media_image_max_size" name="media_image_max_size" class="gui-input" placeholder="1920x1080" value="{{{ conf('media.image_max_size', '1920x1080') }}}">
+          <span class="field-icon">
            <i class="fa fa-picture-o"></i>
           </span>
-                  </label>
-                  <span class="help-block mt5">@lang('admin.hint.example', ['1920x1080'], 'Örnek: %s')</span>
-                </div>
-              </div>
-              <div class="section mb15 row">
-                <div class="col-md-6">
-                  <h6 class="fw400">@lang('admin.label.image_extensions', 'Resim Uzantıları')</h6>
-                  <div>
-                    <input type="text" id="media_image_extensions" name="media_image_extensions" class="tagsinput" value="{{{ conf('media.image_extensions') }}}" data-role="tagsinput">
-                  </div>
-                  <span class="help-block mt5">
+         </label>
+         <span class="help-block mt5">@lang('admin.hint.example', ['1920x1080'], 'Örnek: %s')</span>
+        </div>
+       </div>
+       <div class="section mb15 row">
+        <div class="col-md-6">
+         <h6 class="fw400">@lang('admin.label.image_extensions', 'Resim Uzantıları')</h6>
+         <div>
+          <input type="text" id="media_image_extensions" name="media_image_extensions" class="tagsinput" value="{{{ conf('media.image_extensions') }}}" data-role="tagsinput">
+         </div>
+         <span class="help-block mt5">
           @lang('admin.hint.example', ['jpg'], 'Örnek: %s')
           -
           @lang('admin.hint.type_keyword_and_hit_enter', 'Kelimeyi yazarak "enter" tuşuna basın')
          </span>
-                </div>
-                <div class="col-md-6">
-                  <h6 class="fw400">@lang('admin.label.file_extensions', 'Dosya Uzantıları')</h6>
-                  <div>
-                    <input type="text" id="media_file_extensions" name="media_file_extensions" class="tagsinput" value="{{{ conf('media.file_extensions') }}}" data-role="tagsinput">
-                  </div>
-                  <span class="help-block mt5">
+        </div>
+        <div class="col-md-6">
+         <h6 class="fw400">@lang('admin.label.file_extensions', 'Dosya Uzantıları')</h6>
+         <div>
+          <input type="text" id="media_file_extensions" name="media_file_extensions" class="tagsinput" value="{{{ conf('media.file_extensions') }}}" data-role="tagsinput">
+         </div>
+         <span class="help-block mt5">
           @lang('admin.hint.example', ['pdf'], 'Örnek: %s')
           -
           @lang('admin.hint.type_keyword_and_hit_enter', 'Kelimeyi yazarak "enter" tuşuna basın')
          </span>
-                </div>
-              </div>
-              <div class="section mb15 row">
-                <div class="col-md-6">
-                  <h6 class="fw400">@lang('admin.label.video_extensions', 'Görüntü Uzantıları')</h6>
-                  <div>
-                    <input type="text" id="media_video_extensions" name="media_video_extensions" class="tagsinput" value="{{{ conf('media.video_extensions') }}}" data-role="tagsinput">
-                  </div>
-                  <span class="help-block mt5">
+        </div>
+       </div>
+       <div class="section mb15 row">
+        <div class="col-md-6">
+         <h6 class="fw400">@lang('admin.label.video_extensions', 'Görüntü Uzantıları')</h6>
+         <div>
+          <input type="text" id="media_video_extensions" name="media_video_extensions" class="tagsinput" value="{{{ conf('media.video_extensions') }}}" data-role="tagsinput">
+         </div>
+         <span class="help-block mt5">
           @lang('admin.hint.example', ['mov'], 'Örnek: %s')
           -
           @lang('admin.hint.type_keyword_and_hit_enter', 'Kelimeyi yazarak "enter" tuşuna basın')
          </span>
-                </div>
-                <div class="col-md-6">
-                  <h6 class="fw400">@lang('admin.label.audio_extensions', 'Ses Uzantıları')</h6>
-                  <div>
-                    <input type="text" id="media_audio_extensions" name="media_audio_extensions" class="tagsinput" value="{{{ conf('media.audio_extensions') }}}" data-role="tagsinput">
-                  </div>
-                  <span class="help-block mt5">
+        </div>
+        <div class="col-md-6">
+         <h6 class="fw400">@lang('admin.label.audio_extensions', 'Ses Uzantıları')</h6>
+         <div>
+          <input type="text" id="media_audio_extensions" name="media_audio_extensions" class="tagsinput" value="{{{ conf('media.audio_extensions') }}}" data-role="tagsinput">
+         </div>
+         <span class="help-block mt5">
           @lang('admin.hint.example', ['mp3'], 'Örnek: %s')
           -
           @lang('admin.hint.type_keyword_and_hit_enter', 'Kelimeyi yazarak "enter" tuşuna basın')
          </span>
-                </div>
-              </div>
-            </div>
-            <hr class="short alt">
-            <div class="section mbn text-right">
-              <button type="submit" class="btn btn-primary">
-                <i class="fa fa-save"></i>
-                @lang('admin.button.save', 'Kaydet')
-              </button>
-            </div>
-          </div>
-        </form>
+        </div>
+       </div>
       </div>
-    </div>
+      <hr class="short alt">
+      <div class="section mbn text-right">
+       <button type="submit" class="btn btn-primary">
+        <i class="fa fa-save"></i>
+        @lang('admin.button.save', 'Kaydet')
+       </button>
+      </div>
+     </div>
+    </form>
+   </div>
   </div>
+ </div>
 </section>
 @stop
 
@@ -109,25 +109,25 @@
 @parent
 <script type="text/javascript" src="{{ $root }}/js/plugins/tagsinput/tagsinput.min.js"></script>
 <script type="text/javascript">
-  //<![CDATA[
-  // Init tagsinput plugin
-  $('.tagsinput').tagsinput({
-    tagClass: function (item) {
-      return 'label bg-primary light';
-    }
+ //<![CDATA[
+ // Init tagsinput plugin
+ $('.tagsinput').tagsinput({
+  tagClass: function(item) {
+   return 'label bg-primary light';
+  }
+ });
+
+ $('#settings-form').submit(function() {
+  $.ajax({
+   'type': $(this).attr('method'),
+   'url': $(this).attr('action'),
+   'data': $(this).serialize()
+  }).done(function(result) {
+   message(result);
   });
 
-  $('#settings-form').submit(function () {
-    $.ajax({
-      'type': $(this).attr('method'),
-      'url': $(this).attr('action'),
-      'data': $(this).serialize()
-    }).done(function (result) {
-      message(result);
-    });
-
-    return false;
-  });
-  //]]>
+  return false;
+ });
+ //]]>
 </script>
 @stop

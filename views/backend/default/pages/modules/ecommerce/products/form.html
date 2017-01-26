@@ -5,267 +5,254 @@
 @section('content')
 @include('topbar')
 <section id="content" class="table-layout">
-  <div class="tray tray-center p25 va-t posr">
-    <div class="panel mb25 mt5">
-      <div class="panel-heading">
-        <span class="panel-title">{{{ isset($content->title) ? lang('admin.label.edit', 'Düzenle') : lang('admin.label.create_new', 'Yeni Oluştur') }}}</span>
-        <ul class="nav panel-tabs-border panel-tabs">
-          <li class="active">
-            <a href="#tab-common" data-toggle="tab">@lang('admin.label.common', 'Genel')</a>
-          </li>
-          <li>
-            <a href="#tab-content" data-toggle="tab">@lang('admin.label.content', 'İçerik')</a>
-          </li>
-          <li>
-            <a href="#tab-media" data-toggle="tab">@lang('admin.label.media', 'Medya')</a>
-          </li>
-          <li>
-            <a href="#tab-form" data-toggle="tab">@lang('admin.label.form', 'Form')</a>
-          </li>
-          <li>
-            <a href="#tab-meta" data-toggle="tab">@lang('admin.label.meta', 'Meta')</a>
-          </li>
-        </ul>
-      </div>
-      <form id="form" class="panel-body p20 pb10" method="post" action="@url()">
-        <input type="hidden" id="id" name="id" value="{{ $content->id or 0 }}">
-        <input type="hidden" id="url" name="url" value="{{ $content->url or '' }}">
-        <input type="hidden" id="version" name="version" value="{{ $content->version or 0 }}">
-        <input type="hidden" id="meta-poster_id" name="meta-poster_id" value="{{ $content->meta->poster_id or 0 }}">
-        <input type="hidden" id="meta-content" name="meta-content" value="{{{ $content->meta->content or '' }}}">
-        <div class="tab-content pn br-n admin-form">
-          <div id="tab-common" class="tab-pane active">
-            <div class="section row mbn">
-              <div class="col-md-4">
-                @include('addon.poster', ['poster' => (isset($content->poster->image) ? $content->poster : null)])
-              </div>
-              <div class="col-md-8 pl15">
-                <div class="section mb15 row">
-                  <div class="col-xs-6">
-                    <h6 class="fw400">@lang('admin.label.language', 'Dil')</h6>
-                    <label class="field select">
-                      <select id="language" name="language" class="empty">
-                        @foreach (langs() as $alias => $name)
-                        <option value="{{ $alias }}" {{ isset($content->language) && $content->language == $alias ? '
-                          selected="selected"' : '' }}>{{{ $name }}}
-                        </option>
-                        @endforeach
-                      </select>
-                      <i class="arrow double"></i>
-                    </label>
-                  </div>
-                  <div class="col-xs-6">
-                    <h6 class="fw400">@lang('admin.label.category', 'Kategori')</h6>
-                    <label class="field select">
-                      <select id="category" name="category[]" data-value="{{ isset($content->categories) ? implode(',', array_keys($content->categories)) : '' }}" class="select2" multiple size="5"></select>
-                    </label>
-                  </div>
-                </div>
-                <div class="section mb15 row">
-                  <div class="col-xs-6">
-                    <h6 class="fw400">@lang('ecommerce.label.shop', 'Mağaza')</h6>
-                    <label class="field select">
-                      <select id="parent_id" name="parent_id" class="empty">
-                        <option value="0">&nbsp;</option>
-                        @foreach ($shops as $shop)
-                        <option value="{{ $shop->id }}" data-url="{{ $shop->url }}" {{ isset($content->parent_id) &&
-                          $content->parent_id == $shop->id ? ' selected="selected"' : '' }}>{{{ $shop->title }}}
-                        </option>
-                        @endforeach
-                      </select>
-                      <i class="arrow double"></i>
-                    </label>
-                  </div>
-                  <div class="col-xs-6">
-                    <h6 class="fw400">@lang('admin.label.brand', 'Marka')</h6>
-                    <label class="field select">
-                      <select id="meta-brand_id" name="meta-brand_id" class="select2">
-                        <option value="0">&nbsp;</option>
-                        @foreach ($brands as $brandId => $brandTitle)
-                        <option value="{{ $brandId }}" {{ isset($content->meta->brand_id) && $content->meta->brand_id ==
-                          $brandId ? ' selected="selected"' : '' }}>{{{ $brandTitle }}}
-                        </option>
-                        @endforeach
-                      </select>
-                    </label>
-                  </div>
-                </div>
-                <div class="section mb15">
-                  <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
-                  <label class="field prepend-icon">
-                    <input type="text" id="title" name="title" class="gui-input" placeholder="@lang('ecommerce.hint.title', 'Ürün Başlığı')" value="{{{ $content->title or '' }}}">
-                    <span class="field-icon">
+ <div class="tray tray-center p25 va-t posr">
+  <div class="panel mb25 mt5">
+   <div class="panel-heading">
+    <span class="panel-title">{{{ isset($content->title) ? lang('admin.label.edit', 'Düzenle') : lang('admin.label.create_new', 'Yeni Oluştur') }}}</span>
+    <ul class="nav panel-tabs-border panel-tabs">
+     <li class="active">
+      <a href="#tab-common" data-toggle="tab">@lang('admin.label.common', 'Genel')</a>
+     </li>
+     <li>
+      <a href="#tab-content" data-toggle="tab">@lang('admin.label.content', 'İçerik')</a>
+     </li>
+     <li>
+      <a href="#tab-media" data-toggle="tab">@lang('admin.label.media', 'Medya')</a>
+     </li>
+     <li>
+      <a href="#tab-form" data-toggle="tab">@lang('admin.label.form', 'Form')</a>
+     </li>
+     <li>
+      <a href="#tab-meta" data-toggle="tab">@lang('admin.label.meta', 'Meta')</a>
+     </li>
+    </ul>
+   </div>
+   <form id="form" class="panel-body p20 pb10" method="post" action="@url()">
+    <input type="hidden" id="id" name="id" value="{{ $content->id or 0 }}">
+    <input type="hidden" id="url" name="url" value="{{ $content->url or '' }}">
+    <input type="hidden" id="version" name="version" value="{{ $content->version or 0 }}">
+    <input type="hidden" id="meta-poster_id" name="meta-poster_id" value="{{ $content->meta->poster_id or 0 }}">
+    <input type="hidden" id="meta-content" name="meta-content" value="{{{ $content->meta->content or '' }}}">
+    <div class="tab-content pn br-n admin-form">
+     <div id="tab-common" class="tab-pane active">
+      <div class="section row mbn">
+       <div class="col-md-4">
+        @include('addon.poster', ['poster' => (isset($content->poster->image) ? $content->poster : null)])
+       </div>
+       <div class="col-md-8 pl15">
+        <div class="section mb15 row">
+         <div class="col-xs-6">
+          <h6 class="fw400">@lang('admin.label.language', 'Dil')</h6>
+          <label class="field select">
+           <select id="language" name="language" class="empty">
+            @foreach (langs() as $alias => $name)
+            <option value="{{ $alias }}"{{ isset($content->language) && $content->language == $alias ? ' selected="selected"' : '' }}>{{{ $name }}}</option>
+            @endforeach
+           </select>
+           <i class="arrow double"></i>
+          </label>
+         </div>
+         <div class="col-xs-6">
+          <h6 class="fw400">@lang('admin.label.category', 'Kategori')</h6>
+          <label class="field select">
+           <select id="category" name="category[]" data-value="{{ isset($content->categories) ? implode(',', array_keys($content->categories)) : '' }}" class="select2" multiple size="5"></select>
+          </label>
+         </div>
+        </div>
+        <div class="section mb15 row">
+         <div class="col-xs-6">
+          <h6 class="fw400">@lang('ecommerce.label.shop', 'Mağaza')</h6>
+          <label class="field select">
+           <select id="parent_id" name="parent_id" class="empty">
+            <option value="0">&nbsp;</option>
+            @foreach ($shops as $shop)
+            <option value="{{ $shop->id }}" data-url="{{ $shop->url }}"{{ isset($content->parent_id) && $content->parent_id == $shop->id ? ' selected="selected"' : '' }}>{{{ $shop->title }}}</option>
+            @endforeach
+           </select>
+           <i class="arrow double"></i>
+          </label>
+         </div>
+         <div class="col-xs-6">
+          <h6 class="fw400">@lang('admin.label.brand', 'Marka')</h6>
+          <label class="field select">
+           <select id="meta-brand_id" name="meta-brand_id" class="select2">
+            <option value="0">&nbsp;</option>
+            @foreach ($brands as $brandId => $brandTitle)
+            <option value="{{ $brandId }}"{{ isset($content->meta->brand_id) && $content->meta->brand_id == $brandId  ? ' selected="selected"' : '' }}>{{{ $brandTitle }}}</option>
+            @endforeach
+           </select>
+          </label>
+         </div>
+        </div>
+        <div class="section mb15">
+         <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
+         <label class="field prepend-icon">
+          <input type="text" id="title" name="title" class="gui-input" placeholder="@lang('ecommerce.hint.title', 'Ürün Başlığı')" value="{{{ $content->title or '' }}}">
+          <span class="field-icon">
            <i class="fa fa-tag"></i>
           </span>
-                  </label>
-                  @include('addon.url', ['base' => 'products', 'url' => (isset($content->url) ? $content->url : '')])
-                </div>
-                <div class="section mb15">
-                  <h6 class="fw400">@lang('admin.label.summary', 'Özet')</h6>
-                  <label class="field prepend-icon">
-                    <textarea id="meta-summary" name="meta-summary" class="gui-textarea" placeholder="@lang('ecommerce.hint.summary', 'Ürün Açıklaması')">{{{ $content->meta->summary or '' }}}</textarea>
-                    <span class="field-icon">
+         </label>
+         @include('addon.url', ['base' => 'products', 'url' => (isset($content->url) ? $content->url : '')])
+        </div>
+        <div class="section mb15">
+         <h6 class="fw400">@lang('admin.label.summary', 'Özet')</h6>
+         <label class="field prepend-icon">
+          <textarea id="meta-summary" name="meta-summary" class="gui-textarea" placeholder="@lang('ecommerce.hint.summary', 'Ürün Açıklaması')">{{{ $content->meta->summary or '' }}}</textarea>
+          <span class="field-icon">
            <i class="fa fa-edit"></i>
           </span>
-                  </label>
-                  <div class="option-group field mt10">
-                    <label class="option option-primary">
-                      <input type="checkbox" id="meta-show_summary_inside" name="meta-show_summary_inside" value="yes" {{ isset($content->meta->show_summary_inside)
-                      && $content->meta->show_summary_inside == 'yes' ? ' checked="checked"' : '' }}>
-                      <span class="checkbox"></span>
-                      @lang('admin.label.content.show_summary_inside', 'Özeti İçerikte Göster')
-                    </label>
-                  </div>
-                </div>
-                <div class="section mb15 row">
-                  <div class="col-xs-6">
-                    <h6 class="fw400">@lang('admin.label.publish_date', 'Yayın Tarihi')</h6>
-                    <label class="field prepend-picker-icon">
-                      <input type="text" id="publish_date" name="publish_date" class="gui-input" placeholder="@lang('admin.hint.content.publish_date', 'Yayın Başlangıç Tarihi ve Saati')" value="{{{ isset($content->publish_date) ? date_show($content->publish_date, '{day}-{month}-{year} {hour}:{minute}') : now('{day}-{month}-{year} {hour}:{minute}') }}}">
-                    </label>
-                  </div>
-                  <div class="col-xs-6">
-                    <h6 class="fw400">@lang('admin.label.expire_date', 'Bitiş Tarihi')</h6>
-                    <label class="field prepend-picker-icon">
-                      <input type="text" id="expire_date" name="expire_date" class="gui-input" placeholder="@lang('admin.hint.content.expire_date', 'Yayın Bitiş Tarihi ve Saati')" value="{{{ isset($content->expire_date) && strlen($content->expire_date) ? date_show($content->expire_date, '{day}-{month}-{year} {hour}:{minute}') : '' }}}">
-                    </label>
-                  </div>
-                </div>
-                <div class="section mb15">
-                  <h6 class="fw400">@lang('admin.label.status', 'Durum')</h6>
-                  <div class="option-group field">
-                    <label class="option option-primary">
-                      <input type="radio" id="active_true" name="active" value="true" {{ !isset($content->active) ||
-                      $content->active == 'true' ? ' checked="checked"' : '' }}>
-                      <span class="radio"></span>
-                      @lang('admin.label.active', 'Aktif')
-                    </label>
-                    <label class="option option-primary">
-                      <input type="radio" id="active_false" name="active" value="false" {{ isset($content->active) &&
-                      $content->active == 'false' ? ' checked="checked"' : '' }}>
-                      <span class="radio"></span>
-                      @lang('admin.label.passive', 'Pasif')
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div id="tab-content" class="tab-pane">
-            <div class="section">
-              @include('addon.editor', ['target' => 'meta-content'])
-            </div>
-          </div>
-          <div id="tab-media" class="tab-pane">
-            @include('addon.media', ['media' => isset($content->media) ? $content->media : []])
-          </div>
-          <div id="tab-form" class="tab-pane">
-            @include('addon.form', ['form_id' => (isset($content->meta->form_id) ? $content->meta->form_id : 0),
-            'values' => isset($content->form_values) ? $content->form_values : []])
-          </div>
-          <div id="tab-meta" class="tab-pane">
-            <div class="section mb15 row">
-              <div class="col-xs-6">
-                <h6 class="fw400">@lang('ecommerce.label.price', 'Fiyatı')</h6>
-                <label class="field prepend-icon">
-                  <input type="text" id="meta-price" name="meta-price" class="gui-input" placeholder="0.00" value="{{{ $content->meta->price or '' }}}">
-                  <span class="field-icon">
+         </label>
+         <div class="option-group field mt10">
+          <label class="option option-primary">
+           <input type="checkbox" id="meta-show_summary_inside" name="meta-show_summary_inside" value="yes"{{ isset($content->meta->show_summary_inside) && $content->meta->show_summary_inside == 'yes' ? ' checked="checked"' : '' }}>
+           <span class="checkbox"></span>
+           @lang('admin.label.content.show_summary_inside', 'Özeti İçerikte Göster')
+          </label>
+         </div>
+        </div>
+        <div class="section mb15 row">
+         <div class="col-xs-6">
+          <h6 class="fw400">@lang('admin.label.publish_date', 'Yayın Tarihi')</h6>
+          <label class="field prepend-picker-icon">
+           <input type="text" id="publish_date" name="publish_date" class="gui-input" placeholder="@lang('admin.hint.content.publish_date', 'Yayın Başlangıç Tarihi ve Saati')" value="{{{ isset($content->publish_date) ? date_show($content->publish_date, '{day}-{month}-{year} {hour}:{minute}') : now('{day}-{month}-{year} {hour}:{minute}') }}}">
+          </label>
+         </div>
+         <div class="col-xs-6">
+          <h6 class="fw400">@lang('admin.label.expire_date', 'Bitiş Tarihi')</h6>
+          <label class="field prepend-picker-icon">
+           <input type="text" id="expire_date" name="expire_date" class="gui-input" placeholder="@lang('admin.hint.content.expire_date', 'Yayın Bitiş Tarihi ve Saati')" value="{{{ isset($content->expire_date) && strlen($content->expire_date) ? date_show($content->expire_date, '{day}-{month}-{year} {hour}:{minute}') : '' }}}">
+          </label>
+         </div>
+        </div>
+        <div class="section mb15">
+         <h6 class="fw400">@lang('admin.label.status', 'Durum')</h6>
+         <div class="option-group field">
+          <label class="option option-primary">
+           <input type="radio" id="active_true" name="active" value="true"{{ !isset($content->active) || $content->active == 'true' ? ' checked="checked"' : '' }}>
+           <span class="radio"></span>
+           @lang('admin.label.active', 'Aktif')
+          </label>
+          <label class="option option-primary">
+           <input type="radio" id="active_false" name="active" value="false"{{ isset($content->active) && $content->active == 'false' ? ' checked="checked"' : '' }}>
+           <span class="radio"></span>
+           @lang('admin.label.passive', 'Pasif')
+          </label>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div id="tab-content" class="tab-pane">
+      <div class="section">
+       @include('addon.editor', ['target' => 'meta-content'])
+      </div>
+     </div>
+     <div id="tab-media" class="tab-pane">
+      @include('addon.media', ['media' => isset($content->media) ? $content->media : []])
+     </div>
+     <div id="tab-form" class="tab-pane">
+      @include('addon.form', ['form_id' => (isset($content->meta->form_id) ? $content->meta->form_id : 0), 'values' => isset($content->form_values) ? $content->form_values : []])
+     </div>
+     <div id="tab-meta" class="tab-pane">
+      <div class="section mb15 row">
+       <div class="col-xs-6">
+        <h6 class="fw400">@lang('ecommerce.label.price', 'Fiyatı')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="meta-price" name="meta-price" class="gui-input" placeholder="0.00" value="{{{ $content->meta->price or '' }}}">
+         <span class="field-icon">
           <i class="fa fa-money"></i>
          </span>
-                </label>
-              </div>
-              <div class="col-xs-6">
-                <h6 class="fw400">@lang('ecommerce.label.currency', 'Para Birimi')</h6>
-                <label class="field select">
-                  <select id="meta-currency" name="meta-currency" class="empty">
-                    @foreach (conf('currency', array()) as $currency => $ratio)
-                    <option value="{{ $currency }}" {{ isset($content->meta->currency) && $content->meta->currency ==
-                      $currency ? ' selected="selected"' : '' }}>{{{ $currency }}}
-                    </option>
-                    @endforeach
-                  </select>
-                  <i class="arrow double"></i>
-                </label>
-              </div>
-            </div>
-            <div class="section mb15 row">
-              <div class="col-xs-4">
-                <h6 class="fw400">@lang('ecommerce.label.tax', 'Vergi Oranı')</h6>
-                <label class="field prepend-icon">
-                  <input type="text" id="meta-tax" name="meta-tax" class="gui-input" placeholder="%" value="{{{ $content->meta->tax or '' }}}">
-                  <span class="field-icon">
+        </label>
+       </div>
+       <div class="col-xs-6">
+        <h6 class="fw400">@lang('ecommerce.label.currency', 'Para Birimi')</h6>
+        <label class="field select">
+         <select id="meta-currency" name="meta-currency" class="empty">
+          @foreach (conf('currency', array()) as $currency => $ratio)
+          <option value="{{ $currency }}"{{ isset($content->meta->currency) && $content->meta->currency == $currency ? ' selected="selected"' : '' }}>{{{ $currency }}}</option>
+          @endforeach
+         </select>
+         <i class="arrow double"></i>
+        </label>
+       </div>
+      </div>
+      <div class="section mb15 row">
+       <div class="col-xs-4">
+        <h6 class="fw400">@lang('ecommerce.label.tax', 'Vergi Oranı')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="meta-tax" name="meta-tax" class="gui-input" placeholder="%" value="{{{ $content->meta->tax or '' }}}">
+         <span class="field-icon">
           <i class="fa fa-money"></i>
          </span>
-                </label>
-              </div>
-              <div class="col-xs-4">
-                <h6 class="fw400">@lang('ecommerce.label.discount', 'İndirim')</h6>
-                <label class="field prepend-icon">
-                  <input type="text" id="meta-discount" name="meta-discount" class="gui-input" placeholder="0.00" value="{{{ $content->meta->discount or 0 }}}">
-                  <span class="field-icon">
+        </label>
+       </div>
+       <div class="col-xs-4">
+        <h6 class="fw400">@lang('ecommerce.label.discount', 'İndirim')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="meta-discount" name="meta-discount" class="gui-input" placeholder="0.00" value="{{{ $content->meta->discount or 0 }}}">
+         <span class="field-icon">
           <i class="fa fa-money"></i>
          </span>
-                </label>
-              </div>
-              <div class="col-xs-4">
-                <h6 class="fw400">@lang('ecommerce.label.sell_price', 'Satış Fiyatı')</h6>
-                <label class="field prepend-icon">
-                  <input type="text" id="meta-sell_price" name="meta-sell_price" class="gui-input" placeholder="0.00" value="{{{ $content->meta->sell_price or '' }}}">
-                  <span class="field-icon">
+        </label>
+       </div>
+       <div class="col-xs-4">
+        <h6 class="fw400">@lang('ecommerce.label.sell_price', 'Satış Fiyatı')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="meta-sell_price" name="meta-sell_price" class="gui-input" placeholder="0.00" value="{{{ $content->meta->sell_price or '' }}}">
+         <span class="field-icon">
           <i class="fa fa-money"></i>
          </span>
-                </label>
-              </div>
-            </div>
-            <div class="section mb15 row">
-              <div class="col-xs-4">
-                <h6 class="fw400">@lang('ecommerce.label.stock_status', 'Stok Durumu')</h6>
-                <div class="option-group field">
-                  <label class="option option-primary">
-                    <input type="checkbox" id="meta-stock_status" name="meta-stock_status" value="yes" {{ isset($content->meta->stock_status)
-                    && $content->meta->stock_status == 'yes' ? ' checked="checked"' : '' }}>
-                    <span class="checkbox"></span>
-                    @lang('ecommerce.label.in_stock', 'Stokta')
-                  </label>
-                </div>
-              </div>
-              <div class="col-xs-8">
-                <h6 class="fw400">@lang('ecommerce.label.stock_count', 'Stok Adedi')</h6>
-                <label class="field prepend-icon">
-                  <input type="text" id="meta-stock_count" name="meta-stock_count" class="gui-input" value="{{{ $content->meta->stock_count or '' }}}">
-                  <span class="field-icon">
+        </label>
+       </div>
+      </div>
+      <div class="section mb15 row">
+       <div class="col-xs-4">
+        <h6 class="fw400">@lang('ecommerce.label.stock_status', 'Stok Durumu')</h6>
+        <div class="option-group field">
+         <label class="option option-primary">
+          <input type="checkbox" id="meta-stock_status" name="meta-stock_status" value="yes"{{ isset($content->meta->stock_status) && $content->meta->stock_status == 'yes' ? ' checked="checked"' : '' }}>
+          <span class="checkbox"></span>
+          @lang('ecommerce.label.in_stock', 'Stokta')
+         </label>
+        </div>
+       </div>
+       <div class="col-xs-8">
+        <h6 class="fw400">@lang('ecommerce.label.stock_count', 'Stok Adedi')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="meta-stock_count" name="meta-stock_count" class="gui-input" value="{{{ $content->meta->stock_count or '' }}}">
+         <span class="field-icon">
           <i class="fa fa-line-chart"></i>
          </span>
-                </label>
-              </div>
-            </div>
-            <div class="section mb15">
-              <h6 class="fw400">@lang('admin.label.content.tags', 'Anahtar Kelimeler')</h6>
-              <input id="tags" name="tags" type="text" value="{{{ $content->tags or '' }}}">
-              <span class="help-block mt5">@lang('admin.hint.type_keyword_and_hit_enter', 'Kelimeyi yazarak "enter" tuşuna basın')</span>
-            </div>
-          </div>
-        </div>
-        <hr class="short alt">
-        <div class="section mbn text-right">
-          <button type="submit" id="save-btn" class="btn btn-primary">
-            <i class="fa fa-save"></i>
-            @lang('admin.button.save', 'Kaydet')
-          </button>
-          @if (isset($content->id) && ($content->id > 0))
-          <button type="button" id="delete-btn" data-id="{{ $content->id }}" class="btn btn-danger">
-            <i class="fa fa-trash-o"></i>
-            @lang('admin.button.delete', 'Sil')
-          </button>
-          @endif
-          <button type="button" id="cancel-btn" class="btn btn-default">
-            <i class="fa fa-reply"></i>
-            @lang('admin.button.cancel', 'İptal')
-          </button>
-        </div>
-      </form>
+        </label>
+       </div>
+      </div>
+      <div class="section mb15">
+       <h6 class="fw400">@lang('admin.label.content.tags', 'Anahtar Kelimeler')</h6>
+       <input id="tags" name="tags" type="text" value="{{{ $content->tags or '' }}}">
+       <span class="help-block mt5">@lang('admin.hint.type_keyword_and_hit_enter', 'Kelimeyi yazarak "enter" tuşuna basın')</span>
+      </div>
+     </div>
     </div>
+    <hr class="short alt">
+    <div class="section mbn text-right">
+     <button type="submit" id="save-btn" class="btn btn-primary">
+      <i class="fa fa-save"></i>
+      @lang('admin.button.save', 'Kaydet')
+     </button>
+     @if (isset($content->id) && ($content->id > 0))
+     <button type="button" id="delete-btn" data-id="{{ $content->id }}" class="btn btn-danger">
+      <i class="fa fa-trash-o"></i>
+      @lang('admin.button.delete', 'Sil')
+     </button>
+     @endif
+     <button type="button" id="cancel-btn" class="btn btn-default">
+      <i class="fa fa-reply"></i>
+      @lang('admin.button.cancel', 'İptal')
+     </button>
+    </div>
+   </form>
   </div>
+ </div>
 </section>
 @stop
 
@@ -274,208 +261,184 @@
 <script type="text/javascript" src="{{ $root }}/js/plugins/jquery/jquery-ui-timepicker.min.js"></script>
 <script type="text/javascript" src="{{ $root }}/js/plugins/tagsinput/tagsinput.min.js"></script>
 <script type="text/javascript">
-  //<![CDATA[
-  $(function () {
-    'use strict';
+ //<![CDATA[
+ $(function() {
+  'use strict';
 
-    // select dropdowns - placeholder like creation
-    var selectList = $('.admin-form select');
-    selectList.each(function (i, e) {
-      $(e).on('change', function () {
-        if ($(e).val() == '0') $(e).addClass('empty');
-        else $(e).removeClass('empty')
-      });
-    });
-    selectList.each(function (i, e) {
-      $(e).change();
-    });
-
-    $('#url').data('prefix', $('#parent_id').find('option:selected').data('url'));
-
-    $('#parent_id').change(function () {
-      var cur = $.fn.clearUrl();
-      var dat = $(this).find('option:selected').data('url');
-
-      $('#url').data('prefix', (dat ? dat : ''));
-
-      if ($('#url').val().length) {
-        var url = $.fn.makeUrl(cur);
-        $('#url').val(url);
-        $('a[href="#edit-url"]').text(url);
-      }
-    });
-
-    function categories(init) {
-      $('#category').empty();
-
-      $.ajax({
-        'url': $('#form').attr('action').replace('/form', '/categories'),
-        'data': {
-          'language': $('#language').val(),
-          'id': init ? $('#id').val() : 0
-        }
-      }).done(function (result) {
-        if (result) {
-          for (var key in result) {
-            $('<option/>', {
-              'value': result[key]['id']
-            }).html(result[key]['title']).appendTo('#category');
-          }
-
-          $('#category').val($('#category').data('value').toString().split(',')).change();
-        }
-      });
-    }
-
-    $('#language').change(function () {
-      categories();
-    });
-
-    categories(true);
-
-    $('#publish_date, #expire_date').datetimepicker({
-      showOn: 'both',
-      buttonText: '<i class="fa fa-calendar-o"></i>',
-      prevText: '<i class="fa fa-chevron-left"></i>',
-      nextText: '<i class="fa fa-chevron-right"></i>',
-      beforeShow: function (input, inst) {
-        var newclass = 'admin-form';
-        var themeClass = $(this).parents('.admin-form').attr('class');
-        var smartpikr = inst.dpDiv.parent();
-        if (!smartpikr.hasClass(themeClass)) {
-          inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
-        }
-      },
-      dateFormat: '{{ str_replace('
-    {
-      day
-    }
-    ', '
-    dd
-    ', str_replace('
-    {
-      month
-    }
-    ', '
-    mm
-    ', str_replace('
-    {
-      year
-    }
-    ', '
-    yy
-    ', lang('
-    date.format.short
-    ')))) }}',
-      firstDay
-    : @lang('date.first_day', 1),
-      onClose
-    :
-    function (selectedDate) {
-      $("#publish_date").datepicker("option", "maxDate", selectedDate);
-      $("#expire_date").datepicker("option", "minDate", selectedDate);
-    }
-  })
-    ;
-
-    // Init tagsinput plugin
-    $('#tags').tagsinput({
-      tagClass: function (item) {
-        return 'label bg-primary light';
-      }
-    });
-
-    $('#form').validate({
-      // Rules for form validation
-      rules: {
-        title: {
-          required: true
-        }
-      },
-      // Messages for form validation
-      messages: {
-        title: {
-          required: "@lang('admin.message.content_title_required', 'İçerik başlığını girin!')"
-        }
-      },
-      // Do not change code below
-      errorPlacement: function (error, element) {
-        error.insertAfter(element.parent());
-      },
-      submitHandler: function (form) {
-        var formData = new FormData(form);
-
-        $.ajax({
-          'type': $(form).attr('method'),
-          'url': $(form).attr('action'),
-          'cache': false,
-          'dataType': 'json',
-          'contentType': false,
-          'processData': false,
-          'data': formData
-        }).done(function (result) {
-          if (result.success) {
-            if ($('#id').val() == 0) {
-              result.onAfterClose = function () {
-                $('#cancel-btn').trigger('click');
-              };
-            }
-
-            $('#id').val(result.return.id);
-            $('#version').val(result.return.version);
-
-            if (result.return.poster.id) {
-              $.fn.posterSet(result.return.poster);
-            }
-          }
-
-          if (result.success) {
-            message(result);
-          } else {
-            new PNotify({
-              title: "@lang('admin.label.error', 'Hata')",
-              text: result.text,
-              type: 'danger'
-            });
-          }
-        });
-      }
-    });
-
-    $('#delete-btn').popConfirm({
-      title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
-      content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
-      placement: "top",
-      yesBtn: "@lang('admin.button.yes', 'Evet')",
-      noBtn: "@lang('admin.button.no', 'Hayır')",
-      confirm: function () {
-        $.ajax({
-          type: 'DELETE',
-          url: $('#form').attr('action')
-        }).done(function (result) {
-          result.onAfterClose = function () {
-            if (result.success) {
-              window.location.href = '{{ urlUp($breadcrumb) }}';
-            }
-          };
-
-          if (result.success) {
-            message(result);
-          } else {
-            new PNotify({
-              title: "@lang('admin.label.error', 'Hata')",
-              text: result.text,
-              type: 'danger'
-            });
-          }
-        });
-      }
-    });
-
-    $('#cancel-btn').click(function () {
-      window.location.href = '{{ urlUp($breadcrumb) }}';
-    });
+  // select dropdowns - placeholder like creation
+  var selectList = $('.admin-form select');
+  selectList.each(function(i, e) {
+   $(e).on('change', function() {
+    if ($(e).val() == '0') $(e).addClass('empty');
+    else $(e).removeClass('empty')
+   });
   });
-  //]]>
+  selectList.each(function(i, e) {
+   $(e).change();
+  });
+
+  $('#url').data('prefix', $('#parent_id').find('option:selected').data('url'));
+
+  $('#parent_id').change(function() {
+   var cur = $.fn.clearUrl();
+   var dat = $(this).find('option:selected').data('url');
+
+   $('#url').data('prefix', (dat ? dat : ''));
+
+   if ($('#url').val().length) {
+    var url = $.fn.makeUrl(cur);
+    $('#url').val(url);
+    $('a[href="#edit-url"]').text(url);
+   }
+  });
+
+  function categories(init) {
+   $('#category').empty();
+
+   $.ajax({
+    'url': $('#form').attr('action').replace('/form', '/categories'),
+    'data': {
+     'language': $('#language').val(),
+     'id': init ? $('#id').val() : 0
+    }
+   }).done(function(result) {
+    if (result) {
+     for (var key in result) {
+      $('<option/>', {
+       'value': result[key]['id']
+      }).html(result[key]['title']).appendTo('#category');
+     }
+
+     $('#category').val($('#category').data('value').toString().split(',')).change();
+    }
+   });
+  }
+
+  $('#language').change(function() {
+   categories();
+  });
+
+  categories(true);
+
+  $('#publish_date, #expire_date').datetimepicker({
+   showOn: 'both',
+   buttonText: '<i class="fa fa-calendar-o"></i>',
+   prevText: '<i class="fa fa-chevron-left"></i>',
+   nextText: '<i class="fa fa-chevron-right"></i>',
+   beforeShow: function(input, inst) {
+    var newclass = 'admin-form';
+    var themeClass = $(this).parents('.admin-form').attr('class');
+    var smartpikr = inst.dpDiv.parent();
+    if (!smartpikr.hasClass(themeClass)) {
+     inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
+    }
+   },
+   dateFormat: '{{ str_replace('{day}', 'dd', str_replace('{month}', 'mm', str_replace('{year}', 'yy', lang('date.format.short')))) }}',
+   firstDay: @lang('date.first_day', 1),
+   onClose: function( selectedDate ) {
+    $("#publish_date").datepicker("option", "maxDate", selectedDate);
+    $("#expire_date").datepicker("option", "minDate", selectedDate);
+   }
+  });
+
+  // Init tagsinput plugin
+  $('#tags').tagsinput({
+   tagClass: function(item) {
+    return 'label bg-primary light';
+   }
+  });
+
+  $('#form').validate({
+   // Rules for form validation
+   rules : {
+    title : {
+     required : true
+    }
+   },
+   // Messages for form validation
+   messages : {
+    title : {
+     required : "@lang('admin.message.content_title_required', 'İçerik başlığını girin!')"
+    }
+   },
+   // Do not change code below
+   errorPlacement : function(error, element) {
+    error.insertAfter(element.parent());
+   },
+   submitHandler: function(form) {
+    var formData = new FormData(form);
+
+    $.ajax({
+     'type': $(form).attr('method'),
+     'url': $(form).attr('action'),
+     'cache': false,
+     'dataType': 'json',
+     'contentType': false,
+     'processData': false,
+     'data': formData
+    }).done(function(result) {
+     if (result.success) {
+      if ($('#id').val() == 0) {
+       result.onAfterClose = function() {
+        $('#cancel-btn').trigger('click');
+       };
+      }
+
+      $('#id').val(result.return.id);
+      $('#version').val(result.return.version);
+
+      if (result.return.poster.id) {
+       $.fn.posterSet(result.return.poster);
+      }
+     }
+
+     if (result.success) {
+      message(result);
+     } else {
+      new PNotify({
+       title: "@lang('admin.label.error', 'Hata')",
+       text: result.text,
+       type: 'danger'
+      });
+     }
+    });
+   }
+  });
+
+  $('#delete-btn').popConfirm({
+   title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+   content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
+   placement: "top",
+   yesBtn: "@lang('admin.button.yes', 'Evet')",
+   noBtn: "@lang('admin.button.no', 'Hayır')",
+   confirm: function() {
+    $.ajax({
+     type: 'DELETE',
+     url: $('#form').attr('action')
+    }).done(function(result) {
+     result.onAfterClose = function() {
+      if (result.success) {
+       window.location.href = '{{ urlUp($breadcrumb) }}';
+      }
+     };
+
+     if (result.success) {
+      message(result);
+     } else {
+      new PNotify({
+       title: "@lang('admin.label.error', 'Hata')",
+       text: result.text,
+       type: 'danger'
+      });
+     }
+    });
+   }
+  });
+
+  $('#cancel-btn').click(function() {
+   window.location.href = '{{ urlUp($breadcrumb) }}';
+  });
+ });
+ //]]>
 </script>
 @stop

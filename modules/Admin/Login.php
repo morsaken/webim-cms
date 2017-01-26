@@ -11,98 +11,98 @@ use \Webim\View\Manager as View;
 
 class Login {
 
-  /**
-   * Manager
-   *
-   * @var \Admin\Manager
-   */
-  protected static $manager;
+ /**
+  * Manager
+  *
+  * @var \Admin\Manager
+  */
+ protected static $manager;
 
-  /**
-   * Register current class and routes
-   *
-   * @param \Admin\Manager $manager
-   */
-  public static function register(Manager $manager) {
-    $check = __CLASS__ . '::check';
+ /**
+  * Register current class and routes
+  *
+  * @param \Admin\Manager $manager
+  */
+ public static function register(Manager $manager) {
+  $check = __CLASS__ . '::check';
 
-    $manager->addRoute($manager->prefix . '/login', __CLASS__ . '::getIndex', 'GET', $check, 'login');
-    $manager->addRoute($manager->prefix . '/login', __CLASS__ . '::postIndex', 'POST', $check);
-    $manager->addRoute($manager->prefix . '/logout', __CLASS__ . '::getLogout', 'GET', $check);
+  $manager->addRoute($manager->prefix . '/login', __CLASS__ . '::getIndex', 'GET', $check, 'login');
+  $manager->addRoute($manager->prefix . '/login', __CLASS__ . '::postIndex', 'POST', $check);
+  $manager->addRoute($manager->prefix . '/logout', __CLASS__ . '::getLogout', 'GET', $check);
 
-    static::$manager = $manager;
+  static::$manager = $manager;
+ }
+
+ /**
+  * Get
+  *
+  * @param null|string $lang
+  *
+  * @return string
+  */
+ public function getIndex($lang = null) {
+  $manager = static::$manager;
+  $app = $manager->app;
+
+  //Login Page
+  if (Auth::current()->isLoggedIn()) {
+   if (Auth::current()->isAdmin()) {
+    $app->redirect(url($manager->prefix));
+   } else {
+    $app->redirect(url($manager->prefix . '/logout'));
+   }
   }
 
-  /**
-   * Get
-   *
-   * @param null|string $lang
-   *
-   * @return string
-   */
-  public function getIndex($lang = null) {
-    $manager = static::$manager;
-    $app = $manager->app;
+  return View::create('login')->data($manager::data())->with('error', $app->flash->getMessage('login_error'))->render();
+ }
 
-    //Login Page
-    if (Auth::current()->isLoggedIn()) {
-      if (Auth::current()->isAdmin()) {
-        $app->redirect(url($manager->prefix));
-      } else {
-        $app->redirect(url($manager->prefix . '/logout'));
-      }
-    }
+ /**
+  * Post
+  *
+  * @param null|string $lang
+  */
+ public function postIndex($lang = null) {
+  $manager = static::$manager;
+  $app = $manager->app;
 
-    return View::create('login')->data($manager::data())->with('error', $app->flash->getMessage('login_error'))->render();
+  if (!Sign::check()) {
+   $check = Sign::in(input('name'), raw_input('pass'), false, input('stay-signed-in', false));
+
+   if (!$check->success()) {
+    $app->flash('login_error', $check->text());
+    $app->redirect(url());
+   }
   }
 
-  /**
-   * Post
-   *
-   * @param null|string $lang
-   */
-  public function postIndex($lang = null) {
-    $manager = static::$manager;
-    $app = $manager->app;
+  $app->redirect(strlen(input('redirect')) ? input('redirect') : url());
+ }
 
-    if (!Sign::check()) {
-      $check = Sign::in(input('name'), raw_input('pass'), false, input('stay-signed-in', false));
+ /**
+  * Logout
+  */
+ public function getLogout() {
+  $manager = static::$manager;
+  $app = $manager->app;
 
-      if (!$check->success()) {
-        $app->flash('login_error', $check->text());
-        $app->redirect(url());
-      }
-    }
+  Sign::out();
 
-    $app->redirect(strlen(input('redirect')) ? input('redirect') : url());
+  $app->redirect(url($manager->prefix . '/login'));
+ }
+
+ /**
+  * Checks login status and redirects to login page
+  *
+  * @param \Webim\Http\Route $route
+  */
+ public static function check($route) {
+  $manager = static::$manager;
+  $app = $manager->app;
+
+  if (!Sign::check() && !url_is($manager->prefix . '/login')) {
+   $app->redirect(url(trim($manager->prefix, '/') . '/login?redirect=' . url()));
+  } elseif (Auth::current()->isLoggedIn() && !Auth::current()->isAdmin()) {
+   $app->redirect(url(trim($manager->prefix, '/') . '/logout'));
   }
-
-  /**
-   * Logout
-   */
-  public function getLogout() {
-    $manager = static::$manager;
-    $app = $manager->app;
-
-    Sign::out();
-
-    $app->redirect(url($manager->prefix . '/login'));
-  }
-
-  /**
-   * Checks login status and redirects to login page
-   *
-   * @param \Webim\Http\Route $route
-   */
-  public static function check($route) {
-    $manager = static::$manager;
-    $app = $manager->app;
-
-    if (!Sign::check() && !url_is($manager->prefix . '/login')) {
-      $app->redirect(url(trim($manager->prefix, '/') . '/login?redirect=' . url()));
-    } elseif (Auth::current()->isLoggedIn() && !Auth::current()->isAdmin()) {
-      $app->redirect(url(trim($manager->prefix, '/') . '/logout'));
-    }
-  }
+ }
 
 }

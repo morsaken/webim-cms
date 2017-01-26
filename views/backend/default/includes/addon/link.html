@@ -1,539 +1,272 @@
 @section('content')
 @parent
 <div id="{{ $target or 'media' }}-link-dialog" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h4>
-          <i class="fa fa-link"></i>
-          @lang('admin.label.add_link', 'Bağlantı Ekle')
-        </h4>
-      </div>
-      <div class="modal-body">
-        <form id="{{ $target or 'media' }}-link-info-form" method="post" action="@url($prefix . 'content/media/link')">
-          <div class="input-group">
-            <input type="text" id="{{ $target or 'media' }}-link-raw-url" name="{{ $target or 'media' }}-link-raw-url" class="form-control" placeholder="@lang('admin.hint.paste_url_here', 'Bağlantıyı buraya yapıştırın')">
-            <span class="input-group-btn">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h4>
+     <i class="fa fa-link"></i>
+     @lang('admin.label.add_link', 'Bağlantı Ekle')
+    </h4>
+   </div>
+   <div class="modal-body">
+    <form id="{{ $target or 'media' }}-link-info-form" method="post" action="@url($prefix . 'content/media/link')">
+     <div class="input-group">
+      <input type="text" id="{{ $target or 'media' }}-link-raw-url" name="{{ $target or 'media' }}-link-raw-url" class="form-control" placeholder="@lang('admin.hint.paste_url_here', 'Bağlantıyı buraya yapıştırın')">
+      <span class="input-group-btn">
        <button type="submit" class="btn btn-sm btn-info">
         <i class="fa fa-crosshairs fa-2x"></i>
        </button>
       </span>
-          </div>
-        </form>
-        <hr class="divider short">
-        <form id="{{ $target or 'media' }}-link-form" method="post" action="@url($prefix . 'content/media/link')">
-          <input type="hidden" id="{{ $target or 'media' }}-link-url" name="{{ $target or 'media' }}-link-url">
-          <input type="hidden" id="{{ $target or 'media' }}-link-embed-url" name="{{ $target or 'media' }}-link-embed-url">
-          <div class="row">
-            <div class="col-xs-12 col-md-5">
-              <div class="image-selector">
-                <input type="hidden" id="{{ $target or 'media' }}-link-poster" name="{{ $target or 'media' }}-link-poster">
-                <div id="{{ $target or 'media' }}-link-poster-view"></div>
-                <nav id="{{ $target or 'media' }}-link-poster-nav">
-                  <a class="prev" href="javascript:void(0)">
-                    <i class="fa fa-angle-left"></i>
-                  </a>
-                  <a class="next" href="javascript:void(0)">
-                    <i class="fa fa-angle-right"></i>
-                  </a>
-                </nav>
-              </div>
-            </div>
-            <div class="col-xs-12 col-md-7">
-              <div class="form-group">
-                <label for="{{ $target or 'media' }}-link-title">@lang('admin.label.title', 'Başlık')</label>
-                <input type="text" id="{{ $target or 'media' }}-link-title" name="{{ $target or 'media' }}-link-title" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="{{ $target or 'media' }}-link-description">@lang('admin.label.description',
-                  'Açıklama')</label>
-                <textarea id="{{ $target or 'media' }}-link-description" name="{{ $target or 'media' }}-link-description" rows="4" class="form-control"></textarea>
-              </div>
-              <div class="form-group">
-                <div class="checkbox-custom fill checkbox-default">
-                  <input type="checkbox" id="{{ $target or 'media' }}-link-no-thumbnail" name="{{ $target or 'media' }}-link-no-thumbnail" value="yes">
-                  <label for="{{ $target or 'media' }}-link-no-thumbnail">@lang('admin.label.no_thumbnail_image', 'Küçük
-                    Resim Yok')</label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
+     </div>
+    </form>
+    <hr class="divider short">
+    <form id="{{ $target or 'media' }}-link-form" method="post" action="@url($prefix . 'content/media/link')">
+     <input type="hidden" id="{{ $target or 'media' }}-link-url" name="{{ $target or 'media' }}-link-url">
+     <input type="hidden" id="{{ $target or 'media' }}-link-embed-url" name="{{ $target or 'media' }}-link-embed-url">
+     <div class="row">
+      <div class="col-xs-12 col-md-5">
+       <div class="image-selector">
+        <input type="hidden" id="{{ $target or 'media' }}-link-poster" name="{{ $target or 'media' }}-link-poster">
+        <div id="{{ $target or 'media' }}-link-poster-view"></div>
+        <nav id="{{ $target or 'media' }}-link-poster-nav">
+         <a class="prev" href="javascript:void(0)">
+          <i class="fa fa-angle-left"></i>
+         </a>
+         <a class="next" href="javascript:void(0)">
+          <i class="fa fa-angle-right"></i>
+         </a>
+        </nav>
+       </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" id="{{ $target or 'media' }}-add-link-btn" class="btn btn-sm btn-info">
-          <i class="fa fa-plus"></i>
-          @lang('admin.button.add', 'Ekle')
-        </button>
-        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
-          <i class="fa fa-close"></i>
-          @lang('admin.button.close', 'Kapat')
-        </button>
+      <div class="col-xs-12 col-md-7">
+       <div class="form-group">
+        <label for="{{ $target or 'media' }}-link-title">@lang('admin.label.title', 'Başlık')</label>
+        <input type="text" id="{{ $target or 'media' }}-link-title" name="{{ $target or 'media' }}-link-title" class="form-control">
+       </div>
+       <div class="form-group">
+        <label for="{{ $target or 'media' }}-link-description">@lang('admin.label.description', 'Açıklama')</label>
+        <textarea id="{{ $target or 'media' }}-link-description" name="{{ $target or 'media' }}-link-description" rows="4" class="form-control"></textarea>
+       </div>
+       <div class="form-group">
+        <div class="checkbox-custom fill checkbox-default">
+         <input type="checkbox" id="{{ $target or 'media' }}-link-no-thumbnail" name="{{ $target or 'media' }}-link-no-thumbnail" value="yes">
+         <label for="{{ $target or 'media' }}-link-no-thumbnail">@lang('admin.label.no_thumbnail_image', 'Küçük Resim Yok')</label>
+        </div>
+       </div>
       </div>
-    </div>
+     </div>
+    </form>
+   </div>
+   <div class="modal-footer">
+    <button type="button" id="{{ $target or 'media' }}-add-link-btn" class="btn btn-sm btn-info">
+     <i class="fa fa-plus"></i>
+     @lang('admin.button.add', 'Ekle')
+    </button>
+    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+     <i class="fa fa-close"></i>
+     @lang('admin.button.close', 'Kapat')
+    </button>
+   </div>
   </div>
+ </div>
 </div>
 @stop
 
 @section('script')
 @parent
 <script type="text/javascript">
-  //<![CDATA[
-  loadScript('{{ $root }}/js/plugins/bootstrap/holder.min.js', function () {
-    $('#{{ $target or '
-    media
-    ' }}-add-link-btn'
-    ).
-    click(function () {
-      if ($('#{{ $target or 'media
-      ' }}-link-url'
-      ).
-      val().length > 0
-      )
-      {
-        $.ajax({
-          'type': $('#{{ $target or 'media' }}-link-form').attr('method'),
-          'url'
-      :
-        $('#{{ $target or '
-        media
-        ' }}-link-form'
-      ).
-        attr('action'),
-          'data'
-      :
-        {
-          'link-url'
-        :
-          $('#{{ $target or '
-          media
-          ' }}-link-url'
-        ).
-          val(),
-            'link-embed-url'
-        :
-          $('#{{ $target or '
-          media
-          ' }}-link-embed-url'
-        ).
-          val(),
-            'link-poster'
-        :
-          $('#{{ $target or '
-          media
-          ' }}-link-poster'
-        ).
-          val(),
-            'link-title'
-        :
-          $('#{{ $target or '
-          media
-          ' }}-link-title'
-        ).
-          val(),
-            'link-description'
-        :
-          $('#{{ $target or '
-          media
-          ' }}-link-description'
-        ).
-          val()
-        }
-      }).
-        done(function (result) {
-          if (result.success) {
-            $('#{{ $target or '
-            media
-            ' }}-link-dialog'
-          ).
-            modal('hide');
+ //<![CDATA[
+ loadScript('{{ $root }}/js/plugins/bootstrap/holder.min.js', function() {
+  $('#{{ $target or 'media' }}-add-link-btn').click(function() {
+   if ($('#{{ $target or 'media' }}-link-url').val().length > 0) {
+    $.ajax({
+     'type': $('#{{ $target or 'media' }}-link-form').attr('method'),
+     'url': $('#{{ $target or 'media' }}-link-form').attr('action'),
+     'data': {
+      'link-url': $('#{{ $target or 'media' }}-link-url').val(),
+      'link-embed-url': $('#{{ $target or 'media' }}-link-embed-url').val(),
+      'link-poster': $('#{{ $target or 'media' }}-link-poster').val(),
+      'link-title': $('#{{ $target or 'media' }}-link-title').val(),
+      'link-description': $('#{{ $target or 'media' }}-link-description').val()
+     }
+    }).done(function (result) {
+     if (result.success) {
+      $('#{{ $target or 'media' }}-link-dialog').modal('hide');
 
-            if (typeof $.fn.{
-              {
-                $target
-                or
-                'media'
-              }
-            }
-            AddLink === 'function'
-          )
-            {
-              $.fn.
-              {
-                {
-                  $target
-                  or
-                  'media'
-                }
-              }
-              AddLink(result.return.id);
-            }
-          else
-            {
-              message("@lang('admin.message.function_not_found', [(isset($target) ? $target : 'media') . 'AddLink'], 'Fonksiyon bulunamadı: %s')");
-            }
-          } else {
-            message(result);
-          }
-        });
+      if (typeof $.fn.{{ $target or 'media' }}AddLink === 'function') {
+       $.fn.{{ $target or 'media' }}AddLink(result.return.id);
+      } else {
+       message("@lang('admin.message.function_not_found', [(isset($target) ? $target : 'media') . 'AddLink'], 'Fonksiyon bulunamadı: %s')");
       }
-      else
-      {
-        message("@lang('admin.message.paste_link_first', 'Önce bağlantıyı yapıştırın!')");
-      }
-
-      return false;
+     } else {
+      message(result);
+     }
     });
+   } else {
+    message("@lang('admin.message.paste_link_first', 'Önce bağlantıyı yapıştırın!')");
+   }
 
-    $.fn.
-    {
-      {
-        $target
-        or
-        'media'
-      }
-    }
-    ResetLinkForm = function () {
-      $('#{{ $target or '
-      media
-      ' }}-link-url, ' +
-      '#{{ $target or '
-      media
-      ' }}-link-embed-url, ' +
-      '#{{ $target or '
-      media
-      ' }}-link-poster, ' +
-      '#{{ $target or '
-      media
-      ' }}-link-title, ' +
-      '#{{ $target or '
-      media
-      ' }}-link-description'
-      ).
-      val('');
-      $('#{{ $target or '
-      media
-      ' }}-link-poster-view'
-      ).
-      data({}).empty();
-      $('#{{ $target or '
-      media
-      ' }}-link-poster-nav > a'
-      ).
-      css({
-        'opacity': .1,
-        'cursor': 'default'
-      });
-      $('#{{ $target or '
-      media
-      ' }}-link-no-thumbnail'
-      ).
-      prop('disabled', true);
-
-      Holder.addImage("holder.js/220x160/text:@lang('admin.label.link_picture', 'Bağlantı Resmi')", '#{{ $target or '
-      media
-      ' }}-link-poster-view'
-      ).
-      run();
-    };
-
-    $('#{{ $target or '
-    media
-    ' }}-link-dialog'
-    ).
-    on('show.bs.modal', function () {
-      $('#{{ $target or '
-      media
-      ' }}-link-raw-url'
-      ).
-      val('');
-      $.fn.
-      {
-        {
-          $target
-          or
-          'media'
-        }
-      }
-      ResetLinkForm();
-    });
-
-    $('#{{ $target or '
-    media
-    ' }}-link-info-form'
-    ).
-    submit(function () {
-      if ($('#{{ $target or 'media
-      ' }}-link-raw-url'
-      ).
-      val().length > 0
-      )
-      {
-        $.ajax({
-          'type': $(this).attr('method'),
-          'url': $(this).attr('action'),
-          'data': {
-            'link-raw-url': $('#{{ $target or 'media' }}-link-raw-url').val()
-      }
-      }).
-        done(function (result) {
-          if (result && result['link-url']) {
-            $.fn.
-            {
-              {
-                $target
-                or
-                'media'
-              }
-            }
-            ResetLinkForm();
-
-            var k;
-
-            for (k in result) {
-              if ($('#{{ $target or 'media
-              ' }}-' + k
-            ).
-              get(0)
-            )
-              {
-                $('#{{ $target or '
-                media
-                ' }}-' + k
-              ).
-                val(result[k]);
-              }
-            }
-
-            if (result['link-images'] && result['link-images'].length > 0) {
-              $('#{{ $target or '
-              media
-              ' }}-link-poster-view'
-            ).
-              empty();
-
-              $('<img/>', {
-                'src': result['link-images'][0],
-                'alt': '',
-                'width': 220
-              }).appendTo('#{{ $target or '
-              media
-              ' }}-link-poster-view'
-            )
-              ;
-
-              var imgs = [];
-
-              for (k in result['link-images']) {
-                imgs.push(result['link-images'][k]);
-              }
-
-              $('#{{ $target or '
-              media
-              ' }}-link-poster-view'
-            ).
-              data({
-                'images': imgs.join(','),
-                'current': 0
-              });
-
-              $('#{{ $target or '
-              media
-              ' }}-link-poster'
-            ).
-              val(imgs[0]);
-              $('#{{ $target or '
-              media
-              ' }}-link-no-thumbnail'
-            ).
-              prop('disabled', false);
-
-              if (imgs.length > 1) {
-                $('#{{ $target or '
-                media
-                ' }}-link-poster-nav > a.next'
-              ).
-                css({
-                  'opacity': 1,
-                  'cursor': 'pointer'
-                });
-              }
-            }
-          } else {
-            message(result);
-          }
-        });
-      }
-      else
-      {
-        message("@lang('admin.message.paste_link_first', 'Önce bağlantıyı yapıştırın!')");
-      }
-
-      return false;
-    });
-
-    $('#{{ $target or '
-    media
-    ' }}-link-poster-nav > a'
-    ).
-    click(function () {
-      if (!$('#{{ $target or 'media
-      ' }}-link-no-thumbnail'
-      ).
-      prop('checked') && parseFloat($('#{{ $target or '
-      media
-      ' }}-link-poster-view'
-      ).
-      data('current')
-      ) >
-      -1
-      )
-      {
-        var imgs = $('#{{ $target or '
-        media
-        ' }}-link-poster-view'
-      ).
-        data('images').split(','),
-          curr = $('#{{ $target or '
-        media
-        ' }}-link-poster-view'
-      ).
-        data('current'),
-          targ = curr;
-
-        if ($(this).hasClass('prev')) {
-          targ = curr - 1;
-        } else if ($(this).hasClass('next')) {
-          targ = curr + 1;
-        }
-
-        if (imgs[targ]) {
-          $('#{{ $target or '
-          media
-          ' }}-link-no-thumbnail'
-        ).
-          prop('checked', false);
-          $('#{{ $target or '
-          media
-          ' }}-link-poster'
-        ).
-          val(imgs[targ]);
-          $('#{{ $target or '
-          media
-          ' }}-link-poster-view'
-        ).
-          data('current', targ).find('img').attr('src', imgs[targ]);
-          $('#{{ $target or '
-          media
-          ' }}-link-poster-nav > a'
-        ).
-          css({
-            'opacity': .1,
-            'cursor': 'default'
-          });
-
-          if (targ > 0) {
-            $('#{{ $target or '
-            media
-            ' }}-link-poster-nav > a.prev'
-          ).
-            css({
-              'opacity': 1,
-              'cursor': 'pointer'
-            });
-          }
-
-          if (targ < (imgs.length - 1)) {
-            $('#{{ $target or '
-            media
-            ' }}-link-poster-nav > a.next'
-          ).
-            css({
-              'opacity': 1,
-              'cursor': 'pointer'
-            });
-          }
-        }
-      }
-
-      return false;
-    });
-
-    $('#{{ $target or '
-    media
-    ' }}-link-no-thumbnail'
-    ).
-    click(function () {
-      if (!$(this).prop('disabled')) {
-        var imgs = $('#{{ $target or '
-        media
-        ' }}-link-poster-view'
-      ).
-        data('images').split(',');
-
-        if ($(this).prop('checked')) {
-          $('#{{ $target or '
-          media
-          ' }}-link-poster'
-        ).
-          val('');
-          $('#{{ $target or '
-          media
-          ' }}-link-poster-view'
-        ).
-          empty().data('current', -1);
-
-          Holder.addImage("holder.js/220x160/text:@lang('admin.label.link_picture', 'Bağlantı Resmi')", '#{{ $target or '
-          media
-          ' }}-link-poster-view'
-        ).
-          run();
-
-          $('#{{ $target or '
-          media
-          ' }}-link-poster-nav > a'
-        ).
-          css({
-            'opacity': .1,
-            'cursor': 'default'
-          });
-        } else {
-          $('#{{ $target or '
-          media
-          ' }}-link-poster'
-        ).
-          val(imgs[0]);
-          $('#{{ $target or '
-          media
-          ' }}-link-poster-view'
-        ).
-          empty().data('current', 0);
-
-          $('<img/>', {
-            'src': imgs[0],
-            'alt': '',
-            'width': 220
-          }).appendTo('#{{ $target or '
-          media
-          ' }}-link-poster-view'
-        )
-          ;
-
-          if (imgs.length > 1) {
-            $('#{{ $target or '
-            media
-            ' }}-link-poster-nav > a.next'
-          ).
-            css({
-              'opacity': 1,
-              'cursor': 'pointer'
-            });
-          }
-        }
-      }
-    });
+   return false;
   });
-  //]]>
+
+  $.fn.{{ $target or 'media' }}ResetLinkForm = function() {
+   $('#{{ $target or 'media' }}-link-url, ' +
+   '#{{ $target or 'media' }}-link-embed-url, ' +
+   '#{{ $target or 'media' }}-link-poster, ' +
+   '#{{ $target or 'media' }}-link-title, ' +
+   '#{{ $target or 'media' }}-link-description').val('');
+   $('#{{ $target or 'media' }}-link-poster-view').data({}).empty();
+   $('#{{ $target or 'media' }}-link-poster-nav > a').css({
+    'opacity': .1,
+    'cursor': 'default'
+   });
+   $('#{{ $target or 'media' }}-link-no-thumbnail').prop('disabled', true);
+
+   Holder.addImage("holder.js/220x160/text:@lang('admin.label.link_picture', 'Bağlantı Resmi')", '#{{ $target or 'media' }}-link-poster-view').run();
+  };
+
+  $('#{{ $target or 'media' }}-link-dialog').on('show.bs.modal', function() {
+   $('#{{ $target or 'media' }}-link-raw-url').val('');
+   $.fn.{{ $target or 'media' }}ResetLinkForm();
+  });
+
+  $('#{{ $target or 'media' }}-link-info-form').submit(function() {
+   if ($('#{{ $target or 'media' }}-link-raw-url').val().length > 0) {
+    $.ajax({
+     'type': $(this).attr('method'),
+     'url': $(this).attr('action'),
+     'data': {
+      'link-raw-url': $('#{{ $target or 'media' }}-link-raw-url').val()
+     }
+    }).done(function (result) {
+     if (result && result['link-url']) {
+      $.fn.{{ $target or 'media' }}ResetLinkForm();
+
+      var k;
+
+      for (k in result) {
+       if ($('#{{ $target or 'media' }}-' + k).get(0)) {
+        $('#{{ $target or 'media' }}-' + k).val(result[k]);
+       }
+      }
+
+      if (result['link-images'] && result['link-images'].length > 0) {
+       $('#{{ $target or 'media' }}-link-poster-view').empty();
+
+       $('<img/>', {
+        'src': result['link-images'][0],
+        'alt': '',
+        'width': 220
+       }).appendTo('#{{ $target or 'media' }}-link-poster-view');
+
+       var imgs = [];
+
+       for (k in result['link-images']) {
+        imgs.push(result['link-images'][k]);
+       }
+
+       $('#{{ $target or 'media' }}-link-poster-view').data({
+        'images': imgs.join(','),
+        'current': 0
+       });
+
+       $('#{{ $target or 'media' }}-link-poster').val(imgs[0]);
+       $('#{{ $target or 'media' }}-link-no-thumbnail').prop('disabled', false);
+
+       if (imgs.length > 1) {
+        $('#{{ $target or 'media' }}-link-poster-nav > a.next').css({
+         'opacity': 1,
+         'cursor': 'pointer'
+        });
+       }
+      }
+     } else {
+      message(result);
+     }
+    });
+   } else {
+    message("@lang('admin.message.paste_link_first', 'Önce bağlantıyı yapıştırın!')");
+   }
+
+   return false;
+  });
+
+  $('#{{ $target or 'media' }}-link-poster-nav > a').click(function(){
+   if (!$('#{{ $target or 'media' }}-link-no-thumbnail').prop('checked') && parseFloat($('#{{ $target or 'media' }}-link-poster-view').data('current')) > -1) {
+    var imgs = $('#{{ $target or 'media' }}-link-poster-view').data('images').split(','),
+     curr = $('#{{ $target or 'media' }}-link-poster-view').data('current'),
+     targ = curr;
+
+    if ($(this).hasClass('prev')){
+     targ = curr - 1;
+    } else if ($(this).hasClass('next')){
+     targ = curr + 1;
+    }
+
+    if (imgs[targ]){
+     $('#{{ $target or 'media' }}-link-no-thumbnail').prop('checked', false);
+     $('#{{ $target or 'media' }}-link-poster').val(imgs[targ]);
+     $('#{{ $target or 'media' }}-link-poster-view').data('current', targ).find('img').attr('src', imgs[targ]);
+     $('#{{ $target or 'media' }}-link-poster-nav > a').css({
+      'opacity': .1,
+      'cursor': 'default'
+     });
+
+     if (targ > 0){
+      $('#{{ $target or 'media' }}-link-poster-nav > a.prev').css({
+       'opacity': 1,
+       'cursor': 'pointer'
+      });
+     }
+
+     if (targ < (imgs.length - 1)){
+      $('#{{ $target or 'media' }}-link-poster-nav > a.next').css({
+       'opacity': 1,
+       'cursor': 'pointer'
+      });
+     }
+    }
+   }
+
+   return false;
+  });
+
+  $('#{{ $target or 'media' }}-link-no-thumbnail').click(function(){
+   if (!$(this).prop('disabled')) {
+    var imgs = $('#{{ $target or 'media' }}-link-poster-view').data('images').split(',');
+
+    if ($(this).prop('checked')) {
+     $('#{{ $target or 'media' }}-link-poster').val('');
+     $('#{{ $target or 'media' }}-link-poster-view').empty().data('current', -1);
+
+     Holder.addImage("holder.js/220x160/text:@lang('admin.label.link_picture', 'Bağlantı Resmi')", '#{{ $target or 'media' }}-link-poster-view').run();
+
+     $('#{{ $target or 'media' }}-link-poster-nav > a').css({
+      'opacity': .1,
+      'cursor': 'default'
+     });
+    } else {
+     $('#{{ $target or 'media' }}-link-poster').val(imgs[0]);
+     $('#{{ $target or 'media' }}-link-poster-view').empty().data('current', 0);
+
+     $('<img/>', {
+      'src': imgs[0],
+      'alt': '',
+      'width': 220
+     }).appendTo('#{{ $target or 'media' }}-link-poster-view');
+
+     if (imgs.length > 1) {
+      $('#{{ $target or 'media' }}-link-poster-nav > a.next').css({
+       'opacity': 1,
+       'cursor': 'pointer'
+      });
+     }
+    }
+   }
+  });
+ });
+ //]]>
 </script>
 @stop

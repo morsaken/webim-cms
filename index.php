@@ -4,7 +4,7 @@
  */
 
 if (version_compare(PHP_VERSION, '5.4', '<')) {
-  die('PHP version (' . PHP_VERSION . ') must be at least 5.4');
+ die('PHP version (' . PHP_VERSION . ') must be at least 5.4');
 }
 
 define('WEBIM', true);
@@ -18,7 +18,7 @@ define('EXT', strrchr(INDEX, '.'));
 define('START_TIME', microtime());
 
 if (!file_exists(SYS_ROOT)) {
-  die('System folder not found!');
+ die('System folder not found!');
 }
 
 require(SYS_ROOT . 'Webim' . DS . 'core' . EXT);

@@ -8,7 +8,7 @@
  * Built for http://www.improvely.com
  */
 
-.daterangepicker.dropdown-menu {
+ .daterangepicker.dropdown-menu {
   max-width: none;
   z-index: 3000;
 }
@@ -33,11 +33,11 @@
   text-align: left;
 }
 
-.daterangepicker .ranges .range_inputs > div {
+.daterangepicker .ranges .range_inputs>div {
   float: left;
 }
 
-.daterangepicker .ranges .range_inputs > div:nth-child(2) {
+.daterangepicker .ranges .range_inputs>div:nth-child(2) {
   padding-left: 11px;
 }
 
@@ -47,7 +47,7 @@
 }
 
 .daterangepicker.show-calendar .calendar {
-  display: block;
+    display: block;
 }
 
 .daterangepicker .calendar.single .calendar-date {
@@ -169,7 +169,7 @@
 .daterangepicker.openscenter:before {
   position: absolute;
   top: -7px;
-  left: 0;
+  left: 0;  
   right: 0;
   width: 0;
   margin-left: auto;
@@ -185,8 +185,8 @@
 .daterangepicker.openscenter:after {
   position: absolute;
   top: -6px;
-  left: 0;
-  right: 0;
+  left: 0;  
+  right: 0;  
   width: 0;
   margin-left: auto;
   margin-right: auto;
@@ -311,7 +311,7 @@
 }
 
 .daterangepicker_end_input {
-  float: left;
+  float: left; 
   padding-left: 11px
 }
 

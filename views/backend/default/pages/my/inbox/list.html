@@ -5,223 +5,215 @@
 @section('content')
 @include('topbar')
 <section id="content" class="table-layout">
-  <aside class="tray tray-left pn va-t tray250" data-tray-height="match">
-    <div class="ph15 pv10 br-b br-light">
-      <button id="quick-compose" type="button" class="btn btn-danger light btn-block fw600">
-        @lang('admin.label.quick_compose', 'Hızlı Gönderi')
-      </button>
+ <aside class="tray tray-left pn va-t tray250" data-tray-height="match">
+  <div class="ph15 pv10 br-b br-light">
+   <button id="quick-compose" type="button" class="btn btn-danger light btn-block fw600">@lang('admin.label.quick_compose', 'Hızlı Gönderi')</button>
+  </div>
+  <div class="p10">
+   <h4 class="ph10 mt10 mb5">@lang('admin.label.menu', 'Menü')</h4>
+   <ul class="nav nav-messages p5" role="menu">
+    <li class="">
+     <a href="#" class="fw600 p10">
+      <span class="fa fa-gear pr5"></span> @lang('admin.label.settings', 'Ayarlar')
+     </a>
+    </li>
+    <li class="">
+     <a href="#" class="text-dark fw600 p10">
+      <span class="fa fa-envelope pr5"></span> Messages
+      <span class="pull-right lh20 h-20 label label-warning label-sm">2</span>
+     </a>
+    </li>
+    <li class="active">
+     <a href="#" class="fw600 p10">
+      <span class="fa fa-user pr5"></span> Friends
+      <span class="pull-right lh20 h-20 label label-warning label-sm">6</span>
+     </a>
+    </li>
+   </ul>
+   <!-- menu tags -->
+   <h4 class="ph10 mv15"> Tags </h4>
+   <hr class="mn br-light">
+   <ul class="nav nav-messages p5" role="menu">
+    <li class="">
+     <a href="#" class="text-dark fw600 p8 animated animated-short fadeInUp">
+      Clients
+      <span class="fa fa-circle text-warning fs14 pull-right lh20"></span>
+     </a>
+    </li>
+    <li class="">
+     <a href="#" class="text-dark fw600 p8 animated animated-short fadeInUp">
+      Contractors
+      <span class="fa fa-circle text-system fs14 pull-right lh20"></span>
+     </a>
+    </li>
+    <li class="">
+     <a href="#" class="text-dark fw600 p8 animated animated-short fadeInUp">
+      Employees
+      <span class="fa fa-circle text-primary fs14 pull-right lh20"></span>
+     </a>
+    </li>
+    <li class="">
+     <a href="#" class="text-dark fw600 p8 animated animated-short fadeInUp">
+      Suppliers
+      <span class="fa fa-circle text-alert fs14 pull-right lh20"></span>
+     </a>
+    </li>
+   </ul>
+
+   <!-- menu labels -->
+   <h4 class="ph10 mv15"> Labels </h4>
+   <hr class="mn br-light">
+   <ul class="nav nav-messages p5" role="menu">
+    <li class="">
+     <a href="#" class="text-dark fw600 p8 animated animated-short fadeInUp">
+      Work
+      <span class="pull-right lh20 h-20 label label-info label-sm">11</span>
+     </a>
+    </li>
+    <li class="">
+     <a href="#" class="text-dark fw600 p8 animated animated-short fadeInUp">
+      Meetings
+      <span class="pull-right lh20 h-20 label label-success label-sm">8</span>
+     </a>
+    </li>
+    <li class="">
+     <a href="#" class="text-dark fw600 p8 animated animated-short fadeInUp">
+      Competition
+      <span class="pull-right lh20 h-20 label label-primary label-sm">4</span>
+     </a>
+    </li>
+    <li class="">
+     <a href="#" class="text-dark fw600 p8 animated animated-short fadeInUp">
+      Promotions
+      <span class="pull-right lh20 h-20 label label-system label-sm">16</span>
+     </a>
+    </li>
+   </ul>
+
+  </div>
+
+ </aside>
+ <div class="tray tray-center pn va-t bg-light">
+  <div class="pv10 pl15 bg-white pr10 br-b">
+   <div class="row table-layout">
+    <div class="hidden-xs hidden-sm col-md-3 va-m pln">
+     <div class="btn-group">
+      <button type="button" class="btn btn-default light"><i class="fa fa-refresh"></i></button>
+      <button type="button" class="btn btn-default light"><i class="fa fa-pencil"></i></button>
+     </div>
     </div>
-    <div class="p10">
-      <h4 class="ph10 mt10 mb5">@lang('admin.label.menu', 'Menü')</h4>
-      <ul class="nav nav-messages p5" role="menu">
-        <li class="">
-          <a href="#" class="fw600 p10">
-            <span class="fa fa-gear pr5"></span> @lang('admin.label.settings', 'Ayarlar')
-          </a>
+    <div class="col-xs-12 col-md-9 text-right prn">
+     <span class="hidden-xs va-m text-muted mr15">Showing <strong>15</strong> of <strong>253</strong></span>
+     <div class="btn-group mr10">
+      <button type="button" class="btn btn-default light hidden-xs"><i class="fa fa-star"></i></button>
+      <button type="button" class="btn btn-default light hidden-xs"><i class="fa fa-calendar"></i></button>
+      <button type="button" class="btn btn-default light"><i class="fa fa-trash"></i></button>
+     </div>
+     <div class="btn-group mr10">
+      <div class="btn-group">
+       <button type="button" class="btn btn-default light dropdown-toggle ph8" data-toggle="dropdown">
+        <span class="fa fa-tags"></span>
+        <span class="caret ml5"></span>
+       </button>
+       <ul class="dropdown-menu pull-right" role="menu">
+        <li>
+         <a href="#">Work</a>
         </li>
-        <li class="">
-          <a href="#" class="text-dark fw600 p10">
-            <span class="fa fa-envelope pr5"></span> Messages
-            <span class="pull-right lh20 h-20 label label-warning label-sm">2</span>
-          </a>
+        <li>
+         <a href="#">Important</a>
         </li>
-        <li class="active">
-          <a href="#" class="fw600 p10">
-            <span class="fa fa-user pr5"></span> Friends
-            <span class="pull-right lh20 h-20 label label-warning label-sm">6</span>
-          </a>
+        <li>
+         <a href="#">Favorites</a>
         </li>
-      </ul>
-      <!-- menu tags -->
-      <h4 class="ph10 mv15"> Tags </h4>
-      <hr class="mn br-light">
-      <ul class="nav nav-messages p5" role="menu">
-        <li class="">
-          <a href="#" class="text-dark fw600 p8 animated animated-short fadeInUp">
-            Clients
-            <span class="fa fa-circle text-warning fs14 pull-right lh20"></span>
-          </a>
+        <li class="divider"></li>
+        <li>
+         <a href="#">
+          <span class="fa fa-plus pr5"></span> Create New</a>
         </li>
-        <li class="">
-          <a href="#" class="text-dark fw600 p8 animated animated-short fadeInUp">
-            Contractors
-            <span class="fa fa-circle text-system fs14 pull-right lh20"></span>
-          </a>
-        </li>
-        <li class="">
-          <a href="#" class="text-dark fw600 p8 animated animated-short fadeInUp">
-            Employees
-            <span class="fa fa-circle text-primary fs14 pull-right lh20"></span>
-          </a>
-        </li>
-        <li class="">
-          <a href="#" class="text-dark fw600 p8 animated animated-short fadeInUp">
-            Suppliers
-            <span class="fa fa-circle text-alert fs14 pull-right lh20"></span>
-          </a>
-        </li>
-      </ul>
-
-      <!-- menu labels -->
-      <h4 class="ph10 mv15"> Labels </h4>
-      <hr class="mn br-light">
-      <ul class="nav nav-messages p5" role="menu">
-        <li class="">
-          <a href="#" class="text-dark fw600 p8 animated animated-short fadeInUp">
-            Work
-            <span class="pull-right lh20 h-20 label label-info label-sm">11</span>
-          </a>
-        </li>
-        <li class="">
-          <a href="#" class="text-dark fw600 p8 animated animated-short fadeInUp">
-            Meetings
-            <span class="pull-right lh20 h-20 label label-success label-sm">8</span>
-          </a>
-        </li>
-        <li class="">
-          <a href="#" class="text-dark fw600 p8 animated animated-short fadeInUp">
-            Competition
-            <span class="pull-right lh20 h-20 label label-primary label-sm">4</span>
-          </a>
-        </li>
-        <li class="">
-          <a href="#" class="text-dark fw600 p8 animated animated-short fadeInUp">
-            Promotions
-            <span class="pull-right lh20 h-20 label label-system label-sm">16</span>
-          </a>
-        </li>
-      </ul>
-
-    </div>
-
-  </aside>
-  <div class="tray tray-center pn va-t bg-light">
-    <div class="pv10 pl15 bg-white pr10 br-b">
-      <div class="row table-layout">
-        <div class="hidden-xs hidden-sm col-md-3 va-m pln">
-          <div class="btn-group">
-            <button type="button" class="btn btn-default light"><i class="fa fa-refresh"></i></button>
-            <button type="button" class="btn btn-default light"><i class="fa fa-pencil"></i></button>
-          </div>
-        </div>
-        <div class="col-xs-12 col-md-9 text-right prn">
-          <span class="hidden-xs va-m text-muted mr15">Showing <strong>15</strong> of <strong>253</strong></span>
-          <div class="btn-group mr10">
-            <button type="button" class="btn btn-default light hidden-xs"><i class="fa fa-star"></i></button>
-            <button type="button" class="btn btn-default light hidden-xs"><i class="fa fa-calendar"></i></button>
-            <button type="button" class="btn btn-default light"><i class="fa fa-trash"></i></button>
-          </div>
-          <div class="btn-group mr10">
-            <div class="btn-group">
-              <button type="button" class="btn btn-default light dropdown-toggle ph8" data-toggle="dropdown">
-                <span class="fa fa-tags"></span>
-                <span class="caret ml5"></span>
-              </button>
-              <ul class="dropdown-menu pull-right" role="menu">
-                <li>
-                  <a href="#">Work</a>
-                </li>
-                <li>
-                  <a href="#">Important</a>
-                </li>
-                <li>
-                  <a href="#">Favorites</a>
-                </li>
-                <li class="divider"></li>
-                <li>
-                  <a href="#">
-                    <span class="fa fa-plus pr5"></span> Create New
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div class="btn-group">
-              <button type="button" class="btn btn-default light dropdown-toggle ph8 br-tp-left" data-toggle="dropdown">
-                <span class="fa fa-folder"></span>
-                <span class="caret ml5"></span>
-              </button>
-              <ul class="dropdown-menu pull-right" role="menu">
-                <li>
-                  <a href="#">Work</a>
-                </li>
-                <li>
-                  <a href="#">Important</a>
-                </li>
-                <li>
-                  <a href="#">Favorites</a>
-                </li>
-                <li class="divider"></li>
-                <li>
-                  <a href="#">
-                    <span class="fa fa-plus pr5"></span> Create New
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="btn-group">
-            <button type="button" class="btn btn-default light"><i class="fa fa-chevron-left"></i>
-            </button>
-            <button type="button" class="btn btn-default light"><i class="fa fa-chevron-right"></i>
-            </button>
-          </div>
-        </div>
+       </ul>
       </div>
+      <div class="btn-group">
+       <button type="button" class="btn btn-default light dropdown-toggle ph8 br-tp-left" data-toggle="dropdown">
+        <span class="fa fa-folder"></span>
+        <span class="caret ml5"></span>
+       </button>
+       <ul class="dropdown-menu pull-right" role="menu">
+        <li>
+         <a href="#">Work</a>
+        </li>
+        <li>
+         <a href="#">Important</a>
+        </li>
+        <li>
+         <a href="#">Favorites</a>
+        </li>
+        <li class="divider"></li>
+        <li>
+         <a href="#">
+          <span class="fa fa-plus pr5"></span> Create New</a>
+        </li>
+       </ul>
+      </div>
+     </div>
+     <div class="btn-group">
+      <button type="button" class="btn btn-default light"><i class="fa fa-chevron-left"></i>
+      </button>
+      <button type="button" class="btn btn-default light"><i class="fa fa-chevron-right"></i>
+      </button>
+     </div>
     </div>
-    @if (isset($list) && $list->total)
-    <table id="message-table" class="table admin-form theme-warning tc-checkbox-1">
-      <thead>
-      <tr>
-        <th class="text-center hidden-xs">#</th>
-        <th>@lang('admin.label.sender', 'Gönderen')</th>
-        <th>@lang('admin.label.subject', 'Başlık')</th>
-        <th class="hidden-xs">Star</th>
-        <th class="hidden-xs">Label</th>
-        <th class="hidden-xs"></th>
-        <th class="text-right">@lang('admin.label.date', 'Tarih')</th>
-      </tr>
-      </thead>
-      <tbody>
-      @foreach ($list->rows as $row)
-      <tr class="message-{{ $row->read == 'true' ? 'read' : 'unread' }}" data-id="{{ $row->key }}">
-        <td class="hidden-xs">
-          <label class="option block mn">
-            <input type="checkbox" name="check[]" value="{{ $row->id }}">
-            <span class="checkbox mn"></span>
-          </label>
-        </td>
-        <td>{{ $row->sender_first_name . ' ' . $row->sender_last_name }}</td>
-        <td>{{{ str_limit($row->subject) }}}</td>
-        <td class="hidden-xs">
+   </div>
+  </div>
+  @if (isset($list) && $list->total)
+  <table id="message-table" class="table admin-form theme-warning tc-checkbox-1">
+   <thead>
+    <tr>
+     <th class="text-center hidden-xs">#</th>
+     <th>@lang('admin.label.sender', 'Gönderen')</th>
+     <th>@lang('admin.label.subject', 'Başlık')</th>
+     <th class="hidden-xs">Star</th>
+     <th class="hidden-xs">Label</th>
+     <th class="hidden-xs"></th>
+     <th class="text-right">@lang('admin.label.date', 'Tarih')</th>
+    </tr>
+   </thead>
+   <tbody>
+    @foreach ($list->rows as $row)
+    <tr class="message-{{ $row->read == 'true' ? 'read' : 'unread' }}" data-id="{{ $row->key }}">
+     <td class="hidden-xs">
+      <label class="option block mn">
+       <input type="checkbox" name="check[]" value="{{ $row->id }}">
+       <span class="checkbox mn"></span>
+      </label>
+     </td>
+     <td>{{ $row->sender_first_name . ' ' . $row->sender_last_name }}</td>
+     <td>{{{ str_limit($row->subject) }}}</td>
+     <td class="hidden-xs">
       <span class="rating block mn pull-left">
        <input class="rating-input" id="r1" type="radio" name="custom">
        <label class="rating-star" for="r1"><i class="fa fa-star va-m"></i>
        </label>
       </span>
-        </td>
-        <td class="hidden-xs">
-          <span class="badge badge-warning mr10 fs11"> Work </span>
-        </td>
-        <td class="hidden-xs">{{ $row->attachmentTotal ? '<i class="fa fa-paperclip fs15 text-muted va-b"></i>' : '&nbsp;'
-          }}
-        </td>
-        <td class="text-right fw600" data-livestamp="{{ strtotime($row->date) }}" title="{{{ date_show($row->date, 'long', true) }}}">
-          {{{ date_show($row->date, '{day} {month_name}') }}}
-        </td>
-      </tr>
-      @endforeach
-      </tbody>
-    </table>
-    @endif
-  </div>
+     </td>
+     <td class="hidden-xs">
+      <span class="badge badge-warning mr10 fs11"> Work </span>
+     </td>
+     <td class="hidden-xs">{{ $row->attachmentTotal ? '<i class="fa fa-paperclip fs15 text-muted va-b"></i>' : '&nbsp;' }}</td>
+     <td class="text-right fw600" data-livestamp="{{ strtotime($row->date) }}" title="{{{ date_show($row->date, 'long', true) }}}">{{{ date_show($row->date, '{day} {month_name}') }}}</td>
+    </tr>
+    @endforeach
+   </tbody>
+  </table>
+  @endif
+ </div>
 </section>
 
 <div class="quick-compose-form">
-  <form id="quick-compose-form" method="post" action="@url()">
-    <input id="to" type="email" name="to[]" class="form-control" placeholder="@lang('admin.placeholder.to', 'Kime')">
-    <input id="inputSubject" type="text" class="form-control" placeholder="@lang('admin.placeholder.subject', 'Konu')">
-    <div class="summernote-quick">@lang('admin.placeholder.message', 'Mesaj')</div>
-  </form>
+ <form id="quick-compose-form" method="post" action="@url()">
+  <input id="to" type="email" name="to[]" class="form-control" placeholder="@lang('admin.placeholder.to', 'Kime')">
+  <input id="inputSubject" type="text" class="form-control" placeholder="@lang('admin.placeholder.subject', 'Konu')">
+  <div class="summernote-quick">@lang('admin.placeholder.message', 'Mesaj')</div>
+ </form>
 </div>
 @stop
 
@@ -236,82 +228,82 @@
 <script type="text/javascript" src="{{ $root }}/js/plugins/jquery/dock/dockmodal.js"></script>
 <script type="text/javascript" src="{{ $root }}/js/lib/editors/summernote/summernote.min.js"></script>
 <script type="text/javascript">
-  //<![CDATA[
-  $(function () {
-    'use strict';
+ //<![CDATA[
+ $(function() {
+  'use strict';
 
-    var msgListing = $('#message-table > tbody > tr > td');
-    var msgCheckbox = $('#message-table > tbody > tr input[type=checkbox]');
+  var msgListing = $('#message-table > tbody > tr > td');
+  var msgCheckbox = $('#message-table > tbody > tr input[type=checkbox]');
 
-    // on message table checkbox click, toggle highlighted class
-    msgCheckbox.on('click', function () {
-      $(this).parents('tr').toggleClass('highlight');
-    });
-
-    // on message table row click, redirect page. Unless target was a checkbox
-    msgListing.not(":first-child").on('click', function (e) {
-
-      // stop event bubble if clicked item is not a checkbox
-      e.stopPropagation();
-      e.preventDefault();
-
-      // Redirect to message compose page if clicked item is not a checkbox
-      window.location = "@url($prefix . 'my/inbox/view')/" + $(this).closest('tr').data('id');
-    });
-
-    // On button click display quick compose message form
-    $('#quick-compose').on('click', function () {
-
-      // Admin Dock Plugin
-      $('.quick-compose-form').dockmodal({
-        minimizedWidth: 260,
-        width: 470,
-        height: 480,
-        title: "@lang('admin.title.compose', 'Yeni Mesaj')",
-        initialState: 'docked',
-        buttons: [{
-          html: "@lang('admin.button.send', 'Gönder')",
-          buttonClass: "btn btn-primary btn-sm",
-          click: function (e, dialog) {
-            // do something when the button is clicked
-            dialog.dockmodal('close');
-            // after dialog closes fire a success notification
-            setTimeout(function () {
-              msgCallback();
-            }, 500);
-          }
-        }]
-      });
-    });
-
-    // example email compose success notification
-    function msgCallback() {
-      (new PNotify({
-        title: 'Message Success!',
-        text: 'Your message has been <b>Sent.</b>',
-        type: 'success',
-        buttons: {
-          closer: false,
-          sticker: false
-        },
-        history: {
-          history: false
-        }
-      }));
-    }
-
-    // Init Summernote
-    $('.summernote-quick').summernote({
-      height: 255, //set editable area's height
-      focus: false, //set focus editable area after Initialize summernote
-      toolbar: [
-        ['style', ['bold', 'italic', 'underline']],
-        ['para', ['ul', 'ol', 'paragraph']],
-        ['height', ['height']]
-      ]
-    });
-
+  // on message table checkbox click, toggle highlighted class
+  msgCheckbox.on('click', function() {
+   $(this).parents('tr').toggleClass('highlight');
   });
-  //]]>
+
+  // on message table row click, redirect page. Unless target was a checkbox
+  msgListing.not(":first-child").on('click', function(e) {
+
+   // stop event bubble if clicked item is not a checkbox
+   e.stopPropagation();
+   e.preventDefault();
+
+   // Redirect to message compose page if clicked item is not a checkbox
+   window.location = "@url($prefix . 'my/inbox/view')/" + $(this).closest('tr').data('id');
+  });
+
+  // On button click display quick compose message form
+  $('#quick-compose').on('click', function() {
+
+   // Admin Dock Plugin
+   $('.quick-compose-form').dockmodal({
+    minimizedWidth: 260,
+    width: 470,
+    height: 480,
+    title: "@lang('admin.title.compose', 'Yeni Mesaj')",
+    initialState: 'docked',
+    buttons: [{
+     html: "@lang('admin.button.send', 'Gönder')",
+     buttonClass: "btn btn-primary btn-sm",
+     click: function(e, dialog) {
+      // do something when the button is clicked
+      dialog.dockmodal('close');
+      // after dialog closes fire a success notification
+      setTimeout(function() {
+       msgCallback();
+      }, 500);
+     }
+    }]
+   });
+  });
+
+  // example email compose success notification
+  function msgCallback() {
+   (new PNotify({
+    title: 'Message Success!',
+    text: 'Your message has been <b>Sent.</b>',
+    type: 'success',
+    buttons: {
+     closer: false,
+     sticker: false
+    },
+    history: {
+     history: false
+    }
+   }));
+  }
+
+  // Init Summernote
+  $('.summernote-quick').summernote({
+   height: 255, //set editable area's height
+   focus: false, //set focus editable area after Initialize summernote
+   toolbar: [
+    ['style', ['bold', 'italic', 'underline']],
+    ['para', ['ul', 'ol', 'paragraph']],
+    ['height', ['height']]
+   ]
+  });
+
+ });
+ //]]>
 </script>
 @stop

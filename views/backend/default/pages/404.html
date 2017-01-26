@@ -4,20 +4,20 @@
 
 @section('content')
 <section id="content" class="pn animated fadeIn">
-  <div class="center-block mt50 mw800">
-    <h1 class="error-title"> 404! </h1>
-    <h2 class="error-subtitle">@lang('admin.menu.404', 'Sayfa Bulunamadı').</h2>
+ <div class="center-block mt50 mw800">
+  <h1 class="error-title"> 404! </h1>
+  <h2 class="error-subtitle">@lang('admin.menu.404', 'Sayfa Bulunamadı').</h2>
+ </div>
+ <div class="mid-section">
+  <div class="mid-content clearfix">
+   <form method="get" action="@url($prefix . 'search')">
+    <input type="text" name="keyword" class="form-control" placeholder="@lang('admin.hint.keyword_to_search', 'Aranacak kelime')">
+   </form>
   </div>
-  <div class="mid-section">
-    <div class="mid-content clearfix">
-      <form method="get" action="@url($prefix . 'search')">
-        <input type="text" name="keyword" class="form-control" placeholder="@lang('admin.hint.keyword_to_search', 'Aranacak kelime')">
-      </form>
-    </div>
-  </div>
-  <a id="return-arrow" href="@url($prefix)">
-    <i class="fa fa-arrow-left fa-3x text-primary"></i>
-    <span>@lang('admin.button.return_home', 'Anasayfaya Dön')</span>
-  </a>
+ </div>
+ <a id="return-arrow" href="@url($prefix)">
+  <i class="fa fa-arrow-left fa-3x text-primary"></i>
+  <span>@lang('admin.button.return_home', 'Anasayfaya Dön')</span>
+ </a>
 </section>
 @stop
