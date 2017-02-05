@@ -16,12 +16,12 @@
  * @return stdClass
  */
 function btn($title, $url, $icon) {
- $nav = new \stdClass();
- $nav->title = $title;
- $nav->url = $url;
- $nav->icon = $icon;
+  $nav = new \stdClass();
+  $nav->title = $title;
+  $nav->url = $url;
+  $nav->icon = $icon;
 
- return $nav;
+  return $nav;
 }
 
 /**
@@ -34,27 +34,27 @@ function btn($title, $url, $icon) {
  * @return array
  */
 function crumb(array &$crumbs, $title, $link = null) {
- if (is_array($title)) {
-  foreach ($title as $crumb) {
-   $crumbs = call_user_func(__FUNCTION__, $crumbs, @$crumb[0], @$crumb[1]);
+  if (is_array($title)) {
+    foreach ($title as $crumb) {
+      $crumbs = call_user_func(__FUNCTION__, $crumbs, @$crumb[0], @$crumb[1]);
+    }
+
+    return $crumbs;
   }
 
+  foreach ($crumbs as $crumb) {
+    $crumb->active = false;
+  }
+
+  $crumb = new \stdClass();
+  $crumb->link = $link;
+  $crumb->url = url($link);
+  $crumb->title = $title;
+  $crumb->active = true;
+
+  $crumbs[] = $crumb;
+
   return $crumbs;
- }
-
- foreach ($crumbs as $crumb) {
-  $crumb->active = false;
- }
-
- $crumb = new \stdClass();
- $crumb->link = $link;
- $crumb->url = url($link);
- $crumb->title = $title;
- $crumb->active = true;
-
- $crumbs[] = $crumb;
-
- return $crumbs;
 }
 
 /**
@@ -67,22 +67,22 @@ function crumb(array &$crumbs, $title, $link = null) {
  * @return array
  */
 function cascade($list, $simple = true, $level = 0) {
- $cascaded = array();
+  $cascaded = array();
 
- foreach ($list as $item) {
-  //Set level
-  $item->level = $level;
+  foreach ($list as $item) {
+    //Set level
+    $item->level = $level;
 
-  $cascaded[$item->url] = ($simple ? $item->title : $item);
+    $cascaded[$item->url] = ($simple ? $item->title : $item);
 
-  if (isset($item->children) && count($item->children)) {
-   $cascaded += call_user_func(__FUNCTION__, $item->children, $simple, ($level + 1));
+    if (isset($item->children) && count($item->children)) {
+      $cascaded += call_user_func(__FUNCTION__, $item->children, $simple, ($level + 1));
 
-   unset($item->children);
+      unset($item->children);
+    }
   }
- }
 
- return $cascaded;
+  return $cascaded;
 }
 
 /**
@@ -96,32 +96,32 @@ function cascade($list, $simple = true, $level = 0) {
  * @return array
  */
 function cascadePageMenu($url, $pages, $parent_id = null, $level = 0) {
- $list = array();
+  $list = array();
 
- foreach ($pages as $page) {
-  $use = false;
+  foreach ($pages as $page) {
+    $use = false;
 
-  if ($parent_id) {
-   if ($page->parent_id == $parent_id) {
-    $use = true;
-   }
-  } elseif ($page->url == $url) {
-   $use = true;
+    if ($parent_id) {
+      if ($page->parent_id == $parent_id) {
+        $use = true;
+      }
+    } elseif ($page->url == $url) {
+      $use = true;
+    }
+
+    if ($use) {
+      //Menu item
+      $menu = new \stdClass();
+      $menu->url = isset($page->full_url) ? $page->full_url : $page->url;
+      $menu->title = $page->title;
+      $menu->level = $level;
+
+      $list[$menu->url] = $menu;
+      $list += call_user_func(__FUNCTION__, $url, $pages, $page->id, ($level + 1));
+    }
   }
 
-  if ($use) {
-   //Menu item
-   $menu = new \stdClass();
-   $menu->url = isset($page->full_url) ? $page->full_url : $page->url;
-   $menu->title = $page->title;
-   $menu->level = $level;
-
-   $list[$menu->url] = $menu;
-   $list += call_user_func(__FUNCTION__, $url, $pages, $page->id, ($level + 1));
-  }
- }
-
- return $list;
+  return $list;
 }
 
 /**
@@ -133,22 +133,22 @@ function cascadePageMenu($url, $pages, $parent_id = null, $level = 0) {
  * @return array
  */
 function makePageMenu($page, $pages) {
- $root = $page;
- $parent_id = $page->parent_id;
+  $root = $page;
+  $parent_id = $page->parent_id;
 
- while ($parent_id) {
-  foreach ($pages as $item) {
-   if ($item->id == $parent_id) {
-    $root = $item;
-    $parent_id = $item->parent_id;
-   }
+  while ($parent_id) {
+    foreach ($pages as $item) {
+      if ($item->id == $parent_id) {
+        $root = $item;
+        $parent_id = $item->parent_id;
+      }
+    }
   }
- }
 
- //Cascade menu list
- $menu = cascadePageMenu($root->url, $pages);
+  //Cascade menu list
+  $menu = cascadePageMenu($root->url, $pages);
 
- return count($menu) > 1 ? $menu : array();
+  return count($menu) > 1 ? $menu : array();
 }
 
 /**
@@ -161,26 +161,26 @@ function makePageMenu($page, $pages) {
  * @return array
  */
 function makePages($pages, $url = '', $level = 0) {
- $list = array();
+  $list = array();
 
- if (!is_null($url)) {
-  $url = (strlen($url) ? $url . '/' : '');
- }
-
- foreach ($pages as $key => $page) {
-  $sub = $page;
-
-  $sub->url = (!is_null($url) ? $url : '') . $page->url;
-  $sub->level = $level;
-
-  $list[$sub->url] = $sub;
-
-  if (isset($page->children) && count($page->children)) {
-   $list += call_user_func(__FUNCTION__, $page->children, (!is_null($url) ? $page->url : null), ($level + 1));
+  if (!is_null($url)) {
+    $url = (strlen($url) ? $url . '/' : '');
   }
- }
 
- return $list;
+  foreach ($pages as $key => $page) {
+    $sub = $page;
+
+    $sub->url = (!is_null($url) ? $url : '') . $page->url;
+    $sub->level = $level;
+
+    $list[$sub->url] = $sub;
+
+    if (isset($page->children) && count($page->children)) {
+      $list += call_user_func(__FUNCTION__, $page->children, (!is_null($url) ? $page->url : null), ($level + 1));
+    }
+  }
+
+  return $list;
 }
 
 /**
@@ -193,54 +193,54 @@ function makePages($pages, $url = '', $level = 0) {
  * @return string
  */
 function makeMenu($menus, $sub = false, $init = true) {
- //Return
- $html = array();
+  //Return
+  $html = array();
 
- if (count($menus) && ($sub || $init)) {
-  $html[] = '<ul class="nav ' . ($sub ? 'sub-nav' : 'sidebar-menu') . '">';
- }
-
- if ($init) {
-  foreach ($menus as $type => $list) {
-   $html[] = '<li class="sidebar-label pt15">' . $type . '</li>';
-
-   $html[] = call_user_func(__FUNCTION__, $list, false, false);
+  if (count($menus) && ($sub || $init)) {
+    $html[] = '<ul class="nav ' . ($sub ? 'sub-nav' : 'sidebar-menu') . '">';
   }
- } else {
-  foreach ($menus as $key => $menu) {
-   $html[] = '<li' . (url_is($menu->link, ($key != 0)) ? ' class="active"' : '') . '>';
 
-   if (count($menu->sub)) {
-    $html[] = '<a class="accordion-toggle' . (url_is($menu->link, true) ? ' menu-open' : '') . '" href="#">';
-    $html[] = '<span class="' . $menu->icon . '"></span>';
-    $html[] = '<span class="sidebar-title">' . e($menu->title) . '</span>';
-    $html[] = '<span class="caret"></span>';
-    $html[] = '</a>';
+  if ($init) {
+    foreach ($menus as $type => $list) {
+      $html[] = '<li class="sidebar-label pt15">' . $type . '</li>';
 
-    $html[] = call_user_func(__FUNCTION__, $menu->sub, true, false);
-   } else {
-    $html[] = '<a href="' . $menu->url . '">';
-    $html[] = '<span class="' . $menu->icon . '"></span>';
-    $html[] = ($sub ? e($menu->title) : '<span class="sidebar-title">' . e($menu->title) . '</span>');
-
-    if (!is_null($menu->badge)) {
-     $html[] = '<span class="sidebar-title-tray">';
-     $html[] = '<span class="label label-xs bg-primary">' . e($menu->badge) . '</span>';
-     $html[] = '</span>';
+      $html[] = call_user_func(__FUNCTION__, $list, false, false);
     }
+  } else {
+    foreach ($menus as $key => $menu) {
+      $html[] = '<li' . (url_is($menu->link, ($key != 0)) ? ' class="active"' : '') . '>';
 
-    $html[] = '</a>';
-   }
+      if (count($menu->sub)) {
+        $html[] = '<a class="accordion-toggle' . (url_is($menu->link, true) ? ' menu-open' : '') . '" href="#">';
+        $html[] = '<span class="' . $menu->icon . '"></span>';
+        $html[] = '<span class="sidebar-title">' . e($menu->title) . '</span>';
+        $html[] = '<span class="caret"></span>';
+        $html[] = '</a>';
 
-   $html[] = '</li>';
+        $html[] = call_user_func(__FUNCTION__, $menu->sub, true, false);
+      } else {
+        $html[] = '<a href="' . $menu->url . '">';
+        $html[] = '<span class="' . $menu->icon . '"></span>';
+        $html[] = ($sub ? e($menu->title) : '<span class="sidebar-title">' . e($menu->title) . '</span>');
+
+        if (!is_null($menu->badge)) {
+          $html[] = '<span class="sidebar-title-tray">';
+          $html[] = '<span class="label label-xs bg-primary">' . e($menu->badge) . '</span>';
+          $html[] = '</span>';
+        }
+
+        $html[] = '</a>';
+      }
+
+      $html[] = '</li>';
+    }
   }
- }
 
- if (count($menus) && ($sub || $init)) {
-  $html[] = '</ul>';
- }
+  if (count($menus) && ($sub || $init)) {
+    $html[] = '</ul>';
+  }
 
- return implode("\n", $html);
+  return implode("\n", $html);
 }
 
 /**
@@ -251,13 +251,13 @@ function makeMenu($menus, $sub = false, $init = true) {
  * @return string
  */
 function urlUp(array $breadcrumb) {
- $total = count($breadcrumb);
+  $total = count($breadcrumb);
 
- if ($total - 2) {
-  return $breadcrumb[$total - 2]->url;
- }
+  if ($total - 2) {
+    return $breadcrumb[$total - 2]->url;
+  }
 
- return url();
+  return url();
 }
 
 /**
@@ -274,24 +274,24 @@ function urlUp(array $breadcrumb) {
  * @return bool|\HTML\DOM
  */
 function htmlFromFile($url, $use_include_path = false, $context = null, $offset = -1, $maxLen = -1, $lowercase = true, $forceTagsClosed = true) {
- // We DO force the tags to be terminated.
- $dom = new \HTML\DOMNode(null, $lowercase, $forceTagsClosed);
+  // We DO force the tags to be terminated.
+  $dom = new \HTML\DOMNode(null, $lowercase, $forceTagsClosed);
 
- // For sourceforge users: uncomment the next line and comment the
- // retrieve_url_contents line 2 lines down if it is not already done.
- $contents = @file_get_contents($url, $use_include_path, $context, $offset);
+  // For sourceforge users: uncomment the next line and comment the
+  // retrieve_url_contents line 2 lines down if it is not already done.
+  $contents = @file_get_contents($url, $use_include_path, $context, $offset);
 
- // Paper - use our own mechanism for getting the contents as we want to
- // control the timeout.
- // $contents = retrieve_url_contents($url);
- if (empty($contents) || strlen($contents) > 600000){
-  return false;
- }
+  // Paper - use our own mechanism for getting the contents as we want to
+  // control the timeout.
+  // $contents = retrieve_url_contents($url);
+  if (empty($contents) || strlen($contents) > 600000) {
+    return false;
+  }
 
- // The second parameter can force the selectors to all be lowercase.
- $dom->load($contents, $lowercase);
+  // The second parameter can force the selectors to all be lowercase.
+  $dom->load($contents, $lowercase);
 
- return $dom;
+  return $dom;
 }
 
 /**
@@ -304,16 +304,17 @@ function htmlFromFile($url, $use_include_path = false, $context = null, $offset 
  * @return bool|\HTML\DOM
  */
 function htmlFromString($str, $lowercase = true, $forceTagsClosed = true) {
- $dom = new \HTML\DOMNode(null, $lowercase, $forceTagsClosed);
+  $dom = new \HTML\DOMNode(null, $lowercase, $forceTagsClosed);
 
- if (empty($str) || strlen($str) > 600000){
-  $dom->clear();
-  return false;
- }
+  if (empty($str) || strlen($str) > 600000) {
+    $dom->clear();
 
- $dom->load($str, $lowercase);
+    return false;
+  }
 
- return $dom;
+  $dom->load($str, $lowercase);
+
+  return $dom;
 }
 
 /**
@@ -322,5 +323,5 @@ function htmlFromString($str, $lowercase = true, $forceTagsClosed = true) {
  * @param \HTML\DOM $node
  */
 function htmlDump($node) {
- $node->dump($node);
+  $node->dump($node);
 }

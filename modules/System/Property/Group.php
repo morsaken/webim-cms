@@ -10,20 +10,20 @@ use \Webim\Library\Controller;
 
 class Group extends Controller {
 
- /**
-  * Constructor
-  */
- public function __construct() {
-  parent::__construct(DB::table('sys_form_group'));
- }
+  /**
+   * Constructor
+   */
+  public function __construct() {
+    parent::__construct(DB::table('sys_form_group'));
+  }
 
- /**
-  * Static creator
-  *
-  * @return self
-  */
- public static function init() {
-  return new self();
- }
+  /**
+   * Static creator
+   *
+   * @return self
+   */
+  public static function init() {
+    return new self();
+  }
 
 }
