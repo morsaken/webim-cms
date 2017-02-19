@@ -86,14 +86,16 @@ class Sign {
         //Auth
         $auth = Auth::current();
 
-        $auth->set('id', $row->id);
-        $auth->set('role', ($root ? 'admin' : $row->role));
-        $auth->set('name', $row->name);
-        $auth->set('email', $row->email);
-        $auth->set('first_name', $row->first_name);
-        $auth->set('last_name', $row->last_name);
-        $auth->set('full_name', trim(implode(' ', array($row->first_name, $row->last_name))));
-        $auth->set('groups', $groups);
+        $auth->set(array(
+          'id' => $row->id,
+          'role' => ($root ? 'admin' : $row->role),
+          'name' => $row->name,
+          'email' => $row->email,
+          'first_name' => $row->first_name,
+          'last_name' => $row->last_name,
+          'full_name' => trim(implode(' ', array($row->first_name, $row->last_name))),
+          'groups' => $groups
+        ));
 
         //Save session
         DB::table('sys_object_session')->insert(array(

@@ -219,7 +219,7 @@ class Settings extends Controller {
       });
     }
 
-    $memberOf = array_filter(array_values(Auth::current()->get('member_of')), function ($value) {
+    $memberOf = array_filter(array_values(Auth::current()->get('groups')), function ($value) {
       return ((int) $value > 0);
     });
 
