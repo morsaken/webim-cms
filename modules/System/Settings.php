@@ -215,18 +215,22 @@ class Settings extends Controller {
     if (Auth::current()->isLoggedIn()) {
       $this->orWhere(function ($q) {
         $q->where('type', 'user');
-        $q->where('owner_id', Auth::current()->get('id'));
+        $q->where('owner_id', me('id'));
       });
     }
 
-    $memberOf = array_filter(array_values(Auth::current()->get('groups')), function ($value) {
-      return ((int) $value > 0);
-    });
+    $group_ids = array();
 
-    if (count($memberOf) > 0) {
-      $this->orWhere(function ($q) use ($memberOf) {
+    foreach (me('groups', array()) as $group) {
+      if ($group->id) {
+        $group_ids[] = $group->id;
+      }
+    }
+
+    if (count($group_ids) > 0) {
+      $this->orWhere(function ($q) use ($group_ids) {
         $q->where('type', 'group');
-        $q->whereIn('owner_id', $memberOf);
+        $q->whereIn('owner_id', $group_ids);
       });
     }
 
