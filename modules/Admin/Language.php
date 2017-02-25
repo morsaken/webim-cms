@@ -26,11 +26,11 @@ class Language {
    * @param \Admin\Manager $manager
    */
   public static function register(Manager $manager) {
-    $manager->addRoute($manager->prefix . '/content/languages(/:alias#[a-z]{2}#)?', __CLASS__ . '::getIndex');
-    $manager->addRoute($manager->prefix . '/content/languages(/:alias#[a-z]{2}#)?', __CLASS__ . '::postIndex', 'POST');
-    $manager->addRoute($manager->prefix . '/content/languages(/:alias#[a-z]{2}#)?', __CLASS__ . '::deleteIndex', 'DELETE');
+    $manager->addRoute($manager->prefix . '/content/languages(/:code#[a-z]{2}#)?', __CLASS__ . '::getIndex');
+    $manager->addRoute($manager->prefix . '/content/languages(/:code#[a-z]{2}#)?', __CLASS__ . '::postIndex', 'POST');
+    $manager->addRoute($manager->prefix . '/content/languages(/:code#[a-z]{2}#)?', __CLASS__ . '::deleteIndex', 'DELETE');
     $manager->addRoute($manager->prefix . '/content/languages/create', __CLASS__ . '::create', 'POST');
-    $manager->addRoute($manager->prefix . '/content/languages/crawl/:alias+', __CLASS__ . '::crawl', 'POST');
+    $manager->addRoute($manager->prefix . '/content/languages/crawl/:code+', __CLASS__ . '::crawl', 'POST');
 
     $parent = $manager->addMenu(lang('admin.menu.system', 'Sistem'), $manager->prefix . '/content', lang('admin.menu.content', 'İçerik'), null, 'fa fa-edit');
     $manager->addMenu(lang('admin.menu.system', 'Sistem'), $manager->prefix . '/content/languages', lang('admin.menu.languages', 'Diller'), $parent, 'fa fa-language');
@@ -42,26 +42,26 @@ class Language {
    * Index
    *
    * @param null|string $lang
-   * @param null|string $alias
+   * @param null|string $code
    *
    * @return string
    */
-  public function getIndex($lang = null, $alias = null) {
+  public function getIndex($lang = null, $code = null) {
     $manager = static::$manager;
 
-    if (is_null($alias) || !Lang::has($alias)) {
-      $alias = lang();
+    if (is_null($code) || !Lang::has($code)) {
+      $code = lang();
     }
 
-    $manager->set('current', $alias);
+    $manager->set('current', $code);
 
-    $main = File::path('language.' . $alias, $alias . EXT);
-    $list = array_get(Lang::getVars(), $alias, array());
+    $main = File::path('language.' . $code, $code . EXT);
+    $list = array_get(Lang::getVars(), $code, array());
     $info = array();
 
     if ($main->exists()) {
       foreach (array_dot($main->load()) as $key => $value) {
-        array_set($info, $alias . '.' . $key, $value);
+        array_set($info, $code . '.' . $key, $value);
         array_forget($list, $key);
       }
 
@@ -88,15 +88,15 @@ class Language {
    * Index savings
    *
    * @param null|string $lang
-   * @param null|string $alias
+   * @param null|string $code
    *
    * @return string
    */
-  public function postIndex($lang = null, $alias = null) {
+  public function postIndex($lang = null, $code = null) {
     $manager = static::$manager;
 
-    if (is_null($alias) || !Lang::has($alias)) {
-      $alias = lang();
+    if (is_null($code) || !Lang::has($code)) {
+      $code = lang();
     }
 
     $manager->app->response->setContentType('json');
@@ -117,7 +117,7 @@ class Language {
     foreach ($strs as $key => $values) {
       $text = '<?php' . "\n" . 'return ' . var_export($values, true) . ';';
 
-      $written += File::path('language.' . $alias, $key . EXT)->create()->write($text);
+      $written += File::path('language.' . $code, $key . EXT)->create()->write($text);
     }
 
     if ($written > 0) {
@@ -132,23 +132,23 @@ class Language {
    * Delete language content
    *
    * @param null|string $lang
-   * @param null|string $alias
+   * @param null|string $code
    *
    * @return string
    */
-  public function deleteIndex($lang = null, $alias = null) {
+  public function deleteIndex($lang = null, $code = null) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
 
-    if (is_null($alias) || !Lang::has($alias)) {
-      $alias = lang();
+    if (is_null($code) || !Lang::has($code)) {
+      $code = lang();
     }
 
     $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
-    if (conf('default.language') !== $alias) {
-      if (File::path('language.' . $alias)->remove()) {
+    if (conf('default.language') !== $code) {
+      if (File::path('language.' . $code)->remove()) {
         $message->success = true;
         $message->text = lang('admin.message.language_deleted', 'Dil silindi...');
       }
@@ -173,31 +173,31 @@ class Language {
 
     $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
-    $alias = str_case(input('language-alias'), 'lower');
+    $code = str_case(input('language-code'), 'lower');
     $abbr = input('language-abbr');
     $name = input('language-name');
 
-    if (strlen($alias) == 2) {
-      if (!Lang::has($alias)) {
+    if (strlen($code) == 2) {
+      if (!Lang::has($code)) {
         $values = array(
           'abbr' => $abbr,
           'name' => $name,
           'charset' => 'utf-8',
           'dir' => 'ltr',
           'order' => (count(langs()) + 1),
-          'locale' => $alias . '_' . str_case($alias),
+          'locale' => $code . '_' . str_case($code),
           'time_zone' => 'Europe/Istanbul'
         );
 
         $text = '<?php' . "\n" . 'return ' . var_export($values, true) . ';';
 
-        $written = File::path('language.' . $alias, $alias . EXT)->create()->write($text);
+        $written = File::path('language.' . $code, $code . EXT)->create()->write($text);
 
         if ($written > 0) {
           $message->success = true;
           $message->text = lang('admin.message.new_language_created', 'Yeni dil oluşturuldu...');
           $message->return = array(
-            'alias' => $alias
+            'code' => $code
           );
         } else {
           $message->text = lang('admin.message.new_language_cannot_created', 'Yeni dil kaydı oluşturulamadı!');
@@ -216,11 +216,11 @@ class Language {
    * Crawling language usages
    *
    * @param null|string $lang
-   * @param string $alias
+   * @param string $code
    *
    * @return string
    */
-  public function crawl($lang = null, $alias) {
+  public function crawl($lang = null, $code) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
@@ -229,7 +229,7 @@ class Language {
     $values = array();
 
     foreach (explode(',', input('paths')) as $path) {
-      $fullPath = (($path == 'modules') ? 'modules' : 'views.' . $path . '.' . conf($path . '.' . $alias . '.template', 'default'));
+      $fullPath = (($path == 'modules') ? 'modules' : 'views.' . $path . '.' . conf($path . '.' . $code . '.template', 'default'));
 
       $values = array_merge_distinct($values, Lang::crawl(File::path($fullPath)));
     }

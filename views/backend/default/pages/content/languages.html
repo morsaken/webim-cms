@@ -8,9 +8,9 @@
  <div class="tray tray-center">
   <div class="page-tabs">
    <ul class="nav nav-tabs">
-    @foreach (langs() as $alias => $lang)
-    <li{{ $current == $alias ? ' class="active"' : '' }}>
-     <a href="@url($prefix . 'content/languages/' . $alias)">{{{ $lang }}}</a>
+    @foreach (langs() as $code => $lang)
+    <li{{ $current == $code ? ' class="active"' : '' }}>
+     <a href="@url($prefix . 'content/languages/' . $code)">{{{ $lang }}}</a>
     </li>
     @endforeach
     <li>

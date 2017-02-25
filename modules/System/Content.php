@@ -112,7 +112,7 @@ class Content extends Controller {
           break;
         case 'language':
 
-          $lang = Language::current()->alias();
+          $lang = lang();
 
           if (is_string($params) && Language::has($params)) {
             $lang = $params;

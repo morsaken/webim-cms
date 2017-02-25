@@ -11,7 +11,6 @@ use \Webim\App;
 use \Webim\Library\Auth;
 use \Webim\Library\Carbon;
 use \Webim\Library\File;
-use \Webim\Library\Language;
 
 App::make(array(
   'mode' => 'development',
@@ -22,7 +21,7 @@ App::make(array(
   Access::write();
 })->with(function () {
   //Get language
-  $lang = Language::current()->alias();
+  $lang = lang();
   $segment = $this->request->segment(1);
 
   if ($this->request->segment(1) === $lang) {

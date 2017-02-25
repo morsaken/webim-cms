@@ -69,19 +69,19 @@
        </div>
        <div class="tab-block mb25">
         <ul class="nav tabs-left">
-         @foreach (langs() as $alias => $lang)
-         <li{{ $alias == lang() ? ' class="active"' : '' }}>
-         <a href="#system-{{ $alias }}-tab" data-toggle="tab">{{{ $lang }}}</a>
+         @foreach (langs() as $code => $lang)
+         <li{{ $code == lang() ? ' class="active"' : '' }}>
+         <a href="#system-{{ $code }}-tab" data-toggle="tab">{{{ $lang }}}</a>
          </li>
          @endforeach
         </ul>
         <div class="tab-content">
-         @foreach (langs() as $alias => $lang)
-         <div id="system-{{ $alias }}-tab" class="tab-pane {{ $alias == lang() ? ' active' : '' }}">
+         @foreach (langs() as $code => $lang)
+         <div id="system-{{ $code }}-tab" class="tab-pane {{ $code == lang() ? ' active' : '' }}">
           <div class="section mb15">
            <h6 class="fw400">@lang('admin.label.offline_message', 'Kapalı Mesajı')</h6>
            <label class="field prepend-icon">
-            <textarea id="system_{{ $alias }}_offline_message" name="system_{{ $alias }}_offline_message" class="gui-textarea" rows="4">{{{ conf('system.' . $alias . '.offline_message') }}}</textarea>
+            <textarea id="system_{{ $code }}_offline_message" name="system_{{ $code }}_offline_message" class="gui-textarea" rows="4">{{{ conf('system.' . $code . '.offline_message') }}}</textarea>
             <span class="field-icon">
              <i class="fa fa-comment"></i>
             </span>
@@ -95,22 +95,22 @@
       <div id="frontend-tab" class="tab-pane fade">
        <div class="tab-block mb25">
         <ul class="nav tabs-left">
-         @foreach (langs() as $alias => $lang)
-         <li{{ $alias == lang() ? ' class="active"' : '' }}>
-          <a href="#frontend-{{ $alias }}-tab" data-toggle="tab">{{{ $lang }}}</a>
+         @foreach (langs() as $code => $lang)
+         <li{{ $code == lang() ? ' class="active"' : '' }}>
+          <a href="#frontend-{{ $code }}-tab" data-toggle="tab">{{{ $lang }}}</a>
          </li>
          @endforeach
         </ul>
         <div class="tab-content">
-         @foreach (langs() as $alias => $lang)
-         <div id="frontend-{{ $alias }}-tab" class="tab-pane {{ $alias == lang() ? ' active' : '' }}">
+         @foreach (langs() as $code => $lang)
+         <div id="frontend-{{ $code }}-tab" class="tab-pane {{ $code == lang() ? ' active' : '' }}">
           <div class="section mb15 row">
            <div class="col-md-6 col-xs-12">
             <h6 class="fw400">@lang('admin.label.template', 'Şablon')</h6>
             <label class="field select">
-             <select id="frontend_{{ $alias }}_template" name="frontend_{{ $alias }}_template" class="empty">
+             <select id="frontend_{{ $code }}_template" name="frontend_{{ $code }}_template" class="empty">
               @foreach ($frontends as $frontend)
-              <option value="{{{ $frontend->name }}}"{{ $frontend->name === conf('frontend.' . $alias . '.template', 'default') ? ' selected="selected"' : '' }}>{{{ $frontend->name }}}</option>
+              <option value="{{{ $frontend->name }}}"{{ $frontend->name === conf('frontend.' . $code . '.template', 'default') ? ' selected="selected"' : '' }}>{{{ $frontend->name }}}</option>
               @endforeach
              </select>
              <i class="arrow double"></i>
@@ -119,7 +119,7 @@
            <div class="col-md-6 col-xs-12">
             <h6 class="fw400">@lang('admin.label.page_title', 'Sayfa Başlığı')</h6>
             <label class="field prepend-icon">
-             <input type="text" id="frontend_{{ $alias }}_title" name="frontend_{{ $alias }}_title" class="gui-input" value="{{{ conf('frontend.' . $alias . '.title', 'Web-IM XI') }}}">
+             <input type="text" id="frontend_{{ $code }}_title" name="frontend_{{ $code }}_title" class="gui-input" value="{{{ conf('frontend.' . $code . '.title', 'Web-IM XI') }}}">
              <span class="field-icon">
               <i class="fa fa-ticket"></i>
              </span>
@@ -129,7 +129,7 @@
           <div class="section mb15">
            <h6 class="fw400">@lang('admin.label.page_description', 'Sayfa Açıklaması')</h6>
            <label class="field prepend-icon">
-            <textarea id="frontend_{{ $alias }}_description" name="frontend_{{ $alias }}_description" class="gui-textarea" rows="4">{{{ conf('frontend.' . $alias . '.description') }}}</textarea>
+            <textarea id="frontend_{{ $code }}_description" name="frontend_{{ $code }}_description" class="gui-textarea" rows="4">{{{ conf('frontend.' . $code . '.description') }}}</textarea>
             <span class="field-icon">
              <i class="fa fa-comment"></i>
             </span>
@@ -138,14 +138,14 @@
           <div class="section mb15">
            <h6 class="fw400">@lang('admin.label.page_keywords', 'Sayfa Arama Etiketleri')</h6>
            <div>
-            <input type="text" id="frontend_{{ $alias }}_keywords" name="frontend_{{ $alias }}_keywords" class="tagsinput" value="{{{ conf('frontend.' . $alias . '.keywords') }}}" data-role="tagsinput">
+            <input type="text" id="frontend_{{ $code }}_keywords" name="frontend_{{ $code }}_keywords" class="tagsinput" value="{{{ conf('frontend.' . $code . '.keywords') }}}" data-role="tagsinput">
            </div>
            <span class="help-block mt10">@lang('admin.hint.type_keyword_and_hit_enter', 'Kelimeyi yazarak "enter" tuşuna basın')</span>
           </div>
           <div class="section">
            <h6 class="fw400">@lang('admin.label.page_copyright', 'Sayfa Altlığı')</h6>
            <label class="field prepend-icon">
-            <input type="text" id="frontend_{{ $alias }}_copyright" name="frontend_{{ $alias }}_copyright" class="gui-input" value="{{{ conf('frontend.' . $alias . '.copyright', '&copy; Powered by Masters') }}}">
+            <input type="text" id="frontend_{{ $code }}_copyright" name="frontend_{{ $code }}_copyright" class="gui-input" value="{{{ conf('frontend.' . $code . '.copyright', '&copy; Powered by Masters') }}}">
             <span class="field-icon">
              <i class="fa fa-copyright"></i>
             </span>
@@ -159,22 +159,22 @@
       <div id="backend-tab" class="tab-pane fade">
        <div class="tab-block mb25">
         <ul class="nav tabs-left">
-         @foreach (langs() as $alias => $lang)
-         <li{{ $alias == lang() ? ' class="active"' : '' }}>
-         <a href="#backend-{{ $alias }}-tab" data-toggle="tab">{{{ $lang }}}</a>
+         @foreach (langs() as $code => $lang)
+         <li{{ $code == lang() ? ' class="active"' : '' }}>
+         <a href="#backend-{{ $code }}-tab" data-toggle="tab">{{{ $lang }}}</a>
          </li>
          @endforeach
         </ul>
         <div class="tab-content">
-         @foreach (langs() as $alias => $lang)
-         <div id="backend-{{ $alias }}-tab" class="tab-pane {{ $alias == lang() ? ' active' : '' }}">
+         @foreach (langs() as $code => $lang)
+         <div id="backend-{{ $code }}-tab" class="tab-pane {{ $code == lang() ? ' active' : '' }}">
           <div class="section mb15 row">
            <div class="col-md-6 col-xs-12">
             <h6 class="fw400">@lang('admin.label.template', 'Şablon')</h6>
             <label class="field select">
-             <select id="backend_{{ $alias }}_template" name="backend_{{ $alias }}_template" class="empty">
+             <select id="backend_{{ $code }}_template" name="backend_{{ $code }}_template" class="empty">
               @foreach ($backends as $backend)
-              <option value="{{{ $backend->name }}}"{{ $backend->name === conf('backend.' . $alias . '.template', 'default') ? ' selected="selected"' : '' }}>{{{ $backend->name }}}</option>
+              <option value="{{{ $backend->name }}}"{{ $backend->name === conf('backend.' . $code . '.template', 'default') ? ' selected="selected"' : '' }}>{{{ $backend->name }}}</option>
               @endforeach
              </select>
              <i class="arrow double"></i>
@@ -183,7 +183,7 @@
            <div class="col-md-6 col-xs-12">
             <h6 class="fw400">@lang('admin.label.page_title', 'Sayfa Başlığı')</h6>
             <label class="field prepend-icon">
-             <input type="text" id="backend_{{ $alias }}_title" name="backend_{{ $alias }}_title" class="gui-input" value="{{{ conf('backend.' . $alias . '.title', 'Web-IM XI') }}}">
+             <input type="text" id="backend_{{ $code }}_title" name="backend_{{ $code }}_title" class="gui-input" value="{{{ conf('backend.' . $code . '.title', 'Web-IM XI') }}}">
              <span class="field-icon">
               <i class="fa fa-ticket"></i>
              </span>
@@ -193,7 +193,7 @@
           <div class="section mb15">
            <h6 class="fw400">@lang('admin.label.page_description', 'Sayfa Açıklaması')</h6>
            <label class="field prepend-icon">
-            <textarea id="backend_{{ $alias }}_description" name="backend_{{ $alias }}_description" class="gui-textarea" rows="4">{{{ conf('backend.' . $alias . '.description') }}}</textarea>
+            <textarea id="backend_{{ $code }}_description" name="backend_{{ $code }}_description" class="gui-textarea" rows="4">{{{ conf('backend.' . $code . '.description') }}}</textarea>
             <span class="field-icon">
              <i class="fa fa-comment"></i>
             </span>
@@ -202,7 +202,7 @@
           <div class="section mb15">
            <h6 class="fw400">@lang('admin.label.page_keywords', 'Sayfa Arama Etiketleri')</h6>
            <div>
-            <input type="text" id="backend_{{ $alias }}_keywords" name="backend_{{ $alias }}_keywords" class="tagsinput" value="{{{ conf('backend.' . $alias . '.keywords') }}}" data-role="tagsinput">
+            <input type="text" id="backend_{{ $code }}_keywords" name="backend_{{ $code }}_keywords" class="tagsinput" value="{{{ conf('backend.' . $code . '.keywords') }}}" data-role="tagsinput">
            </div>
            <span class="help-block mt10">@lang('admin.hint.type_keyword_and_hit_enter', 'Kelimeyi yazarak "enter" tuşuna basın')</span>
           </div>

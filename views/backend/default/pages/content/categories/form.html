@@ -32,8 +32,8 @@
           <h6 class="fw400">@lang('admin.label.language', 'Dil')</h6>
           <label class="field select">
            <select id="language" name="language" class="empty">
-            @foreach (langs() as $alias => $name)
-            <option value="{{ $alias }}"{{ isset($content->language) && $content->language == $alias ? ' selected="selected"' : '' }}>{{{ $name }}}</option>
+            @foreach (langs() as $code => $name)
+            <option value="{{ $code }}"{{ isset($content->language) && $content->language == $code ? ' selected="selected"' : '' }}>{{{ $name }}}</option>
             @endforeach
            </select>
            <i class="arrow double"></i>

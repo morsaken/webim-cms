@@ -191,21 +191,21 @@ class Portfolio {
   $posts = array();
   $langs = array();
 
-  foreach (langs() as $alias => $lang) {
-   if (strlen(input($alias . '-title'))) {
-    $posts[$alias] = array(
-     'id' => input($alias . '-id', 0),
-     'version' => input($alias . '-version', 0),
+  foreach (langs() as $code => $lang) {
+   if (strlen(input($code . '-title'))) {
+    $posts[$code] = array(
+     'id' => input($code . '-id', 0),
+     'version' => input($code . '-version', 0),
      'url' => slug(input('url')),
-     'title' => input($alias . '-title'),
-     'description' => input($alias . '-description'),
-     'content' => raw_input($alias . '-content'),
-     'form_id' => input($alias . '-form_id', 0)
+     'title' => input($code . '-title'),
+     'description' => input($code . '-description'),
+     'content' => raw_input($code . '-content'),
+     'form_id' => input($code . '-form_id', 0)
     );
 
-    $langs[$alias] = array(
-     'id' => input($alias . '-id', 0),
-     'version' => input($alias . '-version', 0)
+    $langs[$code] = array(
+     'id' => input($code . '-id', 0),
+     'version' => input($code . '-version', 0)
     );
    }
   }

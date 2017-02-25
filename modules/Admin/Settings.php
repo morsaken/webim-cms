@@ -81,17 +81,17 @@ class Settings {
       'email.smtp.active' => input('email_smtp_active', array('no', 'yes'))
     );
 
-    foreach (langs() as $alias => $lang) {
-      $settings['system.' . $alias . '.offline_message'] = input('system_' . $alias . '_offline_message');
-      $settings['frontend.' . $alias . '.template'] = input('frontend_' . $alias . '_template', 'default');
-      $settings['frontend.' . $alias . '.title'] = input('frontend_' . $alias . '_title', 'Web-IM XI');
-      $settings['frontend.' . $alias . '.description'] = input('frontend_' . $alias . '_description');
-      $settings['frontend.' . $alias . '.keywords'] = input('frontend_' . $alias . '_keywords');
-      $settings['frontend.' . $alias . '.copyright'] = input('frontend_' . $alias . '_copyright');
-      $settings['backend.' . $alias . '.template'] = input('backend_' . $alias . '_template', 'default');
-      $settings['backend.' . $alias . '.title'] = input('backend_' . $alias . '_title', 'Web-IM XI');
-      $settings['backend.' . $alias . '.description'] = input('backend_' . $alias . '_description');
-      $settings['backend.' . $alias . '.keywords'] = input('backend_' . $alias . '_keywords');
+    foreach (langs() as $code => $lang) {
+      $settings['system.' . $code . '.offline_message'] = input('system_' . $code . '_offline_message');
+      $settings['frontend.' . $code . '.template'] = input('frontend_' . $code . '_template', 'default');
+      $settings['frontend.' . $code . '.title'] = input('frontend_' . $code . '_title', 'Web-IM XI');
+      $settings['frontend.' . $code . '.description'] = input('frontend_' . $code . '_description');
+      $settings['frontend.' . $code . '.keywords'] = input('frontend_' . $code . '_keywords');
+      $settings['frontend.' . $code . '.copyright'] = input('frontend_' . $code . '_copyright');
+      $settings['backend.' . $code . '.template'] = input('backend_' . $code . '_template', 'default');
+      $settings['backend.' . $code . '.title'] = input('backend_' . $code . '_title', 'Web-IM XI');
+      $settings['backend.' . $code . '.description'] = input('backend_' . $code . '_description');
+      $settings['backend.' . $code . '.keywords'] = input('backend_' . $code . '_keywords');
     }
 
     if (input('email_smtp_active', array('no', 'yes')) == 'yes') {

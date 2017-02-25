@@ -248,7 +248,7 @@ class Media extends Content {
             if (@copy($path['url'], $destination->getPath())) {
               $media = parent::init()
                 ->set('type', 'media')
-                ->set('language', Language::current()->alias())
+                ->set('language', lang())
                 ->set('url', $url)
                 ->set('title', $path['title'])
                 ->set('publish_date', Carbon::now())
