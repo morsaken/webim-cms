@@ -26,7 +26,7 @@
     <div class="tab-content pn br-n admin-form">
      <div id="tab-common" class="tab-pane active">
       <div class="section mb15 row">
-       <div class="col-xs-6">
+       <div class="col-sm-6">
         <h6 class="fw400">@lang('admin.label.language', 'Dil')</h6>
         <label class="field select">
          <select id="language" name="language" class="empty">
@@ -37,7 +37,7 @@
          <i class="arrow double"></i>
         </label>
        </div>
-       <div class="col-xs-6">
+       <div class="col-sm-6">
         <h6 class="fw400">@lang('admin.label.parent_page', 'Üst Sayfası')</h6>
         <label class="field select">
          <select id="parent_id" name="parent_id" data-value="{{ $content->parent_id or 0 }}"></select>
@@ -72,12 +72,12 @@
        @include('addon.editor', ['target' => 'meta-content'])
       </div>
       <div class="section mb15 row">
-       <div class="col-xs-6">
+       <div class="col-sm-6">
         <h6 class="fw400">@lang('admin.label.content.tags', 'Anahtar Kelimeler')</h6>
         <input id="tags" name="tags" type="text" value="{{{ $content->tags or '' }}}">
         <span class="help-block mt5">@lang('admin.hint.type_keyword_and_hit_enter', 'Kelimeyi yazarak "enter" tuşuna basın')</span>
        </div>
-       <div class="col-xs-6">
+       <div class="col-sm-6">
         <h6 class="fw400">@lang('admin.label.content.order', 'Sırası')</h6>
         <label class="field select">
          <select id="order" name="order" data-value="{{ $content->order or 0 }}">
@@ -87,13 +87,13 @@
        </div>
       </div>
       <div class="section mb15 row">
-       <div class="col-xs-6">
+       <div class="col-sm-6">
         <h6 class="fw400">@lang('admin.label.publish_date', 'Yayın Tarihi')</h6>
         <label class="field prepend-picker-icon">
          <input type="text" id="publish_date" name="publish_date" class="gui-input" placeholder="@lang('admin.hint.content.publish_date', 'Yayın Başlangıç Tarihi ve Saati')" value="{{{ isset($content->publish_date) ? date_show($content->publish_date, '{day}-{month}-{year} {hour}:{minute}') : now('{day}-{month}-{year} {hour}:{minute}') }}}">
         </label>
        </div>
-       <div class="col-xs-6">
+       <div class="col-sm-6">
         <h6 class="fw400">@lang('admin.label.expire_date', 'Bitiş Tarihi')</h6>
         <label class="field prepend-picker-icon">
          <input type="text" id="expire_date" name="expire_date" class="gui-input" placeholder="@lang('admin.hint.content.expire_date', 'Yayın Bitiş Tarihi ve Saati')" value="{{{ isset($content->expire_date) && strlen($content->expire_date) ? date_show($content->expire_date, '{day}-{month}-{year} {hour}:{minute}') : '' }}}">

@@ -13,9 +13,9 @@
      <li class="active">
       <a href="#tab-common" data-toggle="tab">@lang('admin.label.common', 'Genel')</a>
      </li>
-     @foreach (langs() as $alias => $lang)
+     @foreach (langs() as $code => $lang)
      <li>
-      <a href="#tab-{{ $alias }}" data-toggle="tab">{{{ $lang }}}</a>
+      <a href="#tab-{{ $code }}" data-toggle="tab">{{{ $lang }}}</a>
      </li>
      @endforeach
      <li>
@@ -93,9 +93,9 @@
        </div>
       </div>
      </div>
-     @foreach (langs() as $alias => $lang)
-     <div id="tab-{{ $alias }}" class="tab-pane">
-      @if (!isset($content->children[$alias]->id))
+     @foreach (langs() as $code => $lang)
+     <div id="tab-{{ $code }}" class="tab-pane">
+      @if (!isset($content->children[$code]->id))
       <div class="alert alert-dark alert-dismissable">
        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
        <i class="fa fa-warning pr10"></i>
@@ -103,20 +103,20 @@
        @lang('admin.message.no_title_no_saving_for_this_language', 'Başlık girilmediği durumda bu dil için kayıt yapılmaz!')
       </div>
       @endif
-      <input type="hidden" id="{{ $alias }}-id" name="{{ $alias }}-id" value="{{{ $content->children[$alias]->id or 0 }}}">
-      <input type="hidden" id="{{ $alias }}-version" name="{{ $alias }}-version" value="{{ $content->children[$alias]->version or 0 }}">
-      <input type="hidden" id="{{ $alias }}-meta-content" name="{{ $alias }}-meta-content" value="{{{ $content->children[$alias]->meta->content or '' }}}">
+      <input type="hidden" id="{{ $code }}-id" name="{{ $code }}-id" value="{{{ $content->children[$code]->id or 0 }}}">
+      <input type="hidden" id="{{ $code }}-version" name="{{ $code }}-version" value="{{ $content->children[$code]->version or 0 }}">
+      <input type="hidden" id="{{ $code }}-meta-content" name="{{ $code }}-meta-content" value="{{{ $content->children[$code]->meta->content or '' }}}">
       <div class="section mb15">
        <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
        <label class="field prepend-icon">
-        <input type="text" id="{{ $alias }}-title" name="{{ $alias }}-title" class="gui-input" value="{{{ $content->children[$alias]->title or '' }}}">
+        <input type="text" id="{{ $code }}-title" name="{{ $code }}-title" class="gui-input" value="{{{ $content->children[$code]->title or '' }}}">
         <span class="field-icon">
          <i class="fa fa-tag"></i>
         </span>
        </label>
       </div>
       <div class="section">
-       @include('addon.editor', ['id' => $alias . '-html-content', 'target' => $alias . '-meta-content'])
+       @include('addon.editor', ['id' => $code . '-html-content', 'target' => $code . '-meta-content'])
       </div>
      </div>
      @endforeach
@@ -344,9 +344,9 @@
        $.fn.posterSet(result.return.poster);
       }
 
-      for (var alias in result.return.langs) {
-       $('#' + alias + '-id').val(result.return.langs[alias].id);
-       $('#' + alias + '-version').val(result.return.langs[alias].version);
+      for (var code in result.return.langs) {
+       $('#' + code + '-id').val(result.return.langs[code].id);
+       $('#' + code + '-version').val(result.return.langs[code].version);
       }
      }
 

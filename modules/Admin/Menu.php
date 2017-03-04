@@ -83,12 +83,7 @@ class Menu {
 
     if ($id) {
       //Current order
-      $order = Content::init()->where('id', $id)->load()->get('rows.0.order');
-    }
-
-    if (!$order) {
-      //Calculate new order
-      $order = Content::init()->where('type', 'menu')->where('language', input('language', lang()))->count() + 1;
+      $order = Content::init()->where('type', 'menu')->where('id', $id)->load()->get('rows.0.order');
     }
 
     return Content::init()->validation(array(

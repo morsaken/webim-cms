@@ -57,7 +57,7 @@ class Search {
    * @param null|int $offset
    * @param null|int $limit
    *
-   * @return array
+   * @return \stdClass
    */
   public function get($offset = null, $limit = null) {
     $keyword = $this->keyword;

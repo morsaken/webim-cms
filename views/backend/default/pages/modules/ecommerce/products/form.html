@@ -41,7 +41,7 @@
        </div>
        <div class="col-md-8 pl15">
         <div class="section mb15 row">
-         <div class="col-xs-6">
+         <div class="col-sm-6">
           <h6 class="fw400">@lang('admin.label.language', 'Dil')</h6>
           <label class="field select">
            <select id="language" name="language" class="empty">
@@ -52,7 +52,7 @@
            <i class="arrow double"></i>
           </label>
          </div>
-         <div class="col-xs-6">
+         <div class="col-sm-6">
           <h6 class="fw400">@lang('admin.label.category', 'Kategori')</h6>
           <label class="field select">
            <select id="category" name="category[]" data-value="{{ isset($content->categories) ? implode(',', array_keys($content->categories)) : '' }}" class="select2" multiple size="5"></select>
@@ -60,7 +60,7 @@
          </div>
         </div>
         <div class="section mb15 row">
-         <div class="col-xs-6">
+         <div class="col-sm-6">
           <h6 class="fw400">@lang('ecommerce.label.shop', 'Mağaza')</h6>
           <label class="field select">
            <select id="parent_id" name="parent_id" class="empty">
@@ -72,7 +72,7 @@
            <i class="arrow double"></i>
           </label>
          </div>
-         <div class="col-xs-6">
+         <div class="col-sm-6">
           <h6 class="fw400">@lang('admin.label.brand', 'Marka')</h6>
           <label class="field select">
            <select id="meta-brand_id" name="meta-brand_id" class="select2">
@@ -111,13 +111,13 @@
          </div>
         </div>
         <div class="section mb15 row">
-         <div class="col-xs-6">
+         <div class="col-sm-6">
           <h6 class="fw400">@lang('admin.label.publish_date', 'Yayın Tarihi')</h6>
           <label class="field prepend-picker-icon">
            <input type="text" id="publish_date" name="publish_date" class="gui-input" placeholder="@lang('admin.hint.content.publish_date', 'Yayın Başlangıç Tarihi ve Saati')" value="{{{ isset($content->publish_date) ? date_show($content->publish_date, '{day}-{month}-{year} {hour}:{minute}') : now('{day}-{month}-{year} {hour}:{minute}') }}}">
           </label>
          </div>
-         <div class="col-xs-6">
+         <div class="col-sm-6">
           <h6 class="fw400">@lang('admin.label.expire_date', 'Bitiş Tarihi')</h6>
           <label class="field prepend-picker-icon">
            <input type="text" id="expire_date" name="expire_date" class="gui-input" placeholder="@lang('admin.hint.content.expire_date', 'Yayın Bitiş Tarihi ve Saati')" value="{{{ isset($content->expire_date) && strlen($content->expire_date) ? date_show($content->expire_date, '{day}-{month}-{year} {hour}:{minute}') : '' }}}">
@@ -156,15 +156,6 @@
      <div id="tab-meta" class="tab-pane">
       <div class="section mb15 row">
        <div class="col-xs-6">
-        <h6 class="fw400">@lang('ecommerce.label.price', 'Fiyatı')</h6>
-        <label class="field prepend-icon">
-         <input type="text" id="meta-price" name="meta-price" class="gui-input" placeholder="0.00" value="{{{ $content->meta->price or '' }}}">
-         <span class="field-icon">
-          <i class="fa fa-money"></i>
-         </span>
-        </label>
-       </div>
-       <div class="col-xs-6">
         <h6 class="fw400">@lang('ecommerce.label.currency', 'Para Birimi')</h6>
         <label class="field select">
          <select id="meta-currency" name="meta-currency" class="empty">
@@ -175,9 +166,18 @@
          <i class="arrow double"></i>
         </label>
        </div>
+       <div class="col-xs-6">
+        <h6 class="fw400">@lang('ecommerce.label.price', 'Fiyatı')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="meta-price" name="meta-price" class="gui-input" placeholder="0.00" value="{{{ $content->meta->price or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-money"></i>
+         </span>
+        </label>
+       </div>
       </div>
       <div class="section mb15 row">
-       <div class="col-xs-4">
+       <div class="col-sm-4">
         <h6 class="fw400">@lang('ecommerce.label.tax', 'Vergi Oranı')</h6>
         <label class="field prepend-icon">
          <input type="text" id="meta-tax" name="meta-tax" class="gui-input" placeholder="%" value="{{{ $content->meta->tax or '' }}}">
@@ -186,7 +186,7 @@
          </span>
         </label>
        </div>
-       <div class="col-xs-4">
+       <div class="col-sm-4">
         <h6 class="fw400">@lang('ecommerce.label.discount', 'İndirim')</h6>
         <label class="field prepend-icon">
          <input type="text" id="meta-discount" name="meta-discount" class="gui-input" placeholder="0.00" value="{{{ $content->meta->discount or 0 }}}">
@@ -195,7 +195,7 @@
          </span>
         </label>
        </div>
-       <div class="col-xs-4">
+       <div class="col-sm-4">
         <h6 class="fw400">@lang('ecommerce.label.sell_price', 'Satış Fiyatı')</h6>
         <label class="field prepend-icon">
          <input type="text" id="meta-sell_price" name="meta-sell_price" class="gui-input" placeholder="0.00" value="{{{ $content->meta->sell_price or '' }}}">
@@ -206,17 +206,16 @@
        </div>
       </div>
       <div class="section mb15 row">
-       <div class="col-xs-4">
-        <h6 class="fw400">@lang('ecommerce.label.stock_status', 'Stok Durumu')</h6>
-        <div class="option-group field">
-         <label class="option option-primary">
-          <input type="checkbox" id="meta-stock_status" name="meta-stock_status" value="yes"{{ isset($content->meta->stock_status) && $content->meta->stock_status == 'yes' ? ' checked="checked"' : '' }}>
-          <span class="checkbox"></span>
-          @lang('ecommerce.label.in_stock', 'Stokta')
-         </label>
-        </div>
+       <div class="col-sm-4">
+        <h6 class="fw400">@lang('ecommerce.label.stock_code', 'Stok Kodu')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="meta-stock_code" name="meta-stock_code" class="gui-input" value="{{{ $content->meta->stock_code or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-code"></i>
+         </span>
+        </label>
        </div>
-       <div class="col-xs-8">
+       <div class="col-sm-4">
         <h6 class="fw400">@lang('ecommerce.label.stock_count', 'Stok Adedi')</h6>
         <label class="field prepend-icon">
          <input type="text" id="meta-stock_count" name="meta-stock_count" class="gui-input" value="{{{ $content->meta->stock_count or '' }}}">
@@ -224,6 +223,17 @@
           <i class="fa fa-line-chart"></i>
          </span>
         </label>
+       </div>
+       <div class="col-sm-4">
+        <h6 class="fw400">@lang('ecommerce.label.stock_control', 'Stok Kontrolü')</h6>
+        <div class="option-group field">
+         <label class="option option-primary">
+          <input type="checkbox" id="meta-stock_control" name="meta-stock_control" value="yes"{{ isset($content->meta->stock_control) && $content->meta->stock_control == 'yes' ? ' checked="checked"' : '' }}>
+          <span class="checkbox"></span>
+          @lang('ecommerce.label.active', 'Aktif')
+         </label>
+         <span class="help-block mt5">@lang('admin.hint.stock_control', 'Satışta otomatik azalsın')</span>
+        </div>
        </div>
       </div>
       <div class="section mb15">

@@ -116,7 +116,7 @@ class ContentSettings {
         'zoom' => array_get(input('map_zoom'), $key),
         'marker_lat' => array_get(input('map_marker_lat'), $key),
         'marker_lon' => array_get(input('map_marker_lon'), $key),
-        'marker_content' => array_get(input('map_marker_content'), $key)
+        'marker_content' => array_get(raw_input('map_marker_content'), $key)
       );
     }
 

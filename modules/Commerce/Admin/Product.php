@@ -280,13 +280,14 @@ class Product {
           'summary' => input('meta-summary'),
           'show_summary_inside' => input('meta-show_summary_inside', array('no', 'yes')),
           'content' => raw_input('meta-content'),
-          'price' => input('meta-price', 0.0),
           'currency' => input('meta-currency'),
+          'price' => input('meta-price', 0.0),
           'tax' => input('meta-tax', 0),
           'discount' => input('meta-discount', 0.0),
           'sell_price' => input('meta-sell_price', 0.0),
-          'stock_status' => input('meta-stock_status', array('no', 'yes')),
+          'stock_code' => input('meta-stock_code'),
           'stock_count' => input('meta-stock_count', 0),
+          'stock_control' => input('meta-stock_control', array('no', 'yes')),
           'form_id' => input('meta-form_id', 0)
         ));
 

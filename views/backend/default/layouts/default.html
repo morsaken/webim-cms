@@ -7,7 +7,6 @@
  <meta name="description" content="{{{ $description or '' }}}">
  <meta name="author" content="{{{ AUTHOR }}}">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
  @section('link')
  <link type="image/x-icon" href="{{ $root }}/img/favicon.ico" rel="shortcut icon">
  <link type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&amp;subset=latin,latin-ext" rel="stylesheet">
@@ -22,14 +21,12 @@
  <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
  <![endif]-->
 </head>
-
 <body class="{{ $bodyClass or '' }}">
 <div id="main">
  @if (!isset($clear))
  @include('header')
  @include('side')
  @endif
-
  <section id="content_wrapper">
   @if (!isset($clear))
   @include('shortcuts')
