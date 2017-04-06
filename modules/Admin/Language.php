@@ -173,11 +173,11 @@ class Language {
 
     $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
-    $code = str_case(input('language-code'), 'lower');
+    $code = slug(input('language-code'));
     $abbr = input('language-abbr');
     $name = input('language-name');
 
-    if (strlen($code) == 2) {
+    if (strlen($code) >= 2) {
       if (!Lang::has($code)) {
         $values = array(
           'abbr' => $abbr,
@@ -185,7 +185,7 @@ class Language {
           'charset' => 'utf-8',
           'dir' => 'ltr',
           'order' => (count(langs()) + 1),
-          'locale' => $code . '_' . str_case($code),
+          'locale' => $code . '_' . $code,
           'time_zone' => 'Europe/Istanbul'
         );
 
@@ -206,7 +206,7 @@ class Language {
         $message->text = lang('admin.message.language_already_exists', 'Bu şekilde bir dil kaydı var!');
       }
     } else {
-      $message->text = lang('admin.message.language_alias_must_be_two_characters_long', 'Dil adı iki karakter olmalı!');
+      $message->text = lang('admin.message.language_code_must_be_at_least_two_characters', 'Dil kodu en az iki karakter olmalı!');
     }
 
     return $message->forData();

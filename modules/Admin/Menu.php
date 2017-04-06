@@ -36,6 +36,13 @@ class Menu {
     static::$manager = $manager;
   }
 
+  /**
+   * List
+   *
+   * @param null|string $lang
+   *
+   * @return string
+   */
   public function getIndex($lang = null) {
     $manager = static::$manager;
 
@@ -43,16 +50,18 @@ class Menu {
       btn(lang('admin.menu.add', 'Ekle'), '#add', 'fa-plus')
     ));
 
-    $list = Content::init()
-      ->where('type', 'menu')
-      ->where('language', input('language', $lang))
-      ->only('root')
-      ->orderBy('order')
-      ->load()->with('meta')->with('children', array(
-        'with' => array(
-          'meta'
-        )
-      ))->get('rows');
+    //List
+    $list = array();
+
+    foreach (Content::init()->where('type', 'menu')->where('language', input('language', $lang))->load()->with('meta')->get('rows') as $row) {
+      $list[] = array(
+        'id' => $row->id,
+        'url' => $row->url,
+        'title' => $row->title,
+        'active' => $row->active,
+        'items' => array_get($row, 'meta.items', array())
+      );
+    }
 
     if ($manager->app->request->isAjax()) {
       $manager->app->response->setContentType('json');
@@ -69,6 +78,13 @@ class Menu {
     return View::create('content.menu')->data($manager::data())->render();
   }
 
+  /**
+   * Save
+   * @param null|string $lang
+   * @param null|int $id
+   *
+   * @return string
+   */
   public function postForm($lang = null, $id = null) {
     $manager = static::$manager;
 
@@ -76,14 +92,6 @@ class Menu {
 
     if (is_null($id)) {
       $id = input('id', 0);
-    }
-
-    //Default order
-    $order = null;
-
-    if ($id) {
-      //Current order
-      $order = Content::init()->where('type', 'menu')->where('id', $id)->load()->get('rows.0.order');
     }
 
     return Content::init()->validation(array(
@@ -98,54 +106,24 @@ class Menu {
       ->set('url', input('url'))
       ->set('title', input('title'))
       ->set('publish_date', Carbon::createFromTimestamp(strtotime(input('publish_date'))))
-      ->set('order', $order)
       ->save(function ($id) use ($manager) {
+        //Menu items
+        $items = @json_decode(input('items'));
+
         $this->saveMeta($id, array(
-          'target' => input('target')
+          'items' => $items
         ));
-        $this->saveOrders($id);
       })->forData();
   }
 
-  private function changeParents($menu, $parent_id = null) {
-    $order = 1;
-
-    if (is_array($menu)) {
-      foreach ($menu as $item) {
-        if (isset($item->id)) {
-          $menu = Content::init()->where('id', $item->id)->where('type', 'menu')->load()->get('rows.0');
-
-          if ($menu) {
-            Content::init()->set(array(
-              'id' => $menu->id,
-              'parent_id' => $parent_id,
-              'type' => 'menu',
-              'language' => $menu->language,
-              'url' => $menu->url,
-              'order' => $order++,
-              'version' => $menu->version
-            ))->save();
-          }
-
-          if (isset($item->children)) {
-            $this->changeParents($item->children, $item->id);
-          }
-        }
-      }
-    }
-  }
-
-  public function postOrders($lang = null) {
-    $manager = static::$manager;
-    $manager->app->response->setContentType('json');
-
-    $list = @json_decode(input('list'));
-
-    $this->changeParents($list);
-
-    return Message::result(lang('message.saved', var_export($list)))->forData();
-  }
-
+  /**
+   * Delete
+   *
+   * @param null|string $lang
+   * @param string $ids
+   *
+   * @return string
+   */
   public function deleteForm($lang = null, $ids = '') {
     $manager = static::$manager;
 

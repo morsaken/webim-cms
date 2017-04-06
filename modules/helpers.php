@@ -73,7 +73,11 @@ function cascade($list, $simple = true, $level = 0) {
     //Set level
     $item->level = $level;
 
-    $cascaded[$item->url] = ($simple ? $item->title : $item);
+    //Url
+    $url = isset($item->full_url) ? $item->full_url : $item->url;
+
+    //Set
+    $cascaded[$url] = ($simple ? $item->title : $item);
 
     if (isset($item->children) && count($item->children)) {
       $cascaded += call_user_func(__FUNCTION__, $item->children, $simple, ($level + 1));

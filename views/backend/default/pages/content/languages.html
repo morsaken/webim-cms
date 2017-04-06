@@ -137,7 +137,7 @@
     <div class="modal-body">
      <div class="section mb10">
       <label class="field prepend-icon">
-       <input type="text" id="language-alias" name="language-alias" class="gui-input" placeholder="@lang('admin.label.language_code', 'Dil Kodu')" maxlength="2">
+       <input type="text" id="language-code" name="language-code" class="gui-input" placeholder="@lang('admin.label.language_code', 'Dil Kodu')" maxlength="5">
        <span class="field-icon">
         <i class="fa fa-info"></i>
        </span>
@@ -334,11 +334,11 @@
  $('#new-language-dialog').on('show.bs.modal', function() {
   $('#new-language-form').get(0).reset();
  }).on('shown.bs.modal', function() {
-  $('#language-alias').focus();
+  $('#language-code').focus();
  });
 
  $('#new-language-form').submit(function() {
-  if ($('#language-alias').val().length == 2) {
+  if ($('#language-code').val().length == 2) {
    $.ajax({
     'type': $(this).attr('method'),
     'url': $(this).attr('action'),
@@ -348,7 +348,7 @@
      result.onAfterClose = function() {
       $('#new-language-dialog').modal('hide');
 
-      window.location.href = "@url($prefix . 'content/languages/[alias]')".replace('[alias]', result.return['alias']);
+      window.location.href = "@url($prefix . 'content/languages/[code]')".replace('[code]', result.return['code']);
      }
     }
 
@@ -356,9 +356,9 @@
    });
   } else {
    message({
-    'text': "@lang('admin.message.language_alias_must_be_two_characters_long', 'Dil adı iki karakter olmalı!')",
+    'text': "@lang('admin.message.language_code_must_be_at_least_two_characters', 'Dil kodu en az iki karakter olmalı!')",
     'onAfterClose': function() {
-     $('#language-alias').focus();
+     $('#language-code').focus();
     }
    });
   }

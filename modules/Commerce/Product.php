@@ -27,7 +27,7 @@ class Product {
         return array_map(function (&$row) use ($class) {
           //Stock status
           $stock = new \stdClass();
-          $stock->in = $row->meta->stock_status == 'yes';
+          $stock->in = array_get($row, 'meta.stock_count', 0) > 0;
           $stock->label = $stock->in ? lang('label.in_stock', 'Stokta') : lang('label.not_in_stock', 'Mevcut Değil');
 
           $row->stock = $stock;

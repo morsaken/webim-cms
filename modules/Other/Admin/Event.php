@@ -205,12 +205,17 @@ class Event {
      }
     }
 
+    $date = Carbon::createFromTimestamp(strtotime(input('meta-date')));
+
     $this->saveMeta($id, array(
      'poster_id' => $poster['id'],
      'summary' => input('meta-summary'),
      'show_summary_inside' => input('meta-show_summary_inside', array('no', 'yes')),
      'content' => raw_input('meta-content'),
-     'date' => Carbon::createFromTimestamp(strtotime(input('meta-date'))),
+     'date' => $date,
+     'day' => $date->format('d'),
+     'month' => $date->format('m'),
+     'year' => $date->format('Y'),
      'location' => input('meta-location'),
      'use_map' => input('meta-use_map', array('no', 'yes')),
      'geo_lat' => input('meta-geo_lat', 0.0),

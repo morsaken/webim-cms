@@ -6,6 +6,7 @@
 namespace Admin;
 
 use \HTML\DOMNode;
+use \HTMLParser\Dom;
 use \System\Content;
 use \System\Media as SystemMedia;
 use \System\Settings as SysSettings;
@@ -77,9 +78,9 @@ class Media {
           $content->where('title', 'like', '%' . input('title') . '%');
         }
 
-        if (strlen(input('meta-role'))) {
+        if (strlen(input('role'))) {
           $content->only('meta', array(
-            'role' => input('meta-role')
+            'role' => input('role')
           ));
         }
       })->orderBy('id', 'desc')->load(input('offset', 0), input('limit', 20))->with('files', array(

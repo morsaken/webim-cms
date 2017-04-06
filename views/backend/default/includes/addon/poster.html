@@ -134,11 +134,14 @@
      .addClass('fa-spin fa-spinner')
      .prop('disabled', true);
 
+    var filter = $('#{{ $target or 'poster' }}-filter').val().split(',');
+
     $.ajax({
      'type': $('#{{ $target or 'poster' }}-form').attr('method'),
      'url': $('#{{ $target or 'poster' }}-form').attr('action'),
      'data': {
-      'filter': $('#{{ $target or 'poster' }}-filter').val(),
+      'title': (filter[1] != undefined ? filter[1] : filter[0]),
+      'role': (filter[1] != undefined ? filter[0] : ''),
       'offset': (offset || 0)
      },
      global: false

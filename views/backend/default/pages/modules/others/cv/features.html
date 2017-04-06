@@ -225,13 +225,15 @@
  });
 
  function orders(init) {
+  $('#order').prop('disabled', true);
   $.ajax({
    'url': "@url('#current/orders')",
    'data': {
     'language': $('#language').val(),
     'parent_id': $('#parent_id').val(),
     'id': init ? $('#id').val() : 0
-   }
+   },
+   'global': false
   }).done(function(result) {
    if (result) {
     $('#order').empty();
@@ -250,6 +252,8 @@
      $('#order').val($('#order').children().last().val());
     }
    }
+
+   $('#order').prop('disabled', false);
   });
  }
 

@@ -4,8 +4,8 @@ return array (
   'nothing_done' => 'Herhangi bir işlem yapılmadı!',
   'deleted' => 
   array (
-    'Kayıt silindi...',
-    '%s adet kayıt silindi...',
+    0 => 'Kayıt silindi...',
+    1 => '%s adet kayıt silindi...',
   ),
   'saved' => 'Kaydedildi...',
 );

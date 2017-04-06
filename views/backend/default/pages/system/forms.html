@@ -463,10 +463,10 @@
         }).click(function (e) {
          e.preventDefault();
 
-         $('#list-title').text("@lang('admin.button.fields', 'Alanlar')");
-         $('#list-modal').data('type', 'field').data('id', $(this).data('id')).modal();
-
-         grid('field');
+         grid('field', function() {
+           $('#list-title').text("@lang('admin.button.fields', 'Alanlar')");
+           $('#list-modal').data('type', 'field').data('id', $(this).data('id')).modal();
+         });
         }).addClass('btn btn-primary mr10').append(
          $('<i/>').addClass('fa fa-plus mr5'),
          "@lang('admin.button.fields', 'Alanlar')"
@@ -722,10 +722,10 @@
      }).click(function(e) {
       e.preventDefault();
 
-      $('#list-title').text("@lang('admin.button.groups', 'Gruplar')");
-      $('#list-modal').data('type', 'group').modal();
-
-      grid('group');
+      grid('group', function() {
+        $('#list-title').text("@lang('admin.button.groups', 'Gruplar')");
+        $('#list-modal').data('type', 'group').modal();
+      });
      }).addClass('btn btn-primary mr10').append(
       $('<i/>').addClass('fa fa-plus mr5'),
       "@lang('admin.button.groups', 'Gruplar')"
@@ -814,7 +814,7 @@
   }
  }
 
- function grid(type) {
+ function grid(type, callback) {
   $('#list').empty();
 
   $.ajax({
@@ -919,6 +919,10 @@
     }
    } else {
     setNotFound('list');
+   }
+
+   if (callback) {
+     callback();
    }
   });
  }

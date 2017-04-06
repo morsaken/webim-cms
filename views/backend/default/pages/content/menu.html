@@ -5,8 +5,8 @@
 @section('content')
 @include('topbar')
 <section id="content" class="table-layout">
- <div class="tray tray-center pn va-t posr" data-tray-height="match">
-  <div class="panel m15">
+ <div class="tray tray-center va-t" data-tray-height="match">
+  <div class="panel">
    <div class="panel-menu p12 admin-form theme-primary">
     <div class="row">
      <div class="col-md-3">
@@ -21,11 +21,9 @@
      </div>
     </div>
    </div>
-   <div class="panel-body">
-    <div id="list" class="dd">
-     <div class="alert alert-default w400 mv20 center-block text-center">@lang('admin.label.loading', 'Yükleniyor...')</div>
-    </div>
-   </div>
+  </div>
+  <div id="list">
+   <div class="alert alert-default w400 mv20 center-block text-center">@lang('admin.label.loading', 'Yükleniyor...')</div>
   </div>
  </div>
 </section>
@@ -67,13 +65,14 @@
       </div>
       <div class="col-xs-4">
        <div class="section mb15">
-        <h6 class="fw400">@lang('admin.label.target', 'Hedefi')</h6>
-        <label class="field prepend-icon">
-         <input type="text" id="target" name="target" class="gui-input" maxlength="25">
-         <span class="field-icon">
-          <i class="fa fa-bullseye"></i>
-         </span>
-        </label>
+         <h6 class="fw400">@lang('admin.label.status', 'Durum')</h6>
+         <div class="option-group field">
+           <label class="option option-primary">
+             <input type="checkbox" id="active" name="active" value="true"{{ !isset($content->active) || $content->active == 'true' ? ' checked="checked"' : '' }}>
+             <span class="checkbox"></span>
+             @lang('admin.label.active', 'Aktif')
+           </label>
+         </div>
        </div>
       </div>
      </div>
@@ -106,221 +105,350 @@
  //<![CDATA[
  var language = $('#filter-language').val();
 
- function getList() {
-  $.ajax({
-   'type': 'get',
-   'url': "@url()",
-   'data': {
-    'language': language
-   }
-  }).done(function(result) {
-   $('#list').empty();
+ function getItems(target) {
+   var items = [], item, children;
 
-   if (result.length) {
-    make(result);
-   } else {
-    $('<div/>')
-     .addClass('alert alert-default w400 mv20 center-block text-center')
-     .appendTo('#list').text("@lang('admin.message.no_content_found', 'Kayıt bulunamadı!')");
-   }
-  });
- }
+   $(target).find('> .dd-list > .dd-item').each(function() {
+     item = {
+       'url': $(this).find('input[name="url"]').val(),
+       'title': $(this).find('input[name="title"]').val(),
+       'target': $(this).find('select[name="target"]').val()
+     };
 
- function make(list, target) {
-  var added;
+     children = getItems(this);
 
-  for (var k in list) {
-   added = add(list[k], target);
-
-   if (list[k].children && list[k].children.length) {
-    make(list[k].children, added);
-   }
-  }
- }
-
- function add(menu, target) {
-  if (!target || !target.length) {
-   target = $('#list');
-
-   if (!target.find('> ol').length) {
-    target.empty();
-   }
-  }
-
-  var ol = target.find('> ol');
-
-  if (!ol.length) {
-   ol = $('<ol/>').addClass('dd-list').appendTo(target);
-  }
-
-  var li = $('li[data-id="' + menu.id + '"]');
-
-  if (li.length) {
-   li.find('.dd-handle').text(menu.title);
-   li.find('.dd-url').text(menu.url);
-   li.find('.dd-target').text((menu.meta && menu.meta.target) ? menu.meta.target : '-');
-
-   li.find('a[href="#edit"]').attr({
-    'data-title': menu.title,
-    'data-url': menu.url,
-    'data-target': ((menu.meta && menu.meta.target) ? menu.meta.target : '')
-   });
-  } else {
-   li = $('<li/>', {
-    'data-id': menu.id
-   }).addClass('dd-item dd-primary').append(
-    $('<div/>').addClass('dd-handle').text(menu.title),
-    $('<div/>').addClass('dd-content').append(
-     $('<div/>').addClass('row').append(
-      $('<div/>').addClass('col-xs-8').append(
-       $('<div/>').addClass('p5 mb10 br-a').html('URL: <span class="dd-url">' + menu.url + '</span>')
-      ),
-      $('<div/>').addClass('col-xs-4').append(
-       $('<div/>').addClass('p5 mb10 br-a').html('@lang("admin.label.target", "Hedefi"): <span class="dd-target">' + (menu.meta && menu.meta.target ? menu.meta.target : '-') + '</span>')
-      )
-     ),
-     $('<a/>', {
-      'href': '#edit',
-      'data-id': menu.id,
-      'data-title': menu.title,
-      'data-url': menu.url,
-      'data-target': ((menu.meta && menu.meta.target) ? menu.meta.target : '')
-     }).addClass('btn btn-info btn-sm mr10').click(function (e) {
-      e.preventDefault();
-
-      $('#id').val($(this).attr('data-id'));
-      $('#language').val(language);
-      $('#title').val($(this).attr('data-title'));
-      $('#url').val($(this).attr('data-url'));
-      $('#target').val($(this).attr('data-target'));
-
-      $('#menu-modal').modal();
-
-      window.setTimeout(function () {
-       $('#title').select();
-      }, 200);
-     }).text("@lang('admin.button.edit', 'Düzenle')"),
-     $('<a/>', {
-      'href': '#delete',
-      'data-id': menu.id
-     }).addClass('btn btn-danger btn-sm').popConfirm({
-      title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
-      content: "@lang('admin.message.will_delete_user', 'Kullanıcı ile bağlantılı tüm içerikler silinecektir!')",
-      placement: "top",
-      yesBtn: "@lang('admin.button.yes', 'Evet')",
-      noBtn: "@lang('admin.button.no', 'Hayır')",
-      confirm: function() {
-       $.ajax({
-        type: 'DELETE',
-        url: "@url()/" + $(this).attr('data-id')
-       }).done(function(result) {
-        if (result.success) {
-         getList();
-        } else {
-         new PNotify({
-          title: "@lang('admin.label.error', 'Hata')",
-          text: result.text,
-          type: 'danger'
-         });
-        }
-       });
-      }
-     }).text("@lang('admin.button.delete', 'Sil')")
-    )
-   ).appendTo(ol);
-  }
-
-  return li;
- }
-
- $('#list').nestable().on('change', function(e) {
-  var list = e.length ? e : $(e.target),
-   output = list.data('output');
-
-  if (window.JSON) {
-   $.ajax({
-    'type': 'post',
-    'url': "@url('#current/orders')",
-    'data': 'list=' + JSON.stringify(list.nestable('serialize'))
-   }).done(function(result) {
-    //console.log(result);
-   });
-  } else {
-   message('JSON browser support required');
-  }
- });
-
- $(function() {
-  //Get list
-  getList();
-
-  $('#filter-language').change(function() {
-   window.location.href = "@url()?language=" + $(this).val();
-  });
-
-  $('a[href="#add"]').click(function(e) {
-   e.preventDefault();
-
-   $('#id').val(0);
-   $('#language').val(language);
-   $('#title, #url, #target').val('');
-
-   $('#menu-form').validate().resetForm();
-
-   $('#menu-modal').modal();
-
-   window.setTimeout(function() {
-    $('#title').focus();
-   }, 200);
-  });
-
-  $('#menu-form').validate({
-   'rules': {
-    'title': {
-     'required': true
-    },
-    'url': {
-     'required': true
-    }
-   },
-   'messages': {
-    'title': {
-     'required': "@lang('admin.message.content_title_required', 'İçerik başlığını girin!')"
-    },
-    url : {
-     required : "@lang('admin.message.content_url_required', 'İçerik URL\'yi girin!')"
-    }
-   },
-   'errorPlacement': function (error, element) {
-    error.insertAfter(element.parent());
-   },
-   'submitHandler': function (form) {
-    $.ajax({
-     'type': $(form).attr('method'),
-     'url': $(form).attr('action'),
-     'data': $(form).serialize()
-    }).done(function(result) {
-     if (result.success) {
-      add({
-       'id': result.return.id,
-       'title': $('#title').val(),
-       'url': $('#url').val(),
-       'meta': {
-        'target': $('#target').val()
-       }
-      });
-
-      $('#menu-modal').modal('hide');
-     } else {
-      new PNotify({
-       title: "@lang('admin.label.error', 'Hata')",
-       text: result.text,
-       type: 'danger'
-      });
+     if (children.length) {
+       item['children'] = children;
      }
-    });
+
+     items.push(item);
+   });
+
+   return items;
+ }
+
+ function getList() {
+   var target = $('#list'), panel;
+
+   $.ajax({
+     'type': 'get',
+     'url': "@url()",
+     'data': {
+       'language': language
+     },
+     'global': false
+   }).done(function (result) {
+     target.empty();
+
+     if (result.length) {
+       result.forEach(function (menu) {
+         makeMenu(menu.items, addPanel(menu));
+       });
+     } else {
+       notFound().appendTo(target);
+     }
+   });
+ }
+
+ function notFound() {
+   return $('<div/>')
+     .addClass('alert alert-default w400 mv20 center-block text-center')
+     .text("@lang('admin.message.no_content_found', 'Kayıt bulunamadı!')");
+ }
+
+ function addPanel(menu) {
+   var panel = $('.panel[data-id="'+ menu.id +'"]');
+
+   if (panel.length) {
+     panel.attr('data-url', menu.url);
+     panel.attr('data-active', menu.active);
+     panel.removeClass('panel-primary panel-default').addClass('panel-' + (menu.active ? 'primary' : 'default'));
+     panel.find('.panel-title > .url').text('[' + menu.url + ']');
+     panel.find('.panel-title > .title').text(menu.title);
+
+     return;
    }
-  });
+
+   var target = $('#list').find('> .row');
+
+   if (!target.length) {
+     target = $('<div/>').addClass('row').appendTo('#list');
+   }
+
+   var nestable = $('<div/>').addClass('dd').appendTo(
+     $('<div/>').addClass('panel-body').appendTo(
+       $('<form/>', {
+         'method': 'post',
+         'action': '@url()'
+       }).on('submit', function(e) {
+         e.preventDefault();
+
+         var panel = $(this).closest('.panel');
+
+         $.ajax({
+           'type': $(this).attr('method'),
+           'url': $(this).attr('action'),
+           'data': {
+             'id': panel.attr('data-id'),
+             'url': panel.attr('data-url'),
+             'title': panel.find('.panel-title > .title').text(),
+             'active': panel.attr('data-active'),
+             'items': JSON.stringify(getItems(panel.find('.dd')))
+           }
+         }).done(function (result) {
+           if (result.success) {
+             panel.attr('data-id', result.return.id);
+           }
+
+           new PNotify({
+             title: "@lang('admin.label.result', 'İşlem Sonucu')",
+             text: result.text,
+             type: result.success ? 'success' : 'danger'
+           });
+         });
+       }).append(
+         $('<div/>').addClass('panel-heading').append(
+           $('<span/>').addClass('panel-title').append(
+             $('<span/>').addClass('url mr5').text('[' + menu.url + ']'),
+             $('<span/>').addClass('title').text(menu.title)
+           ),
+           $('<span/>').addClass('panel-controls').append(
+             $('<a/>', {
+               'href': '#',
+               'title': '@lang("admin.button.edit", "Düzenle")'
+             }).on('click', function(e) {
+               e.preventDefault();
+
+               $('#menu-modal').modal();
+
+               var panel = $(this).closest('.panel');
+
+               $('#id').val(panel.attr('data-id'));
+               $('#language').val(language);
+               $('#url').val(panel.attr('data-url'));
+               $('#title').val(panel.find('.panel-title > .title').text());
+               $('#active').prop('checked', panel.attr('data-active'));
+             }).append(
+               $('<i/>').addClass('fa fa-edit')
+             ),
+             $('<a/>', {
+               'href': '#',
+               'title': '@lang("admin.button.add", "Ekle")'
+             }).on('click', function(e) {
+               e.preventDefault();
+
+               addItem({
+                 'title': '@lang("admin.label.unnames", "İsimsiz")'
+               }, $(this).closest('.panel').find('.dd'));
+             }).append(
+               $('<i/>').addClass('fa fa-plus')
+             )
+           )
+         )
+       ).appendTo(
+         $('<div/>', {
+           'data-id': menu.id,
+           'data-url': menu.url,
+           'data-active': menu.active
+         }).addClass('panel panel-' + (menu.active ? 'primary' : 'default') + ' panel-border top mb25').appendTo(
+           $('<div/>').addClass('col-md-6').appendTo(target)
+         )
+       )
+     ).after(
+       $('<div/>').addClass('panel-footer text-right').append(
+         $('<button/>', {
+           'type': 'submit'
+         }).addClass('btn btn-primary mr10').text('@lang("admin.button.save", "Kaydet")'),
+         $('<button/>', {
+           'type': 'button'
+         }).popConfirm({
+           title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+           content: "@lang('admin.message.will_delete_menu', 'Tüm menü silinecektir!')",
+           placement: "top",
+           yesBtn: "@lang('admin.button.yes', 'Evet')",
+           noBtn: "@lang('admin.button.no', 'Hayır')",
+           confirm: function () {
+             var el = $(this).closest('.col-md-6');
+
+             $.ajax({
+               'type': 'delete',
+               'url': $(this).closest('form').attr('action') + '/' + $(this).closest('.panel').attr('data-id')
+             }).done(function(result) {
+               if (result.success) {
+                 window.setTimeout(function () {
+                   el.remove();
+                 }, 100);
+               } else {
+                 new PNotify({
+                   title: "@lang('admin.label.result', 'İşlem Sonucu')",
+                   text: result.text,
+                   type: result.success ? 'success' : 'danger'
+                 });
+               }
+             });
+           }
+         }).addClass('btn btn-danger').text('@lang("admin.button.delete", "Sil")')
+       )
+     )
+   ).append(
+     notFound()
+   );
+
+   nestable.nestable();
+
+   return nestable;
+ }
+
+ function makeMenu(list, target) {
+   var added;
+
+   for (var k in list) {
+     added = addItem(list[k], target);
+
+     if (list[k].children && list[k].children.length) {
+       makeMenu(list[k].children, added);
+     }
+   }
+ }
+
+ function addItem(item, target) {
+   var ol = target.find('> ol');
+
+   if (!ol.length) {
+     ol = $('<ol/>').addClass('dd-list').appendTo(target.empty());
+   }
+
+   return $('<li/>').addClass('dd-item').append(
+     $('<div/>').addClass('dd-handle').text(item.title),
+     $('<div/>').addClass('dd-content').append(
+       $('<div/>').addClass('form-group').append(
+         $('<label/>').text('@lang("admin.label.title", "Başlık")'),
+         $('<input/>', {
+           'type': 'text',
+           'name': 'title',
+           'maxlength': '255'
+         }).on('focus', function() {
+           $(this).select();
+         }).on('keyup', function(e) {
+           $(this).closest('.dd-item').find('.dd-handle').text($(this).val());
+         }).addClass('form-control').val(item.title)
+       ),
+       $('<div/>').addClass('row').append(
+         $('<div/>').addClass('col-xs-8').append(
+           $('<div/>').addClass('form-group').append(
+             $('<label/>').text('URL'),
+             $('<input/>', {
+               'type': 'text',
+               'name': 'url',
+               'maxlength': '255'
+             }).addClass('form-control').val(item.url)
+           )
+         ),
+         $('<div/>').addClass('col-xs-4').append(
+           $('<div/>').addClass('form-group').append(
+             $('<label/>').text('@lang("admin.label.target", "Hedefi")'),
+             $('<select/>', {
+               'name': 'target'
+             }).append(
+               $('<option/>', {
+                 'value': '_self'
+               }).text('_self'),
+               $('<option/>', {
+                 'value': '_blank'
+               }).text('_blank'),
+               $('<option/>', {
+                 'value': '_top'
+               }).text('_top'),
+               $('<option/>', {
+                 'value': '_parent'
+               }).text('_parent')
+             ).addClass('form-control').val(item.target ? item.target : '_self')
+           )
+         )
+       ),
+       $('<a/>', {
+         'href': '#delete'
+       }).addClass('btn btn-danger btn-sm').popConfirm({
+         title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+         content: "@lang('admin.message.will_delete_menu_item', 'Menü elemanı silinecektir!')",
+         placement: "top",
+         yesBtn: "@lang('admin.button.yes', 'Evet')",
+         noBtn: "@lang('admin.button.no', 'Hayır')",
+         confirm: function () {
+           var target = $(this).closest('.dd');
+           var el = $(this).closest('li.dd-item');
+
+           window.setTimeout(function () {
+             el.remove();
+
+             if (!target.find('li.dd-item').length) {
+               target.empty().append(notFound());
+             }
+           }, 100);
+         }
+       }).text("@lang('admin.button.delete', 'Sil')")
+     )
+   ).appendTo(ol);
+ }
+
+ $(function () {
+   //Get list
+   getList();
+
+   $('#filter-language').change(function () {
+     window.location.href = "@url()?language=" + $(this).val();
+   });
+
+   $('#menu-modal').on('show.bs.modal', function() {
+     $('#id').val(0);
+     $('#language').val(language);
+     $('#url, #title').val('');
+     $('#active').prop('checked', true);
+
+     $('#menu-form').validate().resetForm();
+   }).on('shown.bs.modal', function() {
+     window.setTimeout(function () {
+       $('#title').focus();
+     }, 200);
+   });
+
+   $('a[href="#add"]').click(function (e) {
+     e.preventDefault();
+
+     $('#menu-modal').modal();
+   });
+
+   $('#menu-form').validate({
+     'rules': {
+       'title': {
+         'required': true
+       },
+       'url': {
+         'required': true
+       }
+     },
+     'messages': {
+       'title': {
+         'required': "@lang('admin.message.content_title_required', 'İçerik başlığını girin!')"
+       },
+       'url': {
+         required: "@lang('admin.message.content_url_required', 'İçerik URL\'yi girin!')"
+       }
+     },
+     'errorPlacement': function (error, element) {
+       error.insertAfter(element.parent());
+     },
+     'submitHandler': function (form) {
+       addPanel({
+         'id': $('#id').val(),
+         'url': $('#url').val(),
+         'title': $('#title').val(),
+         'active': $('#active').prop('checked')
+       });
+
+       $('#menu-modal').modal('hide');
+     }
+   });
  });
  //]]>
 </script>
