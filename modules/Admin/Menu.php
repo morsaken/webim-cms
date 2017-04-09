@@ -94,16 +94,17 @@ class Menu {
       $id = input('id', 0);
     }
 
+    //Create url
+    $url = Content::makeUrl(input('url'), input('title'));
+
     return Content::init()->validation(array(
-      'url' => 'required',
       'title' => 'required'
     ), array(
-      'url.required' => lang('admin.message.content_url_required', 'İçerik URL\'yi girin!'),
       'title.required' => lang('admin.message.content_title_required', 'İçerik başlığını girin!')
     ))->set('id', $id)
       ->set('type', 'menu')
       ->set('language', input('language', lang()))
-      ->set('url', input('url'))
+      ->set('url', $url)
       ->set('title', input('title'))
       ->set('publish_date', Carbon::createFromTimestamp(strtotime(input('publish_date'))))
       ->save(function ($id) use ($manager) {
