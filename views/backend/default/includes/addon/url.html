@@ -97,12 +97,16 @@
  }
  @endif
 
+ $('#url-dialog').on('show.bs.modal', function() {
+  $('#url-form').validate().resetForm();
+ }).on('shown.bs.modal', function() {
+  $('#new-url').select();
+ });
+
  $('a[href="#edit-url"]').click(function() {
   $('#new-url').val($.fn.clearUrl());
 
-  $('#url-dialog').modal().on('shown.bs.modal', function() {
-   $('#new-url').select();
-  });
+  $('#url-dialog').modal();
 
   return false;
  });
