@@ -172,7 +172,7 @@
    var target = $('#list').find('> .row');
 
    if (!target.length) {
-     target = $('<div/>').addClass('row').appendTo('#list');
+     target = $('<div/>').addClass('row').appendTo($('#list').empty());
    }
 
    var nestable = $('<div/>').addClass('dd').appendTo(
@@ -268,24 +268,40 @@
            yesBtn: "@lang('admin.button.yes', 'Evet')",
            noBtn: "@lang('admin.button.no', 'Hayır')",
            confirm: function () {
+             var target = $('#list');
              var el = $(this).closest('.col-md-6');
+             var id = $(this).closest('.panel').attr('data-id');
 
-             $.ajax({
-               'type': 'delete',
-               'url': $(this).closest('form').attr('action') + '/' + $(this).closest('.panel').attr('data-id')
-             }).done(function(result) {
-               if (result.success) {
-                 window.setTimeout(function () {
-                   el.remove();
-                 }, 100);
-               } else {
-                 new PNotify({
-                   title: "@lang('admin.label.result', 'İşlem Sonucu')",
-                   text: result.text,
-                   type: result.success ? 'success' : 'danger'
-                 });
-               }
-             });
+             if (id) {
+               window.setTimeout(function () {
+                 el.remove();
+
+                 if (!target.find('.col-md-6').length) {
+                   target.empty().append(notFound());
+                 }
+               }, 100);
+             } else {
+               $.ajax({
+                 'type': 'delete',
+                 'url': $(this).closest('form').attr('action') + '/' + id
+               }).done(function(result) {
+                 if (result.success) {
+                   window.setTimeout(function () {
+                     el.remove();
+
+                     if (!target.find('.col-md-6').length) {
+                       target.empty().append(notFound());
+                     }
+                   }, 100);
+                 } else {
+                   new PNotify({
+                     title: "@lang('admin.label.result', 'İşlem Sonucu')",
+                     text: result.text,
+                     type: result.success ? 'success' : 'danger'
+                   });
+                 }
+               });
+             }
            }
          }).addClass('btn btn-danger').text('@lang("admin.button.delete", "Sil")')
        )
