@@ -1111,14 +1111,14 @@ class Content extends Controller {
   }
 
   /**
-   * Form fields with values
+   * Form groups
    *
    * @param array $rows
    * @param array $params
    *
    * @return array
    */
-  protected function formFields($rows, $params = array()) {
+  protected function formGroups($rows, $params = array()) {
     if (in_array(__FUNCTION__, $this->called)) {
       return $rows;
     }
@@ -1126,8 +1126,8 @@ class Content extends Controller {
     //Add called class
     $this->called[] = __FUNCTION__;
 
-    //Form fields
-    $fields = array();
+    //Form groups
+    $groups = array();
 
     $query = DB::table('sys_content_form_value as fv')
       ->join('sys_form_property as fp', 'fp.id', 'fv.property_id')
@@ -1162,7 +1162,59 @@ class Content extends Controller {
       $field->value = array_get($row, 'value');
       $field->text = array_get($row, 'text');
 
-      $fields[array_get($row, 'content_id')][$group->label][$field->name] = $field;
+      $groups[array_get($row, 'content_id')][$group->label][$field->name] = $field;
+    }
+
+    return array_map(function (&$row) use ($groups) {
+      $row->form_groups = (object) array_get($groups, $row->id, array());
+    }, $rows);
+  }
+
+  /**
+   * Form fields with values
+   *
+   * @param array $rows
+   * @param array $params
+   *
+   * @return array
+   */
+  protected function formFields($rows, $params = array()) {
+    if (in_array(__FUNCTION__, $this->called)) {
+      return $rows;
+    }
+
+    //Add called class
+    $this->called[] = __FUNCTION__;
+
+    //Form fields
+    $fields = array();
+
+    $query = DB::table('sys_content_form_value as fv')
+      ->join('sys_form_property as fp', 'fp.id', 'fv.property_id')
+      ->join('sys_form_field as ff', 'ff.id', 'fp.field_id')
+      ->whereIn('fv.content_id', $this->ids())->get(array(
+        'fv.content_id',
+        'ff.id',
+        'ff.name',
+        'ff.label',
+        'fv.value',
+        'fv.text'
+      ));
+
+    foreach ($query as $row) {
+      $field = new \stdClass();
+      $field->id = array_get($row, 'id');
+      $field->name = array_get($row, 'name');
+
+      if (!strlen($field->name)) {
+        $field->name = 'field-' . $field->id;
+      }
+
+      $field->label = array_get($row, 'label');
+      $field->value = array_get($row, 'value');
+      $field->text = array_get($row, 'text');
+
+      $fields[array_get($row, 'content_id')][$field->name] = $field;
     }
 
     return array_map(function (&$row) use ($fields) {

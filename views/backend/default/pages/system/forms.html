@@ -463,9 +463,11 @@
         }).click(function (e) {
          e.preventDefault();
 
+         var id = $(this).data('id');
+
          grid('field', function() {
            $('#list-title').text("@lang('admin.button.fields', 'Alanlar')");
-           $('#list-modal').data('type', 'field').data('id', $(this).data('id')).modal();
+           $('#list-modal').data('type', 'field').data('id', id).modal();
          });
         }).addClass('btn btn-primary mr10').append(
          $('<i/>').addClass('fa fa-plus mr5'),
