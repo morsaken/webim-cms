@@ -124,7 +124,9 @@ class Portfolio {
    ->where('id', $id)
    ->load()
    ->with('children', array(
-    'with' => array('meta', 'formValues')
+    'with' => function() {
+      $this->with('meta')->with('formValues');
+    }
    ))->with('meta')->with('category')->with('media', array(
     'poster' => array(
      'default' => array(

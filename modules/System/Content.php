@@ -442,10 +442,18 @@ class Content extends Controller {
       foreach (self::init()->only(function ($query) use ($parent_ids, $params) {
         $query->whereIn('id', $parent_ids);
 
-        $this->childProcess($query, $params);
-      })->load()->with(function () use ($params) {
-        $this->childProcess($this, $params);
-      })->get('rows') as $parent) {
+        $callback = array_get($params, 'only');
+
+        if ($callback instanceof \Closure) {
+          call_user_func($callback, $query);
+        }
+      })->load()->with(function ($rows) use ($params) {
+        $callback = array_get($params, 'with');
+
+        if ($callback instanceof \Closure) {
+          call_user_func(\Closure::bind($callback, $this), $rows);
+        }
+      })->with('parents', $params)->get('rows') as $parent) {
         foreach ($rows as $row) {
           if ($row->parent_id == $parent->id) {
             $row->parent = $parent;
@@ -476,10 +484,18 @@ class Content extends Controller {
     foreach (self::init()->only(function ($query) use ($params) {
       $query->whereIn('parent_id', $this->ids());
 
-      $this->childProcess($query, $params);
-    })->load()->with('children', $params)->with(function () use ($params) {
-      $this->childProcess($this, $params);
-    })->get('rows') as $child) {
+      $callback = array_get($params, 'only');
+
+      if ($callback instanceof \Closure) {
+        call_user_func($callback, $query);
+      }
+    })->load()->with(function ($rows) use ($params) {
+      $callback = array_get($params, 'with');
+
+      if ($callback instanceof \Closure) {
+        call_user_func(\Closure::bind($callback, $this), $rows);
+      }
+    })->with('children', $params)->get('rows') as $child) {
       foreach ($rows as $row) {
         if (!isset($row->children)) {
           $row->children = array();
@@ -492,49 +508,6 @@ class Content extends Controller {
     }
 
     return $rows;
-  }
-
-  /**
-   * Child process for children action
-   *
-   * @param Content|DB $class
-   * @param array $actions
-   */
-  private function childProcess($class, $actions = array()) {
-    foreach ((array) $actions as $key => $params) {
-      if (is_numeric($key)) {
-        foreach ($params as $method => $options) {
-          if (is_callable(array($class, $method))) {
-            call_user_func_array(array(
-              $class, $method
-            ), (array) $options);
-          }
-        }
-      } elseif (is_callable(array($class, $key))) {
-        $method = $key;
-
-        if (is_array($params)) {
-          foreach ($params as $action => $options) {
-            if (is_numeric($action)) {
-              if (!is_array($options)) {
-                $options = array($options);
-              }
-              call_user_func_array(array(
-                $class, $method
-              ), $options);
-            } else {
-              call_user_func(array(
-                $class, $method
-              ), $action, $options);
-            }
-          }
-        } else {
-          call_user_func(array(
-            $class, $method
-          ), $params);
-        }
-      }
-    }
   }
 
   /**
