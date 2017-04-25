@@ -1145,12 +1145,7 @@ class Content extends Controller {
       ));
 
     foreach ($query as $row) {
-      $group = new \stdClass();
-      $group->id = array_get($row, 'group_id');
-      $group->label = array_get($row, 'group_label');
-
       $field = new \stdClass();
-      $field->group = $group;
       $field->id = array_get($row, 'id');
       $field->name = array_get($row, 'name');
 
@@ -1162,11 +1157,11 @@ class Content extends Controller {
       $field->value = array_get($row, 'value');
       $field->text = array_get($row, 'text');
 
-      $groups[array_get($row, 'content_id')][$group->label][$field->name] = $field;
+      $groups[array_get($row, 'content_id')][array_get($row, 'group_label')][$field->name] = $field;
     }
 
     return array_map(function (&$row) use ($groups) {
-      $row->form_groups = (object) array_get($groups, $row->id, array());
+      $row->form_groups = array_get($groups, $row->id, array());
     }, $rows);
   }
 
@@ -1218,7 +1213,7 @@ class Content extends Controller {
     }
 
     return array_map(function (&$row) use ($fields) {
-      $row->form_fields = (object) array_get($fields, $row->id, array());
+      $row->form_fields = array_get($fields, $row->id, array());
     }, $rows);
   }
 
