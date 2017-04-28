@@ -128,9 +128,18 @@ class Media extends Content {
               }
 
               if (($role == 'image') && ($size = array_get($params, 'image_max_size'))) {
-                list($width, $height) = explode('x', $size);
                 //Current resolution
-                Picture::file($file)->fit($width, $height);
+                $picture = Picture::file($file);
+
+                //New sizes
+                list($width, $height) = explode('x', $size);
+
+                if ($picture->orientation() == 'portrait') {
+                  //Change sizes
+                  list($height, $width) = explode('x', $size);
+                }
+
+                $picture->fit($width, $height);
               }
 
               $meta = array(
