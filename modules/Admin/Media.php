@@ -109,7 +109,8 @@ class Media {
           'description' => array_get($row, 'meta.description'),
           'poster' => null,
           'thumb' => null,
-          'path' => $row->file ? '/' . $row->file->info('source') : null
+          'file' => $row->file instanceof File ? $row->file->src() : null,
+          'path' => $row->file instanceof File ? '/' . $row->file->info('source') : null
         );
 
         if ($row->poster->image instanceof Picture) {
@@ -209,7 +210,8 @@ class Media {
             'title' => $row->title,
             'poster' => $row->poster->image->src(),
             'thumb' => $row->poster->image->size($width, $height)->src(),
-            'file' => $row->file instanceof File ? $row->file->src() : null
+            'file' => $row->file instanceof File ? $row->file->src() : null,
+            'path' => $row->file instanceof File ? '/' . $row->file->info('source') : null
           );
         }
 
