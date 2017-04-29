@@ -108,7 +108,8 @@ class Media {
           'title' => $row->title,
           'description' => array_get($row, 'meta.description'),
           'poster' => null,
-          'thumb' => null
+          'thumb' => null,
+          'path' => $row->file ? '/' . $row->file->info('source') : null
         );
 
         if ($row->poster->image instanceof Picture) {

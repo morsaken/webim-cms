@@ -498,8 +498,13 @@
        $('<div/>').addClass('col-xs-4 va-m prn text-right').append(
         $('<span/>', {
          'data-id': r.id,
+         'data-button': 'info',
+         'data-path': r.path
+        }).addClass('fa fa-info fs12 text-info' + (!r.path ? ' hidden' : '')),
+        $('<span/>', {
+         'data-id': r.id,
          'data-button': 'edit'
-        }).addClass('fa fa-edit fs12 text-info'),
+        }).addClass('fa fa-edit fs12 ml10 text-info'),
         $('<span/>', {
          'data-id': r.id,
          'data-button': 'delete'
@@ -594,6 +599,23 @@
   });
 
   function event() {
+   $('[data-button="info"]').css('cursor', 'pointer').off('click').click(function () {
+     var path = $(this).data('path');
+
+     new PNotify({
+       title: "@lang('message.file_path', 'Dosya Yolu')",
+       text: path,
+       type: 'info',
+       buttons: {
+         closer: true,
+         sticker: false
+       },
+       history: {
+         history: false
+       }
+     });
+   });
+
    $('[data-button="edit"]').css('cursor', 'pointer').off('click').click(function () {
     var $this = $(this);
 
