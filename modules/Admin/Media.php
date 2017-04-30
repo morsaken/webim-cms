@@ -102,7 +102,8 @@ class Media {
       $list['rows'] = array();
 
       foreach ($media->rows as $row) {
-        list($width, $height) = explode('x', conf('media.image_thumbnail_size', '150x150'));
+        //Default size
+        $width = $height = 250;
 
         $item = array(
           'id' => $row->id,
@@ -219,7 +220,8 @@ class Media {
         ))->get('rows') as $row) {
           $orientation = $row->poster->image->orientation();
 
-          list($width, $height) = explode('x', conf('media.image_thumbnail_size', '150x150'));
+          //Default size
+          $width = $height = 250;
 
           if ($orientation == 'portrait') {
             $height *= 1.5;
