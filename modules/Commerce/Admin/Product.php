@@ -168,11 +168,11 @@ class Product {
       ->with('media', array(
         'poster' => array(
           'default' => array(
-            'image' => View::getPath()->folder('layouts.img.poster')->file('image.png'),
-            'file' => View::getPath()->folder('layouts.img.poster')->file('file.png'),
-            'video' => View::getPath()->folder('layouts.img.poster')->file('video.png'),
-            'audio' => View::getPath()->folder('layouts.img.poster')->file('audio.png'),
-            'link' => View::getPath()->folder('layouts.img.poster')->file('link.png')
+            'image' => View::getPath()->folder('layouts.assets.poster')->file('image.png'),
+            'file' => View::getPath()->folder('layouts.assets.poster')->file('file.png'),
+            'video' => View::getPath()->folder('layouts.assets.poster')->file('video.png'),
+            'audio' => View::getPath()->folder('layouts.assets.poster')->file('audio.png'),
+            'link' => View::getPath()->folder('layouts.assets.poster')->file('link.png')
           ),
           'size' => '150x150'
         )
