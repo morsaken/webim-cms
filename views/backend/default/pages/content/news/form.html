@@ -173,24 +173,11 @@
 
 @section('script')
 @parent
-<script type="text/javascript" src="{{ $root }}/js/plugins/jquery/jquery-ui-timepicker.min.js"></script>
 <script type="text/javascript" src="{{ $root }}/js/plugins/tagsinput/tagsinput.min.js"></script>
 <script type="text/javascript">
  //<![CDATA[
  $(function() {
   'use strict';
-
-  // select dropdowns - placeholder like creation
-  var selectList = $('.admin-form select');
-  selectList.each(function(i, e) {
-   $(e).on('change', function() {
-    if ($(e).val() == '0') $(e).addClass('empty');
-    else $(e).removeClass('empty');
-   });
-  });
-  selectList.each(function(i, e) {
-   $(e).change();
-  });
 
   function categories(init) {
    $('#category').empty();

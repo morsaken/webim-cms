@@ -152,18 +152,6 @@
  $(function() {
   'use strict';
 
-  // select dropdowns - placeholder like creation
-  var selectList = $('.admin-form select');
-  selectList.each(function(i, e) {
-   $(e).on('change', function() {
-    if ($(e).val() == '0') $(e).addClass('empty');
-    else $(e).removeClass('empty');
-   });
-  });
-  selectList.each(function(i, e) {
-   $(e).change();
-  });
-
   $('#form').validate({
    // Rules for form validation
    rules : {

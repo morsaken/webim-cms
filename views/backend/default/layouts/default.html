@@ -9,8 +9,8 @@
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  @section('link')
  <link type="image/x-icon" href="{{ $root }}/img/favicon.ico" rel="shortcut icon">
- <link type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&amp;subset=latin,latin-ext" rel="stylesheet">
- <link type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,500,700,300&amp;subset=latin,latin-ext" rel="stylesheet">
+ <link type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&amp;subset=latin,latin-ext" rel="stylesheet">
+ <link type="text/css" href="//fonts.googleapis.com/css?family=Roboto:400,500,700,300&amp;subset=latin,latin-ext" rel="stylesheet">
  <link type="text/css" href="{{ $root }}/js/plugins/select2/css/select2.min.css" rel="stylesheet">
  <link type="text/css" href="{{ $root }}/css/style.css" rel="stylesheet">
  <link type="text/css" href="{{ $root }}/css/forms.css" rel="stylesheet">
@@ -32,6 +32,18 @@
   @include('shortcuts')
   @endif
   @yield('content')
+  <footer id="content-footer">
+   <div class="row">
+    <div class="col-xs-6">
+     <span class="footer-legal">{{{ COPYRIGHT }}}</span>
+    </div>
+    <div class="col-xs-6 text-right">
+     <a href="#content_wrapper" class="footer-return-top">
+      <span class="fa fa-arrow-up"></span>
+     </a>
+    </div>
+   </div>
+  </footer>
  </section>
 </div>
 
@@ -41,10 +53,11 @@
 <script type="text/javascript" src="{{ $root }}/js/plugins/moment/moment.min.js"></script>
 <script type="text/javascript" src="{{ $root }}/js/plugins/moment/moment.timezone.min.js"></script>
 <script type="text/javascript" src="{{ $root }}/js/plugins/moment/livestamp.min.js"></script>
-<script type="text/javascript" src="{{ $root }}/js/plugins/jquery/jquery.blockUI.js"></script>
-<script type="text/javascript" src="{{ $root }}/js/plugins/jquery/jquery.popconfirm.js"></script>
-<script type="text/javascript" src="{{ $root }}/js/plugins/jquery/jquery.validate.min.js"></script>
-<script type="text/javascript" src="{{ $root }}/js/plugins/bootstrap/bs-timeout.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/jquery.blockUI.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/jquery.popconfirm.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/jquery.validate.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/jquery-ui-timepicker.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/bs-timeout.js"></script>
 <script type="text/javascript" src="{{ $root }}/js/plugins/select2/js/select2.full.min.js"></script>
 <script type="text/javascript" src="{{ $root }}/js/plugins/pnotify/pnotify.js"></script>
 <script type="text/javascript" src="{{ $root }}/js/utility.js"></script>

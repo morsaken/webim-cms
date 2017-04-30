@@ -10,6 +10,7 @@ if (version_compare(PHP_VERSION, '5.4', '<')) {
 define('WEBIM', true);
 define('VERSION', '11.0.0');
 define('AUTHOR', 'Orhan POLAT');
+define('COPYRIGHT', '© 2017 Powered By Masters');
 define('DS', DIRECTORY_SEPARATOR);
 define('PUB_ROOT', __DIR__ . DS);
 define('SYS_ROOT', PUB_ROOT . '..' . DS . 'sys' . DS);

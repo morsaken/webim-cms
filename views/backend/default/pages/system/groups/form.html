@@ -112,18 +112,6 @@
  $(function() {
   'use strict';
 
-  // select dropdowns - placeholder like creation
-  var selectList = $('.admin-form select');
-  selectList.each(function(i, e) {
-   $(e).on('change', function() {
-    if ($(e).val() == '0') $(e).addClass('empty');
-    else $(e).removeClass('empty');
-   });
-  });
-  selectList.each(function(i, e) {
-   $(e).change();
-  });
-
   function formatUser(user) {
    if (user.loading) return user.text;
 
@@ -136,7 +124,7 @@
   }
 
   function formatUserSelection(user) {
-   return user.first_name + ' ' + user.last_name;
+   return user.text;
   }
 
   $('#members').select2({

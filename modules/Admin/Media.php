@@ -102,6 +102,8 @@ class Media {
       $list['rows'] = array();
 
       foreach ($media->rows as $row) {
+        list($width, $height) = explode('x', conf('media.image_thumbnail_size', '150x150'));
+
         $item = array(
           'id' => $row->id,
           'role' => $row->role,
@@ -109,13 +111,26 @@ class Media {
           'description' => array_get($row, 'meta.description'),
           'poster' => null,
           'thumb' => null,
+          'width' => $width,
+          'height' => $height,
           'file' => $row->file instanceof File ? $row->file->src() : null,
           'path' => $row->file instanceof File ? '/' . $row->file->info('source') : null
         );
 
         if ($row->poster->image instanceof Picture) {
           $item['poster'] = $row->poster->image->src();
-          $item['thumb'] = $row->poster->image->size(150, 150)->src();
+
+          $orientation = $row->poster->image->orientation();
+
+          if ($orientation == 'portrait') {
+            $height *= 1.5;
+          } elseif ($orientation == 'landscape') {
+            $width *= 1.5;
+          }
+
+          $item['thumb'] = $row->poster->image->size($width, $height)->src();
+          $item['width'] = $width;
+          $item['height'] = $height;
         }
 
         if ($row->role == 'link') {
@@ -202,7 +217,15 @@ class Media {
             )
           )
         ))->get('rows') as $row) {
+          $orientation = $row->poster->image->orientation();
+
           list($width, $height) = explode('x', conf('media.image_thumbnail_size', '150x150'));
+
+          if ($orientation == 'portrait') {
+            $height *= 1.5;
+          } elseif ($orientation == 'landscape') {
+            $width *= 1.5;
+          }
 
           $list[] = array(
             'id' => $row->id,
@@ -210,6 +233,8 @@ class Media {
             'title' => $row->title,
             'poster' => $row->poster->image->src(),
             'thumb' => $row->poster->image->size($width, $height)->src(),
+            'width' => $width,
+            'height' => $height,
             'file' => $row->file instanceof File ? $row->file->src() : null,
             'path' => $row->file instanceof File ? '/' . $row->file->info('source') : null
           );
