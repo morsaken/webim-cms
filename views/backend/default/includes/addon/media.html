@@ -18,7 +18,7 @@
    @foreach ($media as $item)
    <div class="preview" data-id="{{ $item->id }}">
     <a href="#{{ $target or 'media' }}">
-     <img src="{{ $item->poster->image }}" width="150" height="150" alt="{{{ $item->title }}}">
+     <div class="image" style="background-image:url('{{ $item->poster->image }}')"></div>
      <div class="tags">
       <span class="label label-info br0">{{{ $item->title }}}</span>
      </div>
@@ -141,12 +141,7 @@
         $(this).parent().toggleClass('selected');
        }
       }).append(
-       $('<img/>', {
-        'src': r.thumb,
-        'width': 150,
-        'height': 150,
-        'alt': r.title
-       }).data('src', r.poster),
+       $('<div/>').addClass('image').css('background-image', 'url(' + r.thumb.replace(/[(]/, '\\(').replace(/[)]/, '\\)') + ')'),
        $('<div/>').addClass('tags').append(
         $('<span/>').addClass('label label-info br0').text(r.title)
        ),

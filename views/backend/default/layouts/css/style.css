@@ -23533,6 +23533,16 @@ label.error {
   text-decoration: none;
 }
 
+.preview .image {
+  display: block;
+  width: 150px;
+  height: 150px;
+  background-color: #fff;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
 .preview > .sticker {
   display: none;
   position: absolute;

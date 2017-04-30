@@ -109,12 +109,7 @@
        $(this).parent().toggleClass('selected');
       }
      }).append(
-      $('<img/>', {
-       'src': r.thumb,
-       'width': 150,
-       'height': 150,
-       'alt': r.title
-      }).data('src', r.poster),
+      $('<div/>').addClass('image').css('background-image', 'url(' + r.thumb.replace(/[(]/, '\\(').replace(/[)]/, '\\)') + ')'),
       $('<div/>').addClass('tags').append(
        $('<span/>').addClass('label label-info br0').text(r.title)
       ),
