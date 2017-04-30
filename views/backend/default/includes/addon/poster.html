@@ -111,7 +111,9 @@
      }).append(
       $('<div/>').addClass('image').css('background-image', 'url(' + r.thumb.replace(/[(]/, '\\(').replace(/[)]/, '\\)') + ')'),
       $('<div/>').addClass('tags').append(
-       $('<span/>').addClass('label label-info br0').text(r.title)
+       $('<span/>', {
+        'title': r.title
+       }).addClass('label label-info br0').text(r.title)
       ),
       $('<i/>').addClass('fa fa-' + (r.role == 'link' ? 'link' : 'play') + ($.inArray(r.role, ['video', 'audio', 'link']) < 0 ? ' hide' : ''))
      ),

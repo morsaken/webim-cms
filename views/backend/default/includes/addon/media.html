@@ -20,7 +20,7 @@
     <a href="#{{ $target or 'media' }}">
      <div class="image" style="background-image:url('{{ $item->poster->image }}')"></div>
      <div class="tags">
-      <span class="label label-info br0">{{{ $item->title }}}</span>
+      <span class="label label-info br0" title="{{{ $item->title }}}">{{{ $item->title }}}</span>
      </div>
      @if (in_array($item->role, ['video', 'audio', 'link']))
      <i class="fa fa-{{ $item->role == 'link' ? 'link' : 'play' }}"></i>
@@ -143,7 +143,9 @@
       }).append(
        $('<div/>').addClass('image').css('background-image', 'url(' + r.thumb.replace(/[(]/, '\\(').replace(/[)]/, '\\)') + ')'),
        $('<div/>').addClass('tags').append(
-        $('<span/>').addClass('label label-info br0').text(r.title)
+        $('<span/>', {
+         'title': r.title
+        }).addClass('label label-info br0').text(r.title)
        ),
        $('<i/>').addClass('fa fa-' + (r.role == 'link' ? 'link' : 'play') + ($.inArray(r.role, ['video', 'audio', 'link']) < 0 ? ' hide' : ''))
       ),
