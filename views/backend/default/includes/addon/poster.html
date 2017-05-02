@@ -109,7 +109,12 @@
        $(this).parent().toggleClass('selected');
       }
      }).append(
-      $('<div/>').addClass('image').css('background-image', 'url(' + r.thumb.replace(/[(]/, '\\(').replace(/[)]/, '\\)') + ')'),
+      $('<div/>', {
+       'data-src': r.poster
+      }).addClass('image').css('background-image', 'url(' + r.thumb.replace(/[(]/, '\\(').replace(/[)]/, '\\)') + ')'),
+      $('<div/>').addClass('extension' + (r.role == 'link' ? ' hide' : '')).append(
+       $('<span/>').addClass('label label-danger br0').text(r.extension)
+      ),
       $('<div/>').addClass('tags').append(
        $('<span/>', {
         'title': r.title
@@ -272,10 +277,10 @@
    $('#{{ $target or 'poster' }}-add-btn').click(function() {
     var m = $('#{{ $target or 'poster' }}-list').find('.preview.selected').not('.disabled');
 
-    if (m.length > 0) {
+    if (m.length) {
      var p = m.first(), r = {
       'id': p.data('id'),
-      'image': p.find('img').data('src'),
+      'image': p.find('.image').data('src'),
       'role': p.data('role')
      };
 

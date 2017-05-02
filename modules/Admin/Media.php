@@ -109,13 +109,14 @@ class Media {
           'id' => $row->id,
           'role' => $row->role,
           'title' => $row->title,
+          'extension' => ($row->file instanceof File ? $row->file->info('extension') : null),
           'description' => array_get($row, 'meta.description'),
           'poster' => null,
           'thumb' => null,
           'width' => $width,
           'height' => $height,
-          'file' => $row->file instanceof File ? $row->file->src() : null,
-          'path' => $row->file instanceof File ? '/' . $row->file->info('source') : null
+          'file' => ($row->file instanceof File ? $row->file->src() : null),
+          'path' => ($row->file instanceof File ? '/' . $row->file->info('source') : null)
         );
 
         if ($row->poster->image instanceof Picture) {
@@ -233,12 +234,13 @@ class Media {
             'id' => $row->id,
             'role' => $row->role,
             'title' => $row->title,
+            'extension' => ($row->file instanceof File ? $row->file->info('extension') : null),
             'poster' => $row->poster->image->src(),
             'thumb' => $row->poster->image->size($width, $height)->src(),
             'width' => $width,
             'height' => $height,
-            'file' => $row->file instanceof File ? $row->file->src() : null,
-            'path' => $row->file instanceof File ? '/' . $row->file->info('source') : null
+            'file' => ($row->file instanceof File ? $row->file->src() : null),
+            'path' => ($row->file instanceof File ? '/' . $row->file->info('source') : null)
           );
         }
 

@@ -19,6 +19,11 @@
    <div class="preview" data-id="{{ $item->id }}">
     <a href="#{{ $target or 'media' }}">
      <div class="image" style="background-image:url('{{ $item->poster->image }}')"></div>
+     @if ($item->role !== 'link')
+     <div class="extension">
+      <span class="label label-danger br0">{{{ $item->extension }}}</span>
+     </div>
+     @endif
      <div class="tags">
       <span class="label label-info br0" title="{{{ $item->title }}}">{{{ $item->title }}}</span>
      </div>
@@ -142,6 +147,9 @@
        }
       }).append(
        $('<div/>').addClass('image').css('background-image', 'url(' + r.thumb.replace(/[(]/, '\\(').replace(/[)]/, '\\)') + ')'),
+       $('<div/>').addClass('extension' + (r.role == 'link' ? ' hide' : '')).append(
+        $('<span/>').addClass('label label-danger br0').text(r.extension)
+       ),
        $('<div/>').addClass('tags').append(
         $('<span/>', {
          'title': r.title

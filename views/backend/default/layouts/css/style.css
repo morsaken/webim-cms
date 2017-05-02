@@ -23543,6 +23543,12 @@ label.error {
   background-position: 50% 50%;
 }
 
+.preview .extension {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .preview > .sticker {
   display: none;
   position: absolute;
