@@ -14273,7 +14273,7 @@ ol.timeline-list li.timeline-item .timeline-date {
 .table-layout > div,
 .table-layout > aside,
 .table-layout > section {
-  vertical-align: middle;
+  vertical-align: top;
   display: table-cell;
   float: none;
 }
