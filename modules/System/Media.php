@@ -8,7 +8,6 @@ namespace System;
 use \Webim\Image\Picture;
 use \Webim\Library\Carbon;
 use \Webim\Library\File;
-use \Webim\Library\Language;
 use \Webim\Library\Message;
 
 class Media extends Content {
@@ -90,7 +89,7 @@ class Media extends Content {
    * @param array $params
    * @param array $extraMeta
    *
-   * @return Message
+   * @return \Webim\Library\Message
    */
   public function upload(array $file, $role = 'auto', $params = array(), $extraMeta = array()) {
     //Set timeout limit
