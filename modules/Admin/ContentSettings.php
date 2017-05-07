@@ -27,7 +27,10 @@ class ContentSettings {
       $manager->prefix . '/content',
       $manager->prefix . '/content/settings'
     ), __CLASS__ . '::getIndex');
-    $manager->addRoute($manager->prefix . '/content/settings', __CLASS__ . '::postIndex', 'POST');
+    $manager->addRoute(array(
+      $manager->prefix . '/content',
+      $manager->prefix . '/content/settings'
+    ), __CLASS__ . '::postIndex', 'POST');
 
     $parent = $manager->addMenu(lang('admin.menu.system', 'Sistem'), $manager->prefix . '/content', lang('admin.menu.content', 'İçerik'), null, 'fa fa-edit');
     $manager->addMenu(lang('admin.menu.system', 'Sistem'), $manager->prefix . '/content/settings', lang('admin.menu.settings', 'Ayarlar'), $parent, 'fa fa-cog');

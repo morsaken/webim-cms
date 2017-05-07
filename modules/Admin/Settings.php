@@ -29,7 +29,10 @@ class Settings {
       $manager->prefix . '/system',
       $manager->prefix . '/system/settings'
     ), __CLASS__ . '::getIndex');
-    $manager->addRoute($manager->prefix . '/system/settings', __CLASS__ . '::postIndex', 'POST');
+    $manager->addRoute(array(
+      $manager->prefix . '/system',
+      $manager->prefix . '/system/settings'
+    ), __CLASS__ . '::postIndex', 'POST');
 
     $parent = $manager->addMenu(lang('admin.menu.system', 'Sistem'), $manager->prefix . '/system', lang('admin.menu.system', 'Sistem'), null, 'fa fa-cogs');
     $manager->addMenu(lang('admin.menu.system', 'Sistem'), $manager->prefix . '/system/settings', lang('admin.menu.settings', 'Ayarlar'), $parent, 'fa fa-cog');
