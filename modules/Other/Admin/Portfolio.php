@@ -113,7 +113,7 @@ class Portfolio {
   $actionTitle = lang('admin.label.create_new', 'Yeni Oluştur');
 
   $orders = array(
-   1 => lang('admin.label.content.at_the_beginning', 'En Başta')
+   1 => lang('admin.label.at_the_beginning', 'En Başta')
   );
 
   foreach (Content::init()->where('type', 'portfolio-group')->where('id', '<>', $id)->orderBy('order')->load()->get('rows') as $row) {

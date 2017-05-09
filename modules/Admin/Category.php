@@ -226,13 +226,13 @@ class Category {
 
     $orders[] = array(
       'id' => $order,
-      'title' => lang('admin.label.content.at_the_beginning', 'En Başta')
+      'title' => lang('admin.label.at_the_beginning', 'En Başta')
     );
 
     foreach (Content::orderList('category', input('language', $lang), input('parent_id', 0), input('id', 0)) as $title) {
       $orders[] = array(
         'id' => ++$order,
-        'title' => lang('admin.label.content.after', [$title], '%s sonuna')
+        'title' => lang('admin.label.after', [$title], '%s sonuna')
       );
     }
 
