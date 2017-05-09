@@ -249,7 +249,8 @@ class News {
           'show_summary_inside' => input('meta-show_summary_inside', array('no', 'yes')),
           'content' => raw_input('meta-content'),
           'source' => input('meta-source'),
-          'author' => input('meta-author')
+          'author' => input('meta-author'),
+          'options' => raw_input('meta-options')
         ));
 
         $this->saveMedia($id, input('media_id'));

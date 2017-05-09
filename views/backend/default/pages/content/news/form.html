@@ -123,28 +123,38 @@
       @include('addon.media', ['media' => isset($content->media) ? $content->media : []])
      </div>
      <div id="tab-meta" class="tab-pane">
-      <div class="section mb15">
-       <h6 class="fw400">@lang('admin.label.source', 'Kaynak')</h6>
-       <label class="field prepend-icon">
-        <input type="text" id="meta-source" name="meta-source" class="gui-input" placeholder="@lang('admin.hint.source', 'Haber Kaynağı')" value="{{{ $content->meta->source or '' }}}">
-        <span class="field-icon">
+      <div class="row">
+       <div class="col-md-7">
+        <div class="section mb15">
+         <h6 class="fw400">@lang('admin.label.source', 'Kaynak')</h6>
+         <label class="field prepend-icon">
+          <input type="text" id="meta-source" name="meta-source" class="gui-input" placeholder="@lang('admin.hint.source', 'Haber Kaynağı')" value="{{{ $content->meta->source or '' }}}">
+          <span class="field-icon">
          <i class="fa fa-info"></i>
         </span>
-       </label>
-      </div>
-      <div class="section mb15">
-       <h6 class="fw400">@lang('admin.label.author', 'Yazar')</h6>
-       <label class="field prepend-icon">
-        <input type="text" id="meta-author" name="meta-author" class="gui-input" placeholder="@lang('admin.hint.author', 'Haber Yazarı')" value="{{{ $content->meta->author or '' }}}">
-        <span class="field-icon">
+         </label>
+        </div>
+        <div class="section mb15">
+         <h6 class="fw400">@lang('admin.label.author', 'Yazar')</h6>
+         <label class="field prepend-icon">
+          <input type="text" id="meta-author" name="meta-author" class="gui-input" placeholder="@lang('admin.hint.author', 'Haber Yazarı')" value="{{{ $content->meta->author or '' }}}">
+          <span class="field-icon">
          <i class="fa fa-info"></i>
         </span>
-       </label>
-      </div>
-      <div class="section mb15">
-       <h6 class="fw400">@lang('admin.label.tags', 'Anahtar Kelimeler')</h6>
-       <input id="tags" name="tags" type="text" value="{{{ $content->tags or '' }}}">
-       <span class="help-block mt5">@lang('admin.hint.type_keyword_and_hit_enter', 'Kelimeyi yazarak "enter" tuşuna basın')</span>
+         </label>
+        </div>
+        <div class="section mb15">
+         <h6 class="fw400">@lang('admin.label.tags', 'Anahtar Kelimeler')</h6>
+         <input id="tags" name="tags" type="text" value="{{{ $content->tags or '' }}}">
+         <span class="help-block mt5">@lang('admin.hint.type_keyword_and_hit_enter', 'Kelimeyi yazarak "enter" tuşuna basın')</span>
+        </div>
+       </div>
+       <div class="col-md-5">
+        <div class="section mb15">
+         <h6 class="fw400">@lang('admin.label.extra_options', 'Ekstra Opsiyonlar')</h6>
+         <textarea id="meta-options" name="meta-options">{{{ $content->meta->options or '' }}}</textarea>
+        </div>
+       </div>
       </div>
      </div>
     </div>
@@ -171,13 +181,37 @@
 </section>
 @stop
 
+@section('link')
+@parent
+<link type="text/css" href="{{ $root }}/js/plugins/codemirror/lib/codemirror.css" rel="stylesheet">
+<link type="text/css" href="{{ $root }}/js/plugins/codemirror/theme/neat.css" rel="stylesheet">
+@stop
+
 @section('script')
 @parent
 <script type="text/javascript" src="{{ $root }}/js/plugins/tagsinput/tagsinput.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/codemirror/lib/codemirror.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/codemirror/mode/javascript/javascript.js"></script>
 <script type="text/javascript">
  //<![CDATA[
  $(function() {
   'use strict';
+
+  var optionsEditor = CodeMirror.fromTextArea($('#meta-options').get(0), {
+   lineNumbers: true,
+   matchBrackets: true,
+   styleActiveLine: true,
+   theme: 'neat',
+   mode: 'javascript'
+  });
+
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+   var target = $(e.target).attr('href');
+
+   if (target == '#tab-meta') {
+    optionsEditor.refresh();
+   }
+  });
 
   function categories(init) {
    $('#category').empty();
