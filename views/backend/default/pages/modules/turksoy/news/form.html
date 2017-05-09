@@ -59,7 +59,7 @@
          </div>
         </div>
         <div class="section mb15">
-         <h6 class="fw400">@lang('admin.label.content.source', 'Kaynak')</h6>
+         <h6 class="fw400">@lang('admin.label.source', 'Kaynak')</h6>
          <label for="meta-source" class="field prepend-icon">
           <input type="text" id="meta-source" name="meta-source" class="gui-input" placeholder="@lang('admin.hint.content.source', 'Haber Kaynağı')" value="{{{ $content->meta->source or '' }}}">
           <span class="field-icon">
@@ -68,7 +68,7 @@
          </label>
         </div>
         <div class="section mb15">
-         <h6 class="fw400">@lang('admin.label.content.author', 'Yazar')</h6>
+         <h6 class="fw400">@lang('admin.label.author', 'Yazar')</h6>
          <label for="meta-author" class="field prepend-icon">
           <input type="text" id="meta-author" name="meta-author" class="gui-input" placeholder="@lang('admin.hint.content.author', 'Haber Yazarı')" value="{{{ $content->meta->author or '' }}}">
           <span class="field-icon">
@@ -129,7 +129,7 @@
        @include('addon.editor', ['id' => $code . '-html-content', 'target' => $code . '-meta-content'])
       </div>
       <div class="section mb15">
-       <h6 class="fw400">@lang('admin.label.content.tags', 'Anahtar Kelimeler')</h6>
+       <h6 class="fw400">@lang('admin.label.tags', 'Anahtar Kelimeler')</h6>
        <input id="{{ $code }}-tags" name="{{ $code }}-tags" type="text" value="{{{ $content->children[$code]->tags or '' }}}">
       </div>
      </div>
