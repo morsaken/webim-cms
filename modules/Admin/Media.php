@@ -6,7 +6,6 @@
 namespace Admin;
 
 use \HTML\DOMNode;
-use \HTMLParser\Dom;
 use \System\Content;
 use \System\Media as SystemMedia;
 use \System\Settings as SysSettings;
@@ -48,11 +47,11 @@ class Media {
   /**
    * Index
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return string
    */
-  public function getIndex($lang = null) {
+  public function getIndex($params = array()) {
     $manager = static::$manager;
 
     if ($manager->app->request->isAjax()) {
@@ -167,11 +166,11 @@ class Media {
   /**
    * Upload
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return mixed
    */
-  public function postUpload($lang = null) {
+  public function postUpload($params = array()) {
     $manager = static::$manager;
 
     //Set execution time to unlimited
@@ -260,11 +259,11 @@ class Media {
   /**
    * Link
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return array|\Webim\Library\Message
    */
-  public function postLink($lang = null) {
+  public function postLink($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
@@ -389,10 +388,12 @@ class Media {
     return Message::result(lang('media.message.paste_link_first', 'Önce bağlantıyı yapıştırın!'))->forData();
   }
 
-  public function save($lang = null, $id) {
+  public function save($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
+
+    $id = array_get($params, 'id');
 
     $save = Content::init()->set(array(
       'id' => $id,
@@ -406,12 +407,12 @@ class Media {
     return $save->forData();
   }
 
-  public function delete($lang = null, $ids) {
+  public function delete($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
 
-    $ids = array_filter(explode(',', $ids), function ($id) {
+    $ids = array_filter(explode(',', array_get($params, 'id')), function ($id) {
       return (int) $id > 0;
     });
 
@@ -448,7 +449,7 @@ class Media {
     return $message->forData();
   }
 
-  public function getSettings($lang = null) {
+  public function getSettings($params = array()) {
     $manager = static::$manager;
 
     $manager->set('caption', lang('admin.menu.settings', 'Ayarlar'));
@@ -459,7 +460,7 @@ class Media {
     return View::create('content.media.settings')->data($manager::data())->render();
   }
 
-  public function postSettings($lang = null) {
+  public function postSettings($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');

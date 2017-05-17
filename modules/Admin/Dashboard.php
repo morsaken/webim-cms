@@ -42,11 +42,11 @@ class Dashboard {
   /**
    * Get
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return string
    */
-  public function getIndex($lang = null) {
+  public function getIndex($params = array()) {
     $manager = static::$manager;
 
     $manager->put(array(

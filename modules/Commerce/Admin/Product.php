@@ -47,11 +47,11 @@ class Product {
   /**
    * Index
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return string
    */
-  public function getIndex($lang = null) {
+  public function getIndex($params = array()) {
     $manager = static::$manager;
 
     $nav = new \stdClass();
@@ -125,13 +125,14 @@ class Product {
   /**
    * Get form
    *
-   * @param null|string $lang
-   * @param int $id
+   * @param array $params
    *
    * @return string
    */
-  public function getForm($lang = null, $id = 0) {
+  public function getForm($params = array()) {
     $manager = static::$manager;
+
+    $lang = array_get($params, 'lang');
 
     $manager->put('shops', Content::init()
       ->where('type', 'shop')
@@ -156,6 +157,7 @@ class Product {
         ->getList('label')
     );
 
+    $id = array_get($params, 'id', 0);
     $action = 'new';
     $actionTitle = lang('admin.label.create_new', 'Yeni Oluştur');
 
@@ -210,15 +212,16 @@ class Product {
   /**
    * Post form
    *
-   * @param null|string $lang
-   * @param null|int $id
+   * @param array $params
    *
    * @return string
    */
-  public function postForm($lang = null, $id = null) {
+  public function postForm($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
+
+    $id = array_get($params, 'id');
 
     //Product url
     $url = implode('/', array_map(function ($part) {
@@ -339,17 +342,16 @@ class Product {
   /**
    * Delete form
    *
-   * @param null|string $lang
-   * @param string $ids
+   * @param array $params
    *
    * @return string
    */
-  public function deleteForm($lang = null, $ids = '') {
+  public function deleteForm($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
 
-    $ids = array_filter(explode(',', $ids), function ($id) {
+    $ids = array_filter(explode(',', array_get($params, 'id', '')), function ($id) {
       return (int) $id > 0;
     });
 
@@ -363,14 +365,16 @@ class Product {
   /**
    * Category list by language
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return string
    */
-  public function categories($lang = null) {
+  public function categories($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
+
+    $lang = array_get($params, 'lang');
 
     $categories = array();
 
@@ -392,15 +396,16 @@ class Product {
   /**
    * Rename
    *
-   * @param null|string $lang
-   * @param int $id
+   * @param array $params
    *
    * @return string
    */
-  public function renameURL($lang = null, $id) {
+  public function renameURL($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
+
+    $id = array_get($params, 'id');
 
     if (strlen(input('url'))) {
       //New url
@@ -424,11 +429,11 @@ class Product {
   /**
    * Duplicate record by language
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return string
    */
-  public function duplicate($lang = null) {
+  public function duplicate($params = array()) {
     $manager = static::$manager;
     $manager->app->response->setContentType('json');
 

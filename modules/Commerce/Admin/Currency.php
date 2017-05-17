@@ -174,11 +174,11 @@ class Currency {
   /**
    * Index
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return string
    */
-  public function getIndex($lang = null) {
+  public function getIndex($params = array()) {
     $manager = static::$manager;
 
     $manager->set('caption', lang('admin.menu.currencies', 'Para Birimleri'));
@@ -193,11 +193,11 @@ class Currency {
   /**
    * Post form
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return string
    */
-  public function postForm($lang = null) {
+  public function postForm($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
@@ -216,15 +216,16 @@ class Currency {
   /**
    * Delete form
    *
-   * @param null|string $lang
-   * @param string $currency
+   * @param array $params
    *
    * @return string
    */
-  public function deleteForm($lang = null, $currency) {
+  public function deleteForm($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
+
+    $currency = array_get($params, 'currency');
 
     if (strlen($currency) && isset(static::$list[$currency])) {
       return SysSettings::init()->remove('system', 'currency.' . $currency)->forData();

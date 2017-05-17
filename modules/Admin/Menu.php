@@ -39,16 +39,18 @@ class Menu {
   /**
    * List
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return string
    */
-  public function getIndex($lang = null) {
+  public function getIndex($params = array()) {
     $manager = static::$manager;
 
     $manager->put('subnavs', array(
       btn(lang('admin.menu.add', 'Ekle'), '#add', 'fa-plus')
     ));
+
+    $lang = array_get($params, 'lang');
 
     //List
     $list = array();
@@ -80,19 +82,17 @@ class Menu {
 
   /**
    * Save
-   * @param null|string $lang
-   * @param null|int $id
+   *
+   * @param array $params
    *
    * @return string
    */
-  public function postForm($lang = null, $id = null) {
+  public function postForm($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
 
-    if (is_null($id)) {
-      $id = input('id', 0);
-    }
+    $id = array_get($params, 'id', input('id', 0));
 
     //Create url
     $url = Content::makeUrl(input('url'), input('title'));
@@ -120,17 +120,16 @@ class Menu {
   /**
    * Delete
    *
-   * @param null|string $lang
-   * @param string $ids
+   * @param array $params
    *
    * @return string
    */
-  public function deleteForm($lang = null, $ids = '') {
+  public function deleteForm($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
 
-    $ids = array_filter(explode(',', $ids), function ($id) {
+    $ids = array_filter(explode(',', array_get($params, 'id', '')), function ($id) {
       return (int) $id > 0;
     });
 

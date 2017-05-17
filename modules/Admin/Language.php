@@ -41,13 +41,14 @@ class Language {
   /**
    * Index
    *
-   * @param null|string $lang
-   * @param null|string $code
+   * @param array $params
    *
    * @return string
    */
-  public function getIndex($lang = null, $code = null) {
+  public function getIndex($params = array()) {
     $manager = static::$manager;
+
+    $code = array_get($params, 'code');
 
     if (is_null($code) || !Lang::has($code)) {
       $code = lang();
@@ -87,13 +88,14 @@ class Language {
   /**
    * Index savings
    *
-   * @param null|string $lang
-   * @param null|string $code
+   * @param array $params
    *
    * @return string
    */
-  public function postIndex($lang = null, $code = null) {
+  public function postIndex($params = array()) {
     $manager = static::$manager;
+
+    $code = array_get($params, 'code');
 
     if (is_null($code) || !Lang::has($code)) {
       $code = lang();
@@ -131,15 +133,16 @@ class Language {
   /**
    * Delete language content
    *
-   * @param null|string $lang
-   * @param null|string $code
+   * @param array $params
    *
    * @return string
    */
-  public function deleteIndex($lang = null, $code = null) {
+  public function deleteIndex($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
+
+    $code = array_get($params, 'code');
 
     if (is_null($code) || !Lang::has($code)) {
       $code = lang();
@@ -162,11 +165,11 @@ class Language {
   /**
    * Creates new language
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return string
    */
-  public function create($lang = null) {
+  public function create($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
@@ -215,16 +218,16 @@ class Language {
   /**
    * Crawling language usages
    *
-   * @param null|string $lang
-   * @param string $code
+   * @param array $params
    *
    * @return string
    */
-  public function crawl($lang = null, $code) {
+  public function crawl($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
 
+    $code = array_get($params, 'code');
     $list = array();
     $values = array();
 

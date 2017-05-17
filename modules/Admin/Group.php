@@ -35,7 +35,7 @@ class Group {
     static::$manager = $manager;
   }
 
-  public function getIndex($lang = null) {
+  public function getIndex($params = array()) {
     $manager = static::$manager;
 
     $manager->put('subnavs', array(
@@ -68,7 +68,7 @@ class Group {
     return View::create('system.groups.list')->data($manager::data())->render();
   }
 
-  public function getForm($lang = null, $id = 0) {
+  public function getForm($params = array()) {
     $manager = static::$manager;
 
     $manager->set('roles', array(
@@ -78,6 +78,7 @@ class Group {
 
     $manager->set('groups', Object::init()->where('type', 'group')->load()->getList('first_name'));
 
+    $id = array_get($params, 'id', 0);
     $action = 'new';
     $actionTitle = lang('admin.label.create_new', 'Yeni Oluştur');
 
@@ -103,10 +104,12 @@ class Group {
     return View::create('system.groups.form')->data($manager::data())->render();
   }
 
-  public function postForm($lang = null, $id = null) {
+  public function postForm($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
+
+    $id = array_get($params, 'id');
 
     return Object::init()->validation(array(
       'name' => 'required',
@@ -126,12 +129,12 @@ class Group {
       })->forData();
   }
 
-  public function deleteForm($lang = null, $ids = '') {
+  public function deleteForm($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
 
-    $ids = array_filter(explode(',', $ids), function ($id) {
+    $ids = array_filter(explode(',', array_get($params, 'id', '')), function ($id) {
       return (int) $id > 0;
     });
 

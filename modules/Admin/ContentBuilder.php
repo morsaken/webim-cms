@@ -37,7 +37,7 @@ class ContentBuilder {
    *
    * @return string
    */
-  public function editor($lang = null) {
+  public function editor($params = array()) {
     $manager = static::$manager;
 
     $manager->set('title', lang('admin.label.editor', 'Editör'));
@@ -45,14 +45,16 @@ class ContentBuilder {
     return View::create('content.builder.editor')->data($manager::data())->render();
   }
 
-  public function snippets($lang = null) {
+  public function snippets($params = array()) {
     $manager = static::$manager;
 
     return View::create('content.builder.snippets')->data($manager::data())->render();
   }
 
-  public function media($lang = null, $role = null) {
+  public function media($params = array()) {
     $manager = static::$manager;
+
+    $role = array_get($params, 'role');
 
     if (is_null($role)) {
       $role = 'image';

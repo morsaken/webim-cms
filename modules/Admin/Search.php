@@ -27,7 +27,7 @@ class Search {
     static::$manager = $manager;
   }
 
-  public function getIndex($lang = null) {
+  public function getIndex($params = array()) {
     $manager = static::$manager;
 
     return View::create('search')->data($manager::data())->render();

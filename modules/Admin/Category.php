@@ -48,7 +48,7 @@ class Category {
     $manager->app->redirect(url($manager->prefix . '/content/categories'));
   }
 
-  public function getIndex($lang = null) {
+  public function getIndex($params = array()) {
     $manager = static::$manager;
 
     $manager->put('subnavs', array(
@@ -99,9 +99,10 @@ class Category {
     return View::create('content.categories.list')->data($manager::data())->render();
   }
 
-  public function getForm($lang = null, $id = 0) {
+  public function getForm($params = array()) {
     $manager = static::$manager;
 
+    $id = array_get($params, 'id', 0);
     $action = 'new';
     $actionTitle = lang('admin.label.create_new', 'Yeni Oluştur');
 
@@ -131,10 +132,12 @@ class Category {
     return View::create('content.categories.form')->data($manager::data())->render();
   }
 
-  public function postForm($lang = null, $id = null) {
+  public function postForm($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
+
+    $id = array_get($params, 'id');
 
     //Poster values
     $poster = array(
@@ -187,10 +190,12 @@ class Category {
     return $save->forData();
   }
 
-  public function parents($lang = null) {
+  public function parents($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
+
+    $lang = array_get($params, 'lang');
 
     $parents = array();
 
@@ -216,10 +221,12 @@ class Category {
     return array_to($parents);
   }
 
-  public function orders($lang = null) {
+  public function orders($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
+
+    $lang = array_get($params, 'lang');
 
     $order = 1;
     $orders = array();
@@ -239,12 +246,12 @@ class Category {
     return array_to($orders);
   }
 
-  public function deleteForm($lang = null, $ids = '') {
+  public function deleteForm($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
 
-    $ids = array_filter(explode(',', $ids), function ($id) {
+    $ids = array_filter(explode(',', array_get($params, 'id', '')), function ($id) {
       return (int) $id > 0;
     });
 
@@ -255,10 +262,12 @@ class Category {
     return Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'))->forData();
   }
 
-  public function renameURL($lang = null, $id) {
+  public function renameURL($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
+
+    $id = array_get($params, 'id');
 
     if (strlen(input('url'))) {
       //New url
@@ -279,7 +288,7 @@ class Category {
     }
   }
 
-  public function duplicate($lang = null) {
+  public function duplicate($params = array()) {
     $manager = static::$manager;
     $manager->app->response->setContentType('json');
 

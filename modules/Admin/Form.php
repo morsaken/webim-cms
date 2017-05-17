@@ -38,7 +38,7 @@ class Form {
     static::$manager = $manager;
   }
 
-  public function getIndex($lang = null) {
+  public function getIndex($params = array()) {
     $manager = static::$manager;
 
     $manager->set('caption', lang('admin.menu.forms', 'Formlar'));
@@ -48,13 +48,15 @@ class Form {
     return View::create('system.forms')->data($manager::data())->render();
   }
 
-  public function getForm($lang = null, $type) {
+  public function getForm($params = array()) {
     $manager = static::$manager;
     $manager->app->response->setContentType('json');
 
+    $lang = array_get($params, 'lang');
+
     $form = array();
 
-    switch ($type) {
+    switch (array_get($params, 'type')) {
       case 'forms':
 
         $form = FormProperty::init();
@@ -154,14 +156,16 @@ class Form {
     return array_to($form);
   }
 
-  public function postForm($lang = null, $type) {
+  public function postForm($params = array()) {
     $manager = static::$manager;
     $manager->app->response->setContentType('json');
+
+    $lang = array_get($params, 'lang');
 
     $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
     try {
-      switch ($type) {
+      switch (array_get($params, 'type')) {
         case 'form':
 
           $save = FormProperty::init()->validation(array(
@@ -277,14 +281,16 @@ class Form {
     return $message->forData();
   }
 
-  public function deleteForm($lang = null, $type, $id) {
+  public function deleteForm($params = array()) {
     $manager = static::$manager;
     $manager->app->response->setContentType('json');
 
     $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
+    $id = array_get($params, 'id');
+
     try {
-      switch ($type) {
+      switch (array_get($params, 'type')) {
         case 'form':
 
           $total = FormProperty::init()->whereIn('id', explode(',', $id))->delete();

@@ -5,7 +5,7 @@
 
 namespace Admin;
 
-use System\Mail;
+use \System\Mail;
 use \Webim\View\Manager as View;
 
 class Inbox {
@@ -49,8 +49,10 @@ class Inbox {
     return View::create('my.inbox.list')->data($manager::data())->render();
   }
 
-  public function getView($lang = null, $key = null) {
+  public function getView($params = array()) {
     $manager = static::$manager;
+
+    $key = array_get($params, 'key');
 
     $mail = Mail::inbox(function ($mail) use ($key) {
       $mail->where('m.key', $key);
@@ -77,13 +79,13 @@ class Inbox {
     return View::create('my.inbox.view')->data($manager::data())->render();
   }
 
-  public function getReply($lang = null, $key = null) {
+  public function getReply($params = array()) {
     $manager = static::$manager;
 
     return View::create('my.inbox.reply')->data($manager::data())->render();
   }
 
-  public function getCompose($lang = null, $key = null) {
+  public function getCompose($params = array()) {
     $manager = static::$manager;
 
     return View::create('my.inbox.compose')->data($manager::data())->render();

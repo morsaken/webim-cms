@@ -39,7 +39,7 @@ class Brand {
     static::$manager = $manager;
   }
 
-  public function getIndex($lang = null) {
+  public function getIndex($params = array()) {
     $manager = static::$manager;
 
     $nav = new \stdClass();
@@ -77,9 +77,11 @@ class Brand {
     return View::create('modules.ecommerce.brands')->data($manager::data())->render();
   }
 
-  public function getForm($lang = null, $id) {
+  public function getForm($params = array()) {
     $manager = static::$manager;
     $manager->app->response->setContentType('json');
+
+    $id = array_get($params, 'id');
 
     $form = Content::init()
       ->where('type', 'brand')
@@ -93,11 +95,13 @@ class Brand {
     return array_to($form);
   }
 
-  public function putForm($lang = null, $id) {
+  public function putForm($params = array()) {
     $manager = static::$manager;
     $manager->app->response->setContentType('json');
 
     $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
+
+    $id = array_get($params, 'id');
 
     $current = Content::init()->where('type', 'brand')->where('id', $id)->load()->get('rows.0');
 
@@ -119,9 +123,11 @@ class Brand {
     return $message->forData();
   }
 
-  public function postForm($lang = null, $id = null) {
+  public function postForm($params = array()) {
     $manager = static::$manager;
     $manager->app->response->setContentType('json');
+
+    $id = array_get($params, 'id');
 
     //Poster values
     $poster = array(
@@ -179,11 +185,11 @@ class Brand {
     return $save->forData();
   }
 
-  public function deleteForm($lang = null, $ids = '') {
+  public function deleteForm($params = array()) {
     $manager = static::$manager;
     $manager->app->response->setContentType('json');
 
-    $ids = array_filter(explode(',', $ids), function ($id) {
+    $ids = array_filter(explode(',', array_get($params, 'id', '')), function ($id) {
       return (int) $id > 0;
     });
 

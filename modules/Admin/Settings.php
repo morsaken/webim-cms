@@ -43,11 +43,11 @@ class Settings {
   /**
    * Get
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return string
    */
-  public function getIndex($lang = null) {
+  public function getIndex($params = array()) {
     $manager = static::$manager;
 
     $manager::put('admins', Object::init()->whereIn('role', ['root', 'admin'])->load()->get('rows'));
@@ -64,11 +64,11 @@ class Settings {
   /**
    * Post
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return string
    */
-  public function postIndex($lang = null) {
+  public function postIndex($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');

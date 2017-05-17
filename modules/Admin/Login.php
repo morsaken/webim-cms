@@ -36,11 +36,11 @@ class Login {
   /**
    * Get
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return string
    */
-  public function getIndex($lang = null) {
+  public function getIndex($params = array()) {
     $manager = static::$manager;
     $app = $manager->app;
 
@@ -59,9 +59,9 @@ class Login {
   /**
    * Post
    *
-   * @param null|string $lang
+   * @param array $params
    */
-  public function postIndex($lang = null) {
+  public function postIndex($params = array()) {
     $manager = static::$manager;
     $app = $manager->app;
 

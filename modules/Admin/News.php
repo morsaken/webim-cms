@@ -46,11 +46,11 @@ class News {
   /**
    * List
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return string
    */
-  public function getIndex($lang = null) {
+  public function getIndex($params = array()) {
     $manager = static::$manager;
 
     $manager->put('subnavs', array(
@@ -119,12 +119,11 @@ class News {
   /**
    * Get form
    *
-   * @param null|string $lang
-   * @param int $id
+   * @param array $params
    *
    * @return string
    */
-  public function getForm($lang = null, $id = 0) {
+  public function getForm($params = array()) {
     $manager = static::$manager;
 
     $defaultPosters = array(
@@ -135,6 +134,7 @@ class News {
       'link' => View::getPath()->folder('layouts.assets.poster')->file('link.png')
     );
 
+    $id = array_get($params, 'id', 0);
     $action = 'new';
     $actionTitle = lang('admin.label.create_new', 'Yeni Oluştur');
 
@@ -184,15 +184,16 @@ class News {
   /**
    * Post form
    *
-   * @param null|string $lang
-   * @param null|int $id
+   * @param array $params
    *
    * @return string
    */
-  public function postForm($lang = null, $id = null) {
+  public function postForm($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
+
+    $id = array_get($params, 'id');
 
     //Publish & expire date
     $publish_date = Carbon::createFromTimestamp(strtotime(input('publish_date')));
@@ -267,17 +268,16 @@ class News {
   /**
    * Delete form
    *
-   * @param null|string $lang
-   * @param string $ids
+   * @param array $params
    *
    * @return string
    */
-  public function deleteForm($lang = null, $ids = '') {
+  public function deleteForm($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
 
-    $ids = array_filter(explode(',', $ids), function ($id) {
+    $ids = array_filter(explode(',', array_get($params, 'id', '')), function ($id) {
       return (int) $id > 0;
     });
 
@@ -291,14 +291,16 @@ class News {
   /**
    * Category list by language
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return string
    */
-  public function categories($lang = null) {
+  public function categories($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
+
+    $lang = array_get($params, 'lang');
 
     $categories = array();
 
@@ -320,15 +322,16 @@ class News {
   /**
    * Rename
    *
-   * @param null|string $lang
-   * @param int $id
+   * @param array $params
    *
    * @return string
    */
-  public function renameURL($lang = null, $id) {
+  public function renameURL($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
+
+    $id = array_get($params, 'id');
 
     if (strlen(input('url'))) {
       //New url
@@ -352,11 +355,11 @@ class News {
   /**
    * Duplicate record by language
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return string
    */
-  public function duplicate($lang = null) {
+  public function duplicate($params = array()) {
     $manager = static::$manager;
     $manager->app->response->setContentType('json');
 
@@ -393,11 +396,11 @@ class News {
   /**
    * Order list
    *
-   * @param null|string $lang
+   * @param array $params
    *
    * @return string
    */
-  public function getOrders($lang = null) {
+  public function getOrders($params = array()) {
     $manager = static::$manager;
 
     $manager->set('caption', lang('admin.menu.orders', 'Sıralamalar'));
@@ -440,12 +443,11 @@ class News {
   /**
    * Order records
    *
-   * @param null|string $lang
-   * @param null|int $id
+   * @param array $params
    *
    * @return string
    */
-  public function postOrders($lang = null, $id = null) {
+  public function postOrders($params = array()) {
     $manager = static::$manager;
 
     $manager->app->response->setContentType('json');
