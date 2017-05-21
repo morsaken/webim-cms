@@ -33,17 +33,17 @@ class Cart {
       'id' => 0,
       'total' => 0,
       'total_final' => '',
-      'currency' => me('currency', array_first(array_keys(conf('currency', array())))),
+      'currency' => my('currency', array_first(array_keys(conf('currency', array())))),
       'version' => 0,
       'items' => array()
     );
 
     if (Session::current()->get('cart.items')) {
       $cart['items'] = Session::current()->get('cart.items', array());
-    } elseif (me('id')) {
+    } elseif (my('id')) {
       $content = Content::init()
         ->only('type', 'cart')
-        ->where('url', me('id'))
+        ->where('url', my('id'))
         ->load()->with('meta')->get('rows.0');
 
       if ($content) {
@@ -92,7 +92,7 @@ class Cart {
     $total = 0;
 
     //Default currency
-    $currency = me('currency', array_first(array_keys(conf('currency', array()))));
+    $currency = my('currency', array_first(array_keys(conf('currency', array()))));
 
     //Default format
     $format = lang('currency.' . $currency . '.format', '%%s ' . $currency);
@@ -126,9 +126,9 @@ class Cart {
   }
 
   private function save($cart, $strict = false) {
-    if (me('id') && (!Session::current()->get('cart.saved') || $strict)) {
+    if (my('id') && (!Session::current()->get('cart.saved') || $strict)) {
       if ($cart['id'] == 0) {
-        $current = Content::init()->where('type', 'cart')->where('url', me('id'))->load()->get('rows.0');
+        $current = Content::init()->where('type', 'cart')->where('url', my('id'))->load()->get('rows.0');
 
         $cart['id'] = array_get($current, 'id');
         $cart['version'] = array_get($current, 'version');
@@ -139,8 +139,8 @@ class Cart {
         ->set('id', $cart['id'])
         ->set('type', 'cart')
         ->set('language', lang())
-        ->set('url', me('id'))
-        ->set('title', me('full_name'))
+        ->set('url', my('id'))
+        ->set('title', my('full_name'))
         ->set('version', $cart['version'])
         ->set('publish_date', Carbon::now())
         ->save(function ($id) use ($cart) {

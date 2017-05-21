@@ -86,7 +86,7 @@
    });
   }, 60000);
 
-  @if (me('id') && (conf('backend.session.timeout_active', 'no') == 'yes') && !url_is($prefix. 'login'))
+  @if (my('id') && (conf('backend.session.timeout_active', 'no') == 'yes') && !url_is($prefix. 'login'))
   // Init Bootstrap Timeout
   $.sessionTimeout({
    title: '@lang('admin.label.session_is_about_to_expire', 'Oturum Süreniz Doluyor')',

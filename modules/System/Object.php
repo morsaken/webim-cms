@@ -507,7 +507,7 @@ class Object extends Controller {
       $id = array($id);
     }
 
-    if (in_array(me('id'), $id)) {
+    if (in_array(my('id'), $id)) {
       $message->text = lang('message.cannot_delete_yourself', 'Kendi kaydınızı silemezsiniz!');
     } else {
       try {

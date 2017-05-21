@@ -215,13 +215,13 @@ class Settings extends Controller {
     if (Auth::current()->isLoggedIn()) {
       $this->orWhere(function ($q) {
         $q->where('type', 'user');
-        $q->where('owner_id', me('id'));
+        $q->where('owner_id', my('id'));
       });
     }
 
     $group_ids = array();
 
-    foreach (me('groups', array()) as $group) {
+    foreach (my('groups', array()) as $group) {
       if ($group->id) {
         $group_ids[] = $group->id;
       }

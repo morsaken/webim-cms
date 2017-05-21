@@ -199,7 +199,7 @@ class Mail extends Controller {
     //Set mail attributes
     $mail->set(array(
       'key' => uniqid(),
-      'sender_id' => me('id'),
+      'sender_id' => my('id'),
       'date' => Carbon::now(),
       'subject' => $subject,
       'content' => $content,

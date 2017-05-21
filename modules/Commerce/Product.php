@@ -49,7 +49,7 @@ class Product {
    */
   protected function formatPrice($price, $currency_code) {
     $currencies = conf('currency', array());
-    $defaultCurrency = me('currency', array_first(array_keys($currencies)));
+    $defaultCurrency = my('currency', array_first(array_keys($currencies)));
 
     //Price format
     $format = lang('currency.' . $defaultCurrency . '.format', '%%s ' . $defaultCurrency);
