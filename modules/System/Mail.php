@@ -19,7 +19,7 @@ class Mail extends Controller {
    *
    * @var \Webim\Library\Auth
    */
-  protected $me;
+  protected $my;
 
   /**
    * Recipient list for send
@@ -43,7 +43,7 @@ class Mail extends Controller {
   public function __construct($withAlias = false) {
     parent::__construct(DB::table('sys_mail' . ($withAlias ? ' as m' : '')));
 
-    $this->me = Auth::current();
+    $this->my = Auth::current();
   }
 
   /**
@@ -58,7 +58,7 @@ class Mail extends Controller {
 
     $mail = $mail->join('sys_mail_recipient as r', function ($join) use ($mail) {
       $join->on('r.mail_id', 'm.id');
-      $join->where('r.recipient_id', '=', DB::raw($mail->me->id));
+      $join->where('r.recipient_id', '=', DB::raw($mail->my->id));
       $join->where('r.trashed', '=', DB::raw('false'));
     })->join('sys_object as o', 'o.id', '=', 'm.sender_id')
       ->where('m.trashed', 'false')

@@ -49,10 +49,15 @@ class Product {
    */
   protected function formatPrice($price, $currency_code) {
     $currencies = conf('currency', array());
+
+    if (!isset($currencies[$currency_code])) {
+      $currency_code = array_first(array_keys($currencies));
+    }
+
     $defaultCurrency = my('currency', array_first(array_keys($currencies)));
 
     //Price format
-    $format = lang('currency.' . $defaultCurrency . '.format', '%%s ' . $defaultCurrency);
+    $format = lang('currency.' . $defaultCurrency . '.format', '%%s ' . $defaultCurrency, '');
 
     //Currency
     $currency = new \stdClass();
@@ -62,7 +67,13 @@ class Product {
     $formatted = new \stdClass();
     $formatted->raw = $price;
     $formatted->currency = $currency;
-    $formatted->converted = $price / array_get($currencies, $currency_code, 1) * array_get($currencies, $defaultCurrency, 1);
+    $formatted->rate = 1;
+
+    if (count($currencies)) {
+      $formatted->rate = array_get($currencies, $currency_code, 1) * array_get($currencies, $defaultCurrency, 1);
+    }
+
+    $formatted->converted = $price / $formatted->rate;
     $formatted->formatted = number_format(
       floatval($formatted->converted),
       lang('currency.digits_after_decimal', 2),
