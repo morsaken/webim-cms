@@ -74,7 +74,7 @@
          <div id="system-{{ $code }}-tab" class="tab-pane {{ $code == lang() ? ' active' : '' }}">
           <div class="section mb15">
            <h6 class="fw400">@lang('admin.label.publish_date', 'Yayın Tarihi')</h6>
-           <label for="system_{{ $code }}_publish_date" class="field prepend-picker-icon">
+           <label class="field prepend-picker-icon">
             <input type="text" id="system_{{ $code }}_publish_date" name="system_{{ $code }}_publish_date" class="gui-input datetime" placeholder="@lang('admin.hint.pick_date', 'Tarih seçin')" value="{{{ conf('system.' . $code . '.publish_date') }}}">
            </label>
           </div>
