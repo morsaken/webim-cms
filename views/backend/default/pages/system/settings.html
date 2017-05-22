@@ -61,12 +61,6 @@
         </div>
        </div>
        <hr>
-       <div class="section mb15">
-        <h6 class="fw400">@lang('admin.label.publish_date', 'Yayın Tarihi')</h6>
-        <label for="system_publish_date" class="field prepend-picker-icon">
-         <input type="text" id="system_publish_date" name="system_publish_date" class="gui-input" placeholder="@lang('admin.hint.pick_date', 'Tarih seçin')" value="{{{ conf('system.publish_date') }}}">
-        </label>
-       </div>
        <div class="tab-block mb25">
         <ul class="nav tabs-left">
          @foreach (langs() as $code => $lang)
@@ -78,6 +72,12 @@
         <div class="tab-content">
          @foreach (langs() as $code => $lang)
          <div id="system-{{ $code }}-tab" class="tab-pane {{ $code == lang() ? ' active' : '' }}">
+          <div class="section mb15">
+           <h6 class="fw400">@lang('admin.label.publish_date', 'Yayın Tarihi')</h6>
+           <label for="system_{{ $code }}_publish_date" class="field prepend-picker-icon">
+            <input type="text" id="system_{{ $code }}_publish_date" name="system_{{ $code }}_publish_date" class="gui-input datetime" placeholder="@lang('admin.hint.pick_date', 'Tarih seçin')" value="{{{ conf('system.' . $code . '.publish_date') }}}">
+           </label>
+          </div>
           <div class="section mb15">
            <h6 class="fw400">@lang('admin.label.offline_message', 'Kapalı Mesajı')</h6>
            <label class="field prepend-icon">
@@ -357,7 +357,7 @@
 <script type="text/javascript" src="{{ $root }}/js/plugins/tagsinput/tagsinput.min.js"></script>
 <script type="text/javascript">
  //<![CDATA[
- $('#system_publish_date').datetimepicker({
+ $('.datetime').datetimepicker({
   showOn: 'both',
   buttonText: '<i class="fa fa-calendar-o"></i>',
   prevText: '<i class="fa fa-chevron-left"></i>',

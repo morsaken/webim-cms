@@ -36,7 +36,7 @@ App::make(array(
 
     //Check published
     $published = Carbon::createFromTimestamp(
-      strtotime(conf('system.publish_date') . ' ' . conf('system.publish_hour'))
+      strtotime(conf('system.' . $lang . '.publish_date'))
     )->isPast();
 
     if ($published || Auth::current()->isAdmin()) {

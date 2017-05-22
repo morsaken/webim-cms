@@ -76,7 +76,6 @@ class Settings {
     $settings = array(
       'system.name' => input('system_name'),
       'system.admin' => input('system_admin'),
-      'system.publish_date' => input('system_publish_date'),
       'backend.session.timeout_active' => input('backend_session_timeout_active', 'no'),
       'backend.session.timeout_after' => intval(input('backend_session_timeout_after')),
       'email.from' => input('email_from'),
@@ -85,6 +84,7 @@ class Settings {
     );
 
     foreach (langs() as $code => $lang) {
+      $settings['system.' . $code . '.publish_date'] = input('system_' . $code . '_publish_date');
       $settings['system.' . $code . '.offline_message'] = input('system_' . $code . '_offline_message');
       $settings['frontend.' . $code . '.template'] = input('frontend_' . $code . '_template', 'default');
       $settings['frontend.' . $code . '.title'] = input('frontend_' . $code . '_title', 'Web-IM XI');
