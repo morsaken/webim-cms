@@ -27,7 +27,7 @@ class Inbox {
       $manager->prefix . '/my/inbox',
       $manager->prefix . '/my/inbox/list'
     ), __CLASS__ . '::getInbox');
-    $manager->addRoute($manager->prefix . '/my/inbox/view/:id+', __CLASS__ . '::getView');
+    $manager->addRoute($manager->prefix . '/my/inbox/view/:key+', __CLASS__ . '::getView');
 
     if ($manager->app->request->isAjax()) {
       $manager->addRoute($manager->prefix . '/my/inbox/list', __CLASS__ . '::getList');
@@ -73,7 +73,7 @@ class Inbox {
 
       $manager->set('mail', $mail);
     } else {
-      $manager->app->redirect(url($manager->prefix . '/inbox'));
+      $manager->app->redirect(url($manager->prefix . '/my/inbox'));
     }
 
     return View::create('my.inbox.view')->data($manager::data())->render();
