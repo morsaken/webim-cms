@@ -181,7 +181,7 @@ class Media extends Content {
           $message->text = $e->getMessage();
         }
       } else {
-        $message->text = lang('message.invalid_media_role', array($role), 'Geçersiz medya türü: %s');
+        $message->text = lang('message.invalid_media_role', [$role], 'Geçersiz medya türü: %s');
       }
     } else {
       $message->text = lang('message.pick_file', 'Dosya seçiniz!');
