@@ -182,8 +182,8 @@
      inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
     }
    },
-   dateFormat: 'dd-mm-yy',
-   firstDay: 1
+   dateFormat: '{{ str_replace('{day}', 'dd', str_replace('{month}', 'mm', str_replace('{year}', 'yy', lang('date.format.short')))) }}',
+   firstDay: @lang('date.first_day', 1)
   });
  });
  //]]>

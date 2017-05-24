@@ -179,8 +179,9 @@ class Category {
         $this->saveOrders($id);
 
         $this->saveMeta($id, array(
+          'poster_id' => $poster['id'],
           'description' => input('meta-description'),
-          'poster_id' => $poster['id']
+          'options' => raw_input('meta-options')
         ));
       });
 
