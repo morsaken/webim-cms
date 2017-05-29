@@ -7,6 +7,49 @@
 \Webim\Library\AutoLoader::register(__DIR__ . DS);
 
 /**
+ * Navigation
+ *
+ * @param string $title
+ * @param string $link
+ * @param array $children
+ *
+ * @return stdClass
+ */
+function nav($title, $link, $children = array()) {
+  $nav = new \stdClass();
+  $nav->title = $title;
+  $nav->url = !preg_match('/^(http|ftp)./', $link) ? url($link) : $link;
+  $nav->link = $link;
+  $nav->children = $children;
+  $nav->active = url_is($link, true);
+
+  return $nav;
+}
+
+/**
+ * Menu
+ *
+ * @param $list
+ *
+ * @return array
+ */
+function menu($list) {
+  $nav = array();
+
+  foreach ($list as $menu) {
+    $children = array();
+
+    if (isset($menu->children) && count($menu->children)) {
+      $children = menu($menu->children);
+    }
+
+    $nav[] = nav($menu->title, $menu->url, $children);
+  }
+
+  return $nav;
+}
+
+/**
  * Button
  *
  * @param string $title

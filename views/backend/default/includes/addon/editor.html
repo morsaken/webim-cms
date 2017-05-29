@@ -8,6 +8,39 @@
  window.setInterval(function() {
   //$('#{{ $target or 'meta-content' }}').val(oEditor.getHTMLBody());
  }, 500);
+ @elseif (conf('system.editor', 'summernote') == 'tinymce')
+ loadScript('{{ $root }}/js/lib/editors/tinymce/tinymce.min.js', function() {
+   tinymce.init({
+     selector: '#{{ $id or 'html-content' }}',
+     height: 500,
+     theme: 'modern',
+     plugins: [
+       'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+       'searchreplace wordcount visualblocks visualchars code fullscreen',
+       'insertdatetime media nonbreaking save table contextmenu directionality',
+       'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc help'
+     ],
+     toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+     toolbar2: 'print preview media | forecolor backcolor | hr removeformat | codesample code help',
+     image_advtab: true,
+     paste_data_images: true,
+     images_upload_handler: function (blobInfo, success, failure) {
+       // no upload, just return the blobInfo.blob() as base64 data
+       success('data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64());
+     },
+     setup: function (editor) {
+       editor.on('init', function(e) {
+         editor.setContent($('#{{ $target or 'meta-content' }}').val());
+       });
+     },
+     init_instance_callback: function (editor) {
+       editor.on('Change', function (e) {
+         console.log(editor.getContent());
+         $('#{{ $target or 'meta-content' }}').val(editor.getContent());
+       });
+     }
+   });
+ });
  @else
  loadScript('{{ $root }}/js/lib/editors/summernote/summernote.min.js', function() {
   loadCSS('{{ $root }}/js/lib/editors/summernote/summernote.css', function() {
