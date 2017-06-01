@@ -112,6 +112,7 @@
      item = {
        'url': $(this).find('input[name="url"]').val(),
        'title': $(this).find('input[name="title"]').val(),
+       'icon': $(this).find('input[name="icon"]').val(),
        'target': $(this).find('select[name="target"]').val()
      };
 
@@ -163,7 +164,6 @@
      panel.attr('data-url', menu.url);
      panel.attr('data-active', menu.active);
      panel.removeClass('panel-primary panel-default').addClass('panel-' + (menu.active ? 'primary' : 'default'));
-     panel.find('.panel-title > .url').text('[' + menu.url + ']');
      panel.find('.panel-title > .title').text(menu.title);
 
      return;
@@ -238,7 +238,7 @@
                e.preventDefault();
 
                addItem({
-                 'title': '@lang("admin.label.unnames", "İsimsiz")'
+                 'title': '@lang("admin.label.unnamed", "İsimsiz")'
                }, $(this).closest('.panel').find('.dd'));
              }).append(
                $('<i/>').addClass('fa fa-plus')
@@ -337,17 +337,31 @@
    return $('<li/>').addClass('dd-item').append(
      $('<div/>').addClass('dd-handle').text(item.title),
      $('<div/>').addClass('dd-content').append(
-       $('<div/>').addClass('form-group').append(
-         $('<label/>').text('@lang("admin.label.title", "Başlık")'),
-         $('<input/>', {
-           'type': 'text',
-           'name': 'title',
-           'maxlength': '255'
-         }).on('focus', function() {
-           $(this).select();
-         }).on('keyup', function(e) {
-           $(this).closest('.dd-item').find('.dd-handle').text($(this).val());
-         }).addClass('form-control').val(item.title)
+       $('<div/>').addClass('row').append(
+         $('<div/>').addClass('col-xs-8').append(
+           $('<div/>').addClass('form-group').append(
+            $('<label/>').text('@lang("admin.label.title", "Başlık")'),
+            $('<input/>', {
+              'type': 'text',
+              'name': 'title',
+              'maxlength': '255'
+            }).on('focus', function() {
+              $(this).select();
+            }).on('keyup', function(e) {
+              $(this).closest('.dd-item').find('.dd-handle').text($(this).val());
+            }).addClass('form-control').val(item.title)
+           )
+         ),
+         $('<div/>').addClass('col-xs-4').append(
+           $('<div/>').addClass('form-group').append(
+             $('<label/>').text('@lang("admin.label.icon", "Simge")'),
+             $('<input/>', {
+               'type': 'text',
+               'name': 'icon',
+               'maxlength': '50'
+             }).addClass('form-control').val(item.icon)
+           )
+         )
        ),
        $('<div/>').addClass('row').append(
          $('<div/>').addClass('col-xs-8').append(
