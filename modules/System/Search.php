@@ -146,7 +146,7 @@ class Search {
   /**
    * Set language
    *
-   * @param $language
+   * @param string $language
    */
   public static function setLanguage($language) {
     static::$language = $language;
