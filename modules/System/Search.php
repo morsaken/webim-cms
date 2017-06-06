@@ -56,10 +56,11 @@ class Search {
    *
    * @param null|int $offset
    * @param null|int $limit
+   * @param null|\Closure $order
    *
    * @return \stdClass
    */
-  public function get($offset = null, $limit = null) {
+  public function get($offset = null, $limit = null, $order = null) {
     $keyword = $this->keyword;
 
     $query = DB::table('sys_content as c');
@@ -90,6 +91,12 @@ class Search {
       });
     });
 
+    if ($order instanceof \Closure) {
+      $query = call_user_func($order, $query);
+    } else {
+      $query = $query->orderBy('publish_date', 'desc');
+    }
+
     $query = $query->lists('c.id');
 
     $result = new \stdClass();
@@ -105,9 +112,35 @@ class Search {
    * Set types
    *
    * @param array $types
+   *
+   * @return $this
+   */
+  public function types($types = array()) {
+    static::setTypes($types);
+
+    return $this;
+  }
+
+  /**
+   * Set types
+   *
+   * @param array $types
    */
   public static function setTypes($types = array()) {
     static::$types = $types;
+  }
+
+  /**
+   * Set language
+   *
+   * @param string $language
+   *
+   * @return $this
+   */
+  public function language($language) {
+    static::setLanguage($language);
+
+    return $this;
   }
 
   /**
