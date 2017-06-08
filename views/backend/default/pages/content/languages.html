@@ -338,7 +338,7 @@
  });
 
  $('#new-language-form').submit(function() {
-  if ($('#language-code').val().length == 2) {
+  if ($('#language-code').val().length >= 2) {
    $.ajax({
     'type': $(this).attr('method'),
     'url': $(this).attr('action'),

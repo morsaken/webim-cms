@@ -22,13 +22,13 @@ App::make(array(
 })->with(function () {
   //Get language
   $lang = lang();
-  $segment = $this->request->segment(1);
+  $admin = $this->request->segment(1);
 
   if ($this->request->segment(1) === $lang) {
-    $segment = $this->request->segment(2);
+    $admin = $this->request->segment(2);
   }
 
-  if (conf('default.admin.ui', false) && ($segment === conf('default.admin.extension', 'admin'))) {
+  if (conf('default.admin.ui', false) && ($admin === conf('default.admin.extension', 'admin'))) {
     File::path('views.backend.' . conf('backend.' . $lang . '.template', 'default'), 'routes' . EXT)->load();
   } else {
     //Default

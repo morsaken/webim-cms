@@ -71,12 +71,12 @@ function btn($title, $url, $icon) {
  * Breadcrumb
  *
  * @param array $crumbs
- * @param string $title
+ * @param string|array $title
  * @param null|string $link
  *
  * @return array
  */
-function crumb(array &$crumbs, $title, $link = null) {
+function crumb(array $crumbs, $title, $link = null) {
   if (is_array($title)) {
     foreach ($title as $crumb) {
       $crumbs = call_user_func(__FUNCTION__, $crumbs, @$crumb[0], @$crumb[1]);
