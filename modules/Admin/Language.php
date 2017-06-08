@@ -26,9 +26,9 @@ class Language {
    * @param \Admin\Manager $manager
    */
   public static function register(Manager $manager) {
-    $manager->addRoute($manager->prefix . '/content/languages(/:code#[a-z]{2}#)?', __CLASS__ . '::getIndex');
-    $manager->addRoute($manager->prefix . '/content/languages(/:code#[a-z]{2}#)?', __CLASS__ . '::postIndex', 'POST');
-    $manager->addRoute($manager->prefix . '/content/languages(/:code#[a-z]{2}#)?', __CLASS__ . '::deleteIndex', 'DELETE');
+    $manager->addRoute($manager->prefix . '/content/languages(/:code#[a-z\-]{2,5}#)?', __CLASS__ . '::getIndex');
+    $manager->addRoute($manager->prefix . '/content/languages(/:code#[a-z\-]{2,5}#)?', __CLASS__ . '::postIndex', 'POST');
+    $manager->addRoute($manager->prefix . '/content/languages(/:code#[a-z\-]{2,5}#)?', __CLASS__ . '::deleteIndex', 'DELETE');
     $manager->addRoute($manager->prefix . '/content/languages/create', __CLASS__ . '::create', 'POST');
     $manager->addRoute($manager->prefix . '/content/languages/crawl/:code+', __CLASS__ . '::crawl', 'POST');
 
