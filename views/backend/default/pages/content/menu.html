@@ -190,6 +190,7 @@
            'url': $(this).attr('action'),
            'data': {
              'id': panel.attr('data-id'),
+             'language': language,
              'url': panel.attr('data-url'),
              'title': panel.find('.panel-title > .title').text(),
              'active': panel.attr('data-active'),
@@ -319,6 +320,8 @@
    var added;
 
    for (var k in list) {
+     target.find('div.alert').remove();
+
      added = addItem(list[k], target);
 
      if (list[k].children && list[k].children.length) {
@@ -331,7 +334,7 @@
    var ol = target.find('> ol');
 
    if (!ol.length) {
-     ol = $('<ol/>').addClass('dd-list').appendTo(target.empty());
+     ol = $('<ol/>').addClass('dd-list').appendTo(target);
    }
 
    return $('<li/>').addClass('dd-item').append(
