@@ -320,8 +320,6 @@
    var added;
 
    for (var k in list) {
-     target.find('div.alert').remove();
-
      added = addItem(list[k], target);
 
      if (list[k].children && list[k].children.length) {
@@ -331,6 +329,8 @@
  }
 
  function addItem(item, target) {
+   target.find('.alert').remove();
+
    var ol = target.find('> ol');
 
    if (!ol.length) {

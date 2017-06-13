@@ -142,11 +142,11 @@
   B. responsiveness for tablets + smart mobile 
 ===================================================================*/
 @media (max-width: 600px) {
- .admin-form .section row {
+ .admin-form .section .row {
   margin: 0;
  }
 
- .admin-form .section row .colm {
+ .admin-form .section .row .colm {
   width: 100%;
   float: none;
   padding: 0;

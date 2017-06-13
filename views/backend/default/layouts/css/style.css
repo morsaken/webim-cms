@@ -5377,16 +5377,16 @@ output {
 }
 
 .form-control::-moz-placeholder {
-  color: #777777;
+  color: #c3c3c3;
   opacity: 1;
 }
 
 .form-control:-ms-input-placeholder {
-  color: #777777;
+  color: #c3c3c3;
 }
 
 .form-control::-webkit-input-placeholder {
-  color: #777777;
+  color: #c3c3c3;
 }
 
 .form-control[disabled],
