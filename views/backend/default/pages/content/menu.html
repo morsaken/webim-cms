@@ -164,6 +164,7 @@
      panel.attr('data-url', menu.url);
      panel.attr('data-active', menu.active);
      panel.removeClass('panel-primary panel-default').addClass('panel-' + (menu.active ? 'primary' : 'default'));
+     panel.find('.panel-title > .url').text('[' + menu.url + ']');
      panel.find('.panel-title > .title').text(menu.title);
 
      return;
