@@ -103,9 +103,7 @@ function loadScript(src, callback) {
   loadQueue = true;
 
   if (!$('script[src="' + src + '"]').get(0)) {
-   $.when(
-    $('<script>', {'type': 'text/javascript', 'src': src}).appendTo('body')
-   ).then(function () {
+   $.when($.getScript(src)).then(function () {
      if (typeof callback == 'function') callback();
 
      loadQueue = false;
