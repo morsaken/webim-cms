@@ -230,90 +230,98 @@ class Media extends Content {
     //Return message
     $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
-    if (!isset($this->roles[$role])) {
-      if (ini_get('allow_url_fopen') !== 'On') {
-        if (isset($path['url']) && isset($path['title'])) {
-          //Poster url
-          $url = uniqid();
-
-          //Create curl
-          $ch = @curl_init($path['url']);
-          @curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-          @curl_exec($ch);
-
-          //Get target url's mime type
-          $mime = @curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-
-          if ($mime && (strpos($mime, 'image/') == 0)) {
-            //Extension
-            $extension = '.' . strtolower(str_replace('image/', '', $mime));
-
-            $destination = File::path(
-              'assets.' . $role . '.' . Carbon::now()->format('Y.m') . '.' . $url,
-              slug($path['title']) . $extension
-            )->create();
-
-            if (@copy($path['url'], $destination->getPath())) {
-              $media = parent::init()
-                ->set('type', 'media')
-                ->set('language', lang())
-                ->set('url', $url)
-                ->set('title', $path['title'])
-                ->set('publish_date', Carbon::now())
-                ->save(function ($id) use ($destination, $role, $params) {
-                  if (array_get($params, 'max_size') && (array_get($params, 'max_size') < $destination->size())) {
-                    throw new \Exception(lang('message.file.size_exceeded', 'Dosya boyutu çok büyük!'));
-                  }
-
-                  if (($role == 'image') && ($size = array_get($params, 'image_max_size'))) {
-                    list($width, $height) = explode('x', $size);
-
-                    //Current resolution
-                    Picture::file($destination)->fit($width, $height);
-                  }
-
-                  $meta = array(
-                    'role' => $role,
-                    'path' => $destination->rawPath,
-                    'name' => $destination->baseName,
-                    'extension' => $destination->extension(),
-                    'file_size' => $destination->size()
-                  );
-
-                  if ($role == 'image') {
-                    $meta['image_size'] = Picture::file($destination)->resolution();
-                  }
-
-                  $this->saveMeta($id, $meta);
-                });
-
-              if ($media->success()) {
-                $message->success = true;
-                $message->text = $media->text();
-                $message->return = array(
-                  'id' => $media->returns('id'),
-                  'src' => $destination->src()
-                );
-              } else {
-                $message->text = $media->text();
-              }
-            } else {
-              //Remove created destination
-              $destination->folder()->remove();
-
-              $message->text = lang('message.target_not_copied_into_system', 'Hedef sisteme kopyalanamadı!');
-            }
-          } else {
-            $message->text = lang('message.target_is_not_an_image', 'Hedef resim değil!');
-          }
-        } else {
-          $message->text = lang('message.type_target', 'Hedefi yazınız!');
-        }
-      } else {
-        $message->text = lang('admin.message.php_ini_fopen_error', '"php.ini" dosyasından "allow_url_fopen" özelliğini "On" yapmanız gerekmektedir!');
+    try {
+      if (!isset($this->roles[$role])) {
+        throw new \Exception(lang('message.invalid_media_role', array($role), 'Geçersiz medya türü: %s'));
       }
-    } else {
-      $message->text = lang('message.invalid_media_role', array($role), 'Geçersiz medya türü: %s');
+
+      if (ini_get('allow_url_fopen') !== 'On') {
+        throw new \Exception(lang('admin.message.php_ini_fopen_error', '"php.ini" dosyasından "allow_url_fopen" özelliğini "On" yapmanız gerekmektedir!'));
+      }
+
+      if (!isset($path['url']) || !isset($path['title'])) {
+        throw new \Exception(lang('message.type_target', 'Hedefi yazınız!'));
+      }
+
+      if (!function_exists('curl_init')) {
+        throw new \Exception(lang('message.need_curl_library', 'CURL kütüphanesi gerekli!'));
+      }
+
+      //Poster url
+      $url = uniqid();
+
+      //Create curl
+      $ch = @curl_init($path['url']);
+      @curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      @curl_exec($ch);
+
+      //Get target url's mime type
+      $mime = @curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+
+      if (!$mime || (strpos($mime, 'image/') !== 0)) {
+        throw new \Exception(lang('message.target_is_not_an_image', 'Hedef resim değil!'));
+      }
+
+      //Extension
+      $extension = '.' . strtolower(str_replace('image/', '', $mime));
+
+      $destination = File::path(
+        'assets.' . $role . '.' . Carbon::now()->format('Y.m') . '.' . $url,
+        slug($path['title']) . $extension
+      )->create();
+
+      if (!@copy($path['url'], $destination->getPath())) {
+        //Remove created destination
+        $destination->folder()->remove();
+
+        throw new \Exception(lang('message.target_not_copied_into_system', 'Hedef sisteme kopyalanamadı!'));
+      }
+
+      $media = parent::init()
+        ->set('type', 'media')
+        ->set('language', lang())
+        ->set('url', $url)
+        ->set('title', $path['title'])
+        ->set('publish_date', Carbon::now())
+        ->save(function ($id) use ($destination, $role, $params) {
+          if (array_get($params, 'max_size') && (array_get($params, 'max_size') < $destination->size())) {
+            throw new \Exception(lang('message.file.size_exceeded', 'Dosya boyutu çok büyük!'));
+          }
+
+          if (($role == 'image') && ($size = array_get($params, 'image_max_size'))) {
+            list($width, $height) = explode('x', $size);
+
+            //Current resolution
+            Picture::file($destination)->fit($width, $height);
+          }
+
+          $meta = array(
+            'role' => $role,
+            'path' => $destination->rawPath,
+            'name' => $destination->baseName,
+            'extension' => $destination->extension(),
+            'file_size' => $destination->size()
+          );
+
+          if ($role == 'image') {
+            $meta['image_size'] = Picture::file($destination)->resolution();
+          }
+
+          $this->saveMeta($id, $meta);
+        });
+
+      if (!$media->success()) {
+        throw new \Exception($media->text());
+      }
+
+      $message->success = true;
+      $message->text = $media->text();
+      $message->return = array(
+        'id' => $media->returns('id'),
+        'src' => $destination->src()
+      );
+    } catch (\Exception $e) {
+      $message->text = $e->getMessage();
     }
 
     return $message;
