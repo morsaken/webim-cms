@@ -12,7 +12,7 @@ use \Webim\Library\File;
 use \Webim\Library\Message;
 use \Webim\View\Manager as View;
 
-App::make()->group('(/:lang#[a-z]{2}#)?', function () {
+App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs())) . ')#)?' : ''), function () {
   $folder = basename(dirname(__FILE__));
 
   //Default path

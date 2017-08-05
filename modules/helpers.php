@@ -128,8 +128,6 @@ function cascade($list, $simple = true, $level = 0) {
 
     if (isset($item->children) && count($item->children)) {
       $cascaded += call_user_func(__FUNCTION__, $item->children, $simple, ($level + 1));
-
-      unset($item->children);
     }
   }
 
