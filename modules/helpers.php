@@ -11,17 +11,19 @@
  *
  * @param string $title
  * @param string $link
- * @param null|string $icon
+ * @param null|array $meta
  * @param array $children
  *
  * @return stdClass
  */
-function nav($title, $link, $icon = null, $children = array()) {
+function nav($title, $link, $meta = null, $children = array()) {
   $nav = new \stdClass();
+  $nav->name = array_get($meta, 'name');
   $nav->link = $link;
   $nav->url = !preg_match('/^(http|ftp)./', $link) ? url($link) : $link;
-  $nav->icon = $icon;
   $nav->title = $title;
+  $nav->icon = array_get($meta, 'icon');
+  $nav->class = array_get($meta, 'class');
   $nav->children = $children;
   $nav->active = url_is($link, true);
 
@@ -45,7 +47,7 @@ function menu($list) {
       $children = menu($menu->children);
     }
 
-    $nav[] = nav($menu->title, $menu->url, (isset($menu->icon) ? $menu->icon : null), $children);
+    $nav[] = nav($menu->title, $menu->url, $menu, $children);
   }
 
   return $nav;

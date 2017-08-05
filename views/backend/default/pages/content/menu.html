@@ -110,8 +110,10 @@
 
    $(target).find('> .dd-list > .dd-item').each(function() {
      item = {
+       'name': $(this).find('input[name="name"]').val(),
        'url': $(this).find('input[name="url"]').val(),
        'title': $(this).find('input[name="title"]').val(),
+       'class': $(this).find('input[name="class"]').val(),
        'icon': $(this).find('input[name="icon"]').val(),
        'target': $(this).find('select[name="target"]').val()
      };
@@ -341,34 +343,20 @@
    return $('<li/>').addClass('dd-item').append(
      $('<div/>').addClass('dd-handle').text(item.title),
      $('<div/>').addClass('dd-content').append(
-       $('<div/>').addClass('row').append(
-         $('<div/>').addClass('col-xs-8').append(
-           $('<div/>').addClass('form-group').append(
-            $('<label/>').text('@lang("admin.label.title", "Başlık")'),
-            $('<input/>', {
-              'type': 'text',
-              'name': 'title',
-              'maxlength': '255'
-            }).on('focus', function() {
-              $(this).select();
-            }).on('keyup', function(e) {
-              $(this).closest('.dd-item').find('.dd-handle').text($(this).val());
-            }).addClass('form-control').val(item.title)
-           )
-         ),
-         $('<div/>').addClass('col-xs-4').append(
-           $('<div/>').addClass('form-group').append(
-             $('<label/>').text('@lang("admin.label.icon", "Simge")'),
-             $('<input/>', {
-               'type': 'text',
-               'name': 'icon',
-               'maxlength': '50'
-             }).addClass('form-control').val(item.icon)
-           )
-         )
+       $('<div/>').addClass('form-group').append(
+         $('<label/>').text('@lang("admin.label.title", "Başlık")'),
+         $('<input/>', {
+           'type': 'text',
+           'name': 'title',
+           'maxlength': '255'
+         }).on('focus', function() {
+           $(this).select();
+         }).on('keyup', function(e) {
+           $(this).closest('.dd-item').find('.dd-handle').text($(this).val());
+         }).addClass('form-control').val(item.title)
        ),
        $('<div/>').addClass('row').append(
-         $('<div/>').addClass('col-xs-8').append(
+         $('<div/>').addClass('col-sm-8').append(
            $('<div/>').addClass('form-group').append(
              $('<label/>').text('URL'),
              $('<input/>', {
@@ -378,7 +366,39 @@
              }).addClass('form-control').val(item.url)
            )
          ),
-         $('<div/>').addClass('col-xs-4').append(
+         $('<div/>').addClass('col-sm-4').append(
+           $('<div/>').addClass('form-group').append(
+             $('<label/>').text('@lang("admin.label.definition", "Tanımı")'),
+             $('<input/>', {
+               'type': 'text',
+               'name': 'name',
+               'maxlength': '50'
+             }).addClass('form-control').val(item.name)
+           )
+         )
+       ),
+       $('<div/>').addClass('row').append(
+         $('<div/>').addClass('col-sm-4').append(
+           $('<div/>').addClass('form-group').append(
+             $('<label/>').text('@lang("admin.label.icon", "Simgesi")'),
+             $('<input/>', {
+               'type': 'text',
+               'name': 'icon',
+               'maxlength': '50'
+             }).addClass('form-control').val(item.icon)
+           )
+         ),
+         $('<div/>').addClass('col-sm-4').append(
+           $('<div/>').addClass('form-group').append(
+             $('<label/>').text('@lang("admin.label.class", "Stil Sınıfı")'),
+             $('<input/>', {
+               'type': 'text',
+               'name': 'class',
+               'maxlength': '50'
+             }).addClass('form-control').val(item.class)
+           )
+         ),
+         $('<div/>').addClass('col-sm-4').append(
            $('<div/>').addClass('form-group').append(
              $('<label/>').text('@lang("admin.label.target", "Hedefi")'),
              $('<select/>', {
@@ -396,7 +416,7 @@
                $('<option/>', {
                  'value': '_parent'
                }).text('_parent')
-             ).addClass('form-control').val(item.target ? item.target : '_self')
+             ).addClass('form-control').val(item.target || '_self')
            )
          )
        ),

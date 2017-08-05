@@ -9,7 +9,7 @@ use \Admin\Manager as Admin;
 use \Webim\App;
 use \Webim\View\Manager as View;
 
-App::make()->group('(/:lang#[a-z\-]{2,5}#)?', function () {
+App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs())) . ')#)?' : ''), function () {
  //Init
  Admin::init()->yieldRoutes();
 

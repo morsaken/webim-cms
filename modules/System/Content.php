@@ -91,6 +91,11 @@ class Content extends Controller {
           $this->where('type', (string) $params);
 
           break;
+        case 'name':
+
+          $this->where('name', (string) $params);
+
+          break;
         case 'root':
 
           $this->where(function ($query) {
