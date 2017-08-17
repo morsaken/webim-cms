@@ -117,10 +117,10 @@ class Media extends Content {
             ->set('type', 'media')
             ->set('language', lang())
             ->set('url', $url)
-            ->set('title', $upload['basename'])
+            ->set('title', $upload->basename)
             ->set('publish_date', Carbon::now())
             ->save(function ($id) use ($upload, $role, $params, $extraMeta) {
-              $file = $upload['file'];
+              $file = $upload->file;
 
               if (array_get($params, 'file_max_size') && (array_get($params, 'file_max_size') < $file->size())) {
                 throw new \Exception(lang('message.file.size_exceeded', 'Dosya boyutu çok büyük!'));
@@ -144,8 +144,8 @@ class Media extends Content {
               $meta = array(
                 'role' => $role,
                 'path' => $file->rawPath,
-                'name' => $upload['name'],
-                'extension' => $upload['extension'],
+                'name' => $upload->name,
+                'extension' => $upload->extension,
                 'file_size' => $file->size()
               );
 
@@ -172,7 +172,7 @@ class Media extends Content {
             $message->return = array(
               'id' => $media->returns('id'),
               'role' => $role,
-              'src' => $upload['file']->src()
+              'src' => $upload->file->src()
             );
           } else {
             $message->text = $media->text();
