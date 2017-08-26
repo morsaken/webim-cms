@@ -54,14 +54,14 @@ App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs
       array($page->title)
     ));
 
-    //View file
-    $file = '500';
+    //Template
+    $data['template'] = 'default';
 
     if ($this->request->isAjax()) {
-      $file = 'ajax.' . $file;
+      $data['template'] = 'empty';
     }
 
-    return View::create($file)->data($data)->render();
+    return View::create('500')->data($data)->render();
   });
 
   //404
@@ -78,17 +78,24 @@ App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs
       array($page->title)
     ));
 
-    //View file
-    $file = '404';
+    //Template
+    $data['template'] = 'default';
 
     if ($this->request->isAjax()) {
-      $file = 'ajax.' . $file;
+      $data['template'] = 'empty';
     }
 
-    return View::create($file)->data($data)->render();
+    return View::create('404')->data($data)->render();
   });
 
   $this->get('/', function ($params = array()) use ($data) {
+    //Template
+    $data['template'] = 'default';
+
+    if ($this->request->isAjax()) {
+      $data['template'] = 'empty';
+    }
+
     return View::create('home')->data($data)->render();
   });
 
@@ -116,14 +123,14 @@ App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs
       $data['page'] = $page;
       $data['pages'] = makePageMenu($page, $pages);
 
-      //View file
-      $file = 'content';
+      //Template
+      $data['template'] = 'default';
 
       if ($this->request->isAjax()) {
-        $file = 'ajax.' . $file;
+        $data['template'] = 'empty';
       }
 
-      return View::create($file)->data($data)->render();
+      return View::create('content')->data($data)->render();
     });
   }
 
