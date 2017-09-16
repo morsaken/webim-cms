@@ -21,6 +21,7 @@
    <form id="form" class="panel-body p20 pb10" method="post" action="@url()">
     <input type="hidden" id="id" name="id" value="{{ $content->id or 0 }}">
     <input type="hidden" id="url" name="url" value="{{ $content->url or '' }}">
+    <input type="hidden" id="name" name="name" value="{{ $content->name or '' }}">
     <input type="hidden" id="version" name="version" value="{{ $content->version or 0 }}">
     <input type="hidden" id="meta-content" name="meta-content" value="{{{ $content->meta->content or '' }}}">
     <div class="tab-content pn br-n admin-form">
@@ -53,7 +54,7 @@
          <i class="fa fa-tag"></i>
         </span>
        </label>
-       @include('addon.url', ['base' => '/', 'parentUrl' => (isset($content->full_url) ? str_replace($content->url, '', $content->full_url) : ''), 'url' => (isset($content->url) ? $content->url : ''), 'link' => true])
+       @include('addon.url', ['base' => '/', 'parentUrl' => (isset($content->full_url) ? str_replace($content->url, '', $content->full_url) : ''), 'url' => (isset($content->url) ? $content->url : ''), 'link' => true, 'name' => (isset($content->name) ? $content->name : '')])
       </div>
       <div class="section mb15">
        <h6 class="fw400">@lang('admin.label.description', 'Açıklama')</h6>

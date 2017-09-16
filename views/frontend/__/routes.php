@@ -18,7 +18,7 @@ App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs
   View::setPath($path);
 
   //Get menus
-  $menus  = Content::init()->only('language')->where('type', 'menu')->load()->with('meta')->get('rows');
+  $menus = Content::init()->only('language')->where('type', 'menu')->load()->with('meta')->get('rows');
 
   //Page all nav
   $nav = array();
@@ -36,6 +36,7 @@ App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs
     'title' => conf('frontend.' . lang() . '.title', 'Web-IM XI'),
     'description' => conf('frontend.' . lang() . '.description', 'Web Internet Manager'),
     'keywords' => conf('frontend.' . lang() . '.keywords'),
+    'template' => 'default',
     'separator' => '::',
     'nav' => $nav,
     'breadcrumb' => array()
@@ -53,9 +54,6 @@ App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs
       array(lang('menu.home', 'Anasayfa'), '/'),
       array($page->title)
     ));
-
-    //Template
-    $data['template'] = 'default';
 
     if ($this->request->isAjax()) {
       $data['template'] = 'empty';
@@ -78,9 +76,6 @@ App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs
       array($page->title)
     ));
 
-    //Template
-    $data['template'] = 'default';
-
     if ($this->request->isAjax()) {
       $data['template'] = 'empty';
     }
@@ -89,9 +84,6 @@ App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs
   });
 
   $this->get('/', function ($params = array()) use ($data) {
-    //Template
-    $data['template'] = 'default';
-
     if ($this->request->isAjax()) {
       $data['template'] = 'empty';
     }
@@ -122,9 +114,6 @@ App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs
 
       $data['page'] = $page;
       $data['pages'] = makePageMenu($page, $pages);
-
-      //Template
-      $data['template'] = 'default';
 
       if ($this->request->isAjax()) {
         $data['template'] = 'empty';

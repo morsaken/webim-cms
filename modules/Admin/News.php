@@ -217,47 +217,49 @@ class News {
       'title' => 'required'
     ), array(
       'title.required' => lang('admin.message.content_title_required', 'İçerik başlığını girin!')
-    ))->set('id', !is_null($id) ? $id : input('id', 0))
-      ->set('type', 'news')
-      ->set('language', input('language', lang()))
-      ->set('url', $url)
-      ->set('title', input('title'))
-      ->set('publish_date', $publish_date)
-      ->set('expire_date', $expire_date)
-      ->set('version', input('version', 0))
-      ->set('active', input('active', array('false', 'true')))
-      ->save(function ($id) use ($manager, &$poster) {
-        if ($file = $manager->app->request->file('poster-file')) {
-          //Upload and save
-          $upload = SystemMedia::init()->extensions('image', conf('media.image_extensions'))->upload($file, 'image', array(
-            'image_max_size' => conf('media.image_max_size', '1920x1080')
-          ));
-
-          if ($upload->success()) {
-            $poster['id'] = $upload->returns('id');
-            $poster['role'] = $upload->returns('role');
-            $poster['image'] = $upload->returns('src');
-          } else {
-            throw new \Exception(lang('message.image_upload_error', [$upload->text()], 'Resim yüklenemedi: %s'));
-          }
-        }
-
-        $this->saveCategory($id, input('category'));
-
-        $this->saveMeta($id, array(
-          'poster_id' => $poster['id'],
-          'summary' => input('meta-summary'),
-          'show_summary_inside' => input('meta-show_summary_inside', array('no', 'yes')),
-          'content' => raw_input('meta-content'),
-          'source' => input('meta-source'),
-          'author' => input('meta-author'),
-          'options' => raw_input('meta-options')
+    ))->set(array(
+      'id' => (!is_null($id) ? $id : input('id', 0)),
+      'type' => 'news',
+      'language' => input('language', lang()),
+      'url' => $url,
+      'name' => (strlen(input('name')) ? slug(input('name')) : null),
+      'title' => input('title'),
+      'publish_date' => $publish_date,
+      'expire_date' => $expire_date,
+      'version' => input('version', 0),
+      'active' => input('active', array('false', 'true'))
+    ))->save(function ($id) use ($manager, &$poster) {
+      if ($file = $manager->app->request->file('poster-file')) {
+        //Upload and save
+        $upload = SystemMedia::init()->extensions('image', conf('media.image_extensions'))->upload($file, 'image', array(
+          'image_max_size' => conf('media.image_max_size', '1920x1080')
         ));
 
-        $this->saveMedia($id, input('media_id'));
+        if ($upload->success()) {
+          $poster['id'] = $upload->returns('id');
+          $poster['role'] = $upload->returns('role');
+          $poster['image'] = $upload->returns('src');
+        } else {
+          throw new \Exception(lang('message.image_upload_error', [$upload->text()], 'Resim yüklenemedi: %s'));
+        }
+      }
 
-        $this->saveTags($id, explode(',', input('tags')));
-      });
+      $this->saveCategory($id, input('category'));
+
+      $this->saveMeta($id, array(
+        'poster_id' => $poster['id'],
+        'summary' => input('meta-summary'),
+        'show_summary_inside' => input('meta-show_summary_inside', array('no', 'yes')),
+        'content' => raw_input('meta-content'),
+        'source' => input('meta-source'),
+        'author' => input('meta-author'),
+        'options' => raw_input('meta-options')
+      ));
+
+      $this->saveMedia($id, input('media_id'));
+
+      $this->saveTags($id, explode(',', input('tags')));
+    });
 
     //Set poster
     $save->return = array_merge($save->returns(), array('poster' => $poster));
@@ -331,25 +333,33 @@ class News {
 
     $manager->app->response->setContentType('json');
 
-    $id = array_get($params, 'id');
+    $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
     if (strlen(input('url'))) {
+      //ID
+      $id = array_get($params, 'id');
+
       //New url
       $url = Content::makeUrl(input('url'), input('url'), substr(input('url'), 0, 10), (conf('news.url_with_date', 'no') == 'yes'));
 
-      $save = Content::init()
-        ->set('id', $id)
-        ->set('url', $url)
-        ->set('version', input('version', 0))->save();
+      $current = Content::init()->where('id', $id)->load()->get('rows.0');
 
-      if ($save->success()) {
-        $save->return = $save->returns() + array('url' => $url);
+      if ($current) {
+        $message = Content::init()->set(array(
+          'id' => $current->id,
+          'parent_id' => $current->parent_id,
+          'type' => $current->type,
+          'language' => $current->language,
+          'url' => $url
+        ))->save();
+
+        if ($message->success()) {
+          $message->return = $message->returns() + array('url' => $url);
+        }
       }
-
-      return $save->forData();
     }
 
-    return Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'))->forData();
+    return $message->forData();
   }
 
   /**

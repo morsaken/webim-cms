@@ -27,6 +27,7 @@
    <form id="form" class="panel-body p20 pb10" method="post" action="@url()">
     <input type="hidden" id="id" name="id" value="{{ $content->id or 0 }}">
     <input type="hidden" id="url" name="url" value="{{ $content->url or '' }}">
+    <input type="hidden" id="name" name="name" value="{{ $content->name or '' }}">
     <input type="hidden" id="version" name="version" value="{{ $content->version or 0 }}">
     <input type="hidden" id="meta-poster_id" name="meta-poster_id" value="{{ $content->meta->poster_id or 0 }}">
     <input type="hidden" id="meta-content" name="meta-content" value="{{{ $content->meta->content or '' }}}">
@@ -64,7 +65,7 @@
            <i class="fa fa-tag"></i>
           </span>
          </label>
-         @include('addon.url', ['base' => 'news', 'url' => (isset($content->url) ? $content->url : ''), 'link' => true, 'withDate' => (conf('news.url_with_date', 'no') == 'yes')])
+         @include('addon.url', ['base' => 'news', 'url' => (isset($content->url) ? $content->url : ''), 'link' => true, 'withDate' => (conf('news.url_with_date', 'no') == 'yes'), 'name' => (isset($content->name) ? $content->name : '')])
         </div>
         <div class="section mb15">
          <h6 class="fw400">@lang('admin.label.summary', 'Özet')</h6>

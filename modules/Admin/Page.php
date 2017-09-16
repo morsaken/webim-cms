@@ -148,29 +148,31 @@ class Page {
       'title' => 'required'
     ), array(
       'title.required' => lang('admin.message.content_title_required', 'İçerik başlığını girin!')
-    ))->set('id', !is_null($id) ? $id : input('id', 0))
-      ->set('parent_id', (input('parent_id', 0) > 0 ? input('parent_id', 0) : null))
-      ->set('type', 'page')
-      ->set('language', input('language', lang()))
-      ->set('url', Content::makeUrl(input('url'), input('title')))
-      ->set('title', input('title'))
-      ->set('publish_date', Carbon::createFromTimestamp(strtotime(input('publish_date'))))
-      ->set('expire_date', (strlen(input('expire_date')) ? Carbon::createFromTimestamp(strtotime(input('expire_date'))) : null))
-      ->set('order', (input('order', 0) > 0 ? input('order', 0) : null))
-      ->set('version', input('version', 0))
-      ->set('active', input('active', array('false', 'true')))
-      ->save(function ($id) use ($manager) {
-        $this->saveOrders($id);
+    ))->set(array(
+      'id' => (!is_null($id) ? $id : input('id', 0)),
+      'parent_id' => (input('parent_id', 0) > 0 ? input('parent_id', 0) : null),
+      'type' => 'page',
+      'language' => input('language', lang()),
+      'url' => Content::makeUrl(input('url'), input('title')),
+      'name' => (strlen(input('name')) ? slug(input('name')) : null),
+      'title' => input('title'),
+      'publish_date' => Carbon::createFromTimestamp(strtotime(input('publish_date'))),
+      'expire_date' => (strlen(input('expire_date')) ? Carbon::createFromTimestamp(strtotime(input('expire_date'))) : null),
+      'order' => (input('order', 0) > 0 ? input('order', 0) : null),
+      'version' => input('version', 0),
+      'active' => input('active', array('false', 'true'))
+    ))->save(function ($id) use ($manager) {
+      $this->saveOrders($id);
 
-        $this->saveMeta($id, array(
-          'description' => input('meta-description'),
-          'content' => raw_input('meta-content')
-        ));
+      $this->saveMeta($id, array(
+        'description' => input('meta-description'),
+        'content' => raw_input('meta-content')
+      ));
 
-        $this->saveMedia($id, input('media_id'));
+      $this->saveMedia($id, input('media_id'));
 
-        $this->saveTags($id, explode(',', input('tags')));
-      })->forData();
+      $this->saveTags($id, explode(',', input('tags')));
+    })->forData();
   }
 
   public function parents($params = array()) {
@@ -250,25 +252,33 @@ class Page {
 
     $manager->app->response->setContentType('json');
 
-    $id = array_get($params, 'id');
+    $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
     if (strlen(input('url'))) {
+      //ID
+      $id = array_get($params, 'id');
+
       //New url
-      $url = Content::makeUrl(input('url'), input('url'));
+      $url = Content::makeUrl(input('url'), input('url'), substr(input('url'), 0, 10), (conf('news.url_with_date', 'no') == 'yes'));
 
-      $save = Content::init()
-        ->set('id', $id)
-        ->set('url', $url)
-        ->set('version', input('version', 0))->save();
+      $current = Content::init()->where('id', $id)->load()->get('rows.0');
 
-      if ($save->success()) {
-        $save->return = $save->returns() + array('url' => $url);
+      if ($current) {
+        $message = Content::init()->set(array(
+          'id' => $current->id,
+          'parent_id' => $current->parent_id,
+          'type' => $current->type,
+          'language' => $current->language,
+          'url' => $url
+        ))->save();
+
+        if ($message->success()) {
+          $message->return = $message->returns() + array('url' => $url);
+        }
       }
-
-      return $save->forData();
     }
 
-    return Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'))->forData();
+    return $message->forData();
   }
 
   public function duplicate($params = array()) {

@@ -13,8 +13,8 @@ use \Webim\Library\Carbon;
 use \Webim\Library\File;
 
 App::make(array(
-  'mode' => conf('default.mode', 'development'),
-  'encryption_key' => conf('default.encryption_key', 'O9s_lWeIn7cOL0M]S6Xg4aR^GwovA&UN'),
+  'mode' => 'development',
+  'encryption_key' => 'O9s_lWeIn7cOL0M]S6Xg4aR^GwovA&UN',
   'root' => PUB_ROOT,
   'ext' => EXT
 ))->with(array('lang', 'cache', 'db'))->with(function () {

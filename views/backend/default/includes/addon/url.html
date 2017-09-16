@@ -1,11 +1,20 @@
-<div class="field mt10">
- <label class="fw600">@lang('admin.label.url', 'URL'):</label>
- @if (isset($base))<span id="base-url">@url($base)</span>/@endif<span id="parent-url">{{ $parentUrl or '' }}</span><a href="#edit-url">{{{ strlen($url) ? $url : 'untitled' }}}</a>
- @if (isset($content->url) && isset($base) && (isset($link) && $link))
- <a class="ml10 text-danger" href="#open-url" data-base-url="@url($base)" title="@lang('admin.hint.open_url', 'URL\'yi görüntüle')">
-  <i class="fa fa-link"></i>
- </a>
- @endif
+<div class="field mt10">@if (isset($name))
+ <div class="row">
+  <div class="col-md-6 of-h no-w">@endif
+   <label class="fw600">@lang('admin.label.url', 'URL'):</label>
+   @if (isset($base))<span id="base-url">@url($base)</span>/@endif<span id="parent-url">{{ $parentUrl or '' }}</span><a href="#edit-url">{{{ strlen($url) ? $url : 'untitled' }}}</a>
+   @if (isset($content->url) && isset($base) && (isset($link) && $link))
+   <a class="ml10 text-danger" href="#open-url" data-base-url="@url($base)" title="@lang('admin.hint.open_url', 'URL\'yi görüntüle')">
+    <i class="fa fa-link"></i>
+   </a>
+   @endif
+   @if (isset($name))
+  </div>
+  <div class="col-md-6 of-h no-w">
+   <label class="fw600">@lang('admin.label.identity', 'Tanımı'):</label>
+   <a id="identity" href="#edit-name">{{ strlen($name) ? $name : 'untitled' }}</a>
+  </div>
+ </div>@endif
 </div>
 
 @section('content')
@@ -26,6 +35,40 @@
       <input type="text" id="new-url" name="new-url" class="gui-input">
       <span class="field-icon">
        <i class="fa fa-link"></i>
+      </span>
+     </label>
+    </div>
+    <div class="modal-footer">
+     <button type="submit" class="btn btn-sm btn-primary">
+      <i class="fa fa-save"></i>
+      @lang('admin.button.save', 'Kaydet')
+     </button>
+     <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+      <i class="fa fa-close"></i>
+      @lang('admin.button.close', 'Kapat')
+     </button>
+    </div>
+   </form>
+  </div>
+ </div>
+</div>
+
+<div id="name-dialog" class="modal fade">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h4>
+     <i class="fa fa-link"></i>
+     @lang('admin.label.change_identity', 'Tanım Değiştir')
+    </h4>
+   </div>
+   <form id="name-form" class="admin-form">
+    <div class="modal-body">
+     <label class="field prepend-icon">
+      <input type="text" id="new-name" name="new-name" class="gui-input">
+      <span class="field-icon">
+       <i class="fa fa-bookmark"></i>
       </span>
      </label>
     </div>
@@ -103,15 +146,27 @@
   $('#new-url').select();
  });
 
- $('a[href="#edit-url"]').click(function() {
+ $('a[href="#edit-url"]').click(function(e) {
+  e.preventDefault();
+
   $('#new-url').val($.fn.clearUrl());
 
   $('#url-dialog').modal();
-
-  return false;
  });
 
- $('#new-url').blur(function() {
+ $('#name-dialog').on('shown.bs.modal', function() {
+  $('#new-name').select();
+ });
+
+ $('a[href="#edit-name"]').click(function(e) {
+  e.preventDefault();
+
+  $('#new-name').val($('#name').val());
+
+  $('#name-dialog').modal();
+ });
+
+ $('#new-url, #new-name').blur(function() {
   $(this).val($.normalizeString($(this).val(), "{{ $except or '' }}"));
  });
 
@@ -185,6 +240,17 @@
     $('#url-dialog').modal('hide');
    }
   }
+ });
+
+ $('#name-form').submit(function(e) {
+  e.preventDefault();
+
+  var name = $.normalizeString($('#new-name').val(), "{{ $except or '' }}");
+
+  $('#new-name, #name').val(name);
+  $('#identity').text(name.length ? name : 'untitled');
+
+  $('#name-dialog').modal('hide');
  });
  //]]>
 </script>
