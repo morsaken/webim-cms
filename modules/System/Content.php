@@ -105,13 +105,18 @@ class Content extends Controller {
 
           break;
         case 'parent':
+        case 'parent.name':
+        case 'parent.url':
 
-          $this->where('parent_id', function ($query) use ($params) {
+          $field = array_get(explode('.', $only), 1, 'url');
+          $value = (string) $params;
+
+          $this->where('parent_id', function ($query) use ($field, $value) {
             $query->select('parent.id')
               ->from('sys_content as parent')
               ->where('parent.type', '=', DB::func(null, 'sys_content.type'))
               ->where('parent.language', '=', DB::func(null, 'sys_content.language'))
-              ->where('parent.url', (string) $params);
+              ->where('parent.' . $field, $value);
           });
 
           break;
