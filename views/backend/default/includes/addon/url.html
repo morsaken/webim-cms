@@ -1,8 +1,8 @@
 <div class="field mt10">@if (isset($name))
  <div class="row">
   <div class="col-md-6 of-h no-w">@endif
-   <label class="fw600">@lang('admin.label.url', 'URL'):</label>
-   @if (isset($base))<span id="base-url">@url($base)</span>/@endif<span id="parent-url">{{ $parentUrl or '' }}</span><a href="#edit-url">{{{ strlen($url) ? $url : 'untitled' }}}</a>
+   <label class="fw600" for="edit-url">@lang('admin.label.url', 'URL'):</label>
+   @if (isset($base))<span id="base-url">@url($base)</span>/@endif<span id="parent-url">{{ $parentUrl or '' }}</span><a id="edit-url" href="#edit-url">{{{ strlen($url) ? $url : 'untitled' }}}</a>
    @if (isset($content->url) && isset($base) && (isset($link) && $link))
    <a class="ml10 text-danger" href="#open-url" data-base-url="@url($base)" title="@lang('admin.hint.open_url', 'URL\'yi görüntüle')">
     <i class="fa fa-link"></i>
@@ -11,8 +11,8 @@
    @if (isset($name))
   </div>
   <div class="col-md-6 of-h no-w">
-   <label class="fw600">@lang('admin.label.identity', 'Tanımı'):</label>
-   <a id="identity" href="#edit-name">{{ strlen($name) ? $name : 'untitled' }}</a>
+   <label class="fw600" for="edit-name">@lang('admin.label.identity', 'Tanımı'):</label>
+   <a id="edit-name" href="#edit-name">{{ strlen($name) ? $name : 'untitled' }}</a>
   </div>
  </div>@endif
 </div>
@@ -248,9 +248,13 @@
   var name = $.normalizeString($('#new-name').val(), "{{ $except or '' }}");
 
   $('#new-name, #name').val(name);
-  $('#identity').text(name.length ? name : 'untitled');
+  $('#edit-name').text(name.length ? name : 'untitled');
 
   $('#name-dialog').modal('hide');
+ });
+
+ $('label[for="edit-url"], label[for="edit-name"]').click(function() {
+   $('a[href="#' +  $(this).attr('for') + '"]').click();
  });
  //]]>
 </script>
