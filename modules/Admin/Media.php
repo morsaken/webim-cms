@@ -320,10 +320,10 @@ class Media {
         $url = 'http://' . $url;
       }
 
-      $dom = new Dom;
-      $dom->loadFromUrl($url);
+      try {
+        $dom = new Dom;
+        $dom->loadFromUrl($url);
 
-      if ($dom) {
         if ($dom->find('title', 0)) {
           $title = $dom->find('title', 0)->text;
         }
@@ -382,15 +382,17 @@ class Media {
         if ($embed = $dom->find('link[itemprop="embedURL"]', 0)) {
           $url = $embed->getAttribute('href');
         }
-      }
 
-      return array_to(array(
-        'link-url' => input('link-raw-url'),
-        'link-embed-url' => html_entity_decode($url),
-        'link-title' => html_entity_decode($title, ENT_QUOTES),
-        'link-description' => html_entity_decode($description, ENT_QUOTES),
-        'link-images' => $images
-      ));
+        return array_to(array(
+          'link-url' => input('link-raw-url'),
+          'link-embed-url' => html_entity_decode($url),
+          'link-title' => html_entity_decode($title, ENT_QUOTES),
+          'link-description' => html_entity_decode($description, ENT_QUOTES),
+          'link-images' => $images
+        ));
+      } catch (\Exception $e) {
+        return Message::result($e->getMessage())->forData();
+      }
     }
 
     return Message::result(lang('message.paste_link_first', 'Önce bağlantıyı yapıştırın!'))->forData();
