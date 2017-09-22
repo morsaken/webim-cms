@@ -231,12 +231,8 @@ class Media extends Content {
     $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
     try {
-      if (!isset($this->roles[$role])) {
-        throw new \Exception(lang('message.invalid_media_role', array($role), 'Geçersiz medya türü: %s'));
-      }
-
-      if (ini_get('allow_url_fopen') !== 'On') {
-        throw new \Exception(lang('admin.message.php_ini_fopen_error', '"php.ini" dosyasından "allow_url_fopen" özelliğini "On" yapmanız gerekmektedir!'));
+      if (!in_array($role, $this->roles, true)) {
+        throw new \Exception(lang('message.invalid_media_role', [$role], 'Geçersiz medya türü: %s'));
       }
 
       if (!isset($path['url']) || !isset($path['title'])) {

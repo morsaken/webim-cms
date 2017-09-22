@@ -247,7 +247,7 @@ class Media {
       }
     } else {
       return json_encode(array(
-        'error' => lang('media.message.no_file_selected', 'Dosya seçilmemiş!')
+        'error' => lang('message.no_file_selected', 'Dosya seçilmemiş!')
       ));
     }
 
@@ -268,136 +268,132 @@ class Media {
 
     $manager->app->response->setContentType('json');
 
-    if (ini_get('allow_url_fopen') !== 'On') {
-      if (strlen(input('link-embed-url'))) {
-        if (strlen(input('link-title'))) {
-          //Poster
-          $poster_id = 0;
+    if (strlen(input('link-embed-url'))) {
+      if (strlen(input('link-title'))) {
+        //Poster
+        $poster_id = 0;
 
-          if (strlen(input('link-poster'))) {
-            //Get poster headers
-            $headers = get_headers(input('link-poster'), 1);
+        if (strlen(input('link-poster'))) {
+          //Get poster headers
+          $headers = get_headers(input('link-poster'), 1);
 
-            if (in_array(array_get($headers, 'Content-Type'), array('image/jpg', 'image/jpeg', 'image/png'))) {
-              $import = SystemMedia::init()->extensions('image', conf('media.image_extensions'))->import('image', array(
-                'url' => input('link-poster'),
-                'title' => input('link-title')
-              ), array(
-                'image_max_size' => conf('media.image_max_size', '1920x1080')
-              ));
+          if (in_array(array_get($headers, 'Content-Type'), array('image/jpg', 'image/jpeg', 'image/png'))) {
+            $import = SystemMedia::init()->extensions('image', conf('media.image_extensions'))->import('image', array(
+              'url' => input('link-poster'),
+              'title' => input('link-title')
+            ), array(
+              'image_max_size' => conf('media.image_max_size', '1920x1080')
+            ));
 
-              if ($import->success()) {
-                $poster_id = $import->returns('id');
-              }
+            if ($import->success()) {
+              $poster_id = $import->returns('id');
             }
           }
-
-          return Content::init()
-            ->set('type', 'media')
-            ->set('language', lang())
-            ->set('url', uniqid())
-            ->set('title', input('link-title'))
-            ->set('publish_date', Carbon::now())
-            ->save(function ($id) use ($poster_id) {
-              $this->saveMeta($id, array(
-                'role' => 'link',
-                'url' => input('link-url'),
-                'embed_url' => input('link-embed-url'),
-                'description' => input('link-description'),
-                'poster_id' => $poster_id
-              ));
-            })->forData();
-        } else {
-          return Message::result(lang('media.message.type_title', 'Bağlantı için başlık yazın!'))->forData();
-        }
-      } elseif (strlen(input('link-raw-url'))) {
-        //Variables
-        $url = input('link-raw-url');
-        $title = '';
-        $description = '';
-        $images = array();
-
-        if (!preg_match('/^http/', $url)) {
-          $url = 'http://' . $url;
         }
 
-        $dom = new Dom;
-        $dom->loadFromUrl($url);
+        return Content::init()
+          ->set('type', 'media')
+          ->set('language', lang())
+          ->set('url', uniqid())
+          ->set('title', input('link-title'))
+          ->set('publish_date', Carbon::now())
+          ->save(function ($id) use ($poster_id) {
+            $this->saveMeta($id, array(
+              'role' => 'link',
+              'url' => input('link-url'),
+              'embed_url' => input('link-embed-url'),
+              'description' => input('link-description'),
+              'poster_id' => $poster_id
+            ));
+          })->forData();
+      } else {
+        return Message::result(lang('message.type_title', 'Bağlantı için başlık yazın!'))->forData();
+      }
+    } elseif (strlen(input('link-raw-url'))) {
+      //Variables
+      $url = input('link-raw-url');
+      $title = '';
+      $description = '';
+      $images = array();
 
-        if ($dom) {
-          if ($dom->find('title', 0)) {
-            $title = $dom->find('title', 0)->text;
+      if (!preg_match('/^http/', $url)) {
+        $url = 'http://' . $url;
+      }
+
+      $dom = new Dom;
+      $dom->loadFromUrl($url);
+
+      if ($dom) {
+        if ($dom->find('title', 0)) {
+          $title = $dom->find('title', 0)->text;
+        }
+
+        if ($dom->find('meta[name="description"]', 0)) {
+          $description = $dom->find('meta[name="description"]', 0)->getAttribute('content');
+        }
+
+        foreach ($dom->find('img') as $img) {
+          if (preg_match('/^.*\.(jpe?g|png)$/', $img->getAttribute('src'))) {
+            $image = $img->getAttribute('src');
+
+            if (!preg_match('/^[' . preg_quote($url, '/') . ']/', $image)) {
+              $image = $url . $image;
+            }
+
+            $images[] = $image;
           }
+        }
 
-          if ($dom->find('meta[name="description"]', 0)) {
-            $description = $dom->find('meta[name="description"]', 0)->getAttribute('content');
-          }
+        foreach ($dom->find('meta[property^=og:]') as $og) {
+          switch ($og->getAttribute('property')) {
+            case 'og:title':
 
-          foreach ($dom->find('img') as $img) {
-            if (preg_match('/^.*\.(jpe?g|png)$/', $img->getAttribute('src'))) {
-              $image = $img->getAttribute('src');
+              //Title
+              $title = $og->getAttribute('content');
+
+              break;
+            case 'og:description':
+
+              //Description
+              $description = $og->getAttribute('content');
+
+              break;
+            case 'og:image':
+
+              $image = $og->getAttribute('content');
 
               if (!preg_match('/^[' . preg_quote($url, '/') . ']/', $image)) {
                 $image = $url . $image;
               }
 
-              $images[] = $image;
-            }
-          }
+              //Image
+              array_unshift($images, $image);
 
-          foreach ($dom->find('meta[property^=og:]') as $og) {
-            switch ($og->getAttribute('property')) {
-              case 'og:title':
+              break;
+            case 'og:video:url':
 
-                //Title
-                $title = $og->getAttribute('content');
+              //Change path (embed)
+              $url = $og->getAttribute('content');
 
-                break;
-              case 'og:description':
-
-                //Description
-                $description = $og->getAttribute('content');
-
-                break;
-              case 'og:image':
-
-                $image = $og->getAttribute('content');
-
-                if (!preg_match('/^[' . preg_quote($url, '/') . ']/', $image)) {
-                  $image = $url . $image;
-                }
-
-                //Image
-                array_unshift($images, $image);
-
-                break;
-              case 'og:video:url':
-
-                //Change path (embed)
-                $url = $og->getAttribute('content');
-
-                break;
-            }
-          }
-
-          if ($embed = $dom->find('link[itemprop="embedURL"]', 0)) {
-            $url = $embed->getAttribute('href');
+              break;
           }
         }
 
-        return array_to(array(
-          'link-url' => input('link-raw-url'),
-          'link-embed-url' => html_entity_decode($url),
-          'link-title' => html_entity_decode($title, ENT_QUOTES),
-          'link-description' => html_entity_decode($description, ENT_QUOTES),
-          'link-images' => $images
-        ));
+        if ($embed = $dom->find('link[itemprop="embedURL"]', 0)) {
+          $url = $embed->getAttribute('href');
+        }
       }
-    } else {
-      return Message::result(lang('media.message.php_ini_fopen_error', '"php.ini" dosyasından "allow_url_fopen" özelliğini "On" yapmanız gerekmektedir!'))->forData();
+
+      return array_to(array(
+        'link-url' => input('link-raw-url'),
+        'link-embed-url' => html_entity_decode($url),
+        'link-title' => html_entity_decode($title, ENT_QUOTES),
+        'link-description' => html_entity_decode($description, ENT_QUOTES),
+        'link-images' => $images
+      ));
     }
 
-    return Message::result(lang('media.message.paste_link_first', 'Önce bağlantıyı yapıştırın!'))->forData();
+    return Message::result(lang('message.paste_link_first', 'Önce bağlantıyı yapıştırın!'))->forData();
   }
 
   public function save($params = array()) {
