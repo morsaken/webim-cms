@@ -5,7 +5,7 @@
 
 namespace Admin;
 
-use \HTML\DOMNode;
+use \HTMLParser\Dom;
 use \System\Content;
 use \System\Media as SystemMedia;
 use \System\Settings as SysSettings;
@@ -321,55 +321,67 @@ class Media {
           $url = 'http://' . $url;
         }
 
-        //HTML
-        $html = htmlFromFile($url);
+        $dom = new Dom;
+        $dom->loadFromUrl($url);
 
-        if ($html) {
-          if ($html->find('title', 0)) {
-            $title = $html->find('title', 0)->plaintext;
+        if ($dom) {
+          if ($dom->find('title', 0)) {
+            $title = $dom->find('title', 0)->text;
           }
 
-          if ($html->find('meta[name="description"]', 0)) {
-            $description = $html->find('meta[name="description"]', 0)->plaintext;
+          if ($dom->find('meta[name="description"]', 0)) {
+            $description = $dom->find('meta[name="description"]', 0)->getAttribute('content');
           }
 
-          foreach ($html->find('img') as $img) {
-            if (isset($img->attr['src']) && preg_match('/^.*\.(jpe?g|png)$/', $img->attr['src'])) {
-              $images[] = DOMNode::url_to_absolute($url, $img->attr['src']);
+          foreach ($dom->find('img') as $img) {
+            if (preg_match('/^.*\.(jpe?g|png)$/', $img->getAttribute('src'))) {
+              $image = $img->getAttribute('src');
+
+              if (!preg_match('/^[' . preg_quote($url, '/') . ']/', $image)) {
+                $image = $url . $image;
+              }
+
+              $images[] = $image;
             }
           }
 
-          foreach ($html->find('meta[property^=og:]') as $og) {
-            switch ($og->attr['property']) {
+          foreach ($dom->find('meta[property^=og:]') as $og) {
+            switch ($og->getAttribute('property')) {
               case 'og:title':
 
                 //Title
-                $title = $og->attr['content'];
+                $title = $og->getAttribute('content');
 
                 break;
               case 'og:description':
 
                 //Description
-                $description = $og->attr['content'];
+                $description = $og->getAttribute('content');
 
                 break;
               case 'og:image':
 
+                $image = $og->getAttribute('content');
+
+                if (!preg_match('/^[' . preg_quote($url, '/') . ']/', $image)) {
+                  $image = $url . $image;
+                }
+
                 //Image
-                array_unshift($images, DOMNode::url_to_absolute($url, $og->attr['content']));
+                array_unshift($images, $image);
 
                 break;
               case 'og:video:url':
 
                 //Change path (embed)
-                $url = $og->attr['content'];
+                $url = $og->getAttribute('content');
 
                 break;
             }
           }
 
-          if ($embed = $html->find('link[itemprop="embedURL"]', 0)) {
-            $url = $embed->attr['href'];
+          if ($embed = $dom->find('link[itemprop="embedURL"]', 0)) {
+            $url = $embed->getAttribute('href');
           }
         }
 

@@ -255,4 +255,5 @@ class Tag {
 
     return '</' . $this->name . '>';
   }
+
 }

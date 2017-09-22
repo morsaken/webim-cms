@@ -270,12 +270,18 @@ class Media extends Content {
         slug($path['title']) . $extension
       )->create();
 
-      if (!@copy($path['url'], $destination->getPath())) {
+      //Target content
+      $content = @file_get_contents($path['url']);
+
+      if ($content === false) {
         //Remove created destination
         $destination->folder()->remove();
 
         throw new \Exception(lang('message.target_not_copied_into_system', 'Hedef sisteme kopyalanamadı!'));
       }
+
+      //Save to file
+      $destination->write($content);
 
       $media = parent::init()
         ->set('type', 'media')

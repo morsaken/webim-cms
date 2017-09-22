@@ -118,14 +118,15 @@ DROP TABLE IF EXISTS `sys_content_media`;
 CREATE TABLE `sys_content_media` (
   `content_id` int(10) unsigned NOT NULL,
   `media_id` int(10) unsigned NOT NULL,
+  `poster` enum('true','false') COLLATE utf8_turkish_ci DEFAULT 'false',
   `order` tinyint(3) unsigned DEFAULT NULL,
   `name` varchar(100) COLLATE utf8_turkish_ci DEFAULT NULL,
   PRIMARY KEY (`content_id`,`media_id`),
+  KEY `poster` (`media_id`,`poster`),
   KEY `order` (`media_id`,`order`),
   CONSTRAINT `con_med_content_id` FOREIGN KEY (`content_id`) REFERENCES `sys_content` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `con_med_media_id` FOREIGN KEY (`media_id`) REFERENCES `sys_content` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci;
-
 -- ----------------------------
 -- Table structure for sys_content_meta
 -- ----------------------------
