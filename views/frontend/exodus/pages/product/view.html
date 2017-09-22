@@ -1,0 +1,124 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} :: @parent @stop
+
+@section('meta')
+@parent
+<meta name="twitter:site" content="@url()">
+<meta name="twitter:title" content="{{{ $product->title }}}">
+<meta name="twitter:description" content="{{{ $product->meta->summary }}}">
+<meta name="twitter:image:src" content="{{ $product->poster->image or '' }}">
+<meta property="fb:app_id" content="@conf('login.facebook.app_id')">
+<meta property="og:site_name" content="{{{ $title }}}">
+<meta property="og:title" content="{{{ $product->title }}}">
+<meta property="og:url" content="@url()">
+<meta property="og:description" content="{{{ $product->meta->summary }}}">
+<meta property="og:image" content="{{ $product->poster->image or '' }}">
+@stop
+
+@section('content')
+<div id="titlebar" class="property-titlebar margin-bottom-0">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <a href="@url('products')" class="back-to-listings"></a>
+        <div class="property-title">
+          <h2>{{{ $page->title }}} <span class="property-badge">{{{ implode(', ', $product->categories) }}}</span></h2>
+        </div>
+        <div class="property-pricing">
+          <div>{{{ $product->meta->stock_code or '-' }}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row margin-bottom-50">
+    <div class="col-md-12">
+      <div class="property-slider-container">
+        <div class="agent-widget">
+          <input type="text" name="email" placeholder="@lang('label.your_email', 'E-Posta Adresiniz')" pattern="^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$">
+          <input type="text" name="phone" placeholder="@lang('label.your_phone', 'Telefon Numaranız')">
+          <textarea name="message">@lang('label.interested_in', [isset($product->meta->stock_code) ? $product->meta->stock_code : $product->url], '\'%s\' nolu ürünle ilgileniyorum. Ayrıntılı bilgi almak istiyorum.')</textarea>
+          <button class="button fullwidth margin-top-5">@lang('button.send', 'Gönder')</button>
+        </div>
+        <div class="property-slider no-arrows">
+          @if ($product->poster->image)
+          <a href="{{ $product->poster->image }}" data-background-image="{{ $product->poster->image }}" class="item mfp-gallery"></a>
+          @endif
+          @if (isset($product->media) && count($product->media))
+          @foreach ($product->media as $media)
+          <a href="{{ $media->poster->image }}" data-background-image="{{ $media->poster->image }}" class="item mfp-gallery"></a>
+          @endforeach
+          @endif
+        </div>
+      </div>
+      @if (isset($product->media) && count($product->media))
+      <div class="property-slider-nav">
+        @if ($product->poster->image)
+        <div class="item"><img src="{{ $product->poster->image }}" alt="{{{ $product->title }}}"></div>
+        @endif
+        @foreach ($product->media as $media)
+        <div class="item"><img src="{{ $media->poster->image }}" alt="{{{ $product->title }}}"></div>
+        @endforeach
+      </div>
+      @endif
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="content">
+    <div class="row">
+      <div class="col-lg-8 col-md-7">
+        <div class="property-description">
+          <ul class="property-main-features">
+            <li>{{{ $product->meta->summary }}}</li>
+          </ul>
+          <h3 class="desc-headline">@lang('label.description', 'Açıklama')</h3>
+          <div class="show-more">
+            {{ $product->meta->content }}
+            <a href="#" class="show-more-button">@lang('button.more', 'Devamı') <i class="fa fa-angle-down"></i></a>
+          </div>
+          @if (isset($product->meta->form_id) && $product->meta->form_id && isset($product->form_fields))
+          @foreach ($product->form_fields as $group => $fields)
+          <h3 class="desc-headline">{{{ $group }}}</h3>
+          <ul class="property-features margin-top-0">
+            @foreach ($fields as $field)
+            <li><strong>{{{ $field->label }}}</strong>: <span>{{{ $field->text }}}</span></li>
+            @endforeach
+          </ul>
+          @endforeach
+          @endif
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-5">
+        <div class="sidebar sticky right">
+          @if (isset($featured) && count($featured))
+          <div class="widget">
+            <h3 class="margin-bottom-35">@lang('label.featured_products', 'İlgili Ürünler')</h3>
+            <div class="listing-carousel outer">
+              @foreach ($featured as $item)
+              <div class="item">
+                <div class="listing-item compact">
+                  <a href="#" class="listing-img-container">
+                    <div class="listing-img-content">
+                      <span class="listing-compact-title">{{{ $item->title }}} <i>{{{ $item->meta->stock_code or '-' }}}</i></span>
+                      <ul class="listing-hidden-content">
+                        <li>{{ strlen($item->meta->summary) ? str_limit($item->meta->summary, 100) : '-' }}</li>
+                        <li></li>
+                      </ul>
+                    </div>
+                    <img src="{{ $item->poster->image }}" alt="{{{ $item->title }}}">
+                  </a>
+                </div>
+              </div>
+              @endforeach
+            </div>
+          </div>
+          @endif
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@stop

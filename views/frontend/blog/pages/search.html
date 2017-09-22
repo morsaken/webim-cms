@@ -1,0 +1,31 @@
+@extends('default')
+
+@section('title') {{ $page->title }} {{ $separator or '::' }} @parent @stop
+
+@section('content')
+@if (isset($keyword))
+<section id="page-header">
+  <div class="row current-cat">
+    <div class="col-full">
+      <h1>@lang('label.keyword', 'Kelime'): {{{ $keyword }}}</h1>
+    </div>
+  </div>
+</section>
+@endif
+<section id="bricks" class="with-top-sep">
+  @if ($page->content->total)
+  <div class="row masonry">
+    <div class="bricks-wrapper">
+      <div class="grid-sizer"></div>
+      @foreach ($page->content->rows as $article)
+      @include('article', ['article' => $article])
+      @endforeach
+    </div>
+  </div>
+  @else
+  <div class="alert-box ss-error">
+    <p>@lang('message.nothing_found', 'Sonuç bulunamadı')</p>
+  </div>
+  @endif
+</section>
+@stop

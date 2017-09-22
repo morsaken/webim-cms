@@ -1,0 +1,10 @@
+<ul class="dropdown-menu categories">
+  @foreach ($categories as $category)
+  <li>
+    <a href="@url('products/category/' . $category->url)" data-title="{{{ $category->title }}}">
+      <figure style="background-image: url('{{ $category->poster->image->size(400, 300)->src() }}')"></figure>
+      <h3>{{{ str_case($category->title) }}}</h3>
+    </a>
+  </li>
+  @endforeach
+</ul>

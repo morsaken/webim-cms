@@ -1,0 +1,140 @@
+@extends('default')
+
+@section('content')
+<div class="container">
+  <div class="section">
+    <div class="row">
+      <div class="site-content col-md-9">
+        <div class="row">
+          <div class="col-sm-8">
+            <div id="home-slider">
+              @foreach ($slides as $slide)
+              <div class="post feature-post">
+                @if ($slide->poster->image)
+                <div class="entry-header">
+                  <div class="entry-thumbnail">
+                    <img class="img-responsive" src="{{ $slide->poster->image->size(555, 340)->src() }}" alt="{{{ $slide->title }}}">
+                  </div>
+                  <div class="category"><a href="@url('news/category/' . $slide->category[0]->url)">{{{ $slide->category[0]->title }}}</a></div>
+                </div>
+                @endif
+                <div class="post-content">
+                  <div class="entry-meta">
+                    <ul class="list-inline">
+                      <li class="publish-date"><i class="fa fa-clock-o"></i><a href="#"> {{{ date_show($slide->publish_date) }}}</a></li>
+                      <!--<li class="views"><i class="fa fa-eye"></i><a href="#">15k</a></li>
+                      <li class="loves"><i class="fa fa-heart-o"></i><a href="#">278</a></li>
+                      <li class="comments"><i class="fa fa-comment-o"></i><a href="#">189</a></li>-->
+                    </ul>
+                  </div>
+                  <h2 class="entry-title">
+                    <a href="@url('news/' . $slide->url)">{{{ $slide->title }}}</a>
+                  </h2>
+                </div>
+              </div>
+              @endforeach
+            </div>
+          </div>
+          <div class="col-sm-4">
+            @foreach ($home as $post)
+            <div class="post feature-post">
+              @if ($post->poster->image)
+              <div class="entry-header">
+                <div class="entry-thumbnail">
+                  <img class="img-responsive" src="{{ $post->poster->image->size(270, 340)->src() }}" alt="">
+                </div>
+                <div class="category"><span><a href="@url('news/category/' . $post->category[0]->url)">{{{ $post->category[0]->title }}}</a></span></div>
+              </div>
+              @endif
+              <div class="post-content">
+                <div class="entry-meta">
+                  <ul class="list-inline">
+                    <li class="publish-date"><i class="fa fa-clock-o"></i><a href="#">{{{ date_show($post->publish_date) }}}</a></li>
+                    <!--<li class="views"><i class="fa fa-eye"></i><a href="#">15k</a></li>
+                    <li class="loves"><i class="fa fa-heart-o"></i><a href="#">278</a></li>-->
+                  </ul>
+                </div>
+                <h2 class="entry-title">
+                  <a href="@url('news/' . $post->url)">{{{ $post->title }}}</a>
+                </h2>
+              </div>
+            </div>
+            @break($loop->index >= 0)
+            @endforeach
+          </div>
+        </div>
+        <div class="row">
+          @foreach ($home as $post)
+          @if ($loop->index > 0)
+          <div class="col-sm-4">
+            <div class="post feature-post">
+              @if ($post->poster->image)
+              <div class="entry-header">
+                <div class="entry-thumbnail">
+                  <img class="img-responsive" src="{{ $post->poster->image->size(265, 220)->src() }}" alt="">
+                </div>
+                <div class="category"><span><a href="@url('news/category/' . $post->category[0]->url)">{{{ $post->category[0]->title }}}</a></span></div>
+              </div>
+              @endif
+              <div class="post-content">
+                <div class="entry-meta">
+                  <ul class="list-inline">
+                    <li class="publish-date"><i class="fa fa-clock-o"></i><a href="#">{{{ date_show($post->publish_date) }}}</a></li>
+                    <!--<li class="views"><i class="fa fa-eye"></i><a href="#">15k</a></li>
+                    <li class="loves"><i class="fa fa-heart-o"></i><a href="#">278</a></li>-->
+                  </ul>
+                </div>
+                <h2 class="entry-title">
+                  <a href="@url('news/' . $post->url)">{{{ $post->title }}}</a>
+                </h2>
+              </div>
+            </div>
+          </div>
+          @endif
+          @break($loop->index > 3)
+          @endforeach
+        </div>
+      </div>
+      <div class="col-md-3 visible-md visible-lg">
+        <div class="add featured-add">
+          <a href="#"><img class="img-responsive" src="{{ $root }}/assets/ads/add1.jpg" alt=""></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="section add inner-add">
+    <a href="#"><img class="img-responsive" src="{{ $root }}/assets/ads/add2.jpg" alt=""></a>
+  </div>
+  <div class="section">
+    <div class="latest-news-wrapper">
+      <h1 class="section-title">@lang('label.latest_news', 'Son Haberler')</h1>
+      <div id="latest-news">
+        @foreach ($latest as $post)
+        <div class="post medium-post">
+          @if ($post->poster->image)
+          <div class="entry-header">
+            <div class="entry-thumbnail">
+              <img class="img-responsive" src="{{ $post->poster->image->size(265, 160)->src() }}" alt="{{{ $post->title }}}">
+            </div>
+            <div class="category politics"><span><a href="@url('news/category/' . $post->category[0]->url)">{{{ $post->category[0]->title }}}</a></span></div>
+          </div>
+          @endif
+          <div class="post-content">
+            <div class="entry-meta">
+              <ul class="list-inline">
+                <li class="publish-date"><a href="#"><i class="fa fa-clock-o"></i> {{{ date_show($post->publish_date) }}}</a></li>
+                <!--<li class="views"><a href="#"><i class="fa fa-eye"></i>15k</a></li>
+                <li class="loves"><a href="#"><i class="fa fa-heart-o"></i>278</a></li>-->
+              </ul>
+            </div>
+            <h2 class="entry-title">
+              <a href="@url('news/' . $post->url)">{{{ $post->title }}}</a>
+            </h2>
+          </div>
+        </div>
+        @endforeach
+      </div>
+    </div>
+  </div>
+</div>
+@stop

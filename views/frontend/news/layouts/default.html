@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="@lang('abbr')">
+<head>
+  <title>@section('title') {{{ $title or 'Web-IM XI' }}} @show</title>
+  @section('meta')
+  <meta charset="@lang('charset')">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <meta name="description" content="{{{ $description or '' }}}">
+  <meta name="keywords" content="{{{ $keywords or '' }}}">
+  <meta name="author" content="{{{ AUTHOR }}}">
+  @conf('google.search_console')
+  @show
+  @section('css')
+  <link type="image/png" href="{{ $root }}/img/favicon.png" rel="shortcut icon">
+  <link type="text/css" href="{{ $root }}/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/plugins/magnific-popup/magnific-popup.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/plugins/slick/slick.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/helpers.css" rel="stylesheet">
+  @show
+  <link type="text/css" href="{{ $root }}/css/style.css" rel="stylesheet">
+</head>
+<body>
+  <div class="loader-wrapper">
+    <div class="loader">
+      <div class="flipper">
+        <div class="front"></div>
+        <div class="back"></div>
+      </div>
+    </div>
+  </div>
+  <div class="main-wrapper">
+    <header class="mobile">
+      <div class="container">
+        <a href="#mobile-menu" class="menu-toggle">
+          <span>toggle menu</span>
+        </a>
+        <a class="logo" href="@url('/')">
+          <img src="{{ $root }}/img/logo-white.svg" alt="{{{ $title }}}">
+        </a>
+        <div class="search">
+          <a class="search-btn" href="#search">
+            <i class="fa fa-search"></i>
+          </a>
+          <div class="search-block">
+            <form class="search-form" method="get" action="@url('search')">
+              <input type="search" name="q" placeholder="@lang('label.type_to_search', 'Aranacak...')">
+              <button type="submit"><i class="fa fa-long-arrow-right"></i></button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </header>
+    <header class="main">
+      <div class="top-bar">
+        <div class="container">
+          <nav class="top">
+            @if (isset($nav['top']))
+            <ul class="menu">
+              @foreach ($nav['top']['items'] as $menu)
+              <li{{ $menu->active ? ' class="active"' : '' }}>
+                <a href="{{ $menu->url }}">{{{ $menu->title }}}</a>
+              </li>
+              @endforeach
+            </ul>
+            @endif
+          </nav>
+          <div class="date">{{{ now() }}}</div>
+        </div>
+      </div>
+      <div class="header-bar">
+        <div class="top">
+          <div class="container">
+            <a class="logo" href="@url('/')">
+              <img src="{{ $root }}/img/logo.svg" alt="{{{ $title }}}">
+            </a>
+            <div class="ad-banner">
+              <img src="http://placeholder.pics/svg/728x90" alt="">
+            </div>
+          </div>
+        </div>
+        <div class="bottom">
+          <div class="container">
+            <nav class="main">
+              <a href="#aside-menu" class="menu-toggle">
+                <span>toggle menu</span>
+              </a>
+              @if (isset($nav['main']))
+              <ul class="menu">
+                @foreach ($nav['main']['items'] as $menu)
+                @if (count($menu->children))
+                <li>
+                  <a href="#">{{{ $menu->title }}} <i class="fa fa-angle-down"></i></a>
+                  <ul class="sub">
+                    @foreach ($menu->children as $submenu)
+                    @if (isset($categories[$submenu->url]))
+                    <li>
+                      <div class="mega-menu">
+                        @include('category_menu', ['category' => $submenu->url])
+                      </div>
+                    </li>
+                    @else
+                    <li{{ $submenu->active ? ' class="active"' : '' }}><a href="{{ $submenu->url }}">{{{ $submenu->title }}}</a></li>
+                    @endif
+                    @endforeach
+                  </ul>
+                </li>
+                @else
+                <li{{ $menu->active ? ' class="active"' : '' }}>
+                  <a href="{{ $menu->url }}">{{{ $menu->title }}}</a>
+                </li>
+                @endif
+                @endforeach
+              </ul>
+              @endif
+            </nav>
+            <div class="search">
+              <a class="search-btn" href="#search">
+                <i class="fa fa-search"></i>
+              </a>
+              <div class="search-block">
+                <form class="search-form" method="get" action="@url('search')">
+                  <input type="search" name="q" placeholder="@lang('label.type_to_search', 'Aranacak...')">
+                  <button type="submit"><i class="fa fa-long-arrow-right"></i></button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="inner-wrapper">
+      <aside class="left-bar">
+        <nav class="left">
+          @if (isset($nav['left']))
+          <ul class="menu">
+            @foreach ($nav['left']['items'] as $menu)
+            <li{{ $menu->active ? ' class="active"' : '' }}>
+              <a href="{{ $menu->url }}" title="{{{ $menu->title }}}">
+                @if (strlen($menu->icon))
+                <i class="{{ $menu->icon }}"></i>
+                @endif
+                {{{ $menu->title }}}
+              </a>
+            </li>
+            @endforeach
+          </ul>
+          @endif
+        </nav>
+      </aside>
+      <main id="content">
+        @yield('content')
+      </main>
+      <footer>
+        <div class="container">
+          <div class="top">
+
+          </div>
+          <div class="bottom">
+            <div class="row">
+              <div class="col-md-3">
+                <a class="logo" href="@url('/')">
+                  <img src="{{ $root }}/img/logo-white.svg" alt="{{{ $title }}}">
+                </a>
+              </div>
+              <div class="col-md-6">
+                @if (isset($about))
+                <article>
+                  <h3>{{ $about->title or lang('label.about', 'Hakkımızda') }}</h3>
+                  <p>{{ nl2br($about->description) }}</p>
+                </article>
+                @endif
+              </div>
+              <div class="col-md-3">
+                <ul class="socials pull-right">
+                  <li>
+                    <a href="@conf('socials.facebook', '#')" target="_blank"><i class="fa fa-facebook"></i></a>
+                  </li>
+                  <li>
+                    <a href="@conf('socials.twitter', '#')" target="_blank"><i class="fa fa-twitter"></i></a>
+                  </li>
+                  <li>
+                    <a href="@conf('socials.instagram', '#')" target="_blank"><i class="fa fa-instagram"></i></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-bar">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8">
+                <nav class="bottom">
+                  @if (isset($nav['bottom']))
+                  <ul class="menu">
+                    @foreach ($nav['bottom']['items'] as $menu)
+                    <li{{ $menu->active ? ' class="active"' : '' }}>
+                      <a href="{{ $menu->url }}">{{{ $menu->title }}}</a>
+                    </li>
+                    @endforeach
+                  </ul>
+                  @endif
+                </nav>
+              </div>
+              <div class="col-lg-4">
+                <div class="copyright">{{ $copyright or 'Powered by USSAL' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <div id="aside-menu" class="aside-menu mfp-hide">
+    @if (isset($nav['side']))
+    <div class="content">
+      <nav class="menu">
+        @foreach ($nav['side']['items'] as $menu)
+        <a href="{{ $menu->url }}">{{{ $menu->title }}}</a>
+        @endforeach
+      </nav>
+    </div>
+    @endif
+    <div class="content">
+      <div class="tweets">
+        <div class="brand"><i class="fa fa-twitter"></i></div>
+        <div class="tweet">
+          Haberlere ulaşabileceğiniz adresimiz <a href="#">http://www.haberci.com</a> 
+        </div>
+        <div class="tweet">
+          Sigortacılık anlamında herşey <a href="#">http://www.haberci.com</a> adresinde
+        </div>
+        <a class="all" href="@conf('socials.twitter', '#')" target="_blank">@lang('button.view_all', 'Tümünü Görüntüle')</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="mobile-menu mfp-hide">
+    <div class="container">
+      @if (isset($nav['side']))
+      <nav class="menu">
+        @foreach ($nav['side']['items'] as $menu)
+        <a href="{{ $menu->url }}">{{{ $menu->title }}}</a>
+        @endforeach
+      </nav>
+      @endif
+    </div>
+  </div>
+
+  @section('plugin')
+  <!--[if lt IE 9]>
+  <script type="text/javascript" src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script type="text/javascript" src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <script type="text/javascript" src="{{ $root }}/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/lib/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/imagesloaded.pkgd.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/waypoints/jquery.waypoints.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/superfish.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/slick/slick.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/owl-carousel/owl.carousel.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/magnific-popup/jquery.magnific-popup.js"></script>
+  @show
+  @section('script')
+  <script type="text/javascript" src="{{ $root }}/js/app.js"></script>
+  @show
+  @conf('google.analytics')
+</body>
+</html>

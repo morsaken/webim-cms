@@ -1,0 +1,20 @@
+@forelse ($articles as $article)
+<article>
+  <h2>{{{ $article->title }}}</h2>
+  <div>{{ $article->meta->content }}</div>
+  @if (isset($article->media) && count($article->media))
+  <div class="gallery grid">
+    @foreach ($article->media as $media)
+    <div class="grid-item {{ $media->poster->image->orientation() }}">
+      <a class="media" href="{{ $media->poster->image->src() }}">
+        <img class="img-responsive" src="{{ $media->poster->image->size(400, ($media->poster->image->orientation() == 'portrait' ? 639 : 300))->src() }}" width="{{ $media->poster->image->reset()->width() }}" height="{{ $media->poster->image->reset()->height() }}" alt="{{{ $media->title }}}">
+      </a>
+    </div>
+    @endforeach
+  </div>
+  @endif
+</article>
+@empty
+<div class="alert alert-info w400 text-center center-block">@lang('label.no_content_found', 'İçerik bulunamadı!')</div>
+@endforelse
+@include('sticky')

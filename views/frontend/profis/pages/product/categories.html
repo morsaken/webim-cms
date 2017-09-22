@@ -1,0 +1,26 @@
+@extends($template)
+
+@section('title') {{{ $page->title }}} {{ $separator or '|' }} @parent @stop
+
+@section('content')
+@include('head')
+<section class="content">
+  <div class="container">
+    @forelse($categories as $category)
+    <a class="category row no-gutter" href="@url('products/category/' . $parent_category->url . '/' . $category->url)">
+      <div class="col-sm-8">
+        <div class="p50">
+          <h2 class="subtitle">{{{ $category->title }}}</h2>
+          <h4>{{{ $category->meta->description }}}</h4>
+        </div>
+      </div>
+      <div class="col-sm-4 hidden-xs">
+        <img src="{{ $category->poster->image->src() }}" alt="{{{ $category->title }}}">
+      </div>
+    </a>
+    @empty
+    <div class="alert alert-warning">@lang('message.category_not_found', 'Kategori bulunamadı!')</div>
+    @endforelse
+  </div>
+</section>
+@stop

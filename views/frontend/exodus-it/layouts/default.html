@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="@lang('abbr')">
+<head>
+  <title>@section('title') {{{ $title or 'Web-IM XI' }}} @show</title>
+  <base href="{{ $root }}/">
+  @section('meta')
+  <meta charset="@lang('charset')">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <meta name="description" content="{{{ $description or '' }}}">
+  <meta name="keywords" content="{{{ $keywords or '' }}}">
+  <meta name="author" content="{{{ AUTHOR }}}">
+  @conf('google.search_console')
+  @show
+  @section('css')
+  <link type="image/png" href="{{ $root }}/img/favicon.png" rel="shortcut icon">
+  <link type="text/css" href="{{ $root }}/js/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/fonts/simple-line-icons/simple-line-icons.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/toastr.min.css" rel="stylesheet">
+  @show
+  <link type="text/css" href="{{ $root }}/css/style.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/responsive.css" rel="stylesheet">
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="preloader"></div>
+    <header class="main-header">
+      <div class="header-top">
+        <div class="auto-container clearfix">
+          <div class="top-right">
+            <ul class="clearfix">
+              <li><a href="tel:{{ str_replace(' ', '', conf('contact.0.phone')) }}"><span class="icon lnr icon-call-in"></span> @conf('contact.0.phone')</a></li>
+              <li><a href="mailto:@conf('contact.0.email')"><span class="icon icon-envelope-open"></span> @conf('contact.0.email')</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="header-lower">
+        <div class="auto-container">
+          <div class="outer-box clearfix">
+            <div class="logo">
+              <a href="@url('/')"><img src="{{ $root }}/img/logo.png" alt="{{{ $title }}}"></a>
+            </div>
+            @if (isset($nav['main']['items']))
+            <nav class="main-menu">
+              <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
+              </div>
+              <div class="navbar-collapse collapse clearfix">
+                <ul class="navigation">
+                  @foreach ($nav['main']['items'] as $menu)
+                  <li{{ $menu->active ? ' class="current"' : '' }}><a href="{{ $menu->url }}">{{ $menu->title }}</a></li>
+                  @endforeach
+                </ul>
+              </div>
+            </nav>
+            @endif
+          </div>
+        </div>
+      </div>
+    </header>
+    @yield('content')
+    <footer class="main-footer footer-dark">
+      <div class="auto-container">
+        <div class="footer-upper">
+          <div class="row clearfix">
+            <div class="column col-sm-4 col-xs-12">
+              <div class="footer-widget normal-widget">
+                <div class="text-left">
+                  <img src="{{ $root }}/img/footer-logo.png" alt="{{{ $title }}}">
+                </div>
+              </div>
+            </div>
+            <div class="column col-sm-4 col-xs-12">
+              <div class="footer-widget links-widget">
+                <h2>@lang('menu.services', 'Hizmetlerimiz')</h2>
+                @if (count(array_get($nav, 'services.items', array())))
+                <ul>
+                  @foreach ($nav['services']['items'] as $menu)
+                  <li><a href="{{ $menu->url }}">{{{ $menu->title }}}</a></li>
+                  @endforeach
+                </ul>
+                @endif
+              </div>
+            </div>
+            <div class="column col-sm-4 col-xs-12">
+              <div class="footer-widget contact-widget">
+                <h2>@lang('menu.contact', 'İletişim')</h2>
+                <ul>
+                  <li><span class="icon icon-call-out"></span> @conf('contact.0.phone')</li>
+                  <li><span class="icon icon-envelope-open"></span> @conf('contact.0.email')</li>
+                  <li>
+                    <span class="icon icon-share"></span>
+                    <a class="social-link" href="@conf('social.facebook', '#')" target="_blank"><span class="fa fa-facebook-f"></span></a>
+                    &ensp;
+                    <a class="social-link" href="@conf('social.twitter', '#')" target="_blank"><span class="fa fa-twitter"></span></a>
+                    &ensp;
+                    <a class="social-link" href="@conf('social.google_plus', '#')" target="_blank"><span class="fa fa-google-plus"></span></a>
+                    &ensp;
+                    <a class="social-link" href="@conf('social.instagram', '#')" target="_blank"><span class="fa fa-instagram"></span></a>
+                  </li>
+                </ul>
+                <div class="newsletter-form">
+                  <form id="newsletter-form" method="post" action="@url('newsletter')">
+                    <div class="form-group">
+                      <input type="email" name="email" placeholder="@lang('label.email_address', 'E-Posta Adresi')"  pattern="^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$" required="required" data-message="@conf('message.type_your_valid_email', 'Geçerli e-posta adresinizi giriniz')">
+                      <button type="submit">@lang('button.send', 'Gönder')</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <div class="text-center">{{ $copyright or 'Powered By Masters'}}</div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <div class="scroll-to-top"><span class="fa fa-arrow-up"></span></div>
+
+  @section('plugin')
+  <script type="text/javascript" src="{{ $root }}/js/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/lib/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/plugins/jquery.blockui.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/plugins/toastr.min.js"></script>
+  @show
+  @section('script')
+  <script type="text/javascript" src="{{ $root }}/js/app.js"></script>
+  @show
+  @conf('google.analytics')
+</body>
+</html>

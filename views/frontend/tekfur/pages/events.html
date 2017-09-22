@@ -1,0 +1,92 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} :: @parent @stop
+
+@section('content')
+<section class="banner" data-background-image="{{ $root }}/img/banner.jpg">
+  @if (isset($events) && count($events))
+  <div id="event-poster">
+    <ul>
+      @foreach ($events as $event)
+      <li>
+        <div class="image" data-background-image="{{ $event->poster->image }}"></div>
+      </li>
+      @endforeach
+    </ul>
+  </div>
+  <div class="event-info">
+    <div class="container posr">
+      <div id="event-info">
+        @foreach ($events as $key => $event)
+        <div class="pager" data-slide-index="{{ $key }}">
+          <h2>{{{ str_case($event->title) }}}</h2>
+          <h3>{{{ str_limit($event->description, 120) }}}</h3>
+          <a class="more" href="@url('events/' . $event->url)">@lang('button.more', 'Devamı')</a>
+          <div class="day">
+            <span class="month-name">{{{ str_case($event->month_name) }}}</span>
+            <span class="day-name">{{{ $event->day }}}</span>
+          </div>
+          <span class="arrow"></span>
+        </div>
+        @endforeach
+      </div>
+    </div>
+  </div>
+  @else
+  <div class="container">
+    <h1>{{{ $page->title }}}</h1>
+  </div>
+  @endif
+</section>
+<div class="page">
+  <div class="container posr">
+    @include('bars')
+    <section class="content">
+      @if (isset($events) && count($events))
+      <div class="event-calendar">
+        {{ $calendar or '' }}
+      </div>
+      @endif
+      <div class="list{{ isset($events) && count($events) ? ' pt200' : '' }}">
+        <h2 class="title">@lang('label.past_events', 'Geçmiş Etkinlikler')</h2>
+        @if (count($page->content))
+        <div class="row">
+          @foreach ($page->content as $item)
+          <div class="col-sm-6">
+            <div class="item">
+              <div class="image" data-background-image="{{ $item->poster->image }}">
+                <div class="overlay"></div>
+              </div>
+              <div class="info">
+                <h2>{{{ $item->title }}}</h2>
+                <h3>{{{ str_limit($item->meta->summary, 200) }}}</h3>
+                <a class="more" href="@url('events/' . $item->url)">@lang('button.more', 'Daha Fazlası')</a>
+              </div>
+            </div>
+          </div>
+          @endforeach
+        </div>
+        @else
+        <div class="empty">
+          <span class="icon">
+            <i class="fa fa-clone"></i>
+          </span>
+          <h3>@lang('message.event_not_found', 'Etkinlik bulunamadı!')</h3>
+        </div>
+        @endif
+      </div>
+    </section>
+    @include('bars')
+  </div>
+</div>
+@stop
+
+@section('css')
+@parent
+<link type="text/css" href="{{ $root }}/js/plugins/bxslider/jquery.bxslider.min.css" rel="stylesheet">
+@stop
+
+@section('plugin')
+@parent
+<script type="text/javascript" src="{{ $root }}/js/plugins/bxslider/jquery.bxslider.min.js"></script>
+@stop

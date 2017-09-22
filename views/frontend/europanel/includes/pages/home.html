@@ -1,0 +1,64 @@
+@if (isset($slides) && count($slides))
+<section class="banner">
+  <div id="slider_wrapper" class="rev_slider_wrapper">
+    <div id="slider" class="rev_slider">
+      <ul>
+        @foreach ($slides as $key => $slide)
+        <li data-index="rs-{{ $key }}" data-transition="papercut" data-slotamount="7" data-hideafterloop="0" data-hideslideonmobile="off" data-easein="default" data-easeout="default" data-masterspeed="1500" data-thumb="{{ $slide->poster->image->size(60, 60)->src() }}" data-rotate="0" data-fsmasterspeed="1500" data-fsslotamount="7" data-saveperformance="off" data-title="{{{ $slide->title }}}" data-description="{{{ $slide->meta->summary }}}">
+          <img src="{{ $slide->poster->image->size()->src() }}" alt="{{{ $slide->title }}}" data-lazyload="{{ $slide->poster->image->size()->src() }}" data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina>
+          <a class="tp-caption" href="@url('duvar-panelleri')" data-x="20" data-y="bottom" data-voffset="20" data-width="['auto']" data-height="['auto']" data-type="text" data-actions="" data-basealign="slide" data-responsive_offset="on" data-responsive="off" data-frames='[{"from":"x:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;","speed":1500,"to":"o:1;","delay":0,"ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"to":"x:[-100%];","mask":"x:inherit;y:inherit;","ease":"Power3.easeInOut"},{"frame":"hover","speed":"200","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(0,0,0,1);bg:rgba(255,255,255,1);"}]' data-paddingtop="[5,5,5,5]" data-paddingright="[8,8,8,8]" data-paddingbottom="[5,5,5,5]" data-paddingleft="[8,8,8,8]" style="z-index: {{ $key + 1 }}; white-space: nowrap; font-size: 20px; line-height: 30px; background-color:rgba(0,0,0,0.50); border-radius:10px 10px 10px 10px;cursor:pointer;text-decoration: none;">
+            <i class="fa fa-picture-o"></i>
+          </a>
+        </li>
+        @endforeach
+      </ul>
+    </div>
+  </div>
+</section>
+@endif
+@if (isset($slogan))
+<div class="home-slogan"><i class="fa fa-quote-left"></i> {{{ $slogan->meta->description or '' }}} <i class="fa fa-quote-right"></i></div>
+@endif
+<div class="home-tabs">
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#popular" aria-controls="popular" role="tab" data-toggle="tab">@lang('label.popular_products', 'Popüler Ürünler')</a></li>
+    <li role="presentation"><a href="#showcase" aria-controls="showcase" role="tab" data-toggle="tab">@lang('label.showcase', 'Vitrin')</a></li>
+    <li role="presentation"><a href="#picks" aria-controls="picks" role="tab" data-toggle="tab">@lang('label.picks_for_you', 'Sizin İçin Seçtiklerimiz')</a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="popular" role="tabpanel" class="tab-pane active">
+      @if (isset($products['popular']) && count($products['popular']))
+      <div class="products owl-carousel owl-theme">
+        @foreach ($products['popular'] as $item)
+        @include('pages.catalog.item', ['item' => $item])
+        @endforeach
+      </div>
+      @else
+      <div class="w400 center-block text-center alert alert-info">@lang('message.product_not_found', 'Ürün bulunamadı!')</div>
+      @endif
+    </div>
+    <div id="showcase" role="tabpanel" class="tab-pane">
+      @if (isset($products['showcase']) && count($products['showcase']))
+      <div class="products owl-carousel owl-theme">
+        @foreach ($products['showcase'] as $item)
+        @include('pages.catalog.item', ['item' => $item])
+        @endforeach
+      </div>
+      @else
+      <div class="w400 center-block text-center alert alert-info">@lang('message.product_not_found', 'Ürün bulunamadı!')</div>
+      @endif
+    </div>
+    <div id="picks" role="tabpanel" class="tab-pane">
+      @if (isset($products['picks']) && count($products['picks']))
+      <div class="products owl-carousel owl-theme">
+        @foreach ($products['picks'] as $item)
+        @include('pages.catalog.item', ['item' => $item])
+        @endforeach
+      </div>
+      @else
+      <div class="w400 center-block text-center alert alert-info">@lang('message.product_not_found', 'Ürün bulunamadı!')</div>
+      @endif
+    </div>
+  </div>
+</div>
+@include('sticky')

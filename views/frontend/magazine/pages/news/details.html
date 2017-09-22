@@ -1,0 +1,159 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} {{{ $separator or '::' }}} @parent @stop
+
+@section('content')
+<div class="container">
+  @if (isset($article->category[0]))
+  <div class="page-breadcrumbs">
+    <h1 class="section-title">{{{ $article->category[0]->title }}}</h1>
+    @if (isset($categories[$article->category[0]->url]->children) && count($categories[$article->category[0]->url]->children))
+    <div class="cat-menu">
+      <ul class="list-inline">
+        @foreach ($categories[$article->category[0]->url]->children as $child)
+        <li><a href="@url('news/category/' . $child->url)">{{{ $child->title }}}</a></li>
+        @endforeach
+      </ul>
+    </div>
+    @endif
+  </div>
+  @endif
+  <div class="section">
+    <div class="row">
+      <div class="col-sm-9">
+        <div id="site-content" class="site-content">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="left-content">
+                <div class="details-news">
+                  <div class="post">
+                    @if ($article->poster->image)
+                    <div class="entry-header">
+                      <div class="entry-thumbnail">
+                        <img class="img-responsive" src="{{ $article->poster->image }}" alt="{{{ $article->title }}}">
+                      </div>
+                    </div>
+                    @endif
+                    <div class="post-content">
+                      <div class="entry-meta">
+                        <ul class="list-inline">
+                          <li class="publish-date"><a href="#"><i class="fa fa-clock-o"></i> {{{ date_show($article->publish_date) }}}</a></li>
+                          <!--<li class="views"><a href="#"><i class="fa fa-eye"></i>15k</a></li>
+                          <li class="loves"><a href="#"><i class="fa fa-heart-o"></i>278</a></li>
+                          <li class="comments"><i class="fa fa-comment-o"></i><a href="#">189</a></li>-->
+                        </ul>
+                      </div>
+                      <h2 class="entry-title">{{{ $article->title }}}</h2>
+                      <div class="entry-content">
+                        {{ $article->meta->content }}
+                        @if (count($article->media))
+                        <div class="row post-inner-image">
+                          @foreach ($article->media as $media)
+                          <div class="col-sm-4">
+                            <img class="img-responsive" src="{{ $media->poster->image }}" alt="{{{ $media->title }}}">
+                          </div>
+                          @endforeach
+                        </div>
+                        @endif
+                        <div class="share-link">
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="post google-add">
+              <div class="add inner-add text-center">
+                <a href="#"><img class="img-responsive" src="{{ $root }}/assets/ads/add2.jpg" alt=""></a>
+              </div>
+            </div>
+            @if (isset($more) && count($more))
+            <div class="section">
+              <h1 class="section-title">@lang('label.more_in_category', [$article->category[0]->title], '%s Kategorisinde Daha Fazlası')</h1>
+              <div class="row">
+                @foreach ($more as $post)
+                <div class="col-sm-4">
+                  <div class="post medium-post">
+                    @if ($post->poster->image)
+                    <div class="entry-header">
+                      <div class="entry-thumbnail">
+                        <img class="img-responsive" src="{{ $post->poster->image->size(265, 150)->src() }}" alt="{{{ $post->title }}}">
+                      </div>
+                    </div>
+                    @endif
+                    <div class="post-content">
+                      <div class="entry-meta">
+                        <ul class="list-inline">
+                          <li class="publish-date"><a href="#"><i class="fa fa-clock-o"></i> {{{ date_show($post->publish_date) }}}</a></li>
+                          <!--<li class="views"><a href="#"><i class="fa fa-eye"></i>15k</a></li>
+                          <li class="loves"><a href="#"><i class="fa fa-heart-o"></i>278</a></li>-->
+                        </ul>
+                      </div>
+                      <h2 class="entry-title">
+                        <a href="@url('news/' . $post->url)">{{{ $post->title }}}</a>
+                      </h2>
+                    </div>
+                  </div>
+                </div>
+                @endforeach
+              </div>
+            </div>
+            @endif
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div id="sidebar">
+          <div class="widget">
+            <div class="add featured-add">
+              <a href="#"><img class="img-responsive" src="{{ $root }}/assets/ads/add1.jpg" alt=""></a>
+            </div>
+          </div>
+          <div class="widget follow-us">
+            <h1 class="section-title title">@lang('label.follow_us', 'Bizi Takip Edin')</h1>
+            <ul class="list-inline social-icons">
+              <li><a href="@conf('socials.facebook')" target="_blank"><i class="fa fa-facebook"></i></a></li>
+              <li><a href="@conf('socials.twitter')" target="_blank"><i class="fa fa-twitter"></i></a></li>
+              <li><a href="@conf('socials.google_plus')" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+              <li><a href="@conf('socials.linkedin')" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+              <li><a href="@conf('socials.youtube')" target="_blank"><i class="fa fa-youtube"></i></a></li>
+            </ul>
+          </div>
+          @if (isset($most) && count($most))
+          <div class="widget">
+            <h1 class="section-title title">@lang('label.most_reads', 'Çok Okunanlar')</h1>
+            <ul class="post-list">
+              @foreach ($most as $post)
+              <li>
+                <div class="post small-post">
+                  @if ($post->poster->image)
+                  <div class="entry-header">
+                    <div class="entry-thumbnail">
+                      <img class="img-responsive" src="{{ $post->poster->image->size(85, 85)->src() }}" alt="{{{ $post->title }}}">
+                    </div>
+                  </div>
+                  @endif
+                  <div class="post-content">
+                    <div class="video-category"><a href="@url('news/category/' . $post->category[0]->url)">{{{ $post->category[0]->title }}}</a></div>
+                    <h2 class="entry-title">
+                      <a href="@url('news/' . $post->url)">{{{ $post->title }}}</a>
+                    </h2>
+                  </div>
+                </div>
+              </li>
+              @endforeach
+            </ul>
+          </div>
+          @endif
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@stop

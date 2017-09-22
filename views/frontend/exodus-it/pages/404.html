@@ -1,0 +1,18 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} @ @parent @stop
+
+@section('content')
+<section class="error-section">
+  <div class="auto-container">
+    <div class="text-center clearfix">
+      <div class="error-image"><img src="{{ $root }}/img/404.png" alt="404"></div>
+      <div class="error-text">
+        <br>
+        <h1 class="bigger-font">404</h1>
+        {{ $page->content }}
+      </div>
+    </div>
+  </div>
+</section>
+@stop

@@ -1,0 +1,13 @@
+<ul class="categories">
+  <li class="all{{ !$selected_category ? ' active' : '' }}">
+    <a href="@url('shop')">@lang('label.all_products', 'Tüm Ürünler')</a>
+  </li>
+  @foreach ($categories as $category)
+  <li{{ $selected_category == $category->url ? ' class="active"' : ''}}>
+    <a href="@url('shop/category/' . $category->url)">
+      <img src="{{ $category->poster->image }}" alt="{{{ $category->title }}}">
+      <span>{{{ $category->title }}}</span>
+    </a>
+  </li>
+  @endforeach
+</ul>

@@ -1,0 +1,40 @@
+@extends('default')
+
+@section('title') {{ $page->title }} {{ $separator or '::' }} @parent @stop
+
+@section('content')
+<section id="content-wrap" class="site-page">
+  <div class="row">
+    <div class="col-twelve">
+      <section>
+        <div class="content-media">
+          <div id="map-wrap" data-lat="@conf('map.0.lat')" data-lon="@conf('map.0.lon')" data-zoom="@conf('map.0.zoom')">
+            <div id="map-container"></div>
+            <div id="map-zoom-in"></div>
+            <div id="map-zoom-out"></div>
+          </div>
+        </div>
+        <form id="contact-form" method="post" action="@url('contact')">
+          <fieldset>
+            <div class="form-field">
+              <input type="text" name="name" class="full-width" placeholder="@lang('label.your_name', 'Adınız')" required="" data-message="@lang('message.type_your_name', 'Adınızı yazın')">
+            </div>
+            <div class="form-field">
+              <input type="email" name="email" class="full-width" placeholder="@lang('label.your_email', 'E-posta Adresiniz')" required="" data-message="@lang('message.type_your_valid_email', 'Geçerli e-posta adresinizi yazın')">
+            </div>
+            <div class="message form-field">
+              <textarea name="message" class="full-width" placeholder="@lang('label.your_message', 'Mesajınız')" required="" data-message="@lang('message.type_your_message', 'Mesajınızı yazın')"></textarea>
+            </div>
+            <button type="submit" class="submit button-primary full-width-on-mobile">@lang('button.send', 'Gönder')</button>
+          </fieldset>
+        </form>
+      </section>
+    </div>
+  </div>
+</section>
+@stop
+
+@section('plugin')
+@parent
+<script src="https://maps.google.com/maps/api/js?key=@conf('google.map_key')"></script>
+@stop

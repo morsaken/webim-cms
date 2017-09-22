@@ -1,0 +1,14 @@
+@extends($template)
+
+@section('title') {{{ $page->title }}} {{ $separator or '|' }} @parent @stop
+
+@section('content')
+<section class="content headless">
+  <div class="container">
+    <div class="error">
+      <h2 class="status">{{{ $page->status }}}</h2>
+      {{ $page->content }}
+    </div>
+  </div>
+</section>
+@stop

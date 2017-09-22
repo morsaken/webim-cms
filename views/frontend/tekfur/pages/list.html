@@ -1,0 +1,89 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} :: @parent @stop
+
+@section('content')
+<section class="banner" data-background-image="{{ $root }}/img/banner.jpg">
+  @if (isset($categories) && count($categories) && isset($page->content[array_first($categories)->url]) && count($page->content[array_first($categories)->url]))
+  <div class="carousel-wrapper">
+    <div class="owl-carousel owl-theme">
+      @foreach ($page->content[array_first($categories)->url] as $slider)
+      <div class="item">
+        <div class="image" data-background-image="{{ $slider->poster->image }}"></div>
+        <div class="overlay"></div>
+        <div class="info">
+          <h2>{{{ $slider->title }}}</h2>
+          <h3 class="hidden-xs">{{{ str_limit($slider->meta->summary, 100) }}}</h3>
+          <a class="more" href="@url($page->url . '/' . $slider->url)">@lang('button.more', 'Daha Fazlası')</a>
+        </div>
+      </div>
+      @endforeach
+    </div>
+  </div>
+  @endif
+</section>
+<div class="page">
+  <div class="container">
+    @include('bars')
+  </div>
+  <div class="content">
+    @php $i = 0 @endphp
+    @foreach ($categories as $category)
+    <div class="group-wrapper {{ $i % 2 == 0 ? '' : 'white-bg'}}">
+      <div class="container">
+        <section class="group">
+          <div class="row">
+            @if ($i % 2 == 0)
+            <div class="col-md-4">
+              <div class="category">
+                <h2>{{{ $category->title }}}</h2>
+                <p>{{{ $category->meta->description }}}</p>
+              </div>
+            </div>
+            @endif
+            <div class="col-md-8 slider">
+              @if (isset($page->content[$category->url]) && count($page->content[$category->url]))
+              <div class="owl-carousel owl-theme">
+                @foreach ($page->content[$category->url] as $slider)
+                <div class="item">
+                  <div class="image" data-background-image="{{ $slider->poster->image }}">
+                    <div class="overlay"></div>
+                  </div>
+                  <div class="info">
+                    <h2>{{{ $slider->title }}}</h2>
+                    <h3>{{{ str_limit($slider->meta->summary, 200) }}}</h3>
+                    <a class="more" href="@url($page->url . '/' . $slider->url)">@lang('button.more', 'Daha Fazlası')</a>
+                  </div>
+                </div>
+                @endforeach
+              </div>
+              @endif
+            </div>
+            @if ($i % 2 == 1)
+            <div class="col-md-4 category">
+              <h2>{{{ $category->title }}}</h2>
+              <p>{{{ $category->meta->description }}}</p>
+            </div>
+            @endif
+          </div>
+        </section>
+      </div>
+    </div>
+    @php $i++ @endphp
+    @endforeach
+  </div>
+  <div class="container">
+    @include('bars')
+  </div>
+</div>
+@stop
+
+@section('css')
+@parent
+<link type="text/css" href="{{ $root }}/js/plugins/owl-carousel/owl.carousel.min.css" rel="stylesheet">
+@stop
+
+@section('plugin')
+@parent
+<script type="text/javascript" src="{{ $root }}/js/plugins/owl-carousel/owl.carousel.min.js"></script>
+@stop

@@ -1,0 +1,56 @@
+@extends('default')
+
+@section('title') {{ $page->title }} {{ $separator or '::' }} @parent @stop
+
+@section('content')
+<section id="content-wrap" class="blog-single">
+  <div class="row">
+    <div class="col-twelve">
+      <article class="format-{{ $article->type }}">
+        @if ($article->type === 'video')
+        <div class="content-media">
+          <div class="fluid-video-wrapper">
+            <iframe src="{{ $article->poster->source->link }}" width="640" height="360" frameborder="0"></iframe>
+          </div>
+        </div>
+        @elseif ($article->type === 'audio')
+        <div class="content-media">
+          <div class="audio-wrap">
+            <audio src="{{ $article->poster->source->file->src() }}" controls="controls" style="width: 100%; height: 42px"></audio>
+          </div>
+        </div>
+        @elseif ($article->poster->image)
+        <div class="content-media">
+          <div class="post-thumb">
+            <img src="{{ $article->poster->image->src() }}" alt="{{{ $article->title }}}">
+          </div>
+        </div>
+        @endif
+        <div class="primary-content">
+          <h1 class="entry-title">{{{ $article->title }}}</h1>
+          <ul class="entry-meta">
+            <li class="date">{{{ date_show($article->publish_date) }}}</li>
+            <li class="cat">
+              @foreach ($article->category as $category)
+              <a href="@url('articles/category/' . $category->url)">{{{ $category->title }}}</a>
+              @endforeach
+            </li>
+          </ul>
+          @if (array_get($article, 'meta.show_summary_inside'))
+          <p class="lead">{{ nl2br($article->meta->summary) }}</p>
+          @endif
+          {{ $article->meta->content }}
+          @if (count($article->tags))
+          <p class="tags">
+            <span>@lang('label.tags', 'Etiketler'):</span>
+            @foreach ($article->tags as $tag)
+            <a href="@url('articles/tags/' . $tag)">{{{ $tag }}}</a>
+            @endforeach
+          </p>
+          @endif
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+@stop

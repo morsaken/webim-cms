@@ -1,0 +1,14 @@
+<ul class="breadcrumb">
+  <li class="active">
+    <i class="fa fa-home"></i>
+  </li>
+  @foreach ($breadcrumb as $crumb)
+  <li{{ $crumb->active ? ' class="active"' : '' }}>
+    @if ($crumb->active)
+    <span>{{{ $crumb->title }}}</span>
+    @else
+    <a class="pop" href="{{ $crumb->url }}" title="{{{ $crumb->link != '/' ? $crumb->title : '' }}}">{{{ $crumb->title }}}</a>
+    @endif
+  </li>
+  @endforeach
+</ul>

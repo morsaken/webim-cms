@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="@lang('abbr')">
+<head>
+  <title data-separator="{{ $separator or '|' }}" data-default="{{{ $title or 'Web-IM XI' }}}">@section('title') {{{ $title or 'Web-IM XI' }}} @show</title>
+  <base href="{{ $root }}/">
+  @section('meta')
+  <meta charset="@lang('charset')">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <meta name="description" content="{{{ $description or '' }}}">
+  <meta name="keywords" content="{{{ $keywords or '' }}}">
+  <meta name="author" content="{{{ AUTHOR }}}">
+  @conf('google.search_console')
+  @show
+  @section('css')
+  <link type="image/png" href="{{ $root }}/img/favicon.png" rel="shortcut icon">
+  <link type="text/css" href="{{ $root }}/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/plugins/toastr/toastr.min.css" rel="stylesheet">
+  @show
+  @section('style')
+  <link type="text/css" href="{{ $root }}/css/helpers.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/style.css" rel="stylesheet">
+  @show
+</head>
+<body>
+  <div class="loader-wrapper">
+    <div class="loader">
+      <div class="flipper">
+        <div class="front"></div>
+        <div class="back"></div>
+      </div>
+    </div>
+  </div>
+  <div class="main-wrapper">
+    <header>
+      <a id="index" class="logo" href="@url('/')">
+        <img src="{{ $root }}/img/logo.svg" alt="{{{ $title }}}">
+      </a>
+      <div class="nav-wrapper">
+        @if (isset($nav['main']))
+        <nav id="navbar" class="navbar-collapse collapse">
+          <ul class="main nav navbar-nav">
+            @foreach ($nav['main']['items'] as $menu)
+            @php
+            $class = array();
+
+            if ($menu->active) {
+              $class[] = 'active';
+            }
+
+            if ((isset($menu->children) && count($menu->children)) || (($menu->name == 'products') && isset($product_categories))) {
+              $class[] = 'dropdown';
+            }
+            @endphp
+            <li{{ count($class) ? ' class="' . implode(' ', $class) . '"' : '' }}>
+              @if (in_array('dropdown', $class, true))
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{{ str_case($menu->title) }}} <span class="caret"></span></a>
+              @else
+              <a href="{{ $menu->url }}" data-title="{{{ $menu->title }}}">{{{ str_case($menu->title) }}}</a>
+              @endif
+              @if (($menu->name == 'products') && isset($product_categories))
+              @include('product_categories', ['categories' => $product_categories])
+              @elseif (isset($menu->children) && count($menu->children))
+              <ul class="dropdown-menu">
+                @foreach ($menu->children as $child)
+                <li>
+                  <a href="{{ $child->url }}" data-title="{{{ $child->title }}}">{{{ str_case($child->title) }}}</a>
+                </li>
+                @endforeach
+              </ul>
+              @endif
+            </li>
+            @endforeach
+          </ul>
+        </nav>
+        @endif
+        <nav>
+          <ul class="extra">
+            <li class="search">
+              <a class="search-btn" href="#search">
+                <i class="fa fa-search"></i>
+              </a>
+              <div class="search-block">
+                <form class="search-form" method="get" action="@url('search')" data-title="@lang('menu.search', 'Arama')">
+                  <input type="search" name="q" placeholder="@lang('label.type_to_search', 'Aranacak...')">
+                  <button type="submit"><i class="fa fa-long-arrow-right"></i></button>
+                </form>
+              </div>
+            </li>
+            <li class="toggle">
+              <a href="#toggle" data-toggle="collapse" data-target="#navbar">
+                <i class="fa fa-bars"></i>
+                <i class="fa fa-close"></i>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="content">
+      @yield('content')
+    </main>
+    <footer>
+      <div class="nav-wrapper">
+        @if (isset($nav['extra']))
+        <nav>
+          <ul class="main">
+            @foreach ($nav['extra']['items'] as $menu)
+            <li>
+              <a href="{{ $menu->url }}" data-title="{{{ $menu->title }}}">{{{ str_case($menu->title) }}}</a>
+            </li>
+            @endforeach
+          </ul>
+        </nav>
+        @endif
+        <nav>
+          <ul class="socials">
+            <li>
+              <a href="@conf('social.facebook', '#')" target="_blank"><i class="fa fa-facebook"></i></a>
+            </li>
+            <li>
+              <a href="@conf('social.twitter', '#')" target="_blank"><i class="fa fa-twitter"></i></a>
+            </li>
+            <li>
+              <a href="@conf('social.instagram', '#')" target="_blank"><i class="fa fa-instagram"></i></a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <p class="copyright">{{ $copyright or '&copy; 2017 Powered by Masters'}}</p>
+    </footer>
+  </div>
+
+  <!--[if lt IE 9]>
+  <script type="text/javascript" src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script type="text/javascript" src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <script type="text/javascript" src="{{ $root }}/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/lib/bootstrap/js/bootstrap.min.js"></script>
+  @section('plugin')
+  <script type="text/javascript" src="{{ $root }}/plugins/pace.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/imagesloaded.pkgd.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/jquery.nicescroll.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/jquery.blockui.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/jquery.lazyload.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/toastr/toastr.min.js"></script>
+  @show
+  @section('script')
+  <script type="text/javascript" src="{{ $root }}/js/app.js"></script>
+  @show
+  @conf('google.analytics')
+</body>
+</html>

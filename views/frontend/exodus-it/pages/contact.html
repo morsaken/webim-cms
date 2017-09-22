@@ -1,0 +1,82 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} @ @parent @stop
+
+@section('content')
+<section class="contact-section default-section">
+  <div class="auto-container">
+    <div class="sec-title text-center">
+      <h2>{{{ $page->title }}}</h2>
+    </div>
+    <div class="row clearfix">
+      <div class="column col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        <div class="info-box">
+          <div class="row clearfix">
+            <div class="info-column col-lg-4 col-md-6 col-sm-6 col-xs-12">
+              <h3>@lang('label.address', 'Adres')</h3>
+              <ul class="text">
+                <li>{{ nl2br(conf('contact.0.address')) }}</li>
+              </ul>
+            </div>
+            <div class="info-column col-lg-4 col-md-6 col-sm-6 col-xs-12">
+              <h3>@lang('label.contact', 'İletişim')</h3>
+              <ul class="text">
+                <li>T: @conf('contact.0.phone')</li>
+                <li>F: @conf('contact.0.fax')</li>
+                <li>E: @conf('contact.0.email')</li>
+              </ul>
+            </div>
+            <div class="info-column col-lg-4 col-md-6 col-sm-6 col-xs-12">
+              <h3>@lang('label.social_media', 'Sosyal Medya')</h3>
+              <ul class="text">
+                <li><a href="@conf('socials.facebook', '#')" target="_blank">Facebook</a></li>
+                <li><a href="@conf('socials.twitter', '#')" target="_blank">Twitter</a></li>
+                <li><a href="@conf('socials.linkedin', '#')" target="_blank">LinkedIn</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="map-area">
+          <h3>@lang('label.location', 'Konum')</h3>
+          <div id="map" class="map-box"
+               data-title="@conf('map.0.title')"
+               data-lat="@conf('map.0.lat')"
+               data-lon="@conf('map.0.lon')"
+               data-zoom="@conf('map.0.zoom')"
+               data-marker-lat="@conf('map.0.marker_lat')"
+               data-marker-lon="@conf('map.0.marker_lon')"
+               data-marker-content="{{ nl2br(conf('map.0.marker_content')) }}"></div>
+        </div>
+      </div>
+      <div class="column form-column col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="inner-box">
+          <h3>@lang('label.send_us_message', 'Mesaj Yazın')</h3>
+          <div class="contact-form">
+            <form id="contact-form" method="post" action="@url()">
+              <div class="form-group">
+                <input type="text" name="name" placeholder="@lang('label.name', 'İsim')" required="required" data-message="@conf('message.type_your_name', 'İsminizi giriniz')">
+              </div>
+              <div class="form-group">
+                <input type="email" name="email" placeholder="@lang('label.email', 'E-Posta')" pattern="^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$" required="required" data-message="@conf('message.type_your_valid_email', 'Geçerli e-posta adresinizi giriniz')">
+              </div>
+              <div class="form-group">
+                <input type="text" name="phone" placeholder="@lang('label.phone', 'Telefon')" required="required" data-message="@conf('message.type_your_phone_number', 'Telefon numaranızı giriniz')">
+              </div>
+              <div class="form-group">
+                <textarea name="message" placeholder="@lang('label.message', 'Mesaj')" required="required" data-message="@conf('message.type_your_message', 'Mesajınızı giriniz')"></textarea>
+              </div>
+              <button type="submit" class="theme-btn default-btn">@lang('button.send', 'Gönder')</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+@stop
+
+@section('plugin')
+@parent
+<script type="text/javascript" src="//maps.google.com/maps/api/js?key=@conf('google.map_key')"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/gmaps.js"></script>
+@stop

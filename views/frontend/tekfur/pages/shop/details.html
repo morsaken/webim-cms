@@ -1,0 +1,61 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} :: @parent @stop
+
+@section('content')
+<section class="banner" data-background-image="{{ $root }}/img/banner.jpg">
+  <div class="container">
+    <h1>{{{ $page->title }}}</h1>
+  </div>
+</section>
+<div class="page">
+  <div class="container">
+    @include('bars')
+    <section class="content ptn">
+      @include('categories')
+      <div class="product">
+        <div class="row">
+          <div class="col-md-6">
+            <div id="product-poster">
+              <ul>
+                <li>
+                  <div class="image" data-background-image="{{ $product->poster->image }}"></div>
+                </li>
+                @foreach ($product->media as $media)
+                <li>
+                  <div class="image" data-background-image="{{ $media->poster->image }}"></div>
+                </li>
+                @endforeach
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="text-center">
+              <h2>{{{ $product->title }}}</h2>
+              <p>{{ nl2br($product->meta->summary) }}</p>
+            </div>
+            <div class="order">
+              <span class="price">{{ $product->sell_price->string }}</span>
+              <a class="order-btn" href="#order">@lang('label.order', 'Sipariş Ver')</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="product mt40">
+        {{ $product->meta->content }}
+      </div>
+    </section>
+    @include('bars')
+  </div>
+</div>
+@stop
+
+@section('css')
+@parent
+<link type="text/css" href="{{ $root }}/js/plugins/bxslider/jquery.bxslider.min.css" rel="stylesheet">
+@stop
+
+@section('plugin')
+@parent
+<script type="text/javascript" src="{{ $root }}/js/plugins/bxslider/jquery.bxslider.min.js"></script>
+@stop

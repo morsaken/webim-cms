@@ -1,0 +1,70 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} :: @parent @stop
+
+@section('content')
+@include('title-bar')
+<div class="container">
+  <div class="content fullwidth-layout">
+    @if ($products->total)
+    <div class="row margin-bottom-15">
+      <div class="col-md-12">
+        <div class="layout-switcher">
+          <a href="#" class="list"><i class="fa fa-th-list"></i></a>
+          <a href="#" class="grid"><i class="fa fa-th-large"></i></a>
+          <a href="#" class="grid-three"><i class="fa fa-th"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="listings-container list-layout">
+      @foreach ($products->rows as $product)
+      <div class="listing-item">
+        <a href="@url('products/' . $product->url)" class="listing-img-container">
+          <div class="listing-badges">
+            <span>{{{ implode(', ', $product->categories) }}}</span>
+          </div>
+          <img src="{{ $product->poster->image }}" alt="{{{ $product->title }}}">
+        </a>
+        <div class="listing-content">
+          <div class="listing-title">
+            <h4><a href="@url('products/' . $product->url)">{{{ $product->title }}}</a></h4>
+            <a href="@url('products/' . $product->url)" class="details button border">@lang('button.details', 'Detay')</a>
+          </div>
+          <ul class="listing-details">
+            <li>{{{ strlen($product->meta->summary) ? $product->meta->summary : '-' }}}</li>
+          </ul>
+          <div class="listing-footer clearfix">
+            <span><i class="fa fa-calendar-o"></i> {{{ date_ago($product->publish_date) }}}</span>
+          </div>
+        </div>
+      </div>
+      @endforeach
+    </div>
+    <div class="clearfix"></div>
+    <div class="pagination-container">
+      <nav class="pagination">
+        <ul>
+          @foreach ($products->paging->pages as $p)
+          <li><a href="{{ $p->link }}"{{ $p->active ? ' class="current-page"' : '' }}>{{ $p->label }}</a></li>
+          @endforeach
+        </ul>
+      </nav>
+      <nav class="pagination-next-prev">
+        <ul>
+          @if ($products->paging->previous->link)
+          <li><a href="{{ $products->paging->previous->link }}" class="prev">@lang('button.previous', 'Önceki')</a></li>
+          @endif
+          @if ($products->paging->next->link)
+          <li><a href="{{ $products->paging->next->link }}" class="next">@lang('button.next', 'Sonraki')</a></li>
+          @endif
+        </ul>
+      </nav>
+    </div>
+    @else
+    <div class="notification notice text-center">
+      <p>@lang('message.no_content_found', 'İçerik bulunamadı!')</p>
+    </div>
+    @endif
+  </div>
+</div>
+@stop

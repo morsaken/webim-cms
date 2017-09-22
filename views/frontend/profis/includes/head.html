@@ -1,0 +1,27 @@
+<div class="head">
+  @if (!isset($bgless) || !$bgless)
+  <figure{{ isset($bg) ? ' style="background-image: url(\'' . $bg . '\')"' : '' }}></figure>
+  <div class="overlay"></div>
+  @else
+  <div class="headless"></div>
+  @endif
+  <div class="title">
+    <div class="container">
+      <h1>{{{ $page->title }}}</h1>
+      @if (isset($page->description) && strlen($page->description))
+      <h2>{{{ str_limit($page->description, 50) }}}</h2>
+      @endif
+      @if (url_is('products', true) && isset($product_categories) && count($product_categories))
+      <div class="category-tab">
+        <ul class="nav nav-tabs">
+          @foreach ($product_categories as $category)
+          <li{{ url_is('products/category/' . $category->url, true) ? ' class="active"' : '' }}>
+          <a href="@url('products/category/' . $category->url)" title="{{{ $category->title }}}"><i class="fa fa-{{ $category->meta->options->icon or 'bookmark' }}"></i> <span class="hidden-xs">{{{ str_case($category->title) }}}</span></a>
+          </li>
+          @endforeach
+        </ul>
+      </div>
+      @endif
+    </div>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} :: @parent @stop
+
+@section('content')
+<section class="banner" data-background-image="{{ $root }}/img/banner.jpg">
+  <div class="container">
+    <h1>{{{ $page->title }}}</h1>
+  </div>
+</section>
+<div class="page">
+  <div class="container">
+    @include('bars')
+    <section class="content ptn">
+      @include('categories')
+      @if (isset($products) && $products->total)
+      <div class="products">
+        @foreach ($products->rows as $product)
+        <a class="product" href="@url('shop/' . $product->url)" title="{{{ $product->title }}}">
+          <img src="{{ $product->poster->image->size(450, 450)->src() }}" alt="{{{ $product->title }}}">
+          <h3>
+            {{{ $product->title }}}
+            <span class="price">{{ $product->sell_price->string }}</span>
+          </h3>
+        </a>
+        @endforeach
+      </div>
+      <div class="paging">
+        <ul class="pagination">
+          <li>
+            <a href="{{ $products->paging->previous->link ? $products->paging->previous->link : 'javascript:void(0)' }}">&laquo;</a>
+          </li>
+          @foreach ($products->paging->pages as $p)
+          <li{{ $p->active ? ' class="active"' : '' }}>
+            <a href="{{ $p->link }}">{{ $p->label }}</a>
+          </li>
+          @endforeach
+          <li>
+            <a href="{{ $products->paging->next->link ? $products->paging->next->link : 'javascript:void(0)'}}">&raquo;</a>
+          </li>
+        </ul>
+      </div>
+      @else
+      <div class="empty">
+        <span class="icon">
+          <i class="fa fa-clone"></i>
+        </span>
+        <h3>@lang('message.product_not_found', 'Ürün bulunamadı!')</h3>
+      </div>
+      @endif
+    </section>
+    @include('bars')
+  </div>
+</div>
+@stop
+
+@section('plugin')
+@parent
+<script type="text/javascript" src="{{ $root }}/js/plugins/imagesloaded.pkgd.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/isotope.pkgd.min.js"></script>
+@stop

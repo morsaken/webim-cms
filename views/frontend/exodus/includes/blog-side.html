@@ -1,0 +1,51 @@
+<div class="widget">
+  <h3 class="margin-top-0 margin-bottom-25">@lang('label.search', 'Arama')</h3>
+  <form method="get" class="search-blog-input" action="@url()">
+    <div class="input">
+      <input type="text" class="search-field" name="filter" placeholder="@lang('label.type_hit_enter', 'Yazarak entera basın')" value="{{{ input('filter') }}}">
+    </div>
+  </form>
+  <div class="clearfix"></div>
+</div>
+<div class="widget">
+  <h3>@lang('label.any_questions', 'Sorunuz mu var?')</h3>
+  <div class="info-box margin-bottom-10">
+    <p>@lang('label.if_any_question', 'Sorunuz varsa, bize yazarak cevap bulabilirsiniz.')</p>
+    <a href="@url('contact')" class="button fullwidth margin-top-20"><i class="fa fa-envelope-o"></i> @lang('button.write_us', 'Bize Yazın')</a>
+  </div>
+</div>
+@if (isset($popular) && count($popular))
+<div class="widget">
+  <h3>@lang('label.popular', 'Çok Okunanlar')</h3>
+  <ul class="widget-tabs">
+    @foreach ($popular as $post)
+    <li>
+      <div class="widget-content">
+        @if ($post->poster->image)
+        <div class="widget-thumb">
+          <a href="@url('blog/' . $post->url)">
+            <img src="{{ $post->poster->image }}" alt="{{{ $post->title }}}">
+          </a>
+        </div>
+        @endif
+        <div class="widget-text">
+          <h5><a href="@url('blog/' . $post->url)">{{{ $post->title }}}</a></h5>
+          <span>{{{ date_show($post->publish_date) }}}</span>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    </li>
+    @endforeach
+  </ul>
+</div>
+@endif
+<div class="widget">
+  <h3 class="margin-top-0 margin-bottom-25">@lang('label.socials', 'Sosyal Ağlar')</h3>
+  <ul class="social-icons rounded">
+    <li><a class="facebook" href="@conf('social.facebook', '#')" target="_blank"><i class="icon-facebook"></i></a></li>
+    <li><a class="twitter" href="@conf('social.twitter', '#')" target="_blank"><i class="icon-twitter"></i></a></li>
+    <li><a class="gplus" href="@conf('social.google_plus', '#')" target="_blank"><i class="icon-gplus"></i></a></li>
+    <li><a class="linkedin" href="@conf('social.linkedin', '#')" target="_blank"><i class="icon-linkedin"></i></a></li>
+  </ul>
+</div>
+<div class="clearfix"></div>

@@ -1,0 +1,11 @@
+@extends('default')
+
+@section('title') {{ $page->title }} {{ $separator or '::' }} @parent @stop
+
+@section('content')
+<section class="error">
+  <div class="container">
+   {{ $page->content }}
+  </div>
+</section>
+@stop

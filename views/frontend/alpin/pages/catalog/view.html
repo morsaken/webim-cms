@@ -1,0 +1,22 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} | @parent @stop
+
+@section('content')
+@include('breadcrumb')
+@include('pages.catalog.view')
+@stop
+
+@section('meta')
+@parent
+<meta name="twitter:site" content="@url()">
+<meta name="twitter:title" content="{{{ $product->title }}}">
+<meta name="twitter:description" content="{{{ $product->meta->summary }}}">
+<meta name="twitter:image:src" content="{{ $product->poster->image or '' }}">
+<meta property="fb:app_id" content="@conf('login.facebook.app_id')">
+<meta property="og:site_name" content="{{{ $title }}}">
+<meta property="og:title" content="{{{ $product->title }}}">
+<meta property="og:url" content="@url()">
+<meta property="og:description" content="{{{ $product->meta->summary }}}">
+<meta property="og:image" content="{{ $product->poster->image ? $product->poster->image->size(600, 600)->src() : '' }}">
+@stop

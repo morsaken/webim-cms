@@ -1,0 +1,35 @@
+@extends('default')
+
+@section('content')
+<div class="container">
+  <div class="content">
+    <div class="row mb20">
+      <div class="col-md-6">
+        <div class="embed-responsive embed-responsive-16by9">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/1VOezUmoDR4" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="col-md-6 posr">
+        <div class="spot">
+          <img src="{{ $root }}/img/spot.png" alt="">
+          <p>Parçayı ücretsiz indirmek için tıklayın</p>
+          <a href="@url('download')">İNDİR</a>
+        </div>
+      </div>
+    </div>
+    <div class="text-center">
+      <p>Garanti ve Ceza'dan 12 Dev Adam'a #DevDestek!</p>
+      <p>Sen de #DevDestek etiketiyle ister 12 Dev Adam şarkısını söyle,</p>
+      <p>İstersen içinden gelen destek mesajını paylaş!</p>
+      <p>Dev Adamlar sesinden güç alsın.</p>
+      <p><strong>Management: Muratcan Terzi // <a href="mailto:iletisim@ceza.com.tr">iletisim@ceza.com.tr</a></strong></p>
+    </div>
+    <ul class="socials">
+      <li><a target="_blank" href="https://www.facebook.com/cezaofficial"><i class="fa fa-facebook"></i></a></li>
+      <li><a target="_blank" href="https://twitter.com/ceza_ed"><i class="fa fa-twitter"></i></a></li>
+      <li><a target="_blank" href="https://instagram.com/cezagram"><i class="fa fa-instagram"></i></a></li>
+      <li><a target="_blank" href="https://www.youtube.com/user/cezaofficial"><i class="fa fa-youtube"></i></a></li>
+    </ul>
+  </div>
+</div>
+@stop

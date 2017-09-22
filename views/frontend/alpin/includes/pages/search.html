@@ -1,0 +1,18 @@
+<section class="content">
+  @if ($page->content->total)
+  <p>@lang('message.found', [$page->content->total], '<b>%s</b> sonuç bulundu')</p>
+  <div class="gallery grid">
+    @foreach ($page->content->rows as $found)
+    <div class="grid-item {{ $found->poster->image->orientation() }}">
+      <a class="pop media" href="{{ $found->url }}" title="{{{ $found->title }}}">
+        <img class="img-responsive" src="{{ $found->poster->image->size(400, ($found->poster->image->orientation() == 'portrait' ? 639 : 300))->src() }}" width="{{ $found->poster->image->reset()->width() }}" height="{{ $found->poster->image->reset()->height() }}" alt="{{{ $found->title }}}">
+        <span class="title">{{{ $found->title }}}</span>
+      </a>
+    </div>
+    @endforeach
+  </div>
+  @else
+  <div class="w400 center-block text-center alert alert-info">@lang('message.product_not_found', 'Ürün bulunamadı!')</div>
+  @endif
+</section>
+@include('sticky')

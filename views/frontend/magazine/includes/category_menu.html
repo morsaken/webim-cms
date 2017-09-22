@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="sub-category">
+    <h2 class="section-title">{{{ $category->title }}}</h2>
+    @if (isset($category->children) && count($category->children))
+    <ul class="list-inline">
+      @foreach ($category->children as $child)
+      <li><a href="@url('news/category/' . $child->url)">{{{ $child->title }}}</a></li>
+      @endforeach
+    </ul>
+    @endif
+  </div>
+  @if (isset($articles) && count($articles))
+  <div class="row">
+    @foreach ($articles as $article)
+    <div class="col-sm-3">
+      <div class="post medium-post">
+        @if ($article->poster->image)
+        <div class="entry-header">
+          <div class="entry-thumbnail">
+            <img class="img-responsive" src="{{ $article->poster->image }}" alt="{{{ $article->title }}}">
+          </div>
+        </div>
+        @endif
+        <div class="post-content">
+          <div class="entry-meta">
+            <ul class="list-inline">
+              <li class="publish-date"><a href="#"><i class="fa fa-clock-o"></i>{{ date_show($article->publish_date) }}</a></li>
+            </ul>
+          </div>
+          <h2 class="entry-title">
+            <a href="@url('news/' . $article->url)">{{{ $article->title }}}</a>
+          </h2>
+        </div>
+      </div>
+    </div>
+    @break($loop->iteration === 4)
+    @endforeach
+  </div>
+  @endif
+</div>

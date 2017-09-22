@@ -1,0 +1,8 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} | @parent @stop
+
+@section('content')
+@include('breadcrumb')
+@include('pages.catalog.brochures')
+@stop

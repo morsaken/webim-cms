@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="@lang('abbr')">
+<head>
+  <title>@section('title') {{{ $title or 'Web-IM XI' }}} @show</title>
+  @section('meta')
+  <meta charset="@lang('charset')">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <meta name="description" content="{{{ $description or '' }}}">
+  <meta name="keywords" content="{{{ $keywords or '' }}}">
+  <meta name="author" content="{{{ AUTHOR }}}">
+  @conf('google.search_console')
+  @show
+  @section('css')
+  <link type="image/x-icon" href="{{ $root }}/img/favicon.ico" rel="shortcut icon">
+  <link type="text/css" href="{{ $root }}/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/helpers.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/style.css" rel="stylesheet">
+  @show
+</head>
+<body>
+  @yield('content')
+  @section('plugin')
+  <!--[if lt IE 9]>
+  <script type="text/javascript" src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script type="text/javascript" src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <script type="text/javascript" src="{{ $root }}/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/lib/bootstrap/js/bootstrap.min.js"></script>
+  @show
+  @conf('google.analytics')
+</body>
+</html>

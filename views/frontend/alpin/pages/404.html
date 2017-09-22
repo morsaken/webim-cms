@@ -1,0 +1,10 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} | @parent @stop
+
+@section('content')
+@include('breadcrumb')
+<section class="content error">
+  {{ $page->content }}
+</section>
+@stop

@@ -1,0 +1,107 @@
+@extends('default')
+
+@section('content')
+<div class="parallax" data-background="{{ $root }}/img/home.jpg" data-color="#36383e" data-color-opacity="0.45" data-img-width="1920" data-img-height="1280">
+  <div class="parallax-content">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="main-search-container">
+            <h2>@lang('label.slogan', 'Herşey insan sağlığı için')</h2>
+            <form class="main-search-form" method="get" action="@url('products')">
+              <div class="search-type">
+                @foreach ($categories as $key => $category)
+                <label{{ $key == 0 ? ' class="active"' : '' }}><input{{ $key == 0 ? ' class="first-tab"' : '' }} name="category"{{ $key == 0 ? ' checked="checked"' : '' }} type="radio" value="{{ $category->url }}">{{ $category->title }}</label>
+                @endforeach
+                <div class="search-type-arrow"></div>
+              </div>
+              <div class="main-search-box">
+                <div class="main-search-input larger-input">
+                  <input type="text" name="keyword" class="ico-01" placeholder="@lang('label.product_name', 'Ürün Adı')">
+                  <button class="button">@lang('button.go_products', 'Ürünlere Git')</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@if (isset($products) && count($products))
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h3 class="headline margin-bottom-25 margin-top-65">@lang('label.newly_added_products', 'Yeni Eklenen Ürünler')</h3>
+    </div>
+    <div class="col-md-12">
+      <div class="carousel">
+        @foreach ($products as $product)
+        <div class="carousel-item">
+          <div class="listing-item">
+            @if ($product->poster->image)
+            <a href="@url('products/' . $product->url)" class="listing-img-container">
+              @if (isset($product->meta->stock_code) && strlen($product->meta->stock_code))
+              <div class="listing-badges">
+                <span>{{{ $product->meta->stock_code }}}</span>
+              </div>
+              @endif
+              <img src="{{ $product->poster->image }}" alt="{{{ $product->title }}}">
+            </a>
+            @endif
+            <div class="listing-content">
+              <div class="listing-title">
+                <h4><a href="@url('products/' . $product->url)">{{{ $product->title }}}</a></h4>
+                @if (count($product->categories))
+                <a href="@url('products/?category=' . urlencode(implode(',', array_keys($product->categories))))" class="listing-address">
+                  <i class="fa fa-list"></i>
+                  {{{ implode(', ', $product->categories) }}}
+                </a>
+                @endif
+              </div>
+              <div class="listing-footer">
+                {{{ $product->meta->summary }}}
+              </div>
+            </div>
+          </div>
+        </div>
+        @endforeach
+      </div>
+    </div>
+  </div>
+</div>
+@endif
+@if (isset($posts) && count($posts))
+<section class="fullwidth margin-top-95 margin-bottom-0">
+  <h3 class="headline-box">@lang('menu.news', 'Haberler')</h3>
+  <div class="container">
+    <div class="row">
+      @foreach ($posts as $post)
+      <div class="col-md-4">
+        <div class="blog-post">
+          @if ($post->poster->image)
+          <a href="@url('blog/' . $post->url)" class="post-img">
+            <img src="{{ $post->poster->image }}" alt="{{{ $post->title }}}">
+          </a>
+          @endif
+          <div class="post-content">
+            <h3><a href="@url('blog/' . $post->url)">{{{ $post->title }}}</a></h3>
+            @if (strlen($post->meta->summary))
+            <p>{{{ str_limit($post->meta->summary) }}}</p>
+            @endif
+            <a href="@url('blog/' . $post->url)" class="read-more">@lang('button.more', 'Devamı') <i class="fa fa-angle-right"></i></a>
+          </div>
+        </div>
+      </div>
+      @endforeach
+    </div>
+  </div>
+</section>
+@endif
+<a href="@url('products')" class="flip-banner parallax" data-background="{{ $root }}/img/banner.jpg" data-color="#274abb" data-color-opacity="0.9" data-img-width="2500" data-img-height="1600">
+  <div class="flip-banner-content">
+    <h2 class="flip-visible">@lang('label.slogan', 'Herşey insan sağlığı için')</h2>
+    <h2 class="flip-hidden">@lang('label.browse_products', 'Ürünleri İncele') <i class="sl sl-icon-arrow-right"></i></h2>
+  </div>
+</a>
+@stop

@@ -1,0 +1,36 @@
+<section class="product-info">
+  <div class="images">
+    @forelse ($product->media as $media)
+    <img src="{{ $media->poster->image }}" alt="{{{ $product->title }}}">
+    @empty
+    <img src="{{ $product->poster->image }}" alt="{{{ $product->title }}}">
+    @endforelse
+  </div>
+  <div class="info">
+    <form>
+      <p>@lang('label.type_size_of_area', 'Uygulama alanınızın metrekare ölçülerini giriniz'):</p>
+      <input id="area" type="text" name="area" maxlength="5" data-value="{{ array_get($product->form_fields, 'area.value', 0) }}">
+      <p class="help-text" data-toggle="tooltip" data-placement="top" title="Uygulama alanınızın ölçümünü yaparak oluşturduğunuz metrekare değerini girdiğinizde, modele göre 3,9 ila 4,1 metrekare alan kaplayan panellerden gerekli adet hesaplanır. (Kapladığı alana göre metrekare fiyatı baz alınarak panel fiyatı oluşturulur.)">@lang('label.how_calculate', 'Nasıl hesaplama yapılır?')</p>
+      <h3><span>{{ array_get($product->form_fields, 'area.value', 0) }}</span>m<sup>2</sup> = <span id="panel">1</span> Panel</h3>
+      <a class="close" href="#close"><i class="fa fa-times"></i></a>
+    </form>
+    <a class="open" href="#open"><i class="fa fa-eye"></i></a>
+    <div class="scroller">
+      {{ $product->meta->content }}
+    </div>
+  </div>
+  <div class="extra-info">
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#offers" aria-controls="offers" role="tab" data-toggle="tab">{{{ str_case(lang('label.offers', 'Özel Teklifler')) }}}</a></li>
+      <li role="presentation"><a href="#faq" aria-controls="faq" role="tab" data-toggle="tab">{{{ str_case(lang('label.faq', 'Sık Sorulan Sorular')) }}}</a></li>
+    </ul>
+    <div class="tab-content">
+      <div id="offers" role="tabpanel" class="tab-pane active">
+        {{ $offers }}
+      </div>
+      <div id="faq" role="tabpanel" class="tab-pane">
+        {{ $faq }}
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="@lang('abbr')">
+<head>
+  <title>@section('title') {{{ $title or 'Web-IM XI' }}} @show</title>
+  @section('meta')
+  <base href="{{ $root }}/">
+  <meta charset="@lang('charset')">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <meta name="description" content="{{{ $description or '' }}}">
+  <meta name="keywords" content="{{{ $keywords or '' }}}">
+  <meta name="author" content="{{{ AUTHOR }}}">
+  @conf('google.search_console')
+  @show
+  @section('css')
+  <link type="image/png" href="{{ $root }}/img/favicon.png" rel="shortcut icon">
+  <link type="text/css" href="{{ $root }}/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/blog.css" rel="stylesheet">
+  @show
+</head>
+<body id="top" data-root="@url('/')">
+  <div id="preloader">
+    <div id="loader"></div>
+  </div>
+  <nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header page-scroll">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+          <span class="sr-only">Seçim Yapın</span> Menu <i class="fa fa-bars"></i>
+        </button>
+        <a class="page-scroll" href="{{ !url_is('/') ? url('/') : '#page-top' }}"><img src="{{ $root }}/img/logo.png" class="img-logo"></a>
+      </div>
+      <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="hidden">
+            <a href="#page-top"></a>
+          </li>
+          <li>
+            <a class="page-scroll" href="{{ !url_is('/') ? url('/') : '' }}#about">Hakkımızda</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="{{ !url_is('/') ? url('/') : '' }}#portfolio">Duyurular</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="{{ !url_is('/') ? url('/') : '' }}#services">Hizmetler</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="{{ !url_is('/') ? url('/') : '' }}#references">Referanslar</a>
+          </li>
+          <li{{ url_is('blog', true) ? ' class="here"' : '' }}>
+          <a href="@url('blog')">Blog</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="{{ !url_is('/') ? url('/') : '' }}#contact">İletişim</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  @yield('content')
+
+  @section('plugin')
+  <!--[if lt IE 9]>
+  <script type="text/javascript" src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script type="text/javascript" src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <script type="text/javascript" src="{{ $root }}/lib/modernizr.js"></script>
+  <script type="text/javascript" src="{{ $root }}/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/pace.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/plugins.js"></script>
+  @show
+  @section('script')
+  <script type="text/javascript" src="{{ $root }}/js/blog.js"></script>
+  <script id="article-template" type="text/html">
+    <article class="brick entry format-{type}">
+      {head}
+      <div class="entry-text">
+        <div class="entry-header">
+          <div class="entry-meta">
+          <span class="cat-links">
+            {categories}
+          </span>
+          </div>
+          <h1 class="entry-title"><a href="{url}">{title}</a></h1>
+        </div>
+        <div class="entry-excerpt">{description}</div>
+      </div>
+    </article>
+  </script>
+  @show
+  @conf('google.analytics')
+</body>
+</html>

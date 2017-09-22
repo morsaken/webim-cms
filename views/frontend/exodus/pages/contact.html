@@ -1,0 +1,76 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} :: @parent @stop
+
+@section('content')
+@include('title-bar')
+<div class="contact-map margin-bottom-55">
+  <div class="google-map-container">
+    <div id="propertyMap" data-latitude="@conf('map.0.lat')" data-longitude="@conf('map.0.lon')"></div>
+    <a id="streetView" href="#">@lang('label.street_view', 'Sokak Görünümü')</a>
+  </div>
+  <div class="address-box-container">
+    <div class="address-container" data-background-image="{{ $root }}/img/office.jpg">
+      <div class="office-address">
+        <h3>@conf('contact.0.title')</h3>
+        <ul>
+          <li>{{ nl2br(conf('contact.0.address')) }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="clearfix"></div>
+<div class="container">
+  <div class="content">
+        <div class="row">
+      <div class="col-md-4">
+        <h4 class="headline margin-bottom-30">@lang('label.find_us_here', 'Bizi Burada Bulabilirsiniz')</h4>
+        <div class="sidebar-textbox">
+          <ul class="contact-details">
+            <li><i class="im im-icon-Phone-2"></i> <strong>@lang('label.phone', 'Telefon'):</strong> <span>@conf('contact.0.phone')</span></li>
+            <li><i class="im im-icon-Fax"></i> <strong>@lang('label.fax', 'Faks'):</strong> <span>@conf('contact.0.fax')</span></li>
+            <li><i class="im im-icon-Globe"></i> <strong>@lang('label.web', 'Web Sayfası'):</strong> <span><a href="@conf('contact.0.web')">@conf('contact.0.web')</a></span></li>
+            <li><i class="im im-icon-Envelope"></i> <strong>@lang('label.email', 'E-Posta'):</strong> <span><a href="mailto:@conf('contact.0.email')">@conf('contact.0.email')</a></span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <section id="contact">
+          <h4 class="headline margin-bottom-35">@lang('label.contact_form', 'İletişim Formu')</h4>
+          <div id="result"></div>
+          <form id="contact-form" method="post" action="@url()" autocomplete="on">
+            <div class="row">
+              <div class="col-md-6">
+                <div>
+                  <input type="text" name="name" placeholder="@lang('label.your_name', 'Adınız')" required="required" title="@conf('message.type_your_name', 'Adınızı giriniz')">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div>
+                  <input type="email" name="email" placeholder="@lang('label.your_email_Address', 'E-Posta Adresiniz')" pattern="^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$" required="required" title="@conf('message.type_your_valid_email', 'Geçerli e-posta adresinizi giriniz')">
+                </div>
+              </div>
+            </div>
+            <div>
+              <input type="text" name="subject" placeholder="@lang('label.subject', 'Başlık')" required="required" title="@conf('message.type_subject', 'Başlığı giriniz')">
+            </div>
+            <div>
+              <textarea name="message" cols="40" rows="3" placeholder="@lang('label.your_message', 'Mesajınız')" spellcheck="true" required="required" title="@conf('message.type_your_message', 'Mesajınızı giriniz')"></textarea>
+            </div>
+            <input type="submit" class="submit button" value="@lang('button.send', 'Gönder')">
+          </form>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+@stop
+
+@section('script')
+@parent
+<script type="text/javascript" src="//maps.google.com/maps/api/js?key=@conf('google.map_key')"></script>
+<script type="text/javascript" src="{{ $root }}/js/infobox.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/markerclusterer.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/maps.js"></script>
+@stop

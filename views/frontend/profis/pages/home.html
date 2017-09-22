@@ -1,0 +1,150 @@
+@extends($template)
+
+@section('content')
+@if (isset($slides) && count($slides))
+<section class="banner">
+  <div id="slider_wrapper" class="rev_slider_wrapper fullwidthbanner-container" data-alias="classic-carousel26" data-source="gallery">
+    <div id="slider" class="rev_slider fullwidthabanner" style="display:none;" data-version="5.4.1">
+      <ul>
+        @foreach ($slides as $slide)
+        <li data-index="rs-{{ $loop->index }}"
+            data-transition="zoomin"
+            data-slotamount="7"
+            data-hideafterloop="0"
+            data-hideslideonmobile="off"
+            data-easein="Power4.easeInOut"
+            data-easeout="Power4.easeInOut"
+            data-masterspeed="2000"
+            data-thumb="{{ $slide->poster->image->size(60, 60)->src() }}"
+            data-rotate="0"
+            data-saveperformance="off"
+            data-title="{{{ $slide->title }}}"
+            data-description="">
+          <img src="{{ $slide->poster->image->reset()->src() }}" alt="{{{ $slide->title }}}"
+               data-bgposition="center center"
+               data-kenburns="on"
+               data-duration="30000"
+               data-ease="Linear.easeNone"
+               data-scalestart="100"
+               data-scaleend="120"
+               data-rotatestart="0"
+               data-rotateend="0"
+               data-offsetstart="0 0"
+               data-offsetend="0 0"
+               data-bgparallax="10"
+               class="rev-slidebg"
+               data-no-retina>
+          @if ($slide->poster->source->role === 'link')
+          <div class="rs-background-video-layer"
+               data-forcerewind="on"
+               data-volume="100"
+               data-ytid="{{ trim(strrchr($slide->poster->source->link, '/'), '/') }}"
+               data-videoattributes="version=3&amp;enablejsapi=1&amp;html5=1&amp;volume=100&amp;hd=1&amp;wmode=opaque&amp;showinfo=0&amp;rel=0;"
+               data-videorate="1"
+               data-videowidth="100%"
+               data-videoheight="100%"
+               data-videocontrols="none"
+               data-videoloop="none"
+               data-forceCover="1"
+               data-aspectratio="16:9"
+               data-autoplay="true"
+               data-autoplayonlyfirsttime="false"
+               data-nextslideatend="true"
+          ></div>
+          @endif
+          <div class="tp-caption tp-shape tp-shapewrapper tp-resizeme"
+               data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
+               data-y="['middle','middle','middle','middle']" data-voffset="['15','15','15','15']"
+               data-width="500"
+               data-height="140"
+               data-whitespace="nowrap"
+               data-type="shape"
+               data-responsive_offset="on"
+               data-frames='[{"from":"y:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;","speed":1500,"to":"o:1;","delay":1000,"ease":"Power4.easeInOut"},{"delay":"wait","speed":1000,"to":"y:[100%];","mask":"x:inherit;y:inherit;","ease":"Power2.easeInOut"}]'
+               data-textAlign="['left','left','left','left']"
+               data-paddingtop="[0,0,0,0]"
+               data-paddingright="[0,0,0,0]"
+               data-paddingbottom="[0,0,0,0]"
+               data-paddingleft="[0,0,0,0]"
+               style="z-index: 15; background-color: rgba(0, 0, 0, 0.75); border-color: rgba(0, 0, 0, 0.50); border-width:0;"></div>
+          <div class="tp-caption NotGeneric-Title tp-resizeme"
+               id="slide-1598-layer-1"
+               data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
+               data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"
+               data-fontsize="['70','70','70','45']"
+               data-lineheight="['70','70','70','50']"
+               data-width="none"
+               data-height="none"
+               data-whitespace="nowrap"
+               data-type="text"
+               data-responsive_offset="on"
+               data-frames='[{"from":"y:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;","speed":1500,"to":"o:1;","delay":1000,"ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"to":"y:[100%];","mask":"x:inherit;y:inherit;","ease":"Power2.easeInOut"}]'
+               data-textAlign="['left','left','left','left']"
+               data-paddingtop="[10,10,10,10]"
+               data-paddingright="[0,0,0,0]"
+               data-paddingbottom="[10,10,10,10]"
+               data-paddingleft="[0,0,0,0]"
+               style="z-index: 16; white-space: nowrap;">{{{ $slide->title }}}</div>
+          <div class="tp-caption NotGeneric-SubTitle tp-resizeme"
+               id="slide-1598-layer-4"
+               data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
+               data-y="['middle','middle','middle','middle']" data-voffset="['52','51','51','31']"
+               data-width="none"
+               data-height="none"
+               data-whitespace="nowrap"
+               data-type="text"
+               data-responsive_offset="on"
+               data-frames='[{"from":"y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;","mask":"x:0px;y:[100%];s:inherit;e:inherit;","speed":2000,"to":"o:1;","delay":1500,"ease":"Power4.easeInOut"},{"delay":"wait","speed":1000,"to":"y:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"Power2.easeInOut"}]'
+               data-textAlign="['left','left','left','left']"
+               data-paddingtop="[0,0,0,0]"
+               data-paddingright="[0,0,0,0]"
+               data-paddingbottom="[0,0,0,0]"
+               data-paddingleft="[0,0,0,0]"
+               style="z-index: 17; white-space: nowrap;">{{{ $slide->meta->summary }}}</div>
+        </li>
+        @endforeach
+      </ul>
+      <div class="tp-bannertimer tp-bottom" style="height: 7px; background-color: rgba(255, 255, 255, 0.25);"></div>
+    </div>
+  </div>
+</section>
+@endif
+@if (isset($slogan) && $slogan)
+<div class="home-slogan">
+  <div class="container">
+    <p>{{ nl2br($slogan->meta->description) }}</p>
+  </div>
+</div>
+@endif
+@if (isset($about) && $about)
+<div class="home-info">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-12">
+        <article>
+          <h2>{{{ $about->title }}}</h2>
+          <p>{{ nl2br($about->meta->description) }}</p>
+          <p class="pt25"><a class="btn" href="{{ url($about->url) }}">@lang('button.more', 'Devamı')</a></p>
+        </article>
+      </div>
+      <div class="col-lg-4 hidden-md">
+        <div class="triangle" style="background-image: url('{{ $root }}/assets/office.jpg')"></div>
+      </div>
+    </div>
+  </div>
+</div>
+@endif
+@stop
+
+@section('css')
+@parent
+<link type="text/css" href="{{ $root }}/plugins/rs-plugin/css/settings.css" rel="stylesheet">
+<link type="text/css" href="{{ $root }}/plugins/rs-plugin/css/layers.css" rel="stylesheet">
+<link type="text/css" href="{{ $root }}/plugins/rs-plugin/css/navigation.css" rel="stylesheet">
+@stop
+
+@section('plugin')
+@parent
+<script type="text/javascript" src="{{ $root }}/plugins/rs-plugin/js/jquery.themepunch.tools.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/plugins/rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
+@stop

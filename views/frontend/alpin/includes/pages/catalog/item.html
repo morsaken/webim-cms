@@ -1,0 +1,11 @@
+<div class="product">
+  <figure>
+    <a class="pop image" href="@url('products/' . $item->url)" title="{{{ $item->title }}}" data-background-image="{{ $item->poster->image }}"></a>
+    <figcaption>
+      <a class="pop btn btn-primary" href="@url('products/' . $item->url)" title="{{{ $item->title }}}">@lang('button.more', 'Ürüne Git')</a>
+      <a class="btn btn-primary poster" href="{{ $item->poster->image }}" data-caption="{{{ $item->title }}}">@lang('button.view_larger', 'Resmi Büyüt')</a>
+    </figcaption>
+  </figure>
+  <h3 title="{{{ $item->title }}}">{{{ str_case($item->title) }}}</h3>
+  <h4>{{{ implode(', ', array_map(function($category){ return $category->title; }, $item->category)) }}}</h4>
+</div>

@@ -1,0 +1,12 @@
+@extends('default')
+@section('title') {{ $page->title }} {{ $separator or '::' }} @parent @stop
+
+@section('content')
+<section class="page-404">
+  <div class="container">
+    <h1>404</h1>
+    <h2>{{ $page->description }}</h2>
+    {{ $page->content }}
+  </div>
+</section>
+@stop

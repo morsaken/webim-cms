@@ -1,0 +1,52 @@
+<section class="content pr25">
+  <div class="filters">
+    <div class="row">
+      <div class="col-sm-4">
+        <label class="select-label block">@lang('label.texture', 'Doku'):</label>
+        <div class="form-group">
+          @if (isset($filters['texture']))
+          <select name="texture" class="cs-select cs-skin-rotate">
+            <option value="*">{{{ str_case(lang('label.all', 'Tümü')) }}}</option>
+            @foreach ($filters['texture'] as $filter)
+            <option value="{{ $filter->url }}">{{{ $filter->title }}} ({{{ $filter->total_products or '0' }}})</option>
+            @endforeach
+          </select>
+          @endif
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <label class="select-label block">@lang('label.color', 'Renk'):</label>
+        <div class="form-group">
+          @if (isset($filters['color']))
+          <select name="color" class="cs-select cs-skin-rotate">
+            <option value="*">{{{ str_case(lang('label.all', 'Tümü')) }}}</option>
+            @foreach ($filters['color'] as $filter)
+            <option value="{{ $filter->url }}">{{{ $filter->title }}} ({{{ $filter->total_products or '0' }}})</option>
+            @endforeach
+          </select>
+          @endif
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <label class="select-label block">@lang('label.model', 'Model'):</label>
+        <div class="form-group">
+          @if (isset($filters['model']))
+          <select name="model" class="cs-select cs-skin-rotate">
+            <option value="*">{{{ str_case(lang('label.all', 'Tümü')) }}}</option>
+            @foreach ($filters['model'] as $filter)
+            <option value="{{ $filter->url }}">{{{ $filter->title }}} ({{{ $filter->total_products or '0' }}})</option>
+            @endforeach
+          </select>
+          @endif
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="products grid">
+    @foreach ($products as $item)
+    <div class="grid-item {{ implode(' ', array_map(function($category){ return $category->url; }, $item->category)) }}">
+      @include('pages.catalog.item', ['item' => $item])
+    </div>
+    @endforeach
+  </div>
+</section>

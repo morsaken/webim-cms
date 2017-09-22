@@ -1,0 +1,20 @@
+@extends('default')
+
+@section('title') {{ $page->title }} {{ $separator or '::' }} @parent @stop
+
+@section('content')
+<section id="content-wrap" class="site-page">
+  <div class="row">
+    <div class="col-twelve">
+      <section>
+        <div class="content-media">
+          <img src="{{ $root }}/img/where-am-i.jpg">
+        </div>
+        <div class="primary-content text-center">
+          {{ $page->content }}
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+@stop

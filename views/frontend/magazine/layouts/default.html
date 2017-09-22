@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="@lang('abbr')">
+<head>
+  <title>@section('title') {{{ $title or 'Web-IM XI' }}} @show</title>
+  @section('meta')
+  <meta charset="@lang('charset')">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <meta name="description" content="{{{ $description or '' }}}">
+  <meta name="keywords" content="{{{ $keywords or '' }}}">
+  <meta name="author" content="{{{ AUTHOR }}}">
+  @conf('google.search_console')
+  @show
+  @section('css')
+  <link type="image/png" href="{{ $root }}/img/favicon.png" rel="shortcut icon">
+  <link type="text/css" href="{{ $root }}/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link type="text/css" href="https://fonts.googleapis.com/css?family=Signika+Negative:400,300,600,700" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/vendor.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/style.css" rel="stylesheet">
+  @show
+</head>
+<body>
+  @section('body')
+  <div id="main-wrapper" class="homepage">
+    <header id="navigation">
+      <div class="navbar" role="banner">
+        <div class="container">
+          <a class="secondary-logo" href="@url('/')">
+            <img class="img-responsive" src="{{ $root }}/img/logo.png" alt="{{{ $title }}}">
+          </a>
+        </div>
+        <div class="topbar">
+          <div class="container">
+            <div id="topbar" class="navbar-header">
+              <a class="navbar-brand" href="@url('/')">
+                <img class="main-logo img-responsive" src="{{ $root }}/img/logo.png" alt="{{{ $title }}}">
+              </a>
+              <div id="topbar-right">
+                <div id="date-time"></div>
+                <div id="weather"></div>
+              </div>
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div id="menubar" class="container">
+          <nav id="mainmenu" class="navbar-left collapse navbar-collapse">
+            @if (isset($nav['main']))
+            <ul class="nav navbar-nav">
+              @foreach ($nav['main']['items'] as $menu)
+              @if (count($menu->children) || isset($categories[$menu->name]))
+              <li class="dropdown{{ isset($categories[$menu->name]) ? ' mega-dropdown' : '' }}">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{{ $menu->title }}} <i class="fa fa-angle-down"></i></a>
+                @if (isset($categories[$menu->name]))
+                <div class="dropdown-menu mega-cat-menu">
+                  @include('category_menu', ['category' => $categories[$menu->name]])
+                </div>
+                @else
+                <ul class="dropdown-menu">
+                  @foreach ($menu->children as $submenu)
+                  <li{{ $submenu->active ? ' class="active"' : '' }}><a href="{{ $submenu->url }}">{{{ $submenu->title }}}</a></li>
+                  @endforeach
+                </ul>
+                @endif
+              </li>
+              @else
+              <li{{ $menu->active ? ' class="active"' : '' }}>
+                <a href="{{ $menu->url }}">{{{ $menu->title }}}</a>
+              </li>
+              @endif
+              @endforeach
+            </ul>
+            @endif
+          </nav>
+          <div class="search-block">
+            <ul>
+              <li class="search-icon"><i class="fa fa-search"></i></li>
+            </ul>
+            <div class="search">
+              <form method="get" action="@url('search')" role="form">
+                <input type="text" class="search-form" name="q" autocomplete="off" placeholder="@lang('label.type_and_press_enter', 'Yazdıktan sonra Enter tuşuna basın')">
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main>
+      @yield('content')
+    </main>
+  </div>
+  <footer id="footer">
+    <div class="footer-top">
+      <div class="container text-center">
+        <div class="logo-icon">
+          <img class="img-responsive" src="{{ $root }}/img/icon.png" alt="{{{ $title }}}">
+        </div>
+      </div>
+    </div>
+    @if (isset($nav['bottom']))
+    <div class="footer-menu">
+      <div class="container">
+        <ul class="nav navbar-nav">
+          @foreach ($nav['bottom']['items'] as $menu)
+          <li{{ $menu->active ? ' class="active"' : '' }}>
+            <a href="{{ $menu->url }}">{{{ $menu->title }}}</a>
+          </li>
+          @endforeach
+        </ul>
+      </div>
+    </div>
+    @endif
+    <div class="footer-bottom">
+      <div class="container text-center">
+        <p>{{ $copyright or 'Powered by USSAL' }}</p>
+      </div>
+    </div>
+  </footer>
+  @show
+
+  @section('plugin')
+  <!--[if lt IE 9]>
+  <script type="text/javascript" src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script type="text/javascript" src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <script type="text/javascript" src="{{ $root }}/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/lib/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/plugins.js"></script>
+  @show
+  @section('script')
+  <script type="text/javascript" src="{{ $root }}/js/app.js"></script>
+  @show
+  @conf('google.analytics')
+</body>
+</html>

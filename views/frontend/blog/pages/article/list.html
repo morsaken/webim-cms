@@ -1,0 +1,22 @@
+@extends('default')
+
+@section('title') {{ $page->title }} {{ $separator or '::' }} @parent @stop
+
+@section('content')
+@if (isset($category))
+<section id="page-header">
+  <div class="row current-cat">
+    <div class="col-full">
+      <h1>@lang('label.category', 'Kategori'): {{{ $category->title }}}</h1>
+    </div>
+  </div>
+</section>
+@endif
+<section id="bricks" class="with-top-sep">
+  <div class="row masonry">
+    <div class="bricks-wrapper" data-infinite="true"{{ isset($category) ? ' data-category="' . $category->url . '"' : ''}}>
+      <div class="grid-sizer"></div>
+    </div>
+  </div>
+</section>
+@stop

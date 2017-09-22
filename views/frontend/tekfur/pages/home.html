@@ -1,0 +1,166 @@
+@extends('default')
+
+@section('content')
+@if (isset($sliders) && count($sliders))
+<section class="main-slider">
+  <ul>
+    @foreach ($sliders as $slider)
+    <li>
+      <div class="slide">
+        <div class="image" data-background-image="{{ $slider->poster->image }}"></div>
+        <div class="box">
+          <div class="container">
+            <div class="info">
+              <h2>{{{ $slider->title }}}</h2>
+              <h3 class="hidden-xs">{{{ str_limit($slider->meta->summary, 100) }}}</h3>
+              <a class="more" href="@url('explore/' . $slider->url)">@lang('button.explore', 'Keşfet')</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    @endforeach
+  </ul>
+</section>
+@endif
+@if (isset($carousel) && count($carousel))
+<div class="white-bg">
+  <div class="container main-carousel-wrapper">
+    <section class="main-carousel">
+      <div class="owl-carousel owl-theme">
+        @foreach ($carousel as $slider)
+        <div class="item">
+          <div class="image" data-background-image="{{ $slider->poster->image }}"></div>
+          <div class="overlay"></div>
+          <div class="info">
+            <h2>{{{ $slider->title }}}</h2>
+            <h3>{{{ str_limit($slider->meta->summary, 100) }}}</h3>
+            <a class="more" href="@url('explore/' . $slider->url)">@lang('button.more', 'Daha Fazlası')</a>
+          </div>
+        </div>
+        @endforeach
+      </div>
+    </section>
+  </div>
+</div>
+@endif
+@if (isset($front->title))
+<section class="main-front">
+  <div class="container">
+    @if ($front->poster->image)
+    <img class="pull-right img-responsive ml75" src="{{ $front->poster->image->size(600, 500)->src() }}" alt="{{{ $front->title }}}">
+    @endif
+    <div class="info">
+      <h2>{{{ $front->title }}}</h2>
+      <h3>{{{ $front->meta->summary }}}</h3>
+      <a class="more" href="@url('explore/' . $slider->url)">@lang('button.more', 'Daha Fazlası')</a>
+    </div>
+  </div>
+</section>
+@endif
+@if (isset($events))
+<section class="main-events">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-5">
+        <div id="event-poster" class="poster"></div>
+      </div>
+      <div class="col-md-7">
+        <div class="info">
+          <div class="top">
+            <div class="title">
+              <h2>@lang('label.event_calendar', 'Etkinlik Takvimi')</h2>
+            </div>
+            <div class="calendar">
+              <div id="calendar"
+                   data-url="@url('events')"
+                   data-months="{{{ json_encode($months) }}}"
+                   data-days="{{{ json_encode($days) }}}"
+                   data-first-day-of-week="@lang('date.first_day', 1)"
+                   data-more-label="@lang('button.more', 'Devamı')"
+                   data-error-message="@lang('message.events_not_loaded', 'Etkinlikler yüklenemedi!')"
+                   data-empty-message="@lang('message.no_event_found', 'Etkinlik bulunamadı...')"></div>
+            </div>
+          </div>
+          <div class="bottom">
+            <div class="date"></div>
+            <div id="event-list" class="event"></div>
+            <span class="arrow"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+@endif
+@if (isset($gallery) && count($gallery))
+<section class="main-gallery">
+  <div class="container">
+    <h2>@lang('label.gallery', 'Galeri')</h2>
+  </div>
+  <div class="gallery">
+    @foreach ($gallery as $media)
+    <a class="media" href="{{ $media->poster->image }}" data-background-image="{{ $media->poster->image->size(300, 300)->src() }}"></a>
+    @endforeach
+  </div>
+</section>
+@endif
+@if (isset($timeline) && count($timeline))
+<section class="main-timeline">
+  <div class="timeline">
+    <div class="container">
+      <div id="timeline-times" class="flexslider">
+        <ul class="slides">
+          @foreach ($timeline as $key => $time)
+          <li>
+            <a class="time" href="javascript:;">
+              <span class="title">{{{ $time->meta->period_title }}}</span>
+              <span class="date">{{{ $time->meta->period }}}</span>
+            </a>
+          </li>
+          @endforeach
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div id="timeline-info" class="flexslider">
+    <ul class="slides">
+      @foreach ($timeline as $time)
+      <li>
+        <div class="time-info">
+          <div class="image" data-background-image="{{ $time->poster->image }}"></div>
+          <div class="container">
+            <div class="info">
+              <h2>{{{ $time->title }}}</h2>
+              <h3 class="hidden-xs">{{{ $time->meta->summary }}}</h3>
+            </div>
+          </div>
+        </div>
+      </li>
+      @endforeach
+    </ul>
+  </div>
+</section>
+@endif
+@stop
+
+@section('css')
+@parent
+<link type="text/css" href="{{ $root }}/js/plugins/bxslider/jquery.bxslider.min.css" rel="stylesheet">
+<link type="text/css" href="{{ $root }}/js/plugins/flexslider/jquery.flexslider.css" rel="stylesheet">
+<link type="text/css" href="{{ $root }}/js/plugins/owl-carousel/owl.carousel.min.css" rel="stylesheet">
+<link type="text/css" href="{{ $root }}/js/plugins/ilightbox/css/ilightbox.css" rel="stylesheet">
+@stop
+
+@section('plugin')
+@parent
+<script type="text/javascript" src="{{ $root }}/js/plugins/bxslider/jquery.bxslider.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/flexslider/jquery.flexslider.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/owl-carousel/owl.carousel.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/ilightbox/js/jquery.requestAnimationFrame.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/ilightbox/js/jquery.mousewheel.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/ilightbox/js/ilightbox.packed.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/imagesloaded.pkgd.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/isotope.pkgd.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/event.calendar.js"></script>
+@stop

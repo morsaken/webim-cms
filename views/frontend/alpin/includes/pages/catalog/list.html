@@ -1,0 +1,26 @@
+<section class="content pr25">
+  <div class="filters">
+    <div class="row">
+      @foreach ($filters as $filter)
+      <div class="col-sm-4">
+        <label class="select-label block">{{{ $filter->title }}}:</label>
+        <div class="form-group">
+          <select name="{{{ $filter->url }}}" class="cs-select cs-skin-rotate">
+            <option value="*">{{{ str_case(lang('label.all', 'Tümü')) }}}</option>
+            @foreach ($filter->children as $child)
+            <option value="{{ $child->url }}">{{ str_repeat('&nbsp;', $child->level * 2) }}{{{ ($child->level ? str_repeat('+', $child->level) . ' ' : '') . $child->title }}} ({{{ $child->total_products or '0' }}})</option>
+            @endforeach
+          </select>
+        </div>
+      </div>
+      @endforeach
+    </div>
+  </div>
+  <div class="products grid">
+    @foreach ($products as $item)
+    <div class="grid-item {{ implode(' ', array_map(function($category){ return $category->url; }, $item->category)) }}">
+      @include('pages.catalog.item', ['item' => $item])
+    </div>
+    @endforeach
+  </div>
+</section>

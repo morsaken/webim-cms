@@ -1,0 +1,298 @@
+@extends('default')
+
+@section('content')
+<header>
+  <div class="container">
+    <div class="intro-text">
+      <!--<div class="intro-small">PRIME BILISIM</div>-->
+      <div class="intro-lead-in">İş Süreçlerinize</div>
+      <div class="intro-heading">Profesyonel Çözümler</div>
+      <!--<a href="#about" class="page-scroll btn btn-xl">Daha Fazla</a>-->
+      <a href="#about" class="page-scroll"><div class=hint-arrow></div></a>
+    </div>
+  </div>
+</header>
+<section id="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2 class="section-heading">Hakkımızda</h2>
+        <h3 class="section-subheading text-muted">10 yılı aşkın süredir Türkiyenin pek çok büyük şirketinde gerçekleştirmiş olduğumuz danışmanlık hizmetini bundan sonra yeni şirketimiz Prime Bilişim çatısı altında sürdürecek olmanın sevinci ve heyecanı içerisindeyiz. .</h3>
+      </div>
+    </div>
+    <div class="row text-center">
+      <div class="col-md-4">
+        <span class="icon icon-reliable icon-animate"></span>
+        <h4 class="service-heading">Güvenilir</h4>
+        <p class="text-muted">Güvenilirlik en genel anlamıyla herhangi bir gözlem aracının uygulanmasıyla elde edilen sonuçların kararlılıktır.</p>
+      </div>
+      <div class="col-md-4">
+        <span class="icon icon-intime icon-animate"></span>
+        <h4 class="service-heading">Zamanında</h4>
+        <p class="text-muted">Güvenilirlik en genel anlamıyla herhangi bir gözlem aracının uygulanmasıyla elde edilen sonuçların kararlılıktır.</p>
+      </div>
+      <div class="col-md-4">
+        <span class="icon icon-professional icon-animate"></span>
+        <h4 class="service-heading">Profesyonel</h4>
+        <p class="text-muted">Güvenilirlik en genel anlamıyla herhangi bir gözlem aracının uygulanmasıyla elde edilen sonuçların kararlılıktır.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Portfolio Grid Section -->
+<section id="portfolio" class="bg-light-gray">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2 class="section-heading">Duyurular</h2>
+        <h3 class="section-subheading text-muted"></h3>
+      </div>
+    </div>
+    <div class="news-carousel">
+      @foreach ($articles as $article)
+      <div class="portfolio-item">
+        <a href="#{{ $article->url }}" class="portfolio-link" data-toggle="modal">
+          <div class="portfolio-hover">
+            <div class="portfolio-hover-content">
+              <i class="fa fa-file-text-o fa-3x"></i>
+            </div>
+          </div>
+          <img src="{{ $article->poster->image->size(360, 260)->src() }}" class="img-responsive" alt="{{{ $article->title }}}">
+        </a>
+        <div class="portfolio-caption">
+          <h4>{{{ $article->title }}}</h4>
+          <p class="text-muted">{{{ $article->meta->summary }}}</p>
+        </div>
+      </div>
+      @endforeach
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section  id="services">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2 class="section-heading">Hizmetler</h2>
+        <h3 class="section-subheading text-muted">Prime Bilişim olarak farklı endüstrilerde SAP Danışmanlık hizmetleri vermekteyiz.</h3>
+      </div>
+    </div>
+  </div>
+  <!-- works -->
+  <div id="works" class="clearfix grid">
+    <figure class="effect-oscar wowload fadeIn">
+      <img src="{{ $root }}/img/portfolio/1.jpg" alt="img01"/>
+      <figcaption>
+        <h2>ENERJI</h2>
+        <!--<p>Lily likes to play with crayons and pencils<br>-->
+        <p><a class="page-scroll" href="#contact" >Detaylı Bilgi</a></p>
+      </figcaption>
+    </figure>
+    <figure class="effect-oscar wowload fadeInUp">
+      <img src="{{ $root }}/img/portfolio/2.jpg" alt="img01"/>
+      <figcaption>
+        <h2>GÜVENLİK</h2>
+        <p><a class="page-scroll" href="#contact" >Detaylı Bilgi</a></p>
+      </figcaption>
+    </figure>
+    <figure class="effect-oscar wowload fadeInUp">
+      <img src="{{ $root }}/img/portfolio/3.jpg" alt="img01"/>
+      <figcaption>
+        <h2>TARIM</h2>
+        <p><a class="page-scroll" href="#contact" >Detaylı Bilgi</a></p>
+      </figcaption>
+    </figure>
+    <figure class="effect-oscar wowload fadeInUp">
+      <img src="{{ $root }}/img/portfolio/4.jpg" alt="img01"/>
+      <figcaption>
+        <h2>MADENCİLİK</h2>
+        <p><a class="page-scroll" href="#contact" >Detaylı Bilgi</a></p>
+      </figcaption>
+    </figure>
+    <figure class="effect-oscar wowload fadeInUp">
+      <img src="{{ $root }}/img/portfolio/5.jpg" alt="img01"/>
+      <figcaption>
+        <h2>TEKNOLOJİ</h2>
+        <p><a class="page-scroll" href="#contact" >Detaylı Bilgi</a></p>
+      </figcaption>
+    </figure>
+    <figure class="effect-oscar wowload fadeInUp">
+      <img src="{{ $root }}/img/portfolio/6.jpg" alt="img01"/>
+      <figcaption>
+        <h2>OTOMOTİV</h2>
+        <p><a class="page-scroll" href="#contact" >Detaylı Bilgi</a></p>
+      </figcaption>
+    </figure>
+  </div>
+  <aside class="bg-divider">
+    <div class="container text-center">
+      <div class="call-to-action">
+        <!--<h2>Detaylı Bilgi!</h2>-->
+      </div>
+    </div>
+  </aside>
+</section>
+
+<!-- Team Section -->
+<section class="testimonials">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="testimonials-carousel">
+          <ul>
+            <li>
+              <div class="testimonial">
+                <div class="testimonial-img">
+                  <img src="{{ $root }}/img/about/client-1.jpg" alt="">
+                </div>
+                <blockquote>
+                  <p>SBIF ve UBF dosyalarının SAP den alınabilmesi ile gümrük müşavirlerine yaptırılan işler SAP ye taşınmakta ve bu işlemler üzerinden alınan dosya/işlem başına hizmet ücretlerinden ciddi oranda tasarruf edilmektedir.</p>
+                  <footer>Ahmet Yılmaz, <cite title="Source Title">TürkTraktör</cite></footer>
+                </blockquote>
+              </div>
+            </li>
+            <li>
+              <div class="testimonial">
+                <div class="testimonial-img">
+                  <img src="{{ $root }}/img/about/client-2.jpg" alt="">
+                </div>
+                <blockquote>
+                  <p>SAP ye taşınmakta ve bu işlemler üzerinden alınan dosya/işlem başına hizmet ücretlerinden ciddi oranda tasarruf edilmektedir.</p>
+                  <footer>Murat Kırıkyol, <cite title="Source Title">Teksan</cite></footer>
+                </blockquote>
+              </div>
+            </li>
+            <li>
+              <div class="testimonial">
+                <div class="testimonial-img">
+                  <img src="{{ $root }}/img/about/client-3.jpg" alt="">
+                </div>
+                <blockquote>
+                  <p>SBIF ve UBF dosyalarının SAP den alınabilmesi ile gümrük müşavirlerine yaptırılan işler SAP ye taşınmakta ve bu işlemler üzerinden alınan dosya/işlem başına hizmet ücretlerinden ciddi oranda tasarruf edilmektedir.</p>
+                  <footer>Yılmaz Karadudu, <cite title="Source Title">Kombassan</cite></footer>
+                </blockquote>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Clients Aside -->
+<section id="references" class="bg-light-gray">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2 class="section-heading">Referanslar</h2>
+        <h3 class="section-subheading text-muted">Prime Bilişim ile başarıya ulaşan iş ortaklarımız.</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+        <a href="#">
+          <img src="{{ $root }}/img/logos/logo-1.jpg" class="img-responsive img-centered opa" alt="">
+        </a>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <a href="#">
+          <img src="{{ $root }}/img/logos/logo-2.jpg" class="img-responsive img-centered opa" alt="">
+        </a>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <a href="#">
+          <img src="{{ $root }}/img/logos/logo-3.jpg" class="img-responsive img-centered opa" alt="">
+        </a>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <a href="#">
+          <img src="{{ $root }}/img/logos/logo-4.jpg" class="img-responsive img-centered opa" alt="">
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2 class="section-heading">İletişim</h2>
+        <h3 class="section-subheading text-muted">.</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <form id="contact-form" method="post" action="@url('contact')">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Ad ve Soyad *" id="name" name="name" required data-validation-required-message="Lütfen ad ve soyadınız girin">
+                <p class="help-block text-danger"></p>
+              </div>
+              <div class="form-group">
+                <input type="email" class="form-control" placeholder="E-Posta *" id="email" name="email" required data-validation-required-message="Lütfen e-posta adresinizi girin">
+                <p class="help-block text-danger"></p>
+              </div>
+              <div class="form-group">
+                <input type="tel" class="form-control" placeholder="Telefon *" id="phone" name="phone" required data-validation-required-message="Lütfen telefonunuzu girin">
+                <p class="help-block text-danger"></p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <textarea class="form-control" placeholder="Mesajınız *" id="message" name="message" required data-validation-required-message="Lütfen mesajınızı girin"></textarea>
+                <p class="help-block text-danger"></p>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-lg-12 text-center">
+              <div id="success"></div>
+              <button type="submit" class="btn btn-xl">Gönder</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+@stop
+
+@section('end')
+@foreach ($articles as $article)
+<div class="portfolio-modal modal fade" id="{{ $article->url }}" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="close-modal" data-dismiss="modal">
+        <div class="lr">
+          <div class="rl">
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2">
+            <div class="modal-body">
+              <h2>{{{ $article->title }}}</h2>
+              <p class="item-intro text-muted">{{{ $article->meta->summary }}}</p>
+              <img class="img-responsive img-centered" src="{{ $article->poster->image->reset()->src() }}" alt="">
+              <div>{{ $article->meta->content }}</div>
+              <ul class="list-inline">
+                <li>Tarih: {{{ date_show($article->publish_date) }}}</li>
+                <li>Kategori: {{{ implode(', ', array_map(function($category){ return $category->title; }, $article->category)) }}}</li>
+              </ul>
+              <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Kapat</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@endforeach
+@stop

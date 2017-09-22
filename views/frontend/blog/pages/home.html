@@ -1,0 +1,48 @@
+@extends('default')
+
+@section('content')
+<section id="bricks">
+  <div class="row masonry">
+    <div class="bricks-wrapper" data-infinite="true">
+      <div class="grid-sizer"></div>
+      @if (isset($slides) && count($slides))
+      <div class="brick entry featured-grid animate-this">
+        <div class="entry-content">
+          <div id="featured-post-slider" class="flexslider">
+            <ul class="slides">
+              @foreach ($slides as $slide)
+              <li>
+                <div class="featured-post-slide">
+                  <div class="post-background" style="background-image:url('{{ $slide->poster->image }}');"></div>
+                  <div class="overlay"></div>
+                  <div class="post-content">
+                    <ul class="entry-meta">
+                      <li>{{{ date_show($slide->publish_date) }}}</li>
+                      @if (strlen($slide->meta->author))
+                      <li><a href="#">{{{ $slide->meta->author }}}</a></li>
+                      @endif
+                    </ul>
+                    <h1 class="slide-title"><a href="@url('article/' . $slide->url)">{{{ $slide->title }}}</a></h1>
+                  </div>
+                </div>
+              </li>
+              @endforeach
+            </ul>
+          </div>
+        </div>
+      </div>
+      @endif
+    </div>
+  </div>
+  <div class="load-status">
+    <div class="loader-ellipse infinite-scroll-request">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+    <p class="infinite-scroll-last">@lang('message.end_of_content', 'Tüm haberler yüklendi')</p>
+    <p class="infinite-scroll-error">@lang('message.loading_error', 'Yükleme hatası')</p>
+  </div>
+</section>
+@stop

@@ -1,0 +1,27 @@
+@extends($template)
+
+@section('title') {{{ $page->title }}} {{ $separator or '|' }} @parent @stop
+
+@section('content')
+@include('head')
+<section class="content">
+  <div class="container">
+    @if (isset($products) && count($products))
+    <div class="row">
+      @foreach($products as $product)
+      <div class="col-md-4 col-sm-6 col-xs-12">
+        <a class="product" href="@url('products/' . $product->url)" data-title="{{{ $product->title }}}">
+          <figure>
+            <img src="{{ $product->poster->image->src() }}" alt="{{{ $product->title }}}">
+          </figure>
+          <h4>{{{ str_case($product->title) }}}</h4>
+        </a>
+      </div>
+      @endforeach
+    </div>
+    @else
+    <div class="alert alert-warning">@lang('message.product_not_found', 'Ürün bulunamadı!')</div>
+    @endif
+  </div>
+</section>
+@stop

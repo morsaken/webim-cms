@@ -1,0 +1,12 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} :: @parent @stop
+
+@section('content')
+@include('title-bar')
+<div class="container">
+  <div class="content">
+    {{ $page->content }}
+  </div>
+</div>
+@stop

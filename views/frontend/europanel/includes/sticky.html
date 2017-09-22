@@ -1,0 +1,14 @@
+<div class="sticky closed">
+  <aside class="write-us">
+    <img src="{{ $root }}/img/asterisk.png" alt="DO IT YOURSELF">
+    <a class="pop" href="@url('bize-ulasin')" title="@lang('menu.contact', 'Bize Ulaşın')">
+      <span class="pin"></span>
+      <span>@lang('label.write_us', 'Bize Yazın')</span>
+    </a>
+  </aside>
+  <aside class="brochure">
+    <p>{{{ str_case(lang('label.brochure_to', 'Ürün Kataloğunu')) }}}</p>
+    <a href="https://issuu.com/europanel/docs/dekoratif_duvar_kaplama_panelleri" target="_blank">@lang('label.view', 'Görüntüle')</a> |
+    <a href="@url('download/catalog')">@lang('label.download', 'İndir')</a>
+  </aside>
+</div>

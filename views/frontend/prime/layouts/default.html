@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="@lang('abbr')">
+<head>
+  <title>@section('title') {{{ $title or 'Web-IM XI' }}} @show</title>
+  @section('meta')
+  <meta charset="@lang('charset')">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <meta name="description" content="{{{ $description or '' }}}">
+  <meta name="keywords" content="{{{ $keywords or '' }}}">
+  <meta name="author" content="{{{ AUTHOR }}}">
+  @conf('google.search_console')
+  @show
+  @section('css')
+  <link type="image/png" href="{{ $root }}/img/favicon.png" rel="shortcut icon">
+  <link type="text/css" href="{{ $root }}/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link type="text/css" href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+  <link type="text/css" href="https://fonts.googleapis.com/css?family=Kaushan+Script" rel="stylesheet">
+  <link type="text/css" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic" rel="stylesheet">
+  <link type="text/css" href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/animate.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/set.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/owl.carousel.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/owl.theme.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/owl.transitions.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/style.css" rel="stylesheet">
+  @show
+</head>
+<body id="page-top"{{ url_is('/') ? ' class="index"' : '' }}>
+  <nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header page-scroll">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+          <span class="sr-only">Seçim Yapın</span> Menu <i class="fa fa-bars"></i>
+        </button>
+        <a class="page-scroll" href="{{ !url_is('/') ? url('/') : '#page-top' }}"><img src="{{ $root }}/img/logo.png" class="img-logo"></a>
+      </div>
+      <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="hidden">
+            <a href="#page-top"></a>
+          </li>
+          <li>
+            <a class="page-scroll" href="{{ !url_is('/') ? url('/') : '' }}#about">Hakkımızda</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="{{ !url_is('/') ? url('/') : '' }}#portfolio">Duyurular</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="{{ !url_is('/') ? url('/') : '' }}#services">Hizmetler</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="{{ !url_is('/') ? url('/') : '' }}#references">Referanslar</a>
+          </li>
+          <li{{ url_is('blog', true) ? ' class="here"' : '' }}>
+            <a href="@url('blog')">Blog</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="{{ !url_is('/') ? url('/') : '' }}#contact">İletişim</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  @yield('content')
+  <footer class="bg-divider">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <span class="copyright"></span>
+        </div>
+        <div class="col-md-4">
+          <ul class="list-inline social-buttons">
+            <li><a href="@conf('social.twitter', '#')" target="_blank"><i class="fa fa-twitter"></i></a>
+            </li>
+            <li><a href="@conf('social.facebook', '#')" target="_blank"><i class="fa fa-facebook"></i></a>
+            </li>
+            <li><a href="@conf('social.linkedin', '#')" target="_blank"><i class="fa fa-linkedin"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  @yield('end')
+
+  @section('plugin')
+  <!--[if lt IE 9]>
+  <script type="text/javascript" src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script type="text/javascript" src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <script type="text/javascript" src="{{ $root }}/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/lib/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/jquery.easing.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/jquery.stellar.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/jquery.appear.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/jquery.nicescroll.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/owl.carousel.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/plugins/jqBootstrapValidation.js"></script>
+  @show
+  @section('script')
+  <script type="text/javascript" src="{{ $root }}/js/app.js"></script>
+  @show
+  @conf('google.analytics')
+</body>
+</html>

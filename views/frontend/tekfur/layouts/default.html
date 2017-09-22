@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="@lang('abbr')">
+<head>
+  <title>@section('title') {{{ $title or 'Web-IM XI' }}} @show</title>
+  @section('meta')
+  <meta charset="@lang('charset')">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <meta name="description" content="{{{ $description or '' }}}">
+  <meta name="keywords" content="{{{ $keywords or '' }}}">
+  <meta name="author" content="{{{ AUTHOR }}}">
+  @conf('google.search_console')
+  @show
+  @section('css')
+  <link type="image/png" href="{{ $root }}/img/favicon.png" rel="shortcut icon">
+  <link type="text/css" href="{{ $root }}/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/js/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/animate.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/helpers.css" rel="stylesheet">
+  @show
+  <link type="text/css" href="{{ $root }}/css/style.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <aside class="logo">
+        <a href="@url('/')" title="{{{ $title }}}">
+          <img src="{{ $root }}/img/logo.svg" alt="{{{ $title }}}">
+        </a>
+      </aside>
+      <aside class="nav">
+        <div class="top">
+          <nav class="language">
+            @foreach (langs() as $code => $lang)
+            <a href="@url($code)" title="{{{ $lang }}}"{{ lang() == $code ? ' class="active"' : '' }}>{{{ str_case($code) }}}</a>
+            @endforeach
+          </nav>
+          <form class="search" method="get" action="@url('search')">
+            <input type="text" name="q" placeholder="{{{ str_case(lang('label.search', 'Arama')) }}}">
+          </form>
+        </div>
+        <div class="bar">
+          <nav class="main">
+            @foreach (array_get($nav, 'main.items', array()) as $menu)
+            <a href="{{ $menu->url }}"{{ $menu->active ? ' class="active"' : '' }}>.{{{ str_case($menu->title, 'lower') }}}</a>
+            @endforeach
+          </nav>
+          <a class="toggle" href="javascript:;">
+            <i class="fa fa-bars"></i>
+            <i class="fa fa-times"></i>
+          </a>
+        </div>
+      </aside>
+    </header>
+  </div>
+  <div id="header"></div>
+  <main>
+    @yield('content')
+  </main>
+  <div class="container">
+    <footer>
+      <aside class="logo">
+        <a href="@url('/')" title="{{{ $title }}}">
+          <img src="{{ $root }}/img/footer-logo.png" alt="{{{ $title }}}">
+        </a>
+      </aside>
+      <aside class="nav">
+        <div class="bottom">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="extra">
+                <div class="row">
+                  <div class="col-xs-6">
+                    <h3>@lang('menu.visit', 'Ziyaret')</h3>
+                    @if (count(array_get($nav, 'visit.items', array())))
+                    <nav>
+                      @foreach ($nav['visit']['items'] as $menu)
+                      <a href="{{ $menu->url }}">{{{ $menu->title }}}</a>
+                      @endforeach
+                    </nav>
+                    @endif
+                  </div>
+                  <div class="col-xs-6">
+                    <h3>@lang('menu.explore', 'Keşfet')</h3>
+                    @if (count(array_get($nav, 'explore.items', array())))
+                    <nav>
+                      @foreach ($nav['explore']['items'] as $menu)
+                      <a href="{{ $menu->url }}">{{{ $menu->title }}}</a>
+                      @endforeach
+                    </nav>
+                    @endif
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="newsletter">
+                <form method="post" action="@url('subscribe')">
+                  <div>
+                  <input type="text" name="email" placeholder="@lang('label.subscribe_our_newsletter', 'Bültenimize üye olun')">
+                  <button type="submit">@lang('button.register', 'Kayıt Ol')</button>
+                  </div>
+                </form>
+              </div>
+              <nav class="socials">
+                <a href="@conf('social.facebook', '#')" target="_blank">
+                  <i class="fa fa-facebook"></i>
+                </a>
+                <a href="@conf('social.twitter', '#')" target="_blank">
+                  <i class="fa fa-twitter"></i>
+                </a>
+                <a href="@conf('social.instagram', '#')" target="_blank">
+                  <i class="fa fa-instagram"></i>
+                </a>
+                <a href="@conf('social.youtube', '#')" target="_blank">
+                  <i class="fa fa-youtube"></i>
+                </a>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </footer>
+  </div>
+
+  <!--[if lt IE 9]>
+  <script type="text/javascript" src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script type="text/javascript" src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  @section('plugin')
+  <script type="text/javascript" src="{{ $root }}/js/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/lib/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/plugins/jquery.blockui.min.js"></script>
+  @show
+  @section('script')
+  <script type="text/javascript" src="{{ $root }}/js/app.js"></script>
+  @show
+  @conf('google.analytics')
+</body>
+</html>

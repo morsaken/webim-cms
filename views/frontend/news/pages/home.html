@@ -1,0 +1,20 @@
+@extends('default')
+
+@section('content')
+<div class="container">
+  <div class="exclusive">
+    <label>@lang('label.exclusive', 'Son Dakika')</label>
+    <div class="items">
+      @foreach ($exclusive as $item)
+      <div>
+        <a href="{{ $item->url }}">{{{ $item->title }}}</a>
+      </div>
+      @endforeach
+    </div>
+    <div class="items-control"></div>
+  </div>
+  <div class="main-slider">
+
+  </div>
+</div>
+@stop

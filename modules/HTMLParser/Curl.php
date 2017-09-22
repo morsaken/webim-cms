@@ -16,9 +16,13 @@ class Curl implements CurlInterface {
    * @param string $url
    *
    * @return string
-   * @throws CurlException
+   * @throws \Exception, CurlException
    */
   public function get($url) {
+    if (!function_exists('curl_init')) {
+      throw new \Exception('Curl library not found');
+    }
+
     $ch = curl_init($url);
 
     if (!ini_get('open_basedir')) {

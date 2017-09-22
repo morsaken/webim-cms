@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="@lang('abbr')">
+<head>
+  <title>@section('title') {{{ $title or 'Web-IM XI' }}} @show</title>
+  <base href="{{ $root }}">
+  @section('meta')
+  <meta charset="@lang('charset')">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="{{{ $description or '' }}}">
+  <meta name="keywords" content="{{{ $keywords or '' }}}">
+  <meta name="author" content="{{{ AUTHOR }}}">
+  @conf('google.search_console')
+  @show
+  @section('css')
+  <link rel="apple-touch-icon" sizes="57x57" href="{{ $root }}/img/favicon/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="{{ $root }}/img/favicon/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="{{ $root }}/img/favicon/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="{{ $root }}/img/favicon/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="{{ $root }}/img/favicon/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="{{ $root }}/img/favicon/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="{{ $root }}/img/favicon/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="{{ $root }}/img/favicon/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ $root }}/img/favicon/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="{{ $root }}/img/favicon/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ $root }}/img/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="{{ $root }}/img/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ $root }}/img/favicon/favicon-16x16.png">
+  <link type="text/css" href="{{ $root }}/css/style.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/theme.css" rel="stylesheet">
+  @show
+  <!--[if lt IE 9]>
+  <script type="text/javascript" src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script type="text/javascript" src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div id="wrapper">
+    <header id="header-container">
+      <div id="top-bar">
+        <div class="container">
+          <div class="left-side">
+            <ul class="top-bar-menu">
+              <li><i class="fa fa-phone"></i> @conf('contact.0.phone')</li>
+              <li><i class="fa fa-envelope"></i>
+                <a href="mailto:@conf('contact.0.email')">@conf('contact.0.email')</a>
+              </li>
+            </ul>
+          </div>
+          <div class="right-side">
+            <ul class="social-icons">
+              <li>
+                <a class="facebook" href="@conf('social.facebook', '#')"><i class="icon-facebook"></i></a>
+              </li>
+              <li>
+                <a class="twitter" href="@conf('social.twitter', '#')"><i class="icon-twitter"></i></a>
+              </li>
+              <li>
+                <a class="gplus" href="@conf('social.google_plus', '#')"><i class="icon-gplus"></i></a>
+              </li>
+              <li>
+                <a class="linkedin" href="@conf('social.linkedin', '#')"><i class="icon-linkedin"></i></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div id="header">
+        <div class="container">
+          <div class="left-side">
+            <div id="logo">
+              <a href="@url('/')">
+                <img src="{{ $root }}/img/logo.png" alt="{{ $title }}">
+              </a>
+            </div>
+            <div class="menu-responsive">
+              <i class="fa fa-reorder menu-trigger"><span>@lang('label.navigations', 'Menüler')</span></i>
+            </div>
+            <nav id="navigation" class="style-1">
+              @if (isset($nav) && count($nav))
+              <ul id="responsive">
+                @foreach ($nav as $item)
+                <li>
+                  <a{{ $item->active ? ' class="current"' : '' }} href="{{ count($item->sub) ? '#' : $item->url }}">{{{ $item->title }}}</a>
+                  @if (count($item->sub))
+                  <ul>
+                    @foreach ($item->sub as $sub)
+                    <li>
+                      <a href="{{ $sub->url }}">{{{ $sub->title }}}</a>
+                    </li>
+                    @endforeach
+                  </ul>
+                  @endif
+                </li>
+                @endforeach
+              </ul>
+              @endif
+            </nav>
+            <div class="clearfix"></div>
+          </div>
+          <div class="right-side">
+            <div class="header-widget">
+              <a href="@url('contact')" class="button border">@lang('label.write_us', 'Bize Yazın')</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="clearfix"></div>
+    @yield('content')
+    <div id="footer" class="sticky-footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-5 col-sm-6">
+            <img class="footer-logo" src="{{ $root }}/img/logo.png" alt="{{ $title }}">
+            <br><br>
+            <p>{{ $description }}</p>
+          </div>
+          <div class="col-md-4 col-sm-6 ">
+            <h4>@lang('label.navigations', 'Menüler')</h4>
+            <ul class="footer-links">
+              @foreach ($nav as $menu)
+              <li>
+                <a href="{{ $menu->url }}">{{ $menu->title }}</a>
+              </li>
+              @endforeach
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="col-md-3  col-sm-12">
+            <h4>@lang('label.contact_us', 'Bize Ulaşın')</h4>
+            <div class="text-widget">
+              <span>@conf('contact.0.address')</span><br>
+              @lang('label.phone', 'Telefon'): <span>@conf('contact.0.phone')</span><br>
+              @lang('label.email', 'E-Posta'): <span><a href="mailto:@conf('contact.0.email')">@conf('contact.0.email')</a></span>
+            </div>
+            <ul class="social-icons margin-top-20">
+              <li>
+                <a class="facebook" href="@conf('social.facebook', '#')"><i class="icon-facebook"></i></a>
+              </li>
+              <li>
+                <a class="twitter" href="@conf('social.twitter', '#')"><i class="icon-twitter"></i></a>
+              </li>
+              <li>
+                <a class="gplus" href="@conf('social.google_plus', '#')"><i class="icon-gplus"></i></a>
+              </li>
+              <li>
+                <a class="pinterest" href="@conf('social.pinterest', '#')"><i class="icon-pinterest"></i></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="copyrights">{{ $copyright }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="backtotop">
+      <a href="#" title="@lang('label.up', 'Yukarı')"></a>
+    </div>
+  </div>
+
+  @section('script')
+  <script type="text/javascript" src="{{ $root }}/js/jquery-3.1.1.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/chosen.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/jquery.jpanelmenu.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/tooltips.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/owl.carousel.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/slick.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/magnific-popup.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/masonry.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/simplebar.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/app.js"></script>
+  @show
+  @conf('google.analytics')
+</body>
+</html>

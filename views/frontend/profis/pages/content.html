@@ -1,0 +1,23 @@
+@extends($template)
+
+@section('title') {{{ $page->title }}} {{ $separator or '|' }} @parent @stop
+
+@section('content')
+@include('head')
+<section class="content">
+  <div class="container">
+    {{ $page->content }}
+    @if (isset($page->media) && count($page->media))
+    <div class="gallery grid">
+      @foreach ($page->media as $media)
+      <div class="grid-item {{ $media->poster->image->orientation() }}">
+        <a class="media" href="{{ $media->poster->image->src() }}">
+          <img class="img-responsive" src="{{ $media->poster->image->size(400, ($media->poster->image->orientation() == 'portrait' ? 639 : 300))->src() }}" width="{{ $media->poster->image->reset()->width() }}" height="{{ $media->poster->image->reset()->height() }}" alt="{{{ $media->title }}}">
+        </a>
+      </div>
+      @endforeach
+    </div>
+    @endif
+  </div>
+</section>
+@stop

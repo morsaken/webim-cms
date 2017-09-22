@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="@lang('abbr')">
+<head>
+  <title data-title="{{{ $title or 'Web-IM XI' }}}">@section('title') {{{ $title or 'Web-IM XI' }}} @show</title>
+  <base href="{{ $root }}/">
+  @section('meta')
+  <meta charset="@lang('charset')">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <meta name="description" content="{{{ $description or '' }}}">
+  <meta name="keywords" content="{{{ $keywords or '' }}}">
+  <meta name="author" content="{{{ AUTHOR }}}">
+  @conf('google.search_console')
+  @show
+  <link type="image/png" href="{{ $root }}/img/favicon.png" rel="shortcut icon">
+  <link type="text/css" href="{{ $root }}/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/js/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/js/plugins/rs-plugin/css/settings.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/js/plugins/owl-carousel/owl.carousel.min.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/js/plugins/ilightbox/css/ilightbox.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/js/plugins/selecty/css/cs-select.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/js/plugins/selecty/css/cs-skin-rotate.css" rel="stylesheet">
+  <link type="text/css" href="{{ $root }}/css/helpers.css" rel="stylesheet">
+  @section('css')
+  <link type="text/css" href="{{ $root }}/css/style.css" rel="stylesheet">
+  @show
+</head>
+<body>
+  <div class="wrapper">
+    <div class="page">
+      <main id="content">
+      @yield('content')
+      </main>
+      <footer>
+        <div class="blocks">
+          <div class="row">
+            <div class="col-sm-4 br-r">
+              <section class="block">
+                <h2>{{{ isset($about->title) ? str_case($about->title) : 'EUROPANEL' }}}</h2>
+                <ul>
+                  <li>{{{ $about->meta->description or '' }}}</li>
+                </ul>
+              </section>
+            </div>
+            <div class="col-sm-4 br-r">
+              <section class="block">
+                <h2>{{{ str_case(lang('label.discount_messenger', 'İndirim Habercisi')) }}}</h2>
+                <ul>
+                  <li>{{{ lang('label.get_updates_from_discounts', 'İndirimlerden haberdar olmak için;') }}}</li>
+                  <li>
+                    <form id="newsletter-form" class="newsletter" method="post" action="@url('newsletter')">
+                      <input type="text" name="email" placeholder="@lang('label.your_email_address', 'E-posta adresiniz')" pattern="^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$" required="required" data-message="@conf('message.type_your_valid_email', 'Geçerli e-posta adresinizi giriniz')">
+                      <button type="submit">@lang('button.save', 'Kaydet')</button>
+                    </form>
+                  </li>
+                  <li>
+                    Ürün Kataloğunu <a href="https://issuu.com/europanel/docs/dekoratif_duvar_kaplama_panelleri" target="_blank">Görüntüle</a> veya <a href="@url('download/catalog')">İndir</a>
+                  </li>
+                </ul>
+              </section>
+            </div>
+            <div class="col-sm-4">
+              <section class="block">
+                <h2>{{{ str_case(lang('label.services', 'Hizmetler')) }}}</h2>
+                <ul>
+                  <li><strong>Europanel Dekoratif Fiberglass Duvar Kaplama Panelleri</strong></li>
+                  <li>
+                    Europanel’le duvarını giydir: <a href="http://www.duvarinigiydir.com" target="_blank">duvarinigiydir.com</a>
+                  </li>
+                  <li>
+                    Europanel’le duvarını kapla: <a href="http://www.duvarkaplama.com" target="_blank">duvarkaplama.com</a>
+                  </li>
+                  <li>
+                    Europanel’den dekoratif duvar panelleri: <a href="http://www.duvarpanelleri.com" target="_blank">duvarpanelleri.com</a>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li>
+                    <strong>&copy; Tüm içerik ve görsellerin telifi europanel'e aittir ve tüm hakları saklıdır.</strong>
+                  </li>
+                  <li>
+                    <strong>{{ $copyright  }}</strong>
+                  </li>
+                </ul>
+              </section>
+            </div>
+          </div>
+        </div>
+        <nav class="socials">
+          <a class="facebook" href="@conf('social.facebook')" target="_blank"><i class="fa fa-facebook"></i></a>
+          <a class="twitter" href="@conf('social.twitter')" target="_blank"><i class="fa fa-twitter"></i></a>
+        </nav>
+      </footer>
+    </div>
+    <header>
+      <div class="menu">
+        <a class="logo pop" href="@url('/')" title="{{{ $title or 'Web-IM XI' }}}">
+          <img src="{{ $root }}/img/logo.svg" alt="{{{ $title or 'Web-IM XI' }}}">
+        </a>
+        <div class="slogan">
+          <img src="{{ $root }}/img/favicon.png" alt="DO IT YOURSELF">
+          DO IT YOURSELF
+        </div>
+        <a class="menu-toggle" href="#">
+          <i class="fa fa-bars"></i>
+          <i class="fa fa-times"></i>
+        </a>
+        <nav>
+          <ul class="main">
+            @foreach (array_get($nav, 'main.items', array()) as $menu)
+            <li>
+              <a class="pop{{ url_is($menu->link, true) ? ' active' : '' }}" href="{{ $menu->url }}" title="{{{ $menu->title }}}">{{{ str_case($menu->title) }}}</a>
+            </li>
+            @endforeach
+          </ul>
+          <ul class="extra">
+            @foreach (array_get($nav, 'extra.items', array()) as $menu)
+            <li>
+              <a class="pop{{ url_is($menu->link, true) ? ' active' : '' }}" href="{{ $menu->url }}" title="{{{ $menu->title }}}">{{{ str_case($menu->title) }}}</a>
+            </li>
+            @endforeach
+          </ul>
+        </nav>
+        <div class="contact">
+          <div class="info">
+            <address>
+              <i class="fa fa-phone-square"></i>
+              <p>
+                <a href="tel:{{ str_replace(' ', '', conf('contact.0.phone')) }}">@conf('contact.0.phone')</a>
+              </p>
+              <p>
+                <a href="tel:{{ str_replace(' ', '', conf('contact.1.phone')) }}">@conf('contact.1.phone')</a>
+              </p>
+            </address>
+            <address>
+              <i class="fa fa-envelope"></i>
+              <p><a href="mailto:@conf('contact.0.email')">@conf('contact.0.email')</a></p>
+            </address>
+            <address>
+              <i class="fa fa-globe"></i>
+              <p><a href="http://www.duvarinigiydir.com" target="_blank">duvarinigiydir.com</a></p>
+            </address>
+            <address>
+              <i class="fa fa-map"></i>
+              <p>{{ nl2br(conf('contact.0.address')) }}</p>
+            </address>
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
+
+  @section('plugin')
+  <!--[if lt IE 9]>
+  <script type="text/javascript" src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script type="text/javascript" src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <script type="text/javascript" src="{{ $root }}/js/plugins/pace.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/lib/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/plugins/jquery.nicescroll.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/plugins/jquery.blockui.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/plugins/jquery.lazyload.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/plugins/notify.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/plugins/rs-plugin/js/jquery.themepunch.tools.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/plugins/rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/plugins/owl-carousel/owl.carousel.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/plugins/ilightbox/js/jquery.requestAnimationFrame.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/plugins/ilightbox/js/jquery.mousewheel.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/plugins/ilightbox/js/ilightbox.packed.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/plugins/isotope.pkgd.min.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/plugins/selecty/js/classie.js"></script>
+  <script type="text/javascript" src="{{ $root }}/js/plugins/selecty/js/selectFx.js"></script>
+  <script type="text/javascript" src="//maps.google.com/maps/api/js?key=@conf('google.map_key')"></script>  @show
+  @section('script')
+  <script type="text/javascript" src="{{ $root }}/js/app.js"></script>
+  @show
+  @conf('google.analytics')
+</body>
+</html>

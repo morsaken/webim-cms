@@ -1,0 +1,63 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} :: @parent @stop
+
+@section('content')
+@include('title-bar')
+<div class="container">
+  <div class="content">
+    <div class="row">
+      <div class="col-md-8">
+        @if ($posts->total)
+        @foreach ($posts->rows as $post)
+        <div class="blog-post">
+          @if ($post->poster->image)
+          <a href="@url('blog/' . $post->url)" class="post-img">
+            <img src="{{ $post->poster->image }}" alt="{{{ $post->title }}}">
+          </a>
+          @endif
+          <div class="post-content">
+            <h3><a href="@url('blog/' . $post->url)">{{{ $post->title }}}</a></h3>
+            <ul class="post-meta">
+              <li>{{{ date_show($post->publish_date) }}}</li>
+            </ul>
+            <p>{{ $post->meta->summary }}</p>
+            <a href="@url('blog/' . $post->url)" class="read-more">@lang('button.more', 'Devamı') <i class="fa fa-angle-right"></i></a>
+          </div>
+        </div>
+        @endforeach
+        <div class="clearfix"></div>
+        <div class="pagination-container">
+          <nav class="pagination">
+            <ul>
+              @foreach ($posts->paging->pages as $p)
+              <li><a href="{{ $p->link }}"{{ $p->active ? ' class="current-page"' : '' }}>{{ $p->label }}</a></li>
+              @endforeach
+            </ul>
+          </nav>
+          <nav class="pagination-next-prev">
+            <ul>
+              @if ($posts->paging->previous->link)
+              <li><a href="{{ $posts->paging->previous->link }}" class="prev">@lang('button.previous', 'Önceki')</a></li>
+              @endif
+              @if ($posts->paging->next->link)
+              <li><a href="{{ $posts->paging->next->link }}" class="next">@lang('button.next', 'Sonraki')</a></li>
+              @endif
+            </ul>
+          </nav>
+        </div>
+        @else
+        <div class="notification notice text-center">
+          <p>@lang('message.no_content_found', 'İçerik bulunamadı!')</p>
+        </div>
+        @endif
+      </div>
+      <div class="col-md-4">
+        <div class="sidebar right">
+          @include('blog-side')
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@stop

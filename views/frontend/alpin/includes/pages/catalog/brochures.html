@@ -1,0 +1,36 @@
+<section class="content pr25">
+  <div class="filters">
+    <div class="row">
+      @foreach ($filters as $filter)
+      <div class="col-sm-4">
+        <label class="select-label block">{{{ $filter->title }}}:</label>
+        <div class="form-group">
+          <select name="{{{ $filter->url }}}" class="cs-select cs-skin-rotate">
+            <option value="*">{{{ str_case(lang('label.all', 'Tümü')) }}}</option>
+            @foreach ($filter->children as $child)
+            <option value="{{ $child->url }}">{{ str_repeat('&nbsp;', $child->level * 2) }}{{{ ($child->level ? str_repeat('+', $child->level) . ' ' : '') . $child->title }}}</option>
+            @endforeach
+          </select>
+        </div>
+      </div>
+      @endforeach
+    </div>
+  </div>
+  @if (isset($brochures) && count($brochures))
+  <div class="catalogs grid">
+    @foreach ($brochures as $item)
+    <div class="grid-item {{ implode(' ', array_map(function($category){ return $category->url; }, $item->category)) }}">
+      <div class="mv15 p15 br-a text-center white-bg">
+        <h3>{{{ $item->title }}}</h3>
+        <a class="btn btn-warning center-block" href="@url('catalogs/' . $item->url)" title="{{{ $item->title }}}">
+          <i class="fa fa-file-pdf-o"></i>
+          @lang('button.download', 'İndir')
+        </a>
+      </div>
+    </div>
+    @endforeach
+  </div>
+  @else
+  <div class="w400 center-block text-center alert alert-info">@lang('message.brochure_not_found', 'Katalog bulunamadı!')</div>
+  @endif
+</section>

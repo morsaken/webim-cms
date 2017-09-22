@@ -1,0 +1,116 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} {{{ $separator or '::' }}} @parent @stop
+
+@section('content')
+<div class="container">
+  <div class="section">
+    <div class="row">
+      <div class="col-sm-9">
+        <div id="site-content" class="site-content">
+          <div class="news">
+            @foreach ($list->rows as $post)
+            <div class="post">
+              @if ($post->poster->image)
+              <div class="entry-header">
+                <div class="entry-thumbnail">
+                  <img class="img-responsive" src="{{ $post->poster->image }}" alt="{{{ $post->title }}}">
+                </div>
+              </div>
+              @endif
+              <div class="post-content">
+                <div class="entry-meta">
+                  <ul class="list-inline">
+                    <li class="publish-date"><a href="#"><i class="fa fa-clock-o"></i> {{{ date_show($post->publish_date) }}}</a></li>
+                    <!--<li class="views"><a href="#"><i class="fa fa-eye"></i>15k</a></li>
+                    <li class="loves"><a href="#"><i class="fa fa-heart-o"></i>278</a></li>-->
+                  </ul>
+                </div>
+                <h2 class="entry-title">
+                  <a href="@url('news/' . $post->url)">{{{ $post->title }}}</a>
+                </h2>
+                <div class="entry-content">
+                  <p>{{{ str_limit($post->meta->summary, 100) }}}</p>
+                </div>
+              </div>
+            </div>
+            @break($loop->index >= 0)
+            @endforeach
+          </div>
+          <div class="section listing-news">
+            @foreach ($list->rows as $post)
+            @if ($loop->index > 0)
+            <div class="post">
+              @if ($post->poster->image)
+              <div class="entry-header">
+                <div class="entry-thumbnail">
+                  <img class="img-responsive" src="{{ $post->poster->image }}" alt="{{{ $post->title }}}">
+                </div>
+              </div>
+              @endif
+              <div class="post-content">
+                <div class="entry-meta">
+                  <ul class="list-inline">
+                    <li class="publish-date"><a href="#"><i class="fa fa-clock-o"></i> {{{ date_show($post->publish_date) }}}</a></li>
+                    <!--<li class="views"><a href="#"><i class="fa fa-eye"></i>15k</a></li>
+                    <li class="loves"><a href="#"><i class="fa fa-heart-o"></i>278</a></li>-->
+                  </ul>
+                </div>
+                <h2 class="entry-title">
+                  <a href="@url('news/' . $post->url)">{{{ $post->title }}}</a>
+                </h2>
+                <div class="entry-content">
+                  <p>{{{ str_limit($post->meta->summary, 100) }}}</p>
+                </div>
+              </div>
+            </div>
+            @endif
+            @if ($loop->index == 2)
+            <div class="post google-add">
+              <div class="add inner-add text-center">
+                <a href="#"><img class="img-responsive" src="{{ $root }}/assets/ads/add2.jpg" alt=""></a>
+              </div>
+            </div>
+            @endif
+            @endforeach
+          </div>
+        </div>
+        <div class="pagination-wrapper">
+          <ul class="pagination">
+            <li>
+              <a href="{{ $list->nav->previous->link ? $list->nav->previous->link : 'javascript:void(0)' }}"><i class="fa fa-long-arrow-left"></i></a>
+            </li>
+            @foreach ($list->nav->pages as $offset => $page)
+            <li{{ $page->active ? ' class="active"' : '' }}>
+              <a href="{{ $page->link }}">{{ $page->label }}</a>
+            </li>
+            @endforeach
+            <li>
+              <a href="{{ $list->nav->next->link ? $list->nav->next->link : 'javascript:void(0)'}}"><i class="fa fa-long-arrow-right"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div id="sticky" class="col-sm-3">
+        <div id="sidebar">
+          <div class="widget">
+            <div class="add featured-add">
+              <a href="#"><img class="img-responsive" src="{{ $root }}/assets/ads/add1.jpg" alt=""></a>
+            </div>
+          </div>
+          <div class="widget follow-us">
+            <h1 class="section-title title">@lang('label.follow_us', 'Bizi Takip Edin')</h1>
+            <ul class="list-inline social-icons">
+              <li><a href="@conf('socials.facebook')" target="_blank"><i class="fa fa-facebook"></i></a></li>
+              <li><a href="@conf('socials.twitter')" target="_blank"><i class="fa fa-twitter"></i></a></li>
+              <li><a href="@conf('socials.google_plus')" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+              <li><a href="@conf('socials.linkedin')" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+              <li><a href="@conf('socials.youtube')" target="_blank"><i class="fa fa-youtube"></i></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@stop

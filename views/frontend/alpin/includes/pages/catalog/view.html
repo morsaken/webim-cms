@@ -1,0 +1,70 @@
+<section class="product-info">
+  <div class="row">
+    <div class="col-lg-9 col-md-8 col-sm-7">
+      <div class="images">
+        @if ($product->poster->image)
+        <img src="{{ $product->poster->image }}" alt="{{{ $product->title }}}">
+        @endif
+        @foreach ($product->media as $media)
+        @if ($media->role == 'image')
+        <img src="{{ $media->poster->image }}" alt="{{{ $product->title }}}">
+        @endif
+        @endforeach
+      </div>
+      <div class="extra-info">
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active"><a href="#common" aria-controls="common" role="tab" data-toggle="tab">{{{ str_case(lang('label.common', 'Genel Bilgiler')) }}}</a></li>
+          @foreach ($product->form_groups as $group => $fields)
+          <li role="presentation"><a href="#{{ slug($group) }}" aria-controls="faq" role="tab" data-toggle="tab">{{{ str_case($group) }}}</a></li>
+          @endforeach
+        </ul>
+        <div class="tab-content">
+          <div id="common" role="tabpanel" class="tab-pane active">
+            {{ $product->meta->content }}
+          </div>
+          @foreach ($product->form_groups as $group => $fields)
+          <div id="{{ slug($group) }}" role="tabpanel" class="tab-pane">
+            @foreach ($fields as $field)
+            @if (strlen($field->text))
+            <dl class="dl-horizontal">
+              <dt>{{{ $field->label }}}</dt>
+              <dd>{{ nl2br($field->text) }}</dd>
+            </dl>
+            @endif
+            @endforeach
+          </div>
+          @endforeach
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-5">
+      <div class="info">
+        <div class="scroller">
+          @if (strlen($product->meta->summary))
+          <p>{{ nl2br($product->meta->summary) }}</p>
+          <hr>
+          @endif
+          @if (count($product->media_files))
+          <div>
+            <a class="btn btn-warning center-block" href="@url('catalogs/' . implode(',', array_map(function($file){ return $file->url; }, $product->media_files)))" title="{{{ $product->title }}}">
+              <i class="fa fa-file-pdf-o"></i>
+              @lang('button.download_catalog', 'Kataloğu İndir')
+            </a>
+          </div>
+          <hr>
+          @endif
+          @if (strlen($offers))
+          <div>{{ $offers or '' }}</div>
+          <hr>
+          @endif
+          <div class="share">
+            <strong>@lang('label.share', 'Paylaş'):</strong>
+            <a class="fa fa-facebook-f" href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()) }}" onclick="window.open(this.href, 'share', 'width=640,height=480'); return false;"></a>
+            <a class="fa fa-twitter" href="https://twitter.com/home?status={{ urlencode(url()) }}" onclick="window.open(this.href, 'share', 'width=640,height=480'); return false;"></a>
+            <a class="fa fa-google" href="https://plus.google.com/share?url={{ urlencode(url()) }}" onclick="window.open(this.href, 'share', 'width=640,height=480'); return false;"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,17 @@
+@php
+$colors = ['blue', 'brown', 'purple'];
+$first = rand(15, 45);
+$second = rand(15, 45);
+$third = 100 - $first - $second;
+
+shuffle($colors);
+$color1 = array_pop($colors);
+shuffle($colors);
+$color2 = array_pop($colors);
+$color3 = array_pop($colors);
+@endphp
+<div class="bars">
+  <div class="{{ $color1 }}" style="width: {{ $first }}%"></div>
+  <div class="{{ $color2 }}" style="width: {{ $second }}%"></div>
+  <div class="{{ $color3 }}" style="width: {{ $third }}%"></div>
+</div>

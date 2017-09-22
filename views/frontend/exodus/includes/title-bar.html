@@ -1,0 +1,25 @@
+<div id="titlebar">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h2>{{{ $page->title }}}</h2>
+        @if (isset($page->description) && count($page->description))
+        <span>{{{ $page->description }}}</span>
+        @endif
+        @if (count($breadcrumb))
+        <nav id="breadcrumbs">
+          <ul>
+            @foreach ($breadcrumb as $crumb)
+            @if ($crumb->active)
+            <li>{{{ $crumb->title }}}</li>
+            @else
+            <li><a href="{{ $crumb->url }}">{{{ $crumb->title }}}</a></li>
+            @endif
+            @endforeach
+          </ul>
+        </nav>
+        @endif
+      </div>
+    </div>
+  </div>
+</div>

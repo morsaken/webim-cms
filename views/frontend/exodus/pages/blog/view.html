@@ -1,0 +1,58 @@
+@extends('default')
+
+@section('title') {{{ $page->title }}} :: @parent @stop
+
+@section('meta')
+@parent
+<meta name="twitter:site" content="@url()">
+<meta name="twitter:title" content="{{{ $post->title }}}">
+<meta name="twitter:description" content="{{{ $post->meta->summary }}}">
+<meta name="twitter:image:src" content="{{ $post->poster->image or '' }}">
+<meta property="fb:app_id" content="@conf('login.facebook.app_id')">
+<meta property="og:site_name" content="{{{ $title }}}">
+<meta property="og:title" content="{{{ $post->title }}}">
+<meta property="og:url" content="@url()">
+<meta property="og:description" content="{{{ $post->meta->summary }}}">
+<meta property="og:image" content="{{ $post->poster->image or '' }}">
+@stop
+
+@section('content')
+@include('title-bar')
+<div class="container">
+  <div class="content">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="blog-post single-post">
+          @if ($post->poster->image)
+          <img class="post-img" src="{{ $post->poster->image }}" alt="{{{ $post->title }}}">
+          @endif
+          <div class="post-content">
+            <h3>{{{ $post->title }}}</h3>
+            <ul class="post-meta">
+              <li>{{{ date_show($post->publish_date) }}}</li>
+            </ul>
+            @if (strlen($post->meta->summary))
+            <div class="post-quote">
+              <span class="icon"></span>
+              <blockquote>{{{ $post->meta->summary }}}</blockquote>
+            </div>
+            @endif
+            <div>{{ $post->meta->content }}</div>
+            <ul class="share-buttons margin-top-40 margin-bottom-0">
+              <li><a class="fb-share" href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()) }}" onclick="window.open(this.href, 'share', 'width=640,height=480'); return false;"><i class="fa fa-facebook"></i> @lang('button.share', 'Paylaş')</a></li>
+              <li><a class="twitter-share" href="https://twitter.com/home?status={{ urlencode(url()) }}" onclick="window.open(this.href, 'share', 'width=640,height=480'); return false;"><i class="fa fa-twitter"></i> Tweet</a></li>
+              <li><a class="gplus-share" href="https://plus.google.com/share?url={{ urlencode(url()) }}" onclick="window.open(this.href, 'share', 'width=640,height=480'); return false;"><i class="fa fa-google-plus"></i> @lang('button.share', 'Paylaş')</a></li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="sidebar right">
+          @include('blog-side')
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@stop

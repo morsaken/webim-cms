@@ -1,0 +1,189 @@
+@extends('default')
+
+@section('content')
+@if (isset($sliders) && count($sliders))
+<section class="main-slider">
+  <div class="tp-banner-container">
+    <div id="banner" class="tp-banner">
+      <ul>
+        @foreach ($sliders as $slider)
+        <li data-transition="slideup" data-slotamount="1" data-masterspeed="1000" data-thumb="{{ $slider->poster->image->size(400, 300)->src() }}" data-saveperformance="off" data-title="{{{ $slider->title }}}">
+          <img src="{{ $slider->poster->image->reset()->src() }}" alt="{{{ $slider->title }}}" data-bgposition="center top" data-bgfit="cover" data-bgrepeat="no-repeat">
+          <div class="tp-caption sfl sfb tp-resizeme"
+               data-x="right" data-hoffset="0"
+               data-y="center" data-voffset="-100"
+               data-speed="1500"
+               data-start="500"
+               data-easing="easeOutExpo"
+               data-splitin="none"
+               data-splitout="none"
+               data-elementdelay="0.01"
+               data-endelementdelay="0.3"
+               data-endspeed="1200"
+               data-endeasing="Power4.easeIn"
+               style="z-index: 4; max-width: none; max-height: none; white-space: nowrap;"><h1 class="bold-font text-uppercase text-right">{{{ $slider->title }}}</h1></div>
+          <div class="tp-caption sfr sfb tp-resizeme"
+               data-x="right" data-hoffset="0"
+               data-y="center" data-voffset="-10"
+               data-speed="1500"
+               data-start="1000"
+               data-easing="easeOutExpo"
+               data-splitin="none"
+               data-splitout="none"
+               data-elementdelay="0.01"
+               data-endelementdelay="0.3"
+               data-endspeed="1200"
+               data-endeasing="Power4.easeIn"
+               style="z-index: 4; max-width: none; max-height: none; white-space: nowrap;"><div class="text"><p class="text-uppercase text-right">{{ nl2br($slider->meta->summary) }}</p></div></div>
+          @if (isset($slider->meta->options->more))
+          <div class="tp-caption sfl sfb tp-resizeme"
+               data-x="right" data-hoffset="0"
+               data-y="center" data-voffset="90"
+               data-speed="1500"
+               data-start="1500"
+               data-easing="easeOutExpo"
+               data-splitin="none"
+               data-splitout="none"
+               data-elementdelay="0.01"
+               data-endelementdelay="0.3"
+               data-endspeed="1200"
+               data-endeasing="Power4.easeIn"
+               style="z-index: 4; max-width: none; max-height: none; white-space: nowrap;"><div class="text-right"><a href="@url($slider->meta->options->more->url)" class="theme-btn normal-btn-white">{{{ $slider->meta->options->more->title or '' }}}</a></div></div>
+          @endif
+        </li>
+        @endforeach
+      </ul>
+      <div class="tp-bannertimer"></div>
+    </div>
+  </div>
+</section>
+@endif
+<section class="default-section about-style-two">
+  <div class="auto-container">
+    <div class="sec-title text-center">
+      <h2>{{{ $about->title or lang('menu.about', 'Hakkımızda') }}}</h2>
+    </div>
+    <div class="text-box">
+      <p>{{{ $about->meta->description or '' }}}</p>
+    </div>
+    <div class="text-center"><a href="@url('about')" class="theme-btn default-btn">@lang('button.read_more', 'Devamını Oku')</a></div>
+  </div>
+</section>
+@if (isset($services) && count($services))
+<section class="default-section services-style-two bg-pattern-one">
+  <div class="auto-container">
+    <div class="sec-title text-center">
+      <h2>@lang('menu.services', 'Hizmetlerimiz')</h2>
+    </div>
+    <div class="slider-outer">
+      <div class="row clearfix">
+        <div class="col-lg-6 col-md-12 col-xs-12 column pager-column">
+          <div class="inner-box">
+            <div id="services-pager" class="services-pager clearfix">
+              @foreach ($services as $key => $service)
+              <a class="pager" data-slide-index="{{ $key }}" href="#">
+                <div class="visible-layer">
+                  <div class="icon">
+                    <span class="{{ $service->meta->options->icon or 'icon-screen-desktop' }}"></span>
+                  </div>
+                  <span class="pager-title">{{{ $service->title }}}</span>
+                </div>
+                <div class="hidden-layer">
+                  <div class="icon">
+                    <span class="{{ $service->meta->options->icon or 'icon-screen-desktop' }}"></span>
+                  </div>
+                </div>
+              </a>
+              @endforeach
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-12 col-xs-12 column slides-column">
+          <div class="inner-box">
+            <div class="services-slider">
+              @foreach ($services as $service)
+              <div class="slide-item">
+                <h3>{{{ $service->title }}}</h3>
+                <div class="slide-text">{{ nl2br($service->meta->summary) }}</div>
+              </div>
+              @endforeach
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+@endif
+@if (isset($blog))
+<section class="default-section featured-blog">
+  <div class="auto-container">
+    <div class="sec-title text-center">
+      <h2>@lang('menu.blog', 'Blog')</h2>
+    </div>
+    <div class="row clearfix">
+      <article class="column image-column col-md-6 col-sm-6 col-xs-12">
+        <div class="inner-box">
+          <div class="post-date"><strong>2</strong><br>Dec</div>
+          <figure class="image"><img src="{{ $root }}/assets/blog-image-4.jpg" alt=""></figure>
+        </div>
+      </article>
+      <article class="column content-column col-md-6 col-sm-6 col-xs-12">
+        <div class="inner-box">
+
+          <br>
+          <!--Post Desc-->
+          <div class="post-desc">
+            <h3>Blog Heading Here</h3>
+            <div class="author-info">By : admin</div>
+            <br>
+            <div class="post-excerpt">
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.</p>
+            </div>
+            <br>
+            <a href="#" class="theme-btn default-btn">Read more</a>
+          </div><!--Post Desc End-->
+          <br><br>
+          <div class="hor-sep"></div>
+          <br><br>
+          <!--Related Posts-->
+          <div class="related-posts">
+            <div class="row clearfix">
+
+              <!--Rel Post-->
+              <article class="rel-post col-md-6 col-sm-12 col-xs-12">
+                <div class="inner-box">
+                  <figure class="post-thumb"><img class="img-circle" src="{{ $root }}/assets/post-thumb-1.jpg" width="50" height="50" alt=""></figure>
+                  <h3><a href="#">Blog Heading</a></h3>
+                  <div class="post-excerpt">Lorem Ipsum is simply dummy text of printing .</div>
+                </div>
+              </article>
+
+              <!--Rel Post-->
+              <article class="rel-post col-md-6 col-sm-12 col-xs-12">
+                <div class="inner-box">
+                  <figure class="post-thumb"><img class="img-circle" src="{{ $root }}/assets/post-thumb-2.jpg" width="50" height="50" alt=""></figure>
+                  <h3><a href="#">Blog Heading</a></h3>
+                  <div class="post-excerpt">Lorem Ipsum is simply dummy text of printing .</div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+@endif
+@stop
+
+@section('css')
+@parent
+<link type="text/css" href="{{ $root }}/css/revolution-slider.css" rel="stylesheet">
+@stop
+
+@section('plugin')
+@parent
+<script type="text/javascript" src="{{ $root }}/js/plugins/revolution.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/bxslider.js"></script>
+@stop
