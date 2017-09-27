@@ -42,14 +42,25 @@
          <tr>
           <td class="text-center col-xs-1" style="vertical-align: top">&nbsp;</td>
           <td class="col-xs-11">
-           <div class="section mb15">
-            <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
-            <label class="field prepend-icon">
-             <input type="text" name="contact_title[]" class="gui-input" value="{{{ conf('contact.0.title') }}}">
-             <span class="field-icon">
-              <i class="fa fa-info"></i>
-             </span>
-            </label>
+           <div class="section mb15 row">
+            <div class="col-md-8 col-sm-6">
+             <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
+             <label class="field prepend-icon">
+              <input type="text" name="contact_title[]" class="gui-input" value="{{{ conf('contact.0.title') }}}">
+              <span class="field-icon">
+               <i class="fa fa-info"></i>
+              </span>
+             </label>
+            </div>
+            <div class="col-md-4 col-sm-6">
+             <h6 class="fw400">@lang('admin.label.name', 'Tanımı')</h6>
+             <label class="field prepend-icon">
+              <input type="text" name="contact_name[]" class="gui-input" value="{{{ conf('contact.0.name') }}}">
+              <span class="field-icon">
+               <i class="fa fa-info"></i>
+              </span>
+             </label>
+            </div>
            </div>
            <div class="section mb15">
             <h6 class="fw400">@lang('admin.label.address', 'Adres')</h6>
@@ -109,14 +120,25 @@
            </button>
           </td>
           <td class="col-xs-11">
-           <div class="section mb15">
-            <h6 class="fw400">@lang('admin.label.title', 'Başlığı')</h6>
-            <label class="field prepend-icon">
-             <input type="text" name="contact_title[]" class="gui-input" value="{{{ array_get($value, 'title') }}}">
-             <span class="field-icon">
-              <i class="fa fa-info"></i>
-             </span>
-            </label>
+           <div class="section mb15 row">
+            <div class="col-md-8 col-sm-6">
+             <h6 class="fw400">@lang('admin.label.title', 'Başlığı')</h6>
+             <label class="field prepend-icon">
+              <input type="text" name="contact_title[]" class="gui-input" value="{{{ array_get($value, 'title') }}}">
+              <span class="field-icon">
+               <i class="fa fa-info"></i>
+              </span>
+             </label>
+            </div>
+            <div class="col-md-4 col-sm-6">
+             <h6 class="fw400">@lang('admin.label.name', 'Tanımı')</h6>
+             <label class="field prepend-icon">
+              <input type="text" name="contact_name[]" class="gui-input" value="{{{ array_get($value, 'name') }}}">
+              <span class="field-icon">
+               <i class="fa fa-info"></i>
+              </span>
+             </label>
+            </div>
            </div>
            <div class="section mb15">
             <h6 class="fw400">@lang('admin.label.address', 'Adres')</h6>
@@ -197,14 +219,25 @@
              <div id="map0" class="map"></div>
             </div>
             <div class="col-md-5">
-             <div class="section mb15">
-              <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
-              <label class="field prepend-icon">
-               <input type="text" name="map_title[]" class="gui-input" value="{{{ conf('map.0.title') }}}">
-               <span class="field-icon">
-                <i class="fa fa-info"></i>
-               </span>
-              </label>
+             <div class="section mb15 row">
+              <div class="col-md-6">
+               <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
+               <label class="field prepend-icon">
+                <input type="text" name="map_title[]" class="gui-input" value="{{{ conf('map.0.title') }}}">
+                <span class="field-icon">
+                 <i class="fa fa-info"></i>
+                </span>
+               </label>
+              </div>
+              <div class="col-md-6">
+               <h6 class="fw400">@lang('admin.label.name', 'Tanımı')</h6>
+               <label class="field prepend-icon">
+                <input type="text" name="map_name[]" class="gui-input" value="{{{ conf('map.0.name') }}}">
+                <span class="field-icon">
+                 <i class="fa fa-info"></i>
+                </span>
+               </label>
+              </div>
              </div>
              <div class="section mb15 row">
               <div class="col-md-6">
@@ -293,14 +326,25 @@
              <div id="map{{ $key }}" class="map"></div>
             </div>
             <div class="col-md-5">
-             <div class="section mb15">
-              <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
-              <label class="field prepend-icon">
-               <input type="text" name="map_title[]" class="gui-input" value="{{{ conf('map.' . $key . '.title') }}}">
-               <span class="field-icon">
-                <i class="fa fa-info"></i>
-               </span>
-              </label>
+             <div class="section mb15 row">
+              <div class="col-md-6">
+               <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
+               <label class="field prepend-icon">
+                <input type="text" name="map_title[]" class="gui-input" value="{{{ conf('map.' . $key . '.title') }}}">
+                <span class="field-icon">
+                 <i class="fa fa-info"></i>
+                </span>
+               </label>
+              </div>
+              <div class="col-md-6">
+               <h6 class="fw400">@lang('admin.label.name', 'Tanımı')</h6>
+               <label class="field prepend-icon">
+                <input type="text" name="map_name[]" class="gui-input" value="{{{ conf('map.' . $key . '.name') }}}">
+                <span class="field-icon">
+                 <i class="fa fa-info"></i>
+                </span>
+               </label>
+              </div>
              </div>
              <div class="section mb15 row">
               <div class="col-md-6">

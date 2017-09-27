@@ -36,7 +36,7 @@ App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs
     'title' => conf('frontend.' . lang() . '.title', 'Web-IM XI'),
     'description' => conf('frontend.' . lang() . '.description', 'Web Internet Manager'),
     'keywords' => conf('frontend.' . lang() . '.keywords'),
-    'template' => 'default',
+    'template' => ($this->request->isAjax() ? 'empty' : 'default'),
     'separator' => '::',
     'nav' => $nav,
     'breadcrumb' => array()
@@ -45,6 +45,7 @@ App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs
   //500
   $this->setErrorTemplate(function ($title, $body) use ($data) {
     $page = new \stdClass();
+    $page->status = 500;
     $page->title = lang('label.system_error', 'Sistem Hatası') . ': 500';
     $page->description = lang('label.page_error_occured', 'Hata oluştu!');
     $page->content = $body;
@@ -55,16 +56,13 @@ App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs
       array($page->title)
     ));
 
-    if ($this->request->isAjax()) {
-      $data['template'] = 'empty';
-    }
-
     return View::create('500')->data($data)->render();
   });
 
   //404
   $this->setNotFoundTemplate(function ($title, $body) use ($data) {
     $page = new \stdClass();
+    $page->status = 404;
     $page->title = lang('label.error', 'Hata') . ': 404';
     $page->description = lang('label.page_not_found', 'Sayfa bulunamadı!');
     $page->content = '<p>' . lang('message.page_not_found', 'Ulaşmaya çalıştığınız sayfa silinmiş ya da taşınmış olabilir. Lütfen bağlantı linklerini takip ediniz!') . '</p>'
@@ -76,18 +74,10 @@ App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs
       array($page->title)
     ));
 
-    if ($this->request->isAjax()) {
-      $data['template'] = 'empty';
-    }
-
     return View::create('404')->data($data)->render();
   });
 
   $this->get('/', function ($params = array()) use ($data) {
-    if ($this->request->isAjax()) {
-      $data['template'] = 'empty';
-    }
-
     return View::create('home')->data($data)->render();
   });
 
@@ -114,10 +104,6 @@ App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs
 
       $data['page'] = $page;
       $data['pages'] = makePageMenu($page, $pages);
-
-      if ($this->request->isAjax()) {
-        $data['template'] = 'empty';
-      }
 
       return View::create('content')->data($data)->render();
     });

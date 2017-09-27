@@ -103,6 +103,7 @@ class ContentSettings {
     foreach (input('contact_title') as $key => $contact) {
       $contacts[] = array(
         'title' => $contact,
+        'name' => array_get(input('contact_name'), $key),
         'address' => array_get(input('contact_address'), $key),
         'phone' => array_get(input('contact_phone'), $key),
         'fax' => array_get(input('contact_fax'), $key),
@@ -114,6 +115,7 @@ class ContentSettings {
     foreach (input('map_title') as $key => $map) {
       $maps[] = array(
         'title' => $map,
+        'name' => array_get(input('map_name'), $key),
         'lat' => array_get(input('map_lat'), $key),
         'lon' => array_get(input('map_lon'), $key),
         'zoom' => array_get(input('map_zoom'), $key),
