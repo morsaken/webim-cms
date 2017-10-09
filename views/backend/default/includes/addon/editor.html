@@ -9,7 +9,7 @@
   //$('#{{ $target or 'meta-content' }}').val(oEditor.getHTMLBody());
  }, 500);
  @elseif (conf('system.editor', 'summernote') == 'tinymce')
- loadScript('{{ $root }}/js/lib/editors/tinymce/tinymce.min.js', function() {
+ load.js('{{ $root }}/js/lib/editors/tinymce/tinymce.min.js').then(function() {
    tinymce.init({
      selector: '#{{ $id or 'html-content' }}',
      height: 500,
@@ -42,8 +42,8 @@
    });
  });
  @else
- loadScript('{{ $root }}/js/lib/editors/summernote/summernote.min.js', function() {
-  loadCSS('{{ $root }}/js/lib/editors/summernote/summernote.css', function() {
+ load.js('{{ $root }}/js/lib/editors/summernote/summernote.min.js').then(function() {
+  load.css('{{ $root }}/js/lib/editors/summernote/summernote.css').then(function() {
    $('#{{ $id or 'html-content' }}').html($('#{{ $target or 'meta-content' }}').val()).summernote({
     height: 500,
     focus: false,

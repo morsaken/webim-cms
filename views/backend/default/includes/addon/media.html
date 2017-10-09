@@ -120,9 +120,9 @@
 @parent
 <script type="text/javascript">
  //<![CDATA[
- loadScript('{{ $root }}/js/plugins/fileinput/js/fileinput.min.js', function() {
-  loadScript('{{ $root }}/js/plugins/fileinput/js/fileinput_locale_{{ lang() }}.js', function() {
-   loadCSS('{{ $root }}/js/plugins/fileinput/css/fileinput.min.css', function() {
+ load.js('{{ $root }}/js/plugins/fileinput/js/fileinput.min.js').then(function() {
+  load.js('{{ $root }}/js/plugins/fileinput/js/fileinput_locale_{{ lang() }}.js').then(function() {
+   load.css('{{ $root }}/js/plugins/fileinput/css/fileinput.min.css').then(function() {
 
     $.fn.{{ $target or 'media' }}Reset = function() {
      $('#{{ $target or 'media' }}-content').empty().append(

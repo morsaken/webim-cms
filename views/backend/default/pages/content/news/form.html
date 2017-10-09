@@ -222,7 +222,8 @@
    $('#category').empty();
 
    $.ajax({
-    'url': $('#form').attr('action').replace('/form', '/categories'),
+    'type': 'get',
+    'url': "@url($prefix . 'content/categories/list')",
     'data': {
      'language': $('#language').val(),
      'id': init ? $('#id').val() : 0

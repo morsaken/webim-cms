@@ -78,7 +78,7 @@
 @parent
 <script type="text/javascript">
  //<![CDATA[
- loadScript('{{ $root }}/js/plugins/holder.min.js', function() {
+ load.js('{{ $root }}/js/plugins/holder.min.js').then(function() {
   $('#{{ $target or 'media' }}-add-link-btn').click(function() {
    if ($('#{{ $target or 'media' }}-link-url').val().length > 0) {
     $.ajax({

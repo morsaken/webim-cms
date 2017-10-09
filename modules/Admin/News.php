@@ -291,37 +291,6 @@ class News {
   }
 
   /**
-   * Category list by language
-   *
-   * @param array $params
-   *
-   * @return string
-   */
-  public function categories($params = array()) {
-    $manager = static::$manager;
-
-    $manager->app->response->setContentType('json');
-
-    $lang = array_get($params, 'lang');
-
-    $categories = array();
-
-    foreach (Content::init()
-               ->where('id', '<>', input('id', 0))
-               ->only('type', 'category')
-               ->only('language', input('language', $lang))
-               ->orderBy('order')
-               ->load()->getListIndented('&nbsp;&nbsp;') as $id => $title) {
-      $categories[] = array(
-        'id' => $id,
-        'title' => $title
-      );
-    }
-
-    return array_to($categories);
-  }
-
-  /**
    * Rename
    *
    * @param array $params

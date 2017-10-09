@@ -36,6 +36,7 @@ class Category {
     $manager->addRoute($manager->prefix . '/content/categories/orders/?:id', __CLASS__ . '::orders', 'POST');
     $manager->addRoute($manager->prefix . '/content/categories/rename/:id+', __CLASS__ . '::renameURL', 'POST');
     $manager->addRoute($manager->prefix . '/content/categories/duplicate', __CLASS__ . '::duplicate', 'POST');
+    $manager->addRoute($manager->prefix . '/content/categories/list', __CLASS__ . '::getList');
 
     $parent = $manager->addMenu(lang('admin.menu.system', 'Sistem'), $manager->prefix . '/content', lang('admin.menu.content', 'İçerik'), null, 'fa fa-edit');
     $manager->addMenu(lang('admin.menu.system', 'Sistem'), $manager->prefix . '/content/categories', lang('admin.menu.categories', 'Kategoriler'), $parent, 'fa fa-tree');
@@ -331,6 +332,36 @@ class Category {
     }
 
     return $message->forData();
+  }
+
+  /**
+   * Category list by language
+   *
+   * @param array $params
+   *
+   * @return string
+   */
+  public function getList($params = array()) {
+    $manager = static::$manager;
+    $manager->app->response->setContentType('json');
+
+    $lang = array_get($params, 'lang');
+
+    $categories = array();
+
+    foreach (Content::init()
+               ->where('id', '<>', input('id', 0))
+               ->only('type', 'category')
+               ->only('language', input('language', $lang))
+               ->orderBy('order')
+               ->load()->getListIndented('&nbsp;&nbsp;') as $id => $title) {
+      $categories[] = array(
+        'id' => $id,
+        'title' => $title
+      );
+    }
+
+    return array_to($categories);
   }
 
 }

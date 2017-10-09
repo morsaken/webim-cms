@@ -83,8 +83,8 @@
 @parent
 <script type="text/javascript">
  //<![CDATA[
- loadScript('{{ $root }}/js/plugins/holder.min.js', function() {
-  loadScript('{{ $root }}/js/plugins/fileupload/fileupload.js', function() {
+ load.js('{{ $root }}/js/plugins/holder.min.js').then(function() {
+  load.js('{{ $root }}/js/plugins/fileupload/fileupload.js').then(function() {
    // grant file-upload preview onclick functionality
    $('.fileupload-preview').on('click', function() {
     $('.btn-file > input').click();
