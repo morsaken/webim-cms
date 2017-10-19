@@ -109,7 +109,7 @@ class Manager extends \System\Manager {
 
       //Discover existing modules
       $manager->discover();
-    } elseif (!url_is($manager->prefix . '/login')) {
+    } elseif (!url_is($manager->prefix . '/login') && !url_is($manager->prefix . '/captcha')) {
       $manager->app->redirect(url($manager->prefix . '/login?redirect=' . url()));
     }
   }

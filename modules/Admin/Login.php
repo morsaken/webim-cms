@@ -6,6 +6,8 @@
 namespace Admin;
 
 use \System\Sign;
+use \Webim\Http\Session;
+use \Webim\Image\Captcha;
 use \Webim\Library\Auth;
 use \Webim\View\Manager as View;
 
@@ -26,6 +28,7 @@ class Login {
   public static function register(Manager $manager) {
     $check = __CLASS__ . '::check';
 
+    $manager->addRoute($manager->prefix . '/captcha', __CLASS__ . '::captcha');
     $manager->addRoute($manager->prefix . '/login', __CLASS__ . '::getIndex', 'GET', $check, 'login');
     $manager->addRoute($manager->prefix . '/login', __CLASS__ . '::postIndex', 'POST', $check);
     $manager->addRoute($manager->prefix . '/logout', __CLASS__ . '::getLogout', 'GET', $check);
@@ -65,6 +68,15 @@ class Login {
     $manager = static::$manager;
     $app = $manager->app;
 
+    $code = strtolower(Session::current()->get('captcha'));
+
+    Session::current()->delete('captcha');
+
+    if ($code !== strtolower(input('captcha'))) {
+      $app->flash('login_error', lang('message.invalid_captcha_code', 'Geçersiz kod!'));
+      $app->redirect(url());
+    }
+
     if (!Sign::check()) {
       $check = Sign::in(input('name'), raw_input('pass'), false, input('stay-signed-in', false));
 
@@ -87,6 +99,23 @@ class Login {
     Sign::out();
 
     $app->redirect(url($manager->prefix . '/login'));
+  }
+
+  /**
+   * CAPTCHA
+   */
+  public function captcha() {
+    //Fonts
+    $fonts = View::getPath()->folder('layouts.fonts.open-sans')->fileIn('*.ttf')->files();
+
+    //Create
+    $captcha = Captcha::create($fonts);
+
+    //Set to check
+    Session::current()->set('captcha', $captcha->getStr());
+
+    //Display
+    $captcha->simple()->fontSize(16)->size(100, 40)->bgColor(255, 255, 255)->strColor(46, 50, 143)->display();
   }
 
   /**

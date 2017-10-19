@@ -24318,3 +24318,9 @@ body.panel-fullscreen-active #content_wrapper {
 .media figure:hover h3 {
   top: 0;
 }
+
+.captcha {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+}

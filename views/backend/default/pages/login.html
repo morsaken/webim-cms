@@ -32,7 +32,7 @@
      </div>
      @endif
      <div class="row">
-      <div class="col-sm-7 pr30">
+      <div class="col-sm-7 pr30 br-r br-grey">
        <div class="section">
         <label for="name" class="field-label text-muted fs18 mb10">@lang('admin.label.login_name', 'Kullanıcı Adı')</label>
         <label class="field prepend-icon">
@@ -51,8 +51,18 @@
          </span>
         </label>
        </div>
+       <div class="section">
+        <label for="captcha" class="field-label text-muted fs18 mb10">@lang('admin.label.captcha_code', 'Kod')</label>
+        <label class="field prepend-icon">
+         <input type="text" id="captcha" name="captcha" class="gui-input" placeholder="@lang('admin.hint.enter_captcha_code', 'Kodu yazın')">
+         <span class="field-icon">
+          <i class="fa fa-lock"></i>
+         </span>
+         <img class="captcha" src="@url($prefix . 'captcha')" alt="CAPTCHA">
+        </label>
+       </div>
       </div>
-      <div class="col-sm-5 br-l br-grey pl30">
+      <div class="col-sm-5 pl30">
        <h3 class="mb25">Webim XI versiyonu ile yayında:</h3>
        <p class="mb15">
         <span class="fa fa-check text-success pr5"></span> Kolay içerik yönetimi</p>
