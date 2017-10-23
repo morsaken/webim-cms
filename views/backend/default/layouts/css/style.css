@@ -24324,3 +24324,10 @@ body.panel-fullscreen-active #content_wrapper {
   top: 1px;
   right: 1px;
 }
+
+@media only screen and (max-width: 767px) {
+  .login-form {
+    padding-right: 15px !important;
+    border-right: none !important;
+  }
+}
