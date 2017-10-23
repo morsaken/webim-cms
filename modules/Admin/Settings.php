@@ -90,7 +90,7 @@ class Settings {
       $settings['frontend.' . $code . '.title'] = input('frontend_' . $code . '_title', 'Web-IM XI');
       $settings['frontend.' . $code . '.description'] = input('frontend_' . $code . '_description');
       $settings['frontend.' . $code . '.keywords'] = input('frontend_' . $code . '_keywords');
-      $settings['frontend.' . $code . '.copyright'] = input('frontend_' . $code . '_copyright');
+      $settings['frontend.' . $code . '.copyright'] = raw_input('frontend_' . $code . '_copyright');
       $settings['backend.' . $code . '.template'] = input('backend_' . $code . '_template', 'default');
       $settings['backend.' . $code . '.title'] = input('backend_' . $code . '_title', 'Web-IM XI');
       $settings['backend.' . $code . '.description'] = input('backend_' . $code . '_description');
