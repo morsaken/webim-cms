@@ -467,15 +467,15 @@ var Core = function(options) {
       var metroBG = $('.metro-modal');
 
       // Toggle menu and active class on icon click
-      $('.topbar-menu-toggle').on('click', function() {
+      $('.topbar-menu-toggle').on('click', function(e) {
+         e.preventDefault();
 
          // If dropmenu is using alternate style we don't show modal
          if (menu.hasClass('alt')) {
             // Toggle menu and active class on icon click
             menu.slideToggle(230).toggleClass('topbar-menu-open');
             metroBG.fadeIn();
-         }
-         else {
+         } else {
             menu.slideToggle(230).toggleClass('topbar-menu-open');
             $(items).addClass('animated animated-short fadeInDown').css('opacity', 1);
 
