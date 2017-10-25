@@ -16,6 +16,9 @@
      <li>
       <a href="#tab-media" data-toggle="tab">@lang('admin.label.media', 'Medya')</a>
      </li>
+     <li>
+      <a href="#tab-meta" data-toggle="tab">@lang('admin.label.meta', 'Meta')</a>
+     </li>
     </ul>
    </div>
    <form id="form" class="panel-body p20 pb10" method="post" action="@url()">
@@ -120,6 +123,12 @@
      <div id="tab-media" class="tab-pane">
       @include('addon.media', ['media' => isset($content->media) ? $content->media : []])
      </div>
+     <div id="tab-meta" class="tab-pane">
+      <div class="section mb15">
+       <h6 class="fw400">@lang('admin.label.extra_options', 'Ekstra Opsiyonlar')</h6>
+       <textarea id="meta-options" name="meta-options">{{{ $content->meta->options or '' }}}</textarea>
+      </div>
+     </div>
     </div>
     <hr class="short alt">
     <div class="section mbn text-right">
@@ -144,13 +153,37 @@
 </section>
 @stop
 
+@section('link')
+@parent
+<link type="text/css" href="{{ $root }}/js/plugins/codemirror/lib/codemirror.css" rel="stylesheet">
+<link type="text/css" href="{{ $root }}/js/plugins/codemirror/theme/neat.css" rel="stylesheet">
+@stop
+
 @section('script')
 @parent
 <script type="text/javascript" src="{{ $root }}/js/plugins/tagsinput/tagsinput.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/codemirror/lib/codemirror.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/codemirror/mode/javascript/javascript.js"></script>
 <script type="text/javascript">
  //<![CDATA[
  $(function() {
   'use strict';
+
+  var optionsEditor = CodeMirror.fromTextArea($('#meta-options').get(0), {
+   lineNumbers: true,
+   matchBrackets: true,
+   styleActiveLine: true,
+   theme: 'neat',
+   mode: 'javascript'
+  });
+
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+   var target = $(e.target).attr('href');
+
+   if (target == '#tab-meta') {
+    optionsEditor.refresh();
+   }
+  });
 
   $('#publish_date, #expire_date').datetimepicker({
    showOn: 'both',

@@ -166,7 +166,8 @@ class Page {
 
       $this->saveMeta($id, array(
         'description' => input('meta-description'),
-        'content' => raw_input('meta-content')
+        'content' => raw_input('meta-content'),
+        'options' => raw_input('meta-options')
       ));
 
       $this->saveMedia($id, input('media_id'));
