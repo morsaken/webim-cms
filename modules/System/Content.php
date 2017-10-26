@@ -1338,8 +1338,8 @@ class Content extends Controller {
    *
    * @param int $content_id
    */
-  public function saveHit($content_id) {
-    if ($content_id > 0) {
+  public static function saveHit($content_id) {
+    if ($content_id) {
       $hitted = DB::table('sys_content_hit')
         ->where('content_id', $content_id)
         ->where('access_id', Session::current()->get('access_id'))
@@ -1395,8 +1395,8 @@ class Content extends Controller {
    * @param int $content_id
    * @param float $score
    */
-  public function saveRate($content_id, $score = 0.0) {
-    if ($content_id > 0) {
+  public static function saveRate($content_id, $score = 0.0) {
+    if ($content_id) {
       $rated = DB::table('sys_content_rate')
         ->where('content_id', $content_id)
         ->where('access_id', Access::current()->get('access_id'))

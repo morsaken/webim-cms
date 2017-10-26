@@ -36,6 +36,7 @@ App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs
     'title' => conf('frontend.' . lang() . '.title', 'Web-IM XI'),
     'description' => conf('frontend.' . lang() . '.description', 'Web Internet Manager'),
     'keywords' => conf('frontend.' . lang() . '.keywords'),
+    'copyright' => conf('frontend.' . lang() . '.copyright', 'Powered By Masters'),
     'template' => ($this->request->isAjax() ? 'empty' : 'default'),
     'separator' => '::',
     'nav' => $nav,
