@@ -48,7 +48,7 @@ App::make()->group((count(langs()) ? '(/:lang#(' . implode('|', array_keys(langs
     $page = new \stdClass();
     $page->status = 500;
     $page->title = lang('label.system_error', 'Sistem Hatası') . ': 500';
-    $page->description = lang('label.page_error_occured', 'Hata oluştu!');
+    $page->description = lang('label.page_error_occurred', 'Hata oluştu!');
     $page->content = $body;
 
     $data['page'] = $page;

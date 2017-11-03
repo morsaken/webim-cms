@@ -262,11 +262,12 @@ class Email {
           $converted = '';
 
           foreach ($params[$key] as $values) {
-            //Add to converted
-            $converted .= $vals[$i];
-
-            foreach ($values as $k => $v) {
-              $converted = preg_replace('/{{' . $key . '\:' . $k . '}}/s', $v, $converted);
+            if (is_array($values)) {
+              foreach ($values as $k => $v) {
+                $converted .= preg_replace('/{{' . $key . '\:' . $k . '}}/s', $v, $vals[$i]);
+              }
+            } else {
+              $converted .= preg_replace('/{{' . $key . '}}/s', $values, $vals[$i]);
             }
           }
 
@@ -376,6 +377,15 @@ class Email {
     }
 
     return $text;
+  }
+
+  /**
+   * Get the html content
+   *
+   * @return string
+   */
+  public function __toString() {
+    return $this->html;
   }
 
 }

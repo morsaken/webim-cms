@@ -19344,7 +19344,7 @@ body.sb-r-o #toggle_sidemenu_r span.glyphicons {
   z-index: 9999;
   overflow: hidden;
   display: none;
-  position: relative;
+  position: fixed;
   padding: 17px 20px 10px;
   height: auto;
   width: 100%;
