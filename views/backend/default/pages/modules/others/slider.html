@@ -11,7 +11,7 @@
         <div class="row">
           <div class="col-md-3">
             <label class="field select">
-              <select id="filter-language" name="filter-language">
+              <select id="filter-language" name="language">
                 @foreach (langs() as $langCode => $langTitle)
                 <option value="{{ $langCode }}" {{ input('language', lang()) == $langCode ? ' selected="selected"' : '' }}>{{{ $langTitle }}}</option>
                 @endforeach
@@ -19,11 +19,21 @@
               <i class="arrow"></i>
             </label>
           </div>
-          <div class="col-md-9">
+          <div class="col-md-3">
+            <label class="field select">
+              <select name="template">
+                @foreach ($templates as $template)
+                <option value="{{{ $template->name }}}"{{ $template->name === conf('frontend.' . input('language', lang()) . '.template', 'default') ? ' selected="selected"' : '' }}>{{{ $template->name }}}</option>
+                @endforeach
+              </select>
+              <i class="arrow"></i>
+            </label>
+          </div>
+          <div class="col-md-6">
             <div class="text-right">
-              <a class="btn btn-dark" href="#upload">
-                <i class="fa fa-upload mr5"></i>
-                @lang('admin.button.upload_image', 'Resim Yükle')
+              <a class="btn btn-dark" href="#folder">
+                <i class="fa fa-folder-open mr5"></i>
+                @lang('admin.button.folder_content', 'Dizin İçeriği')
               </a>
             </div>
           </div>
@@ -62,6 +72,54 @@
     </div>
   </div>
 </section>
+
+<div id="folder-dialog" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4>
+          <i class="fa fa-file-o"></i>
+          @lang('admin.label.content', 'İçerik')
+        </h4>
+      </div>
+      <div class="modal-body">
+        <ol id="path" class="breadcrumb">
+          <li class="crumb-active">
+            <a href="#root"><span class="glyphicon glyphicon-home"></span></a>
+          </li>
+        </ol>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th>@lang('admin.label.name', 'Adı')</th>
+              <th class="text-center">@lang('admin.label.size', 'Boyutu')</th>
+              <th class="text-center">@lang('admin.label.permission', 'Yetkisi')</th>
+            </tr>
+          </thead>
+          <tbody id="folder-list">
+            <tr>
+              <td colspan="4">
+                <div class="alert alert-default w400 mv20 center-block text-center">@lang('admin.label.loading', 'Yükleniyor...')</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="upload-btn" class="btn btn-sm btn-info">
+          <i class="fa fa-upload"></i>
+          @lang('admin.button.upload_file', 'Dosya Yükle')
+        </button>
+        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+          <i class="fa fa-close"></i>
+          @lang('admin.button.close', 'Kapat')
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 @stop
 
 @section('link')
@@ -105,6 +163,42 @@
   $('#filter-language').change(function () {
     window.location.href = "@url()?language=" + $(this).val();
   });
+
+  function getFolders() {
+    $.ajax({
+      'type': 'get',
+      'url': '@url()/folders',
+      'data': {
+        'template': $('select[name="template"]').val()
+      }
+    }).done(function(result) {
+      result.forEach(function(item) {
+
+      });
+    });
+  }
+
+  $('a[href="#folder"]').click(function(e) {
+    e.preventDefault();
+
+    $('#folder-dialog').modal();
+
+    getFolders();
+  });
+  /*
+  $('#folder-dialog').on('shown.bs.modal', function() {
+    $('#folder-list').empty().append(
+      $('<tr/>').append(
+        $('<td/>', {
+          'colspan': '4'
+        }).append(
+          $('<div/>').addClass('alert alert-default w400 mv20 center-block text-center').text(
+            "@lang('admin.label.loading', 'Yükleniyor...')"
+          )
+        )
+      )
+    );
+  });*/
 
   $('#slider-form').submit(function(e) {
     e.preventDefault();

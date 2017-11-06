@@ -7,7 +7,6 @@ namespace Other\Admin;
 
 use \Admin\Manager;
 use \System\Content;
-use \System\Settings as SysSettings;
 use \Webim\Library\Carbon;
 use \Webim\Library\Message;
 use \Webim\View\Manager as View;
