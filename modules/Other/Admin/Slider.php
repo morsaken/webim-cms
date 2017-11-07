@@ -72,23 +72,29 @@ class Slider {
 
     $template = input('template', 'default');
     $root = File::in('views.frontend.' . $template . '.layouts');
+    $dir = $root;
+    $path = input('path');
 
-    $list = array(
-      array(
-        'path' => '.',
+    $list = array();
+
+    if (strlen($path) && ($path !== '..')) {
+      $dir = $dir->folder($path);
+
+      $list[] = array(
+        'path' => trim(str_replace($root->info('rawPath'), '', $dir->up()->info('rawPath')), '.'),
         'type' => 'folder',
-        'name' => '.',
-        'size' => null,
-        'permissions' => null
-      )
-    );
+        'name' => '..',
+        'size' => '-',
+        'perms' => '-'
+      );
+    }
 
-    foreach ($root->filesAndFolders() as $path => $item) {
+    foreach ($dir->filesAndFolders() as $item) {
       $list[] = array(
         'path' => str_replace($root->info('rawPath') . '.', '', $item->info('rawPath')),
-        'type' => $item->info('type'),
-        'name' => $item->info('name'),
-        'size' => $item->size(),
+        'type' => $item->info('type') == 'dir' ? 'folder' : $item->info('type'),
+        'name' => $item->info('baseName'),
+        'size' => $item->info('type') == 'dir' ? '-' : $item->size(false, true),
         'perms' => $item->info('perms')
       );
     }
