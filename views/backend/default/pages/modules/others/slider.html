@@ -84,17 +84,17 @@
         </h4>
       </div>
       <div class="modal-body">
-        <ol id="path" class="breadcrumb">
+        <ol id="path" class="breadcrumb mb15">
           <li class="crumb-active">
-            <a href="#root"><span class="glyphicon glyphicon-home"></span></a>
+            <a href="javascript:void(0)" data-path="">@conf('frontend.' . input('language', lang()) . '.template', 'default')</a>
           </li>
         </ol>
-        <table class="table table-striped">
+        <table class="table table-striped br-t">
           <thead>
             <tr>
               <th class="text-center">#</th>
               <th>@lang('admin.label.name', 'Adı')</th>
-              <th class="text-center">@lang('admin.label.size', 'Boyutu')</th>
+              <th class="text-right">@lang('admin.label.size', 'Boyutu')</th>
               <th class="text-center">@lang('admin.label.permission', 'Yetkisi')</th>
             </tr>
           </thead>
@@ -164,17 +164,84 @@
     window.location.href = "@url()?language=" + $(this).val();
   });
 
-  function getFolders() {
+  $('select[name="template"]').change(function() {
+    $('#path').find('li.crumb-active > a').text($(this).val());
+  });
+
+  $('#path').find('li.crumb-active > a').click(function(e) {
+    e.preventDefault();
+    getFolders();
+  });
+
+  function getFolders(path) {
+    $('#folder-dialog .modal-content').block({
+      message: "@lang('label.loading', 'Yükleniyor...')",
+      css: {
+        border: '0',
+        padding: '10'
+      }
+    });
+
     $.ajax({
       'type': 'get',
       'url': '@url()/folders',
       'data': {
-        'template': $('select[name="template"]').val()
-      }
+        'template': $('select[name="template"]').val(),
+        'path': path || ''
+      },
+      'global': false
     }).done(function(result) {
-      result.forEach(function(item) {
+      $('#path').find('li:not(.crumb-active)').remove();
+      $('#folder-list').empty();
 
+      if (path && path.length) {
+        var paths = [], splitted = path.split('.');
+
+        splitted.forEach(function(crumb) {
+          paths.push(crumb);
+
+          $('<li/>').addClass('crumb-link').append(
+            $('<a/>', {
+              'href': 'javascript:void(0)',
+              'data-path': paths.join('.')
+            }).click(function(e) {
+              e.preventDefault();
+
+              getFolders($(this).data('path'));
+            }).text(crumb)
+          ).appendTo('#path');
+        });
+      }
+
+      result.forEach(function (item) {
+        var file;
+
+        if (item.type === 'folder') {
+          file = $('<a/>', {
+            'href': 'javascript:void(0)',
+            'data-path': item.path
+          }).click(function(e) {
+            e.preventDefault();
+
+            getFolders($(this).data('path'));
+          }).text(item.name);
+        } else {
+          file = $('<span/>').text(item.name);
+        }
+
+        $('<tr/>').append(
+          $('<td/>').addClass('text-center').append(
+            $('<i/>').addClass('fa fa-' + item.type)
+          ),
+          $('<td/>').append(file),
+          $('<td/>').addClass('text-right').text(item.size || '-'),
+          $('<td/>').addClass('text-center').text(item.perms)
+        ).appendTo('#folder-list');
       });
+
+      $('#folder-dialog .modal-content').unblock();
+    }).fail(function() {
+      $('#folder-dialog .modal-content').unblock();
     });
   }
 
@@ -182,11 +249,10 @@
     e.preventDefault();
 
     $('#folder-dialog').modal();
-
-    getFolders();
   });
-  /*
-  $('#folder-dialog').on('shown.bs.modal', function() {
+
+  $('#folder-dialog').on('hidden.bs.modal', function() {
+    $('#path').find('li:not(.crumb-active)').remove();
     $('#folder-list').empty().append(
       $('<tr/>').append(
         $('<td/>', {
@@ -198,7 +264,9 @@
         )
       )
     );
-  });*/
+  }).on('shown.bs.modal', function() {
+    getFolders();
+  });
 
   $('#slider-form').submit(function(e) {
     e.preventDefault();
