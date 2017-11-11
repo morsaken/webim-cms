@@ -349,12 +349,20 @@ class Category {
 
     $categories = array();
 
-    foreach (Content::init()
-               ->where('id', '<>', input('id', 0))
-               ->only('type', 'category')
-               ->only('language', input('language', $lang))
-               ->orderBy('order')
-               ->load()->getListIndented('&nbsp;&nbsp;') as $id => $title) {
+    $list = Content::init()
+      ->where('id', '<>', input('id', 0))
+      ->only('type', 'category')
+      ->only('language', input('language', $lang));
+
+    if (strlen(input('parent_name'))) {
+      $list->only('parent.name', input('parent_name'));
+    } elseif (strlen(input('parent')) || strlen(input('parent_url'))) {
+      $list->only('parent', strlen(input('parent_url')) ? input('parent_url') : input('parent'));
+    }
+
+    $list = $list->orderBy('order')->load()->getListIndented('&nbsp;&nbsp;');
+
+    foreach ($list as $id => $title) {
       $categories[] = array(
         'id' => $id,
         'title' => $title
