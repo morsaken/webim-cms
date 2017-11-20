@@ -158,7 +158,7 @@ class Sign {
   protected static function fromCookie() {
     $cookie = Request::current()->cookie(static::$cookieName);
 
-    if (!is_null($cookie) && Str::text($cookie)->isSerialized()) {
+    if (!is_null($cookie) && is_string($cookie) && Str::text($cookie)->isSerialized()) {
       $info = unserialize($cookie);
 
       $check = static::in(array_get($info, 'name'), array_get($info, 'pass'), true);

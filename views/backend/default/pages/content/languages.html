@@ -5,561 +5,561 @@
 @section('content')
 @include('topbar')
 <section id="content" class="table-layout">
- <div class="tray tray-center">
-  <div class="page-tabs">
-   <ul class="nav nav-tabs">
-    @foreach (langs() as $code => $lang)
-    <li{{ $current == $code ? ' class="active"' : '' }}>
-     <a href="@url($prefix . 'content/languages/' . $code)">{{{ $lang }}}</a>
-    </li>
-    @endforeach
-    <li>
-     <a href="#new-language-dialog" data-toggle="modal">+</a>
-    </li>
-   </ul>
-  </div>
-  <div class="admin-panels">
-   <div class="panel">
-    <div class="panel-heading">
-     <span class="panel-title">@lang('admin.menu.language', 'Dil')</span>
-     <ul class="nav panel-tabs-border panel-tabs">
-      @foreach (array_keys($list) as $i => $tab)
-      <li{{ $i == 0 ? ' class="active"' : '' }}>
-       <a href="#{{ $tab }}-tab" data-toggle="tab">{{ str_case($tab) }}</a>
-      </li>
-      @endforeach
-      <li>
-       <a href="#new-tab" data-toggle="tab">+</a>
-      </li>
-     </ul>
+  <div class="tray tray-center">
+    <div class="page-tabs">
+      <ul class="nav nav-tabs">
+        @foreach (langs() as $code => $lang)
+        <li{{ $current == $code ? ' class="active"' : '' }}>
+          <a href="@url($prefix . 'content/languages/' . $code)">{{{ $lang }}}</a>
+        </li>
+        @endforeach
+        <li>
+          <a href="#new-language-dialog" data-toggle="modal">+</a>
+        </li>
+      </ul>
     </div>
-    <div class="panel-body p20 pb10">
-     <form id="language-form" class="admin-form" method="post" autocomplete="off" action="@url()">
-      <div class="tab-content pn br-n">
-       @foreach (array_keys($list) as $i => $tab)
-       <div id="{{ $tab }}-tab" class="tab-pane fade{{ $i == 0 ? ' in active' : '' }}">
-        <div class="table-responsive">
-         <table class="table table-bordered table-striped" data-target="{{ $tab }}">
-          <colgroup>
-           <col class="col-xs-3">
-           <col class="col-xs-9">
-          </colgroup>
-          <thead>
-           <tr>
-            <th>@lang('admin.label.language_key', 'Anahtar')</th>
-            <th>@lang('admin.label.language_text', 'Karşılığı')</th>
-           </tr>
-          </thead>
-          <tbody>
-           @foreach (array_dot($list[$tab]) as $key => $value)
-           <tr>
-            <th scope="row">
-             @if (in_array($tab . '.' . $key, [$current . '.abbr', $current . '.name']))
-             <label class="field">
-              <input type="text" class="gui-input" value="{{{ $key }}}" readonly="readonly">
-             </label>
-             @else
-             <div class="smart-widget sm-left sml-50">
-              <label class="field">
-               <input type="text" class="gui-input" value="{{{ $key }}}" readonly="readonly">
-              </label>
-              <button type="button" class="button btn-danger" data-remove="{{ $key }}">-</button>
-             </div>
-             @endif
-            </th>
-            <td>
-             <label class="field">
-              <input type="text" name="{{ $tab . '.' . $key }}" class="gui-input" value="{{{ $value }}}" placeholder="{{{ $value }}}" data-language="{{ $tab }}">
-             </label>
-            </td>
-           </tr>
-           @endforeach
-           <tr>
-            <th scope="row">
-             <div class="smart-widget sm-left sml-50">
-              <label class="field">
-               <input type="text" class="gui-input" data-key="{{ $tab }}" tabindex="{{ $i + 1 }}">
-              </label>
-              <button type="button" class="button btn-primary" data-target="{{ $tab }}">+</button>
-             </div>
-            </th>
-            <td>
-             <label class="field">
-              <input type="text" class="gui-input" data-value="{{ $tab }}" tabindex="{{ $i + 2 }}">
-             </label>
-            </td>
-           </tr>
-          </tbody>
-         </table>
+    <div class="admin-panels">
+      <div class="panel">
+        <div class="panel-heading">
+          <span class="panel-title">@lang('admin.menu.language', 'Dil')</span>
+          <ul class="nav panel-tabs-border panel-tabs">
+            @foreach (array_keys($list) as $i => $tab)
+            <li{{ $i == 0 ? ' class="active"' : '' }}>
+              <a href="#{{ $tab }}-tab" data-toggle="tab">{{ str_case($tab) }}</a>
+            </li>
+            @endforeach
+            <li>
+              <a href="#new-tab" data-toggle="tab">+</a>
+            </li>
+          </ul>
         </div>
-       </div>
-       @endforeach
-       <hr class="short alt">
-       <div class="section mbn">
-        <p class="pull-left">
-         <button id="crawl-btn" type="button" class="btn btn-danger">
-          <i class="fa fa-expand"></i>
-          @lang('admin.button.find_language_usages', 'Dil Kullanımlarını Getir')
-         </button>
-        </p>
-        <p class="text-right">
-         <button type="submit" class="btn btn-primary">
-          <i class="fa fa-save"></i>
-          @lang('admin.button.save', 'Kaydet')
-         </button>
-         @if ((count(langs()) > 1) && ($current !== conf('default.language')))
-         <button id="delete-btn" type="button" class="btn btn-danger">
-          <i class="fa fa-trash-o"></i>
-          @lang('admin.button.delete', 'Sil')
-         </button>
-         @endif
-        </p>
-       </div>
+        <div class="panel-body p20 pb10">
+          <form id="language-form" class="admin-form" method="post" autocomplete="off" action="@url()">
+            <div class="tab-content pn br-n">
+              @foreach (array_keys($list) as $i => $tab)
+              <div id="{{ $tab }}-tab" class="tab-pane fade{{ $i == 0 ? ' in active' : '' }}">
+                <div class="table-responsive">
+                  <table class="table table-bordered table-striped" data-target="{{ $tab }}">
+                    <colgroup>
+                      <col class="col-xs-3">
+                      <col class="col-xs-9">
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>@lang('admin.label.language_key', 'Anahtar')</th>
+                        <th>@lang('admin.label.language_text', 'Karşılığı')</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (array_dot($list[$tab]) as $key => $value)
+                    <tr>
+                      <th scope="row">
+                        @if (in_array($tab . '.' . $key, [$current . '.abbr', $current . '.name']))
+                        <label class="field">
+                          <input type="text" class="gui-input" value="{{{ $key }}}" readonly="readonly">
+                        </label>
+                        @else
+                        <div class="smart-widget sm-left sml-50">
+                          <label class="field">
+                            <input type="text" class="gui-input" value="{{{ $key }}}" readonly="readonly">
+                          </label>
+                          <button type="button" class="button btn-danger" data-remove="{{ $key }}">-</button>
+                        </div>
+                        @endif
+                      </th>
+                      <td>
+                        <label class="field">
+                          <input type="text" name="{{ $tab . '.' . $key }}" class="gui-input" value="{{{ $value }}}" placeholder="{{{ $value }}}" data-language="{{ $tab }}">
+                        </label>
+                      </td>
+                    </tr>
+                    @endforeach
+                    <tr>
+                      <th scope="row">
+                        <div class="smart-widget sm-left sml-50">
+                          <label class="field">
+                            <input type="text" class="gui-input" data-key="{{ $tab }}" tabindex="{{ $i + 1 }}">
+                          </label>
+                          <button type="button" class="button btn-primary" data-target="{{ $tab }}">+</button>
+                        </div>
+                      </th>
+                      <td>
+                        <label class="field">
+                          <input type="text" class="gui-input" data-value="{{ $tab }}" tabindex="{{ $i + 2 }}">
+                        </label>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              @endforeach
+              <hr class="short alt">
+              <div class="section mbn">
+                <p class="pull-left">
+                  <button id="crawl-btn" type="button" class="btn btn-danger">
+                    <i class="fa fa-expand"></i>
+                    @lang('admin.button.find_language_usages', 'Dil Kullanımlarını Getir')
+                  </button>
+                </p>
+                <p class="text-right">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-save"></i>
+                    @lang('admin.button.save', 'Kaydet')
+                  </button>
+                  @if ((count(langs()) > 1) && ($current !== conf('default.language')))
+                  <button id="delete-btn" type="button" class="btn btn-danger">
+                    <i class="fa fa-trash-o"></i>
+                    @lang('admin.button.delete', 'Sil')
+                  </button>
+                  @endif
+                </p>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
-     </form>
     </div>
-   </div>
   </div>
- </div>
 </section>
 
 <div id="new-language-dialog" class="modal fade">
- <div class="modal-dialog">
-  <div class="modal-content">
-   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">×</button>
-    <h4>
-     <i class="fa fa-language"></i>
-     @lang('admin.label.create_new_language', 'Yeni Dil Oluştur')
-    </h4>
-   </div>
-   <form id="new-language-form" class="admin-form" method="post" action="@url($prefix . 'content/languages/create')">
-    <div class="modal-body">
-     <div class="section mb10">
-      <label class="field prepend-icon">
-       <input type="text" id="language-code" name="language-code" class="gui-input" placeholder="@lang('admin.label.language_code', 'Dil Kodu')" maxlength="5">
-       <span class="field-icon">
-        <i class="fa fa-info"></i>
-       </span>
-      </label>
-     </div>
-     <div class="section mb10">
-      <label class="field prepend-icon">
-       <input type="text" id="language-abbr" name="language-abbr" class="gui-input" placeholder="@lang('admin.label.language_abbr', 'Dil Kısaltması')">
-       <span class="field-icon">
-        <i class="fa fa-info"></i>
-       </span>
-      </label>
-     </div>
-     <div class="section mb10">
-      <label class="field prepend-icon">
-       <input type="text" id="language-name" name="language-name" class="gui-input" placeholder="@lang('admin.label.language_name', 'Dil Adı')">
-       <span class="field-icon">
-        <i class="fa fa-info"></i>
-       </span>
-      </label>
-     </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4>
+          <i class="fa fa-language"></i>
+          @lang('admin.label.create_new_language', 'Yeni Dil Oluştur')
+        </h4>
+      </div>
+      <form id="new-language-form" class="admin-form" method="post" action="@url($prefix . 'content/languages/create')">
+        <div class="modal-body">
+          <div class="section mb10">
+            <label class="field prepend-icon">
+              <input type="text" id="language-code" name="language-code" class="gui-input" placeholder="@lang('admin.label.language_code', 'Dil Kodu')" maxlength="5">
+              <span class="field-icon">
+                <i class="fa fa-info"></i>
+               </span>
+            </label>
+          </div>
+          <div class="section mb10">
+            <label class="field prepend-icon">
+              <input type="text" id="language-abbr" name="language-abbr" class="gui-input" placeholder="@lang('admin.label.language_abbr', 'Dil Kısaltması')">
+              <span class="field-icon">
+                <i class="fa fa-info"></i>
+              </span>
+            </label>
+          </div>
+          <div class="section mb10">
+            <label class="field prepend-icon">
+              <input type="text" id="language-name" name="language-name" class="gui-input" placeholder="@lang('admin.label.language_name', 'Dil Adı')">
+              <span class="field-icon">
+                <i class="fa fa-info"></i>
+              </span>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-sm btn-primary">
+            <i class="fa fa-save"></i>
+            @lang('admin.button.save', 'Kaydet')
+          </button>
+          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+            <i class="fa fa-close"></i>
+            @lang('admin.button.close', 'Kapat')
+          </button>
+        </div>
+      </form>
     </div>
-    <div class="modal-footer">
-     <button type="submit" class="btn btn-sm btn-primary">
-      <i class="fa fa-save"></i>
-      @lang('admin.button.save', 'Kaydet')
-     </button>
-     <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
-      <i class="fa fa-close"></i>
-      @lang('admin.button.close', 'Kapat')
-     </button>
-    </div>
-   </form>
   </div>
- </div>
 </div>
 
 <div id="new-property-dialog" class="modal fade">
- <div class="modal-dialog">
-  <div class="modal-content">
-   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">×</button>
-    <h4>
-     <i class="fa fa-key"></i>
-     @lang('admin.label.create_new_property', 'Yeni Özellik Oluştur')
-    </h4>
-   </div>
-   <form id="new-property-form" class="admin-form" method="post" action="@url()">
-    <div class="modal-body">
-     <label class="field">
-      <input type="text" id="property-name" name="property-name" class="gui-input" maxlength="10">
-     </label>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4>
+          <i class="fa fa-key"></i>
+          @lang('admin.label.create_new_property', 'Yeni Özellik Oluştur')
+        </h4>
+      </div>
+      <form id="new-property-form" class="admin-form" method="post" action="@url()">
+        <div class="modal-body">
+          <label class="field">
+            <input type="text" id="property-name" name="property-name" class="gui-input" maxlength="10">
+          </label>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-sm btn-primary">
+            <i class="fa fa-save"></i>
+            @lang('admin.button.save', 'Kaydet')
+          </button>
+          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+            <i class="fa fa-close"></i>
+            @lang('admin.button.close', 'Kapat')
+          </button>
+        </div>
+      </form>
     </div>
-    <div class="modal-footer">
-     <button type="submit" class="btn btn-sm btn-primary">
-      <i class="fa fa-save"></i>
-      @lang('admin.button.save', 'Kaydet')
-     </button>
-     <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
-      <i class="fa fa-close"></i>
-      @lang('admin.button.close', 'Kapat')
-     </button>
-    </div>
-   </form>
   </div>
- </div>
 </div>
 
 <div id="crawl-dialog" class="modal fade">
- <div class="modal-dialog">
-  <div class="modal-content">
-   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">×</button>
-    <h4>
-     <i class="fa fa-key"></i>
-     @lang('admin.label.discover_usages', 'Kullanımları Bul')
-    </h4>
-   </div>
-   <form id="crawl-form" class="admin-form" method="post" action="@url($prefix . 'content/languages/crawl/' . $current)">
-    <div class="modal-body">
-     <div class="option-group field section">
-      <label class="block option option-primary">
-       <input type="checkbox" name="paths[]" value="backend">
-       <span class="checkbox"></span>
-       @lang('admin.label.backend_view', 'Arkayüz Görünümü')
-       (@lang('admin.label.only_active', 'Yalnızca Aktif Olan'): {{ conf('backend.' . $current . '.template', 'default') }})
-      </label>
-      <label class="block mt15 option option-primary">
-       <input type="checkbox" name="paths[]" value="frontend">
-       <span class="checkbox"></span>
-       @lang('admin.label.frontend_view', 'Önyüz Görünümü')
-       (@lang('admin.label.only_active', 'Yalnızca Aktif Olan'): {{ conf('frontend.' . $current . '.template', 'default') }})
-      </label>
-      <label class="block mt15 option option-primary">
-       <input type="checkbox" name="paths[]" value="modules">
-       <span class="checkbox"></span>
-       @lang('admin.label.modules', 'Modüller')
-      </label>
-     </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4>
+          <i class="fa fa-key"></i>
+          @lang('admin.label.discover_usages', 'Kullanımları Bul')
+        </h4>
+      </div>
+      <form id="crawl-form" class="admin-form" method="post" action="@url($prefix . 'content/languages/crawl/' . $current)">
+        <div class="modal-body">
+          <div class="option-group field section">
+            <label class="block option option-primary">
+              <input type="checkbox" name="paths[]" value="backend">
+              <span class="checkbox"></span>
+              @lang('admin.label.backend_view', 'Arkayüz Görünümü')
+              (@lang('admin.label.only_active', 'Yalnızca Aktif Olan'): {{ conf('backend.' . $current . '.template', 'default') }})
+            </label>
+            <label class="block mt15 option option-primary">
+              <input type="checkbox" name="paths[]" value="frontend">
+              <span class="checkbox"></span>
+              @lang('admin.label.frontend_view', 'Önyüz Görünümü')
+              (@lang('admin.label.only_active', 'Yalnızca Aktif Olan'): {{ conf('frontend.' . $current . '.template', 'default') }})
+            </label>
+            <label class="block mt15 option option-primary">
+              <input type="checkbox" name="paths[]" value="modules">
+              <span class="checkbox"></span>
+              @lang('admin.label.modules', 'Modüller')
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-sm btn-primary">
+            <i class="fa fa-search"></i>
+            @lang('admin.button.find_and_place', 'Bul ve Yerleştir')
+          </button>
+          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+            <i class="fa fa-close"></i>
+            @lang('admin.button.close', 'Kapat')
+          </button>
+        </div>
+      </form>
     </div>
-    <div class="modal-footer">
-     <button type="submit" class="btn btn-sm btn-primary">
-      <i class="fa fa-search"></i>
-      @lang('admin.button.find_and_place', 'Bul ve Yerleştir')
-     </button>
-     <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
-      <i class="fa fa-close"></i>
-      @lang('admin.button.close', 'Kapat')
-     </button>
-    </div>
-   </form>
   </div>
- </div>
 </div>
 @stop
 
 @section('script')
 @parent
 <script type="text/javascript">
- //<![CDATA[
- function createEvents() {
-  $('button[data-remove]').off('click').on('click', function() {
-   $(this).closest('tr').remove();
+  //<![CDATA[
+  function createEvents() {
+    $('button[data-remove]').off('click').on('click', function () {
+      $(this).closest('tr').remove();
+    });
+
+    $('input[data-value]').off('blur').on('blur', function () {
+      if ($(this).val().length) {
+        $(this).closest('tr').find('button[data-target]').trigger('click');
+      }
+
+      $(this).closest('tr').find('input[data-key]').select();
+    });
+
+    $('button[data-target]').off('click').on('click', function () {
+      var t = $(this).data('target'),
+        k = $('input[data-key="' + t + '"]').val(),
+        v = $('input[data-value="' + t + '"]').val(),
+        n = t + '.' + k;
+
+      if (k.length && v.length) {
+        if (!$('input[name="' + n + '"]').get(0)) {
+          $('<tr/>').append(
+            $('<th/>').attr('scope', 'row').append(
+              $('<div/>').addClass('smart-widget sm-left sml-50').append(
+                $('<label/>').addClass('field').append(
+                  $('<input/>', {
+                    'type': 'text'
+                  }).prop('readonly', true).addClass('gui-input').val(k)
+                ),
+                $('<button/>', {
+                  'type': 'button',
+                  'data-remove': n
+                }).addClass('button btn-danger').text('-')
+              )
+            ),
+            $('<td/>').append(
+              $('<label/>').addClass('field').append(
+                $('<input/>', {
+                  'type': 'text',
+                  'name': n,
+                  'placeholder': v,
+                  'data-language': t
+                }).addClass('gui-input').val(v)
+              )
+            )
+          ).insertBefore($('table[data-target="' + t + '"]').find('tbody > tr:last'));
+
+          $('input[data-key="' + t + '"], input[data-value="' + t + '"]').val('');
+
+          createEvents();
+        } else {
+          message({
+            'text': "@lang('admin.message.already_exists_with_this_key', 'Bu isimde zaten bir değer var!')",
+            'onAfterClose': function () {
+              $('input[data-key="' + t + '"]').select();
+            }
+          });
+        }
+      } else {
+        message({
+          'text': "@lang('admin.message.fill_all_the_fields', 'Tüm alanları doldurunuz!')",
+          'onAfterClose': function () {
+            $('input[data-key="' + t + '"]').select();
+          }
+        });
+      }
+
+      return false;
+    });
+  }
+
+  createEvents();
+
+  $('#new-language-dialog').on('show.bs.modal', function () {
+    $('#new-language-form').get(0).reset();
+  }).on('shown.bs.modal', function () {
+    $('#language-code').focus();
   });
 
-  $('input[data-value]').off('blur').on('blur', function() {
-   if ($(this).val().length) {
-    $(this).closest('tr').find('button[data-target]').trigger('click');
-   }
+  $('#new-language-form').submit(function () {
+    if ($('#language-code').val().length >= 2) {
+      $.ajax({
+        'type': $(this).attr('method'),
+        'url': $(this).attr('action'),
+        'data': $(this).serialize()
+      }).done(function (result) {
+        if (result.success) {
+          result.onAfterClose = function () {
+            $('#new-language-dialog').modal('hide');
 
-   $(this).closest('tr').find('input[data-key]').select();
-  });
+            window.location.href = "@url($prefix . 'content/languages/[code]')".replace('[code]', result.return['code']);
+          }
+        }
 
-  $('button[data-target]').off('click').on('click', function() {
-   var t = $(this).data('target'),
-    k = $('input[data-key="' + t +'"]').val(),
-    v = $('input[data-value="' + t +'"]').val(),
-    n = t + '.' + k;
-
-   if (k.length && v.length) {
-    if (!$('input[name="' + n + '"]').get(0)) {
-     $('<tr/>').append(
-      $('<th/>').attr('scope', 'row').append(
-       $('<div/>').addClass('smart-widget sm-left sml-50').append(
-        $('<label/>').addClass('field').append(
-         $('<input/>', {
-          'type': 'text'
-         }).prop('readonly', true).addClass('gui-input').val(k)
-        ),
-        $('<button/>', {
-         'type': 'button',
-         'data-remove': n
-        }).addClass('button btn-danger').text('-')
-       )
-      ),
-      $('<td/>').append(
-       $('<label/>').addClass('field').append(
-        $('<input/>', {
-         'type': 'text',
-         'name': n,
-         'placeholder': v,
-         'data-language': t
-        }).addClass('gui-input').val(v)
-       )
-      )
-     ).insertBefore($('table[data-target="'+ t +'"]').find('tbody > tr:last'));
-
-     $('input[data-key="' + t +'"], input[data-value="' + t +'"]').val('');
-
-     createEvents();
+        message(result);
+      });
     } else {
-     message({
-      'text': "@lang('admin.message.already_exists_with_this_key', 'Bu isimde zaten bir değer var!')",
-      'onAfterClose': function() {
-       $('input[data-key="' + t +'"]').select();
-      }
-     });
+      message({
+        'text': "@lang('admin.message.language_code_must_be_at_least_two_characters', 'Dil kodu en az iki karakter olmalı!')",
+        'onAfterClose': function () {
+          $('#language-code').focus();
+        }
+      });
     }
-   } else {
-    message({
-     'text': "@lang('admin.message.fill_all_the_fields', 'Tüm alanları doldurunuz!')",
-     'onAfterClose': function() {
-      $('input[data-key="' + t +'"]').select();
-     }
+
+    return false;
+  });
+
+  $('#property-name').on('keyup', function () {
+    $(this).val($(this).val().replace(/[^a-z]/g, ''));
+  });
+
+  $('a[href="#new-tab"]').click(function () {
+    $('#new-property-dialog').modal().on('shown.bs.modal', function () {
+      $('#property-name').val('').focus();
     });
-   }
 
-   return false;
-  });
- }
-
- createEvents();
-
- $('#new-language-dialog').on('show.bs.modal', function() {
-  $('#new-language-form').get(0).reset();
- }).on('shown.bs.modal', function() {
-  $('#language-code').focus();
- });
-
- $('#new-language-form').submit(function() {
-  if ($('#language-code').val().length >= 2) {
-   $.ajax({
-    'type': $(this).attr('method'),
-    'url': $(this).attr('action'),
-    'data': $(this).serialize()
-   }).done(function(result) {
-    if (result.success) {
-     result.onAfterClose = function() {
-      $('#new-language-dialog').modal('hide');
-
-      window.location.href = "@url($prefix . 'content/languages/[code]')".replace('[code]', result.return['code']);
-     }
-    }
-
-    message(result);
-   });
-  } else {
-   message({
-    'text': "@lang('admin.message.language_code_must_be_at_least_two_characters', 'Dil kodu en az iki karakter olmalı!')",
-    'onAfterClose': function() {
-     $('#language-code').focus();
-    }
-   });
-  }
-
-  return false;
- });
-
- $('#property-name').on('keyup', function() {
-  $(this).val($(this).val().replace(/[^a-z]/g, ''));
- });
-
- $('a[href="#new-tab"]').click(function() {
-  $('#new-property-dialog').modal().on('shown.bs.modal', function() {
-   $('#property-name').val('').focus();
+    return false;
   });
 
-  return false;
- });
+  $('#new-property-form').submit(function () {
+    var name = $('#property-name').val();
 
- $('#new-property-form').submit(function() {
-  var name = $('#property-name').val();
+    if (name.length) {
+      if (!$('#' + name).get(0)) {
+        $('<li/>').append(
+          $('<a/>', {
+            'href': '#' + name + '-tab',
+            'data-toggle': 'tab'
+          }).text(name.toUpperCase())
+        ).insertBefore($('a[href="#new-tab"]').closest('li'));
 
-  if (name.length) {
-   if (!$('#' + name).get(0)) {
-    $('<li/>').append(
-     $('<a/>', {
-      'href': '#' + name + '-tab',
-      'data-toggle': 'tab'
-     }).text(name.toUpperCase())
-    ).insertBefore($('a[href="#new-tab"]').closest('li'));
-
-    $('<div/>', {
-     'id': name + '-tab'
-    }).addClass('tab-pane fade').append(
-     $('<div/>').addClass('table-responsive').append(
-      $('<table/>', {
-       'data-target': name
-      }).addClass('table table-bordered table-striped').append(
-       $('<colgroup/>').append(
-        $('<col/>').addClass('col-xs-3'),
-        $('<col/>').addClass('col-xs-9')
-       ),
-       $('<thead/>').append(
-        $('<tr/>').append(
-         $('<th/>').text('@lang('admin.label.language_key', 'Anahtar')'),
-         $('<th/>').text('@lang('admin.label.language_text', 'Karşılığı')')
-        )
-       ),
-       $('<tbody/>').append(
-        $('<tr/>').append(
-         $('<th/>').attr('scope', 'row').append(
-          $('<div/>').addClass('smart-widget sm-left sml-50').append(
-           $('<label/>').addClass('field').append(
-            $('<input/>', {
-             'type': 'text',
-             'tabindex': 1,
-             'data-key': name
-            }).addClass('gui-input')
-           ),
-           $('<button/>', {
-            'type': 'button',
-            'data-target': name
-           }).addClass('button btn-primary').text('+')
+        $('<div/>', {
+          'id': name + '-tab'
+        }).addClass('tab-pane fade').append(
+          $('<div/>').addClass('table-responsive').append(
+            $('<table/>', {
+              'data-target': name
+            }).addClass('table table-bordered table-striped').append(
+              $('<colgroup/>').append(
+                $('<col/>').addClass('col-xs-3'),
+                $('<col/>').addClass('col-xs-9')
+              ),
+              $('<thead/>').append(
+                $('<tr/>').append(
+                  $('<th/>').text("@lang('admin.label.language_key', 'Anahtar')"),
+                  $('<th/>').text("@lang('admin.label.language_text', 'Karşılığı')")
+                )
+              ),
+              $('<tbody/>').append(
+                $('<tr/>').append(
+                  $('<th/>').attr('scope', 'row').append(
+                    $('<div/>').addClass('smart-widget sm-left sml-50').append(
+                      $('<label/>').addClass('field').append(
+                        $('<input/>', {
+                          'type': 'text',
+                          'tabindex': 1,
+                          'data-key': name
+                        }).addClass('gui-input')
+                      ),
+                      $('<button/>', {
+                        'type': 'button',
+                        'data-target': name
+                      }).addClass('button btn-primary').text('+')
+                    )
+                  ),
+                  $('<td/>').append(
+                    $('<label/>').addClass('field').append(
+                      $('<input/>', {
+                        'type': 'text',
+                        'tabindex': 2,
+                        'data-value': name
+                      }).addClass('gui-input')
+                    )
+                  )
+                )
+              )
+            )
           )
-         ),
-         $('<td/>').append(
-          $('<label/>').addClass('field').append(
-           $('<input/>', {
-            'type': 'text',
-            'tabindex': 2,
-            'data-value': name
-           }).addClass('gui-input')
-          )
-         )
-        )
-       )
-      )
-     )
-    ).insertBefore($('#language-form').find('.tab-content > hr'));
+        ).insertBefore($('#language-form').find('.tab-content > hr'));
 
-    $('#new-property-dialog').modal('hide').on('hidden.bs.modal', function() {
-     $('a[href="#'+ name + '-tab"]').tab('show');
-    });
+        $('#new-property-dialog').modal('hide').on('hidden.bs.modal', function () {
+          $('a[href="#' + name + '-tab"]').tab('show');
+        });
 
-    $('a[href="#'+ name + '-tab"]').click(function() {
-     $(this).tab('show');
-    });
+        $('a[href="#' + name + '-tab"]').click(function () {
+          $(this).tab('show');
+        });
 
-    createEvents();
-   } else {
-    message({
-     'text': '@lang('admin.message.already_exists_with_this_key', 'Bu isimde zaten bir değer var!')',
-     'onAfterClose': function() {
-      $('#property-name').select();
-     }
-    });
-   }
-  } else {
-   message({
-    'text': '@lang('admin.message.fill_all_fields', 'Tüm alanları doldurun!')',
-    'onAfterClose': function() {
-     $('#property-name').focus();
-    }
-   });
-  }
-
-  return false;
- });
-
- $('#crawl-btn').click(function() {
-  $('#crawl-dialog').modal();
-
-  return false;
- });
-
- $('#crawl-form').submit(function() {
-  var paths = [];
-
-  $('input[name="paths[]"]:checked').each(function() {
-   paths.push($(this).val());
-  });
-
-  if (paths.length) {
-   $.ajax({
-    'type': $(this).attr('method'),
-    'url': $(this).attr('action'),
-    'data': 'paths=' + paths.join(',')
-   }).done(function(result) {
-    if (result) {
-     var tab, key;
-
-     for (tab in result) {
-      if (!$('#' + tab + '-tab').get(0)) {
-       $('#property-name').val(tab);
-       $('#new-property-form').trigger('submit');
+        createEvents();
+      } else {
+        message({
+          'text': "@lang('admin.message.already_exists_with_this_key', 'Bu isimde zaten bir değer var !')",
+          'onAfterClose': function () {
+            $('#property-name').select();
+          }
+        });
       }
-
-      for (key in result[tab]) {
-       if (!$('input[name="' + tab + '.' + key + '"]').get(0)) {
-        $('input[data-key]', $('#' + tab + '-tab')).val(key);
-        $('input[data-value]', $('#' + tab + '-tab')).val(result[tab][key]);
-        $('button[data-target]', $('#' + tab + '-tab')).trigger('click');
-       }
-      }
-     }
-
-     $('#crawl-dialog').modal('hide');
-
-     if (tab) {
-      $('a[href="#' + tab + '-tab"]').tab('show');
-     }
+    } else {
+      message({
+        'text': "@lang('admin.message.fill_all_fields', 'Tüm alanları doldurun!')",
+        'onAfterClose': function () {
+          $('#property-name').focus();
+        }
+      });
     }
-   });
-  } else {
-   message({
-    'text': '@lang('admin.message.pick_at_least_one', 'En az bir tanesini seçin!')'
-   });
-  }
 
-  return false;
- });
-
- $('#language-form').submit(function() {
-  var strs = [];
-
-  $('input[data-language]').each(function(k, el) {
-   strs.push($(el).attr('name').replace(/\./g, '>') + '=' + encodeURIComponent($(el).val()));
+    return false;
   });
 
-  $.ajax({
-   'type': $(this).attr('method'),
-   'url': $(this).attr('action'),
-   'data': strs.join('&')
-  }).done(function(result) {
-   message(result);
+  $('#crawl-btn').click(function () {
+    $('#crawl-dialog').modal();
+
+    return false;
   });
 
-  return false;
- });
+  $('#crawl-form').submit(function () {
+    var paths = [];
 
- $('#delete-btn').popConfirm({
-  title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
-  content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
-  placement: "top",
-  yesBtn: "@lang('admin.button.yes', 'Evet')",
-  noBtn: "@lang('admin.button.no', 'Hayır')",
-  confirm: function() {
-   $.ajax({
-    type: 'DELETE',
-    url: '@url()'
-   }).done(function(result) {
-    result.onAfterClose = function() {
-     if (result.success) {
-      window.location.href = '@url($prefix . 'content/languages')';
-     }
-    };
+    $('input[name="paths[]"]:checked').each(function () {
+      paths.push($(this).val());
+    });
 
-    message(result);
-   });
-  }
- });
- //]]>
+    if (paths.length) {
+      $.ajax({
+        'type': $(this).attr('method'),
+        'url': $(this).attr('action'),
+        'data': 'paths=' + paths.join(',')
+      }).done(function (result) {
+        if (result) {
+          var tab, key;
+
+          for (tab in result) {
+            if (!$('#' + tab + '-tab').get(0)) {
+              $('#property-name').val(tab);
+              $('#new-property-form').trigger('submit');
+            }
+
+            for (key in result[tab]) {
+              if (!$('input[name="' + tab + '.' + key + '"]').get(0)) {
+                $('input[data-key]', $('#' + tab + '-tab')).val(key);
+                $('input[data-value]', $('#' + tab + '-tab')).val(result[tab][key]);
+                $('button[data-target]', $('#' + tab + '-tab')).trigger('click');
+              }
+            }
+          }
+
+          $('#crawl-dialog').modal('hide');
+
+          if (tab) {
+            $('a[href="#' + tab + '-tab"]').tab('show');
+          }
+        }
+      });
+    } else {
+      message({
+        'text': "@lang('admin.message.pick_at_least_one', 'En az bir tanesini seçin!')"
+      });
+    }
+
+    return false;
+  });
+
+  $('#language-form').submit(function () {
+    var strs = [];
+
+    $('input[data-language]').each(function (k, el) {
+      strs.push($(el).attr('name').replace(/\./g, '>') + '=' + encodeURIComponent($(el).val()));
+    });
+
+    $.ajax({
+      'type': $(this).attr('method'),
+      'url': $(this).attr('action'),
+      'data': strs.join('&')
+    }).done(function (result) {
+      message(result);
+    });
+
+    return false;
+  });
+
+  $('#delete-btn').popConfirm({
+    title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+    content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
+    placement: "top",
+    yesBtn: "@lang('admin.button.yes', 'Evet')",
+    noBtn: "@lang('admin.button.no', 'Hayır')",
+    confirm: function () {
+      $.ajax({
+        type: 'DELETE',
+        url: '@url()'
+      }).done(function (result) {
+        result.onAfterClose = function () {
+          if (result.success) {
+            window.location.href = "@url($prefix . 'content / languages')";
+          }
+        };
+
+        message(result);
+      });
+    }
+  });
+  //]]>
 </script>
 @stop

@@ -53,7 +53,7 @@
                   <div class="col-sm-6">
                     <h6 class="fw400">@lang('admin.label.category', 'Kategori')</h6>
                     <label class="field select">
-                      <select id="category" name="category[]" data-value="{{ isset($content->categories) ? implode(',', array_keys($content->categories)) : '' }}" class="select2" multiple size="5"></select>
+                      <select id="category" name="category" data-value="{{ isset($content->categories) ? implode(',', array_keys($content->categories)) : '' }}" class="select2"></select>
                     </label>
                   </div>
                 </div>
@@ -257,11 +257,17 @@
 
     $('#form').validate({
       'rules': {
+        'category': {
+          'required': true
+        },
         'title': {
           'required': true
         }
       },
       'messages': {
+        'category': {
+          'required': "@lang('admin.message.category_required', 'Kategoriyi seçin!')"
+        },
         'title': {
           'required': "@lang('admin.message.content_title_required', 'İçerik başlığını girin!')"
         }
