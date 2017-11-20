@@ -491,16 +491,18 @@
           var tab, key;
 
           for (tab in result) {
-            if (!$('#' + tab + '-tab').get(0)) {
-              $('#property-name').val(tab);
-              $('#new-property-form').trigger('submit');
-            }
+            if (typeof result[tab] === 'object') {
+              if (!$('#' + tab + '-tab').get(0)) {
+                $('#property-name').val(tab);
+                $('#new-property-form').trigger('submit');
+              }
 
-            for (key in result[tab]) {
-              if (!$('input[name="' + tab + '.' + key + '"]').get(0)) {
-                $('input[data-key]', $('#' + tab + '-tab')).val(key);
-                $('input[data-value]', $('#' + tab + '-tab')).val(result[tab][key]);
-                $('button[data-target]', $('#' + tab + '-tab')).trigger('click');
+              for (key in result[tab]) {
+                if (!$('input[name="' + tab + '.' + key + '"]').get(0)) {
+                  $('input[data-key]', $('#' + tab + '-tab')).val(key);
+                  $('input[data-value]', $('#' + tab + '-tab')).val(result[tab][key]);
+                  $('button[data-target]', $('#' + tab + '-tab')).trigger('click');
+                }
               }
             }
           }
