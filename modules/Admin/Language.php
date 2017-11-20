@@ -238,7 +238,7 @@ class Language {
     }
 
     foreach ($values as $key => $value) {
-      $list[$key] = array_dot($value);
+      $list[$key] = is_array($value) ? array_dot($value) : $value;
     }
 
     return array_to($list);
