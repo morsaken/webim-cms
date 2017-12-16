@@ -401,7 +401,7 @@ class News {
         ->only('type', 'news')
         ->only('category', input('category_id', 0))
         ->orderByCategory(input('category_id', 0), 'asc')
-        ->orderBy('order', 'asc')
+        ->orderBy('order')->orderBy('publish_date', 'desc')
         ->load()->with('poster', array(
           'size' => '150x150',
           'default' => View::getPath()->folder('layouts.assets.poster')->file('image.png')

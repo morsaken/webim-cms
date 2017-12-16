@@ -132,7 +132,7 @@ var load = (function () {
           };
 
           el.onerror = function () {
-            reject(url);
+            reject('File not found: ' + url);
           };
 
           // Need to set different attributes depending on tag type

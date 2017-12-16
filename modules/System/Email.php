@@ -146,14 +146,20 @@ class Email {
   /**
    * Attachment
    *
-   * @param \Webim\Library\File $file
+   * @param string|\Webim\Library\File $file
    * @param string $name
    *
    * @return $this
    */
-  public function attach(File $file, $name = '') {
+  public function attach($file, $name = '') {
+    $path = $file;
+
+    if ($file instanceof File) {
+      $path = $file->getPath();
+    }
+
     //Add attachment
-    $this->mailer->addAttachment($file->getPath(), (strlen($name) ? $name : $file->name));
+    $this->mailer->addAttachment($path, (strlen($name) ? $name : $file->name));
 
     return $this;
   }
@@ -161,14 +167,20 @@ class Email {
   /**
    * Embed image
    *
-   * @param \Webim\Library\File $image
+   * @param string|\Webim\Library\File $image
    * @param string $cid
    *
    * @return $this
    */
-  public function embedImage(File $image, $cid) {
+  public function embedImage($image, $cid) {
+    $path = $image;
+
+    if ($image instanceof File) {
+      $path = $image->getPath();
+    }
+
     //Add embedded image
-    $this->mailer->addEmbeddedImage($image->getPath(), $cid);
+    $this->mailer->addEmbeddedImage($path, $cid);
 
     return $this;
   }
