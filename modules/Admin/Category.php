@@ -199,19 +199,19 @@ class Category {
 
     $manager->app->response->setContentType('json');
 
-    $lang = array_get($params, 'lang');
-
     $parents = array();
 
-    $parents[] = array(
-      'id' => 0,
-      'title' => '.'
-    );
+    if (input('root', 'true') == 'true') {
+      $parents[] = array(
+        'id' => 0,
+        'title' => '.'
+      );
+    }
 
     foreach (Content::init()
                ->where('id', '<>', input('id', 0))
                ->only('type', 'category')
-               ->only('language', input('language', $lang))
+               ->only('language', input('language', lang()))
                ->orderBy('order')
                ->load()->getListIndented('', null) as $id => $row) {
       $parents[] = array(
@@ -230,8 +230,6 @@ class Category {
 
     $manager->app->response->setContentType('json');
 
-    $lang = array_get($params, 'lang');
-
     $order = 1;
     $orders = array();
 
@@ -240,7 +238,7 @@ class Category {
       'title' => lang('admin.label.at_the_beginning', 'En Başta')
     );
 
-    foreach (Content::orderList('category', input('language', $lang), input('parent_id', 0), input('id', 0)) as $title) {
+    foreach (Content::orderList('category', input('language', lang()), input('parent_id', 0), input('id', 0)) as $title) {
       $orders[] = array(
         'id' => ++$order,
         'title' => lang('admin.label.after', [$title], '%s sonuna')

@@ -367,10 +367,10 @@ class Content extends Controller {
     $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
     //Get content
-    $content = DB::table('sys_content')->where('id', $id)->first();
+    $current = DB::table('sys_content')->where('id', $id)->first();
 
-    if ($content) {
-      if ($language != array_get($content, 'language')) {
+    if ($current) {
+      if ($language != array_get($current, 'language')) {
         //Meta
         $meta = array();
 
@@ -389,22 +389,20 @@ class Content extends Controller {
           $content = static::init();
 
           $save = $content->set(array(
-            'type' => array_get($content, 'type'),
+            'type' => array_get($current, 'type'),
             'language' => $language,
-            'url' => array_get($content, 'url'),
-            'title' => array_get($content, 'title'),
-            'publish_date' => array_get($content, 'publish_date'),
-            'expire_date' => array_get($content, 'expire_date'),
-            'active' => array_get($content, 'active')
-          ))->save();
-
-          if ($save->success()) {
-            $id = $save->returns('id');
-
-            $content->saveCategory($id, $category);
+            'url' => array_get($current, 'url'),
+            'title' => array_get($current, 'title'),
+            'publish_date' => array_get($current, 'publish_date'),
+            'expire_date' => array_get($current, 'expire_date'),
+            'active' => array_get($current, 'active')
+          ))->save(function ($id) use ($content, $meta, $category, $media) {
             $content->saveMeta($id, $meta);
+            $content->saveCategory($id, $category);
             $content->saveMedia($id, $media);
-          } else {
+          });
+
+          if (!$save->success()) {
             throw new \ErrorException($save->text());
           }
 

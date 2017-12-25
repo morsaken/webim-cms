@@ -1,145 +1,146 @@
 <div id="duplicate-dialog" class="modal fade">
- <div class="modal-dialog">
-  <div class="modal-content">
-   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">×</button>
-    <h4>
-     <i class="fa fa-language"></i>
-     @lang('admin.label.pick_language', 'Dil Seç')
-    </h4>
-   </div>
-   <form id="duplicate-form" method="post" action="{{ $url or url($prefix . 'content/duplicate') }}">
-    <input id="duplicate-ids" type="hidden" name="duplicate-ids" value="">
-    <div class="modal-body">
-     <div class="form-group">
-      <label>@lang('admin.label.language_to_duplicate', 'Çoklanacak Dil')</label>
-      <select id="duplicate-language" name="duplicate-language" class="form-control select2">
-       @foreach (langs() as $code => $lang)
-       <option value="{{ $code }}"{{ $code == lang() ? ' selected="selected"' : '' }}>{{{ $lang }}}</option>
-       @endforeach
-      </select>
-     </div>
-     @if (!isset($categoryless) || !$categoryless)
-     <div class="form-group">
-      <label>@lang('admin.label.category', 'Kategori')</label>
-      <select id="duplicate-category" name="duplicate-category[]" class="select2" multiple size="5"></select>
-     </div>
-     @endif
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4>
+          <i class="fa fa-language"></i>
+          @lang('admin.label.pick_language', 'Dil Seç')
+        </h4>
+      </div>
+      <form id="duplicate-form" method="post" action="{{ $url or url($prefix . 'content/duplicate') }}">
+        <input id="duplicate-ids" type="hidden" name="duplicate-ids" value="">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>@lang('admin.label.language_to_duplicate', 'Çoklanacak Dil')</label>
+            <select id="duplicate-language" name="duplicate-language" class="form-control select2">
+              @foreach (langs() as $code => $lang)
+              <option value="{{ $code }}" {{ $code == lang() ? ' selected="selected"' : '' }}>{{{ $lang }}}</option>
+              @endforeach
+            </select>
+          </div>
+          @if (!isset($categoryless) || !$categoryless)
+          <div class="form-group">
+            <label>@lang('admin.label.category', 'Kategori')</label>
+            <select id="duplicate-category" name="duplicate-category[]" class="select2" multiple size="5"></select>
+          </div>
+          @endif
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-sm btn-info">
+            <i class="fa fa-save"></i>
+            @lang('admin.button.duplicate', 'Çokla')
+          </button>
+          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+            <i class="fa fa-close"></i>
+            @lang('admin.button.close', 'Kapat')
+          </button>
+        </div>
+      </form>
     </div>
-    <div class="modal-footer">
-     <button type="submit" class="btn btn-sm btn-info">
-      <i class="fa fa-save"></i>
-      @lang('admin.button.duplicate', 'Çokla')
-     </button>
-     <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
-      <i class="fa fa-close"></i>
-      @lang('admin.button.close', 'Kapat')
-     </button>
-    </div>
-   </form>
   </div>
- </div>
 </div>
 
 @section('script')
 @parent
 <script type="text/javascript">
- //<![CDATA[
- $(function() {
+//<![CDATA[
+$(function () {
   'use strict';
 
   function categories(callback) {
-   var lang = $('#duplicate-language');
-   var cat = $('#duplicate-category');
+    var lang = $('#duplicate-language');
+    var cat = $('#duplicate-category');
 
-   if (cat.length && (cat.data('lang') != lang.val())) {
-    cat.empty();
+    if (cat.length && (cat.data('lang') !== lang.val())) {
+      cat.empty();
 
-    $.ajax({
-     'url': "@url($prefix . 'content/categories/parents')",
-     'data': {
-      'language': lang.val()
-     }
-    }).done(function (result) {
-     if (result) {
-      for (var key in result) {
-       $('<option/>', {
-        'value': result[key]['id']
-       }).html(result[key]['title']).appendTo(cat);
-      }
+      $.ajax({
+        'url': "@url($prefix . 'content/categories/parents')",
+        'data': {
+          'language': lang.val(),
+          'root': 'false'
+        }
+      }).done(function (result) {
+        if (result) {
+          for (var key in result) {
+            $('<option/>', {
+              'value': result[key]['id']
+            }).html(result[key]['title']).appendTo(cat);
+          }
 
-      cat.data('lang', lang.val());
+          cat.data('lang', lang.val());
 
-      if (callback) {
-       callback();
-      }
-     }
-    });
-   } else if (callback) {
-    callback();
-   }
+          if (callback) {
+            callback();
+          }
+        }
+      });
+    } else if (callback) {
+      callback();
+    }
   }
 
-  $('#duplicate-language').change(function() {
-   categories();
+  $('#duplicate-language').change(function () {
+    categories();
   });
 
-  $('a[href="#duplicate"]').click(function() {
-   var ids = [];
+  $('a[href="#duplicate"]').click(function () {
+    var ids = [];
 
-   if ($(this).data('id')) {
-    ids.push($(this).data('id'));
-   } else {
-    var checks = $('input[name="check[]"]:checked');
-
-    if (checks.length > 0) {
-     checks.each(function() {
-      ids.push($(this).val());
-     });
+    if ($(this).data('id')) {
+      ids.push($(this).data('id'));
     } else {
-     message("@lang('admin.message.check_at_least_one', 'En az bir kayıt seçmelisiniz!')");
-    }
-   }
+      var checks = $('input[name="check[]"]:checked');
 
-   if (ids.length > 0) {
-    if ($('#duplicate-language > option').length > 1) {
-     categories(function() {
-      $('#duplicate-ids').val(ids.join(','));
-      $('#duplicate-dialog').modal();
-     });
-    } else {
-     message("@lang('admin.message.only_one_language_in_system', 'Sistemde zaten tek dil var!')");
-    }
-   }
-
-   return false;
-  });
-
-  $('#duplicate-form').submit(function(e) {
-   e.preventDefault();
-
-   if ($('#duplicate-ids').val().length) {
-    $.ajax({
-     type: $('#duplicate-form').attr('method'),
-     url: $('#duplicate-form').attr('action'),
-     data: {
-      'lang': $('#duplicate-language').val(),
-      'id': $('#duplicate-ids').val(),
-      'category': $('#duplicate-category').val()
-     }
-    }).done(function(result) {
-     result.onAfterClose = function() {
-      if (result.success) {
-       $('#duplicate-dialog').modal('hide');
-       window.location.href = "@url()";
+      if (checks.length > 0) {
+        checks.each(function () {
+          ids.push($(this).val());
+        });
+      } else {
+        message("@lang('admin.message.check_at_least_one', 'En az bir kayıt seçmelisiniz!')");
       }
-     };
+    }
 
-     message(result);
-    });
-   }
+    if (ids.length > 0) {
+      if ($('#duplicate-language > option').length > 1) {
+        categories(function () {
+          $('#duplicate-ids').val(ids.join(','));
+          $('#duplicate-dialog').modal();
+        });
+      } else {
+        message("@lang('admin.message.only_one_language_in_system', 'Sistemde zaten tek dil var!')");
+      }
+    }
+
+    return false;
   });
- });
+
+  $('#duplicate-form').submit(function (e) {
+    e.preventDefault();
+
+    if ($('#duplicate-ids').val().length) {
+      $.ajax({
+        type: $(this).attr('method'),
+        url: $(this).attr('action'),
+        data: {
+          'lang': $('#duplicate-language').val(),
+          'id': $('#duplicate-ids').val(),
+          'category': $('#duplicate-category').val()
+        }
+      }).done(function (result) {
+        result.onAfterClose = function () {
+          if (result.success) {
+            $('#duplicate-dialog').modal('hide');
+            window.location.href = "@url()";
+          }
+        };
+
+        message(result);
+      });
+    }
+  });
+});
 //]]>
 </script>
 @stop
