@@ -179,12 +179,14 @@ class Language {
     $code = slug(input('language-code'));
     $abbr = input('language-abbr');
     $name = input('language-name');
+    $english_name = input('language-english-name', $name);
 
     if (strlen($code) >= 2) {
       if (!Lang::has($code)) {
         $values = array(
           'abbr' => $abbr,
           'name' => $name,
+          'english_name' => $english_name,
           'charset' => 'utf-8',
           'dir' => 'ltr',
           'order' => (count(langs()) + 1),

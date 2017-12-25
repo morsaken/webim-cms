@@ -6,6 +6,7 @@
 namespace Admin;
 
 use \System\Mail;
+use \Webim\Library\Paging;
 use \Webim\View\Manager as View;
 
 class Inbox {
@@ -44,7 +45,13 @@ class Inbox {
     $manager->set('caption', lang('admin.menu.inbox', 'Mesajlar'));
     $manager->breadcrumb($manager->prefix . '/my/inbox', lang('admin.menu.inbox', 'Mesajlar'));
 
-    $manager->set('list', Mail::inbox()->orderBy('m.date', 'desc')->load()->with('total', 'attachment')->get());
+    $list = Mail::inbox()->orderBy('m.date', 'desc')
+      ->load(input('offset', 0), input('limit', 20))
+      ->with('total', 'attachment')->get();
+
+    $list->nav = Paging::nav($list->offset, $list->limit, $list->total);
+
+    $manager->set('list', $list);
 
     return View::create('my.inbox.list')->data($manager::data())->render();
   }
