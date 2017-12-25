@@ -19,6 +19,12 @@
               @endforeach
             </select>
           </div>
+          @if (!isset($parentless) || !$parentless)
+          <div class="form-group">
+            <label>@lang('admin.label.parent', 'Üst Kaydı')</label>
+            <select id="duplicate-parent_id" name="duplicate-parent_id" class="select2"></select>
+          </div>
+          @endif
           @if (!isset($categoryless) || !$categoryless)
           <div class="form-group">
             <label>@lang('admin.label.category', 'Kategori')</label>
@@ -50,11 +56,22 @@ $(function () {
 
   function categories(callback) {
     var lang = $('#duplicate-language');
-    var cat = $('#duplicate-category');
+    var parent = $('#duplicate-parent_id');
+    var category = $('#duplicate-category');
 
-    if (cat.length && (cat.data('lang') !== lang.val())) {
-      cat.empty();
+    if (parent.length && parent.data('lang') !== lang.val()) {
+      parent.empty().append(
+        $('<option/>', {
+          'value': '0'
+        }).text('.')
+      );
+    }
 
+    if (category.length && category.data('lang') !== lang.val()) {
+      category.empty();
+    }
+
+    if ((parent.length || category.length) && (parent.data('lang') !== lang.val() || category.data('lang') !== lang.val())) {
       $.ajax({
         'url': "@url($prefix . 'content/categories/parents')",
         'data': {
@@ -64,12 +81,26 @@ $(function () {
       }).done(function (result) {
         if (result) {
           for (var key in result) {
-            $('<option/>', {
+            var option = $('<option/>', {
               'value': result[key]['id']
-            }).html(result[key]['title']).appendTo(cat);
+            }).html(result[key]['title']);
+
+            if (parent.length) {
+              option.appendTo(parent);
+            }
+
+            if (category.length) {
+              option.appendTo(category);
+            }
           }
 
-          cat.data('lang', lang.val());
+          if (parent.length) {
+            parent.data('lang', lang.val());
+          }
+
+          if (category.length) {
+            category.data('lang', lang.val());
+          }
 
           if (callback) {
             callback();
@@ -120,14 +151,23 @@ $(function () {
     e.preventDefault();
 
     if ($('#duplicate-ids').val().length) {
+      var data = {
+        'lang': $('#duplicate-language').val(),
+        'id': $('#duplicate-ids').val()
+      };
+
+      if ($('#duplicate-parent_id').length) {
+        data['parent_id'] = $('#duplicate-parent_id').val();
+      }
+
+      if ($('#duplicate-category').length) {
+        data['category'] = $('#duplicate-category').val();
+      }
+
       $.ajax({
         type: $(this).attr('method'),
         url: $(this).attr('action'),
-        data: {
-          'lang': $('#duplicate-language').val(),
-          'id': $('#duplicate-ids').val(),
-          'category': $('#duplicate-category').val()
-        }
+        data: data
       }).done(function (result) {
         result.onAfterClose = function () {
           if (result.success) {

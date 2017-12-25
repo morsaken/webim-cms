@@ -151,7 +151,7 @@
  </aside>
 </section>
 
-@include('list.duplicate', ['url' => url($prefix . 'content/news/duplicate')])
+@include('list.duplicate', ['url' => url($prefix . 'content/news/duplicate'), 'parentless' => true])
 @include('list.delete', ['url' => url($prefix . 'content/news/form')])
 @stop
 

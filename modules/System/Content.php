@@ -359,10 +359,11 @@ class Content extends Controller {
    * @param int $id
    * @param string $language
    * @param array $category
+   * @param null|int $parent_id
    *
    * @return Message
    */
-  public static function duplicate($id, $language, $category = array()) {
+  public static function duplicate($id, $language, $category = array(), $parent_id = null) {
     //Default return
     $message = Message::result(lang('message.nothing_done', 'Herhangi bir işlem yapılmadı!'));
 
@@ -389,6 +390,7 @@ class Content extends Controller {
           $content = static::init();
 
           $save = $content->set(array(
+            'parent_id' => ($parent_id ? $parent_id : null),
             'type' => array_get($current, 'type'),
             'language' => $language,
             'url' => array_get($current, 'url'),

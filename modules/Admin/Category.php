@@ -314,7 +314,7 @@ class Category {
       $error = 0;
 
       foreach ($ids as $id) {
-        $duplicate = Content::duplicate($id, input('lang'), input('category'));
+        $duplicate = Content::duplicate($id, input('lang'), array(), input('parent_id', 0));
 
         if ($duplicate->success()) {
           $duplicated++;
