@@ -13,8 +13,7 @@
             <label class="field select">
               <select id="filter-language" name="filter-language">
                 @foreach (langs() as $langCode => $langTitle)
-                <option value="{{ $langCode }}" {{ input(
-                'language', lang()) == $langCode ? ' selected="selected"' : '' }}>{{{ $langTitle }}}</option>
+                <option value="{{ $langCode }}" {{ input('language', lang()) == $langCode ? ' selected="selected"' : '' }}>{{{ $langTitle }}}</option>
                 @endforeach
               </select>
               <i class="arrow"></i>
@@ -246,19 +245,19 @@
           }).text(result[order]).appendTo('#order');
         }
 
+        $('#order').val($('#order').children().last().val());
+
         var val = $('#order').data('value');
 
         if (val > 0 && $('#order > option[value="' + val + '"]').get(0)) {
           $('#order').val(val);
-        } else {
-          $('#order').val($('#order').children().last().val());
         }
       }
     });
   }
 
   $('#filter-language').change(function () {
-    getList();
+    window.location.href = "@url('#current?language=')" + $(this).val();
   });
 
   $('#parent_id').change(function () {
