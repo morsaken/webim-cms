@@ -159,7 +159,7 @@ class Email {
     }
 
     //Add attachment
-    $this->mailer->addAttachment($path, (strlen($name) ? $name : $file->name));
+    $this->mailer->addAttachment($path, (strlen($name) ? $name : $file->baseName));
 
     return $this;
   }
