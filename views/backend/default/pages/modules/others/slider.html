@@ -1,0 +1,288 @@
+@extends('default')
+
+@section('title') {{{ $caption }}} :: @parent @stop
+
+@section('content')
+@include('topbar')
+<section id="content" class="table-layout">
+  <div class="tray tray-center pn va-t posr">
+    <div class="panel m15">
+      <div class="panel-menu p12 admin-form theme-primary">
+        <div class="row">
+          <div class="col-md-3">
+            <label class="field select">
+              <select id="filter-language" name="language">
+                @foreach (langs() as $langCode => $langTitle)
+                <option value="{{ $langCode }}" {{ input('language', lang()) == $langCode ? ' selected="selected"' : '' }}>{{{ $langTitle }}}</option>
+                @endforeach
+              </select>
+              <i class="arrow"></i>
+            </label>
+          </div>
+          <div class="col-md-3">
+            <label class="field select">
+              <select name="template">
+                @foreach ($templates as $template)
+                <option value="{{{ $template->name }}}"{{ $template->name === conf('frontend.' . input('language', lang()) . '.template', 'default') ? ' selected="selected"' : '' }}>{{{ $template->name }}}</option>
+                @endforeach
+              </select>
+              <i class="arrow"></i>
+            </label>
+          </div>
+          <div class="col-md-6">
+            <div class="text-right">
+              <a class="btn btn-dark" href="#folder">
+                <i class="fa fa-folder-open mr5"></i>
+                @lang('admin.button.folder_content', 'Dizin İçeriği')
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <form id="slider-form" class="admin-form" method="post" autocomplete="off" action="@url()">
+          <input type="hidden" name="language" value="{{ input('language', lang()) }}">
+          <div class="section mb15">
+            <h6 class="fw400">@lang('admin.label.html_content', 'HTML İçerik')</h6>
+            <label class="field">
+              <textarea name="slider-html" class="gui-textarea" rows="4">{{{ conf('slider.' . input('language', lang()) . '.html') }}}</textarea>
+            </label>
+          </div>
+          <div class="section mb15">
+            <h6 class="fw400">@lang('admin.label.css_content', 'CSS İçerik')</h6>
+            <label class="field">
+              <textarea name="slider-css" class="gui-textarea" rows="4">{{{ conf('slider.' . input('language', lang()) . '.css') }}}</textarea>
+            </label>
+          </div>
+          <div class="section mb15">
+            <h6 class="fw400">@lang('admin.label.javascript_content', 'JavaScript İçerik')</h6>
+            <label class="field">
+              <textarea name="slider-js" class="gui-textarea" rows="4">{{{ conf('slider.' . input('language', lang()) . '.js') }}}</textarea>
+            </label>
+          </div>
+          <hr class="short alt">
+          <div class="section mbn text-right">
+            <button type="submit" class="btn btn-primary">
+              <i class="fa fa-save"></i>
+              @lang('admin.button.save', 'Kaydet')
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="folder-dialog" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4>
+          <i class="fa fa-file-o"></i>
+          @lang('admin.label.content', 'İçerik')
+        </h4>
+      </div>
+      <div class="modal-body">
+        <ol id="path" class="breadcrumb mb15">
+          <li class="crumb-active">
+            <a href="javascript:void(0)" data-path="">@conf('frontend.' . input('language', lang()) . '.template', 'default')</a>
+          </li>
+        </ol>
+        <table class="table table-striped br-t">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th>@lang('admin.label.name', 'Adı')</th>
+              <th class="text-right">@lang('admin.label.size', 'Boyutu')</th>
+              <th class="text-center">@lang('admin.label.permission', 'Yetkisi')</th>
+            </tr>
+          </thead>
+          <tbody id="folder-list">
+            <tr>
+              <td colspan="4">
+                <div class="alert alert-default w400 mv20 center-block text-center">@lang('admin.label.loading', 'Yükleniyor...')</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="upload-btn" class="btn btn-sm btn-info">
+          <i class="fa fa-upload"></i>
+          @lang('admin.button.upload_file', 'Dosya Yükle')
+        </button>
+        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+          <i class="fa fa-close"></i>
+          @lang('admin.button.close', 'Kapat')
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+@stop
+
+@section('link')
+@parent
+<link type="text/css" href="{{ $root }}/js/plugins/codemirror/lib/codemirror.css" rel="stylesheet">
+<link type="text/css" href="{{ $root }}/js/plugins/codemirror/theme/neat.css" rel="stylesheet">
+@stop
+
+@section('script')
+@parent
+<script type="text/javascript" src="{{ $root }}/js/plugins/codemirror/lib/codemirror.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/codemirror/mode/javascript/javascript.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/codemirror/mode/css/css.js"></script>
+<script type="text/javascript">
+  //<![CDATA[
+  'use strict';
+
+  var htmlEditor = CodeMirror.fromTextArea($('textarea[name="slider-html"]').get(0), {
+    lineNumbers: true,
+    matchBrackets: true,
+    styleActiveLine: true,
+    theme: 'neat'
+  });
+
+  var cssEditor = CodeMirror.fromTextArea($('textarea[name="slider-css"]').get(0), {
+    lineNumbers: true,
+    matchBrackets: true,
+    styleActiveLine: true,
+    theme: 'neat',
+    mode: 'css'
+  });
+
+  var jsEditor = CodeMirror.fromTextArea($('textarea[name="slider-js"]').get(0), {
+    lineNumbers: true,
+    matchBrackets: true,
+    styleActiveLine: true,
+    theme: 'neat',
+    mode: 'javascript'
+  });
+
+  $('#filter-language').change(function () {
+    window.location.href = "@url()?language=" + $(this).val();
+  });
+
+  $('select[name="template"]').change(function() {
+    $('#path').find('li.crumb-active > a').text($(this).val());
+  });
+
+  $('#path').find('li.crumb-active > a').click(function(e) {
+    e.preventDefault();
+    getFolders();
+  });
+
+  function getFolders(path) {
+    $('#folder-dialog .modal-content').block({
+      message: "@lang('label.loading', 'Yükleniyor...')",
+      css: {
+        border: '0',
+        padding: '10'
+      }
+    });
+
+    $.ajax({
+      'type': 'get',
+      'url': '@url()/folders',
+      'data': {
+        'template': $('select[name="template"]').val(),
+        'path': path || ''
+      },
+      'global': false
+    }).done(function(result) {
+      $('#path').find('li:not(.crumb-active)').remove();
+      $('#folder-list').empty();
+
+      if (path && path.length) {
+        var paths = [], splitted = path.split('.');
+
+        splitted.forEach(function(crumb) {
+          paths.push(crumb);
+
+          $('<li/>').addClass('crumb-link').append(
+            $('<a/>', {
+              'href': 'javascript:void(0)',
+              'data-path': paths.join('.')
+            }).click(function(e) {
+              e.preventDefault();
+
+              getFolders($(this).data('path'));
+            }).text(crumb)
+          ).appendTo('#path');
+        });
+      }
+
+      result.forEach(function (item) {
+        var file;
+
+        if (item.type === 'folder') {
+          file = $('<a/>', {
+            'href': 'javascript:void(0)',
+            'data-path': item.path
+          }).click(function(e) {
+            e.preventDefault();
+
+            getFolders($(this).data('path'));
+          }).text(item.name);
+        } else {
+          file = $('<span/>').text(item.name);
+        }
+
+        $('<tr/>').append(
+          $('<td/>').addClass('text-center').append(
+            $('<i/>').addClass('fa fa-' + item.type)
+          ),
+          $('<td/>').append(file),
+          $('<td/>').addClass('text-right').text(item.size || '-'),
+          $('<td/>').addClass('text-center').text(item.perms)
+        ).appendTo('#folder-list');
+      });
+
+      $('#folder-dialog .modal-content').unblock();
+    }).fail(function() {
+      $('#folder-dialog .modal-content').unblock();
+    });
+  }
+
+  $('a[href="#folder"]').click(function(e) {
+    e.preventDefault();
+
+    $('#folder-dialog').modal();
+  });
+
+  $('#folder-dialog').on('hidden.bs.modal', function() {
+    $('#path').find('li:not(.crumb-active)').remove();
+    $('#folder-list').empty().append(
+      $('<tr/>').append(
+        $('<td/>', {
+          'colspan': '4'
+        }).append(
+          $('<div/>').addClass('alert alert-default w400 mv20 center-block text-center').text(
+            "@lang('admin.label.loading', 'Yükleniyor...')"
+          )
+        )
+      )
+    );
+  }).on('shown.bs.modal', function() {
+    getFolders();
+  });
+
+  $('#slider-form').submit(function(e) {
+    e.preventDefault();
+
+    $.ajax({
+      'type': $(this).attr('method'),
+      'url': $(this).attr('action'),
+      'data': $(this).serialize()
+    }).done(function(result) {
+      new PNotify({
+        title: "@lang('admin.label.result', 'İşlem Sonucu')",
+        text: result.text,
+        type: result.success ? 'success' : 'danger'
+      });
+    });
+  });
+  //]]>
+</script>
+@stop

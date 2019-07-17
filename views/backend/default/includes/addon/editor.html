@@ -1,0 +1,87 @@
+<div id="{{ $id or 'html-content' }}"></div>
+
+@section('script')
+@parent
+<script type="text/javascript">
+ //<![CDATA[
+ @if (conf('html_editor', 'default') == 'innova')
+ window.setInterval(function() {
+  //$('#{{ $target or 'meta-content' }}').val(oEditor.getHTMLBody());
+ }, 500);
+ @elseif (conf('html_editor', 'default') == 'tiny')
+ load.js('{{ $root }}/js/lib/editors/tinymce/tinymce.min.js').then(function() {
+   tinymce.init({
+     selector: "#{{ $id or 'html-content' }}",
+     content_css : '{{ $root }}/js/lib/bootstrap/css/bootstrap.min.css',
+     height: 500,
+     theme: 'modern',
+     plugins: [
+       'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+       'searchreplace wordcount visualblocks visualchars code fullscreen',
+       'insertdatetime media nonbreaking save table contextmenu directionality',
+       'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc help'
+     ],
+     toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+     toolbar2: 'print preview media | forecolor backcolor | hr removeformat | codesample code help',
+     image_advtab: true,
+     paste_data_images: true,
+     convert_urls: false,
+     paste_as_text: true,
+     images_upload_handler: function (blobInfo, success, failure) {
+       // no upload, just return the blobInfo.blob() as base64 data
+       success('data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64());
+     },
+     setup: function (editor) {
+       editor.on('init', function(e) {
+         editor.setContent($("#{{ $target or 'meta-content' }}").val());
+       });
+     },
+     init_instance_callback: function (editor) {
+       editor.on('Change', function (e) {
+         $("#{{ $target or 'meta-content' }}").val(editor.getContent());
+       });
+     },
+     file_browser_callback : function(field_name, url, type, win) {
+       tinyMCE.activeEditor.windowManager.open({
+         file : "@url($prefix . 'content/builder/media')?integration=tinymce&amp;input=" + field_name + "&amp;value=" + win.document.getElementById(field_name).value,
+         title : "@lang('admin.label.file_manager', 'Dosya Yöneticisi')",
+         width : 800,
+         height : 600,
+         resizable: 'yes',
+         inline: 'yes',
+         close_previous : 'no'
+       }, {
+         window : win,
+         input : field_name
+       });
+
+       return false;
+     }
+   });
+ });
+ @else
+ load.js('{{ $root }}/js/lib/editors/summernote/summernote.min.js').then(function(el) {
+  load.css('{{ $root }}/js/lib/editors/summernote/summernote.css').then(function() {
+   $('#{{ $id or 'html-content' }}').html($('#{{ $target or 'meta-content' }}').val()).summernote({
+    height: 500,
+    focus: false,
+    onChange: function(contents) {
+     $('#{{ $target or 'meta-content' }}').val(contents);
+    },
+    onFocus: function(contents) {
+     $('#{{ $target or 'meta-content' }}').val(contents);
+    },
+    onBlur: function(contents) {
+     $('#{{ $target or 'meta-content' }}').val(contents);
+    }
+   });
+
+   window.setInterval(function() {
+    $('#{{ $target or 'meta-content' }}').val($('#{{ $id or 'html-content' }}').code());
+   }, 500);
+  });
+ });
+ @endif
+ //]]>
+</script>
+@stop

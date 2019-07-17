@@ -1,0 +1,241 @@
+<div class="section mb15">
+  <h6 class="fw400">@lang('admin.label.form', 'Form')</h6>
+  <label class="field select">
+    <select id="{{ $id or 'meta' }}-form_id" name="{{ $id or 'meta' }}-form_id" data-value="{{ $form_id or 0 }}">
+      <option value="0">@lang('admin.label.pick', 'Seçin')</option>
+    </select>
+    <i class="arrow double"></i>
+  </label>
+</div>
+<div id="{{ $id or 'form' }}-elements"></div>
+
+@section('script')
+@parent
+<script type="text/javascript">
+  //<![CDATA[
+  $(function() {
+    var language = '@lang()';
+
+    if ($('#language').length) {
+      language = $('#language').val();
+
+      $('#language').change(function() {
+        language = $(this).val();
+
+        formList(language);
+      });
+    }
+
+    var values = {{ json_encode($values) }};
+
+    $('#{{ $id or 'meta' }}-form_id').change(function() {
+      setForm();
+    });
+
+    function formList() {
+      var selectEl = $("#{{ $id or 'meta' }}-form_id");
+
+      selectEl.find('> option').each(function() {
+        if ($(this).attr('value') !== '0') {
+          $(this).remove();
+        }
+      });
+
+      $.ajax({
+        'type': 'get',
+        'url': "@url($prefix . 'system/forms/forms')",
+        'data': {
+          'language': language,
+          'active': 'true'
+        }
+      }).done(function(forms) {
+        for (var k in forms) {
+          $('<option/>', {
+            'value': forms[k].id
+          }).text(forms[k].label).appendTo(selectEl)
+        }
+
+        selectEl.val(selectEl.attr('data-value'));
+
+        setForm();
+      });
+    }
+
+    function setForm() {
+      $('#{{ $id or 'form' }}-elements').empty();
+
+      if ($('#{{ $id or 'meta' }}-form_id').val() !== '0') {
+        Form.create($('#{{ $id or 'form' }}-elements'), $('#{{ $id or 'meta' }}-form_id').val(), function () {
+          for (var id in values) {
+            setValue('{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + id, values[id].value);
+          }
+        });
+      }
+    }
+
+    var Form = {
+      create: function(target, id, callback) {
+        target.empty();
+
+        $.ajax({
+          'type': 'get',
+          'url': "@url($prefix . 'system/forms/forms')",
+          'data': {
+            'id': id,
+            'properties': 'true'
+          }
+        }).done(function(result) {
+          if (result.id) {
+            var k, i, properties = result.properties, group, fields;
+
+            for (k in properties) {
+              group = Form.group(properties[k].label, target);
+              fields = properties[k].fields;
+
+              for (i in fields) {
+                Form.property(fields[i]).appendTo(
+                  Form.field(fields[i].property_id, fields[i].label).appendTo(
+                    group
+                  )
+                );
+              }
+            }
+          } else {
+            $('<div/>').addClass('alert alert-success w400 center-block text-center').text("@lang('admin.message.form_not_found', 'Form bulunamadı!')").appendTo(target);
+          }
+
+          if (callback) {
+            callback(target);
+          }
+        });
+      },
+      createOne: function(target, id, callback) {
+        target.empty();
+
+        $.ajax({
+          'type': 'get',
+          'url': "@url($prefix . 'system/forms/property')",
+          'data': {
+            'id': id
+          }
+        }).done(function(result) {
+          if (result.id) {
+            Form.property(result, 'edit-').appendTo(
+              Form.field(result.property_id, result.label, 'edit-').appendTo(target)
+            );
+
+            if (callback) {
+              callback(target);
+            }
+          } else {
+            new PNotify({
+              title: "@lang('admin.label.error', 'Hata')",
+              text: "@lang('admin.message.form_element_not_found', 'Form elemanı bulunamadı!')",
+              type: 'danger'
+            });
+          }
+        });
+      },
+      group: function(label, target) {
+        return $('<div/>').addClass('panel-body').appendTo(
+          $('<div/>').addClass('panel').append(
+            $('<div/>').addClass('panel-heading').append(
+              $('<span/>').addClass('panel-title').text(label)
+            )
+          ).appendTo(target)
+        );
+      },
+      field: function(id, label, prefix) {
+        if (!prefix) {
+          prefix = '';
+        }
+
+        return $('<div/>').addClass('form-group').append(
+          $('<h6/>').addClass('fw400').text(label)
+        );
+      },
+      property: function(el, prefix) {
+        if (!prefix) {
+          prefix = '';
+        }
+
+        var field;
+
+        if (el.meta) {
+          el.meta = $.parseJSON(el.meta);
+        } else {
+          el.meta = {};
+        }
+
+        switch (el.type) {
+          case 'select':
+
+            field = $('<select/>', {
+              'id': prefix + '{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + el.property_id,
+              'name': prefix + '{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + el.property_id
+            }).addClass('form-control');
+
+            if (el.meta.options) {
+              for (var k in el.meta.options) {
+                $('<option/>', {
+                  'value': k
+                }).text(el.meta.options[k]).prop('selected', ((k == el.value) || (k == el.default))).appendTo(field);
+              }
+            }
+
+            break;
+          case 'radio':
+          case 'checkbox':
+
+            field = $('<div/>').addClass('option-group field');
+
+            for (var k in el.meta.options) {
+              $('<label/>').addClass('option option-primary').append(
+                $('<input/>', {
+                  'type': el.type,
+                  'id': prefix + '{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + el.property_id + '-' + k,
+                  'name': prefix + '{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + el.property_id,
+                  'value': k
+                }).prop('checked', ((k == el.value) || (k == el.default))),
+                $('<span/>').addClass(el.type),
+                ' ', el.meta.options[k]
+              ).appendTo(field);
+            }
+
+            break;
+          case 'textarea':
+
+            field = $('<textarea/>', {
+              'id': prefix + '{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + el.property_id,
+              'name': prefix + '{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + el.property_id,
+              'placeholder': el.meta.placeholder || ''
+            }).val(el.value || el.default).addClass('form-control');
+
+            break;
+          default:
+
+            field = $('<input/>', {
+              'type': 'text',
+              'id': prefix + '{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + el.property_id,
+              'name': prefix + '{{ isset($id) && strlen($id) ? $id . '-' : '' }}field-' + el.property_id,
+              'placeholder': el.meta.placeholder || ''
+            }).val(el.value || el.default).addClass('form-control');
+
+            if (el.meta.maxlength) {
+              field.attr('maxlength', el.meta.maxlength);
+            }
+        }
+
+        if (el.meta.callback) {
+          eval('field.' + el.meta.callback);
+        }
+
+        return field;
+      }
+    };
+
+    formList();
+  });
+  //]]>
+</script>
+@stop

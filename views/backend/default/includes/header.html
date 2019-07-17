@@ -1,0 +1,120 @@
+<header class="navbar navbar-fixed-top bg-light">
+ <div class="navbar-branding">
+  <a class="navbar-brand" href="@url($prefix)"><b>Web-IM</b>XI</a>
+  <span id="toggle_sidemenu_l" class="glyphicons glyphicons-show_lines"></span>
+  <ul class="nav navbar-nav pull-right hidden">
+   <li>
+    <a href="#" class="sidebar-menu-toggle">
+     <span class="octicon octicon-ruby fs20 mr10 pull-right"></span>
+    </a>
+   </li>
+  </ul>
+ </div>
+ <ul class="nav navbar-nav navbar-left">
+  <li>
+   <a class="sidebar-menu-toggle" href="#">
+    <span class="octicon octicon-ruby fs18"></span>
+   </a>
+  </li>
+  <li>
+   <a class="topbar-menu-toggle" href="#">
+    <span class="glyphicons glyphicons-magic fs16"></span>
+   </a>
+  </li>
+  <li>
+   <span id="toggle_sidemenu_l2" class="glyphicon glyphicon-log-in fa-flip-horizontal hidden"></span>
+  </li>
+  <li class="hidden-xs">
+   <a href="@url('/')" target="webim-site" title="@lang('admin.label.show_frontend', 'Önyüzü Görüntüle')">
+    <span class="octicon octicon-screen-full fs18"></span>
+   </a>
+  </li>
+ </ul>
+ <form class="navbar-form navbar-left navbar-search ml5" method="get" action="@url($prefix . 'search')">
+  <div class="form-group">
+   <input type="text" class="form-control" placeholder="@lang('admin.label.search', 'Arama')..." value="">
+  </div>
+ </form>
+ <ul class="nav navbar-nav navbar-right">
+  <li class="dropdown dropdown-item-slide">
+   <a class="dropdown-toggle pl10 pr10" data-toggle="dropdown" href="#">
+    <span class="octicon octicon-radio-tower fs18"></span>
+   </a>
+   <ul class="dropdown-menu dropdown-hover dropdown-persist pn w350 bg-white animated animated-shorter fadeIn" role="menu">
+    <li class="bg-light p8">
+     <span class="fw600 pl5 lh30"> @lang('admin.label.notificiations', 'Uyarılar')</span>
+     <span class="label label-warning label-sm pull-right lh20 h-20 mt5 mr5">
+      @if (isset($notifications) && count($notifications))
+      {{ count($notifications) }}
+      @else
+      0
+      @endif
+     </span>
+    </li>
+    @if (isset($notifications))
+    @foreach ($notifications as $notification)
+    <li class="p10 br-t">
+     <div class="media">
+      <a class="media-left" href="#">
+       <img src="{{ $root . '/img/avatar.png' }}" class="mw40" alt="">
+      </a>
+      <div class="media-body va-m">
+       <h5 class="media-heading mv5">
+        {{{ $notification->title }}}
+        <small class="text-muted">- {{{ $notification->by }}}</small>
+       </h5> {{{ date_ago($notification->date) }}}
+      </div>
+     </div>
+    </li>
+    @endforeach
+    @endif
+   </ul>
+  </li>
+  <li class="dropdown">
+   <a class="dropdown-toggle" data-toggle="dropdown" data-locale="@lang()" href="#">
+    <span class="flag flag-@lang()"></span>
+    <span class="fw600">@lang('name')</span>
+   </a>
+   <ul class="dropdown-menu animated animated-short flipInX" role="menu">
+    @foreach (langs() as $langCode => $langTitle)
+    <li>
+     <a href="@url($langCode . '/' . $prefix)" class="fw600">
+      <span class="flag flag-{{{ $langCode }}} mr10"></span> {{{ $langTitle }}}
+     </a>
+    </li>
+    @endforeach
+   </ul>
+  </li>
+  <li class="ph10 pv20 hidden-xs">
+   <i class="fa fa-circle text-tp fs8"></i>
+  </li>
+  <li class="dropdown">
+   <a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">
+    <img class="mw30 br64 mr15" src="{{ my('meta.avatar', $root . '/img/avatar.png') }}" alt="{{{ my('full_name') }}}">
+    <span>{{{ my('full_name') }}}</span>
+    <span class="caret caret-tp hidden-xs"></span>
+   </a>
+   <ul class="dropdown-menu dropdown-persist pn w250 bg-white" role="menu">
+    <li class="of-h">
+     <a href="@url($prefix . 'my/inbox')" class="fw600 p12 animated animated-short fadeInUp">
+      <span class="fa fa-envelope pr5"></span>
+      @lang('admin.menu.messages', 'Mesajlar')
+      <span class="pull-right lh20 h-20 label label-warning label-sm">{{ $newInboxTotal or 0 }}</span>
+     </a>
+    </li>
+    <li class="br-t of-h">
+     <a href="@url($prefix . 'my/profile')" class="fw600 p12 animated animated-short fadeInDown">
+      <span class="fa fa-gear pr5"></span>
+      @lang('admin.menu.profile', 'Profil')
+     </a>
+    </li>
+    <li class="br-t of-h">
+     <a href="@url($prefix . 'logout')" class="fw600 p12 animated animated-short fadeInDown">
+      <span class="fa fa-power-off pr5"></span>
+      @lang('admin.menu.logout', 'Çıkış')
+     </a>
+    </li>
+   </ul>
+  </li>
+ </ul>
+</header>

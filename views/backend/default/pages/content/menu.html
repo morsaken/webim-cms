@@ -1,0 +1,545 @@
+@extends('default', ['bodyClass' => 'form-nestable-page'])
+
+@section('title') {{{ $caption }}} :: @parent @stop
+
+@section('content')
+@include('topbar')
+<section id="content" class="table-layout">
+  <div class="tray tray-center va-t" data-tray-height="match">
+    <div class="panel">
+      <div class="panel-menu p12 admin-form theme-primary">
+        <div class="row">
+          <div class="col-md-3">
+            <label class="field select">
+              <select id="filter-language" name="filter-language">
+                @foreach (langs() as $langCode => $langTitle)
+                <option value="{{ $langCode }}" {{ input(
+                'language', lang()) == $langCode ? ' selected="selected"' : '' }}>{{{ $langTitle }}}</option>
+                @endforeach
+              </select>
+              <i class="arrow"></i>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="list">
+      <div class="alert alert-default w400 mv20 center-block text-center">@lang('admin.label.loading',
+        'Yükleniyor...')
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="menu-modal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4>
+          <i class="fa fa-info"></i>
+          @lang('admin.label.menu', 'Menü')
+        </h4>
+      </div>
+      <form id="menu-form" class="admin-form" method="post" action="@url()">
+        <input type="hidden" id="id" name="id" value="0">
+        <input type="hidden" id="language" name="language" value="@lang()">
+        <div class="modal-body">
+          <div class="section mb15">
+            <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
+            <label class="field prepend-icon">
+              <input type="text" id="title" name="title" class="gui-input" maxlength="255">
+              <span class="field-icon"><i class="fa fa-tag"></i></span>
+            </label>
+          </div>
+          <div class="row">
+            <div class="col-xs-8">
+              <div class="section mb15">
+                <h6 class="fw400">@lang('admin.label.name', 'Tanımı')</h6>
+                <label class="field prepend-icon">
+                  <input type="text" id="url" name="url" class="gui-input" maxlength="255">
+                  <span class="field-icon"><i class="fa fa-tag"></i></span>
+                </label>
+              </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="section mb15">
+                <h6 class="fw400">@lang('admin.label.status', 'Durum')</h6>
+                <div class="option-group field">
+                  <label class="option option-primary">
+                    <input type="checkbox" id="active" name="active" value="true" {{ !isset($content->active) ||
+                    $content->active == 'true' ? ' checked="checked"' : '' }}>
+                    <span class="checkbox"></span>
+                    @lang('admin.label.active', 'Aktif')
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-sm btn-primary">
+            <i class="fa fa-check"></i>
+            @lang('admin.button.ok', 'Tamam')
+          </button>
+          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+            <i class="fa fa-close"></i>
+            @lang('admin.button.close', 'Kapat')
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+@stop
+
+@section('link')
+@parent
+<link rel="stylesheet" type="text/css" href="{{ $root }}/js/plugins/nestable/nestable.css">
+@stop
+
+@section('script')
+@parent
+<script type="text/javascript" src="{{ $root }}/js/plugins/nestable/jquery.nestable.js"></script>
+<script type="text/javascript">
+  //<![CDATA[
+  var language = $('#filter-language').val();
+
+  function getItems(target) {
+    var items = [], item, children;
+
+    $(target).find('> .dd-list > .dd-item').each(function () {
+      item = {
+        'name': $(this).find('input[name="name"]').val(),
+        'url': $(this).find('input[name="url"]').val(),
+        'title': $(this).find('input[name="title"]').val(),
+        'description': $(this).find('input[name="description"]').val(),
+        'class': $(this).find('input[name="class"]').val(),
+        'icon': $(this).find('input[name="icon"]').val(),
+        'target': $(this).find('select[name="target"]').val()
+      };
+
+      children = getItems(this);
+
+      if (children.length) {
+        item['children'] = children;
+      }
+
+      items.push(item);
+    });
+
+    return items;
+  }
+
+  function getList() {
+    var target = $('#list'), panel;
+
+    $.ajax({
+      'type': 'get',
+      'url': "@url()",
+      'data': {
+        'language': language
+      },
+      'global': false
+    }).done(function (result) {
+      target.empty();
+
+      if (result.length) {
+        result.forEach(function (menu) {
+          makeMenu(menu.items, addPanel(menu));
+        });
+      } else {
+        notFound().appendTo(target);
+      }
+    });
+  }
+
+  function notFound() {
+    return $('<div/>')
+      .addClass('alert alert-default w400 mv20 center-block text-center')
+      .text("@lang('admin.message.no_content_found', 'Kayıt bulunamadı!')");
+  }
+
+  function addPanel(menu) {
+    var panel = $('.panel[data-id="' + menu.id + '"]');
+
+    if (panel.length) {
+      panel.attr('data-url', menu.url);
+      panel.attr('data-active', menu.active);
+      panel.removeClass('panel-primary panel-default').addClass('panel-' + (menu.active ? 'primary' : 'default'));
+      panel.find('.panel-title > .url').text('[' + menu.url + ']');
+      panel.find('.panel-title > .title').text(menu.title);
+
+      return;
+    }
+
+    var target = $('#list').find('> .row');
+
+    if (!target.length) {
+      target = $('<div/>').addClass('row').appendTo($('#list').empty());
+    }
+
+    var nestable = $('<div/>').addClass('dd').appendTo(
+      $('<div/>').addClass('panel-body menu').appendTo(
+        $('<form/>', {
+          'method': 'post',
+          'action': '@url()'
+        }).on('submit', function (e) {
+          e.preventDefault();
+
+          var panel = $(this).closest('.panel');
+
+          $.ajax({
+            'type': $(this).attr('method'),
+            'url': $(this).attr('action'),
+            'data': {
+              'id': panel.attr('data-id'),
+              'language': language,
+              'url': panel.attr('data-url'),
+              'title': panel.find('.panel-title > .title').text(),
+              'active': panel.attr('data-active'),
+              'items': JSON.stringify(getItems(panel.find('.dd')))
+            }
+          }).done(function (result) {
+            if (result.success) {
+              panel.attr('data-id', result.return.id);
+            }
+
+            new PNotify({
+              title: "@lang('admin.label.result', 'İşlem Sonucu')",
+              text: result.text,
+              type: result.success ? 'success' : 'danger'
+            });
+          });
+        }).append(
+          $('<div/>').addClass('panel-heading').append(
+            $('<span/>').addClass('panel-title').append(
+              $('<span/>').addClass('url mr5').text('[' + menu.url + ']'),
+              $('<span/>').addClass('title').text(menu.title)
+            ),
+            $('<span/>').addClass('panel-controls').append(
+              $('<a/>', {
+                'href': '#',
+                'title': '@lang("admin.button.edit", "Düzenle")'
+              }).on('click', function (e) {
+                e.preventDefault();
+
+                $('#menu-modal').modal();
+
+                var panel = $(this).closest('.panel');
+
+                $('#id').val(panel.attr('data-id'));
+                $('#language').val(language);
+                $('#url').val(panel.attr('data-url'));
+                $('#title').val(panel.find('.panel-title > .title').text());
+                $('#active').prop('checked', panel.attr('data-active'));
+              }).append(
+                $('<i/>').addClass('fa fa-edit')
+              ),
+              $('<a/>', {
+                'href': '#',
+                'title': '@lang("admin.button.add_item", "Eleman Ekle")'
+              }).on('click', function (e) {
+                e.preventDefault();
+
+                addItem({
+                  'title': '@lang("admin.label.unnamed", "İsimsiz")'
+                }, $(this).closest('.panel').find('.dd'), true);
+              }).append(
+                $('<i/>').addClass('fa fa-plus')
+              )
+            )
+          )
+        ).appendTo(
+          $('<div/>', {
+            'data-id': menu.id,
+            'data-url': menu.url,
+            'data-active': menu.active
+          }).addClass('panel panel-' + (menu.active ? 'primary' : 'default') + ' panel-border top mb25').appendTo(
+            $('<div/>').addClass('col-md-6').appendTo(target)
+          )
+        )
+      ).after(
+        $('<div/>').addClass('panel-footer text-right').append(
+          $('<button/>', {
+            'type': 'submit'
+          }).addClass('btn btn-primary mr10').text('@lang("admin.button.save", "Kaydet")'),
+          $('<button/>', {
+            'type': 'button'
+          }).popConfirm({
+            title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+            content: "@lang('admin.message.will_delete_menu', 'Tüm menü silinecektir!')",
+            placement: "top",
+            yesBtn: "@lang('admin.button.yes', 'Evet')",
+            noBtn: "@lang('admin.button.no', 'Hayır')",
+            confirm: function () {
+              var target = $('#list');
+              var el = $(this).closest('.col-md-6');
+              var id = $(this).closest('.panel').attr('data-id');
+
+              if (!id) {
+                window.setTimeout(function () {
+                  el.remove();
+
+                  if (!target.find('.col-md-6').length) {
+                    target.empty().append(notFound());
+                  }
+                }, 100);
+              } else {
+                $.ajax({
+                  'type': 'delete',
+                  'url': $(this).closest('form').attr('action') + '/' + id
+                }).done(function (result) {
+                  if (result.success) {
+                    window.setTimeout(function () {
+                      el.remove();
+
+                      if (!target.find('.col-md-6').length) {
+                        target.empty().append(notFound());
+                      }
+                    }, 100);
+                  } else {
+                    new PNotify({
+                      title: "@lang('admin.label.result', 'İşlem Sonucu')",
+                      text: result.text,
+                      type: result.success ? 'success' : 'danger'
+                    });
+                  }
+                });
+              }
+            }
+          }).addClass('btn btn-danger').text('@lang("admin.button.delete", "Sil")')
+        )
+      )
+    ).append(
+      notFound()
+    );
+
+    nestable.nestable();
+
+    return nestable;
+  }
+
+  function makeMenu(list, target) {
+    var added;
+
+    for (var k in list) {
+      added = addItem(list[k], target);
+
+      if (list[k].children && list[k].children.length) {
+        makeMenu(list[k].children, added);
+      }
+    }
+  }
+
+  function addItem(item, target, open) {
+    target.find('.alert').remove();
+
+    var ol = target.find('> ol');
+
+    if (!ol.length) {
+      ol = $('<ol/>').addClass('dd-list').appendTo(target);
+    }
+
+    return $('<li/>').addClass('dd-item').append(
+      $('<div/>').addClass('dd-handle').append(
+        $('<i/>').addClass('fa fa-ellipsis-v'),
+        $('<span/>').addClass('dd-title ml10').text(item.title)
+      ),
+      $('<div/>').addClass('dd-content' + (open ? ' open' : '')).append(
+        $('<div/>').addClass('row').append(
+          $('<div/>').addClass('col-sm-5').append(
+            $('<div/>').addClass('form-group').append(
+              $('<input/>', {
+                'type': 'text',
+                'name': 'title',
+                'maxlength': '255',
+                'placeholder': '@lang("admin.label.title", "Başlık")'
+              }).on('focus', function () {
+                $(this).select();
+              }).on('keyup', function (e) {
+                $(this).closest('.dd-item').find('.dd-title').text($(this).val());
+              }).addClass('form-control').val(item.title)
+            )
+          ),
+          $('<div/>').addClass('col-sm-4').append(
+            $('<div/>').addClass('form-group').append(
+              $('<input/>', {
+                'type': 'text',
+                'name': 'url',
+                'maxlength': '255',
+                'placeholder': 'URL'
+              }).addClass('form-control').val(item.url)
+            )
+          ),
+          $('<div/>').addClass('col-sm-3').append(
+            $('<div/>').addClass('form-group').append(
+              $('<input/>', {
+                'type': 'text',
+                'name': 'name',
+                'maxlength': '50',
+                'placeholder': '@lang("admin.label.definition", "Tanımı")'
+              }).addClass('form-control').val(item.name)
+            )
+          )
+        ),
+        $('<div/>').addClass('row').append(
+          $('<div/>').addClass('col-xs-12').append(
+            $('<div/>').addClass('form-group').append(
+              $('<input/>', {
+                'type': 'text',
+                'name': 'description',
+                'maxlength': '255',
+                'placeholder': '@lang("admin.label.description", "Açıklama")'
+              }).on('focus', function () {
+                $(this).select();
+              }).addClass('form-control').val(item.description)
+            )
+          )
+        ),
+        $('<div/>').addClass('row').append(
+          $('<div/>').addClass('col-sm-4').append(
+            $('<div/>').addClass('form-group').append(
+              $('<input/>', {
+                'type': 'text',
+                'name': 'icon',
+                'maxlength': '50',
+                'placeholder': '@lang("admin.label.icon", "Simgesi")'
+              }).addClass('form-control').val(item.icon)
+            )
+          ),
+          $('<div/>').addClass('col-sm-4').append(
+            $('<div/>').addClass('form-group').append(
+              $('<input/>', {
+                'type': 'text',
+                'name': 'class',
+                'maxlength': '50',
+                'placeholder': '@lang("admin.label.class", "Stil Sınıfı")'
+              }).addClass('form-control').val(item.class)
+            )
+          ),
+          $('<div/>').addClass('col-sm-4').append(
+            $('<div/>').addClass('form-group').append(
+              $('<select/>', {
+                'name': 'target'
+              }).append(
+                $('<option/>', {
+                  'value': '_self'
+                }).text('_self'),
+                $('<option/>', {
+                  'value': '_blank'
+                }).text('_blank'),
+                $('<option/>', {
+                  'value': '_top'
+                }).text('_top'),
+                $('<option/>', {
+                  'value': '_parent'
+                }).text('_parent')
+              ).addClass('form-control').val(item.target || '_self')
+            )
+          )
+        ),
+        $('<a/>', {
+          'href': 'javascript:void(0)'
+        }).addClass('btn btn-danger btn-sm').popConfirm({
+          title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+          content: "@lang('admin.message.will_delete_menu_item', 'Menü elemanı silinecektir!')",
+          placement: "top",
+          yesBtn: "@lang('admin.button.yes', 'Evet')",
+          noBtn: "@lang('admin.button.no', 'Hayır')",
+          confirm: function () {
+            var target = $(this).closest('.dd');
+            var el = $(this).closest('li.dd-item');
+
+            window.setTimeout(function () {
+              el.remove();
+
+              if (!target.find('li.dd-item').length) {
+                target.empty().append(notFound());
+              }
+            }, 100);
+          }
+        }).text("@lang('admin.button.delete', 'Sil')")
+      ),
+      $('<a/>', {
+        'href': 'javascript:void(0)'
+      }).addClass('expand-btn').click(function (e) {
+        e.preventDefault();
+
+        var target = $(this).closest('.dd-item').find('.dd-content');
+
+        if (target.hasClass('open')) {
+          target.removeClass('open');
+          $(this).find('i').removeClass().addClass('fa fa-chevron-left');
+        } else {
+          target.addClass('open');
+          $(this).find('i').removeClass().addClass('fa fa-chevron-down');
+        }
+      }).append(
+        $('<i/>').addClass('fa fa-chevron-' + (open ? 'down' : 'left'))
+      )
+    ).appendTo(ol);
+  }
+
+  $(function () {
+    //Get list
+    getList();
+
+    $('#filter-language').change(function () {
+      window.location.href = "@url()?language=" + $(this).val();
+    });
+
+    $('#menu-modal').on('show.bs.modal', function () {
+      $('#id').val(0);
+      $('#language').val(language);
+      $('#url, #title').val('');
+      $('#active').prop('checked', true);
+
+      $('#menu-form').validate().resetForm();
+    }).on('shown.bs.modal', function () {
+      window.setTimeout(function () {
+        $('#title').focus();
+      }, 200);
+    });
+
+    $('a[href="#add"]').click(function (e) {
+      e.preventDefault();
+
+      $('#menu-modal').modal();
+    });
+
+    $('#menu-form').validate({
+      'rules': {
+        'title': {
+          'required': true
+        },
+        'url': {
+          'required': true
+        }
+      },
+      'messages': {
+        'title': {
+          'required': "@lang('admin.message.content_title_required', 'İçerik başlığını girin!')"
+        },
+        'url': {
+          required: "@lang('admin.message.content_url_required', 'İçerik URL\'yi girin!')"
+        }
+      },
+      'errorPlacement': function (error, element) {
+        error.insertAfter(element.parent());
+      },
+      'submitHandler': function (form) {
+        addPanel({
+          'id': $('#id').val(),
+          'url': $('#url').val(),
+          'title': $('#title').val(),
+          'active': $('#active').prop('checked')
+        });
+
+        $('#menu-modal').modal('hide');
+      }
+    });
+  });
+  //]]>
+</script>
+@stop

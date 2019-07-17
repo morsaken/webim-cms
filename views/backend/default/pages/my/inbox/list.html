@@ -1,0 +1,193 @@
+@extends('default', ['bodyClass' => 'messages-page'])
+
+@section('title') {{{ $caption }}} :: @parent @stop
+
+@section('content')
+@include('topbar')
+<section id="content" class="table-layout">
+  <div class="tray tray-center pn va-t bg-light">
+    <div class="pv10 pl15 bg-white pr10 br-b">
+      <div class="row table-layout">
+        <div class="hidden-xs hidden-sm col-md-3 va-m pln">
+          <div class="btn-group">
+            <button id="quick-compose" type="button" class="btn btn-danger light fw600">
+              @lang('admin.label.quick_compose', 'Hızlı Gönderi')
+            </button>
+          </div>
+        </div>
+        <div class="col-xs-12 col-md-9 text-right prn">
+          <span class="hidden-xs va-m text-muted mr15">
+            @lang('admin.label.total', 'Toplam'):
+            <strong>{{ $list->total }}</strong>
+            -
+            @lang('admin.label.showing', 'Gösterilen'):
+            <strong>{{ $list->offset + 1 }}</strong> / <strong>{{ $list->limit + $list->offset }}</strong>
+          </span>
+          <div class="btn-group">
+            <a class="btn btn-default light{{ !$list->nav->previous->link ? ' disabled' : '' }}" href="{{ $list->nav->previous->link ? $list->nav->previous->link : 'javascript:void(0)'}}"><i class="fa fa-chevron-left"></i></a>
+            <a class="btn btn-default light{{ !$list->nav->next->link ? ' disabled' : '' }}" href="{{ $list->nav->next->link ? $list->nav->next->link : 'javascript:void(0)'}}"><i class="fa fa-chevron-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    @if (isset($list) && $list->total)
+    <table id="message-table" class="table admin-form theme-warning tc-checkbox-1">
+      <thead>
+        <tr>
+          <th class="text-center">@lang('admin.label.sender', 'Gönderen')</th>
+          <th>@lang('admin.label.subject', 'Başlık')</th>
+          <th class="hidden-xs"></th>
+          <th class="text-right">@lang('admin.label.date', 'Tarih')</th>
+          <th class="text-center hidden-xs">#</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach ($list->rows as $row)
+        <tr class="message-{{ $row->read == 'true' ? 'read' : 'unread' }}" data-id="{{ $row->key }}">
+          <td>{{ $row->sender_name ? $row->sender_first_name . ' ' . $row->sender_last_name : lang('label.anonymous_user', 'Anonim Kullanıcı') }}</td>
+          <td>{{{ str_limit($row->subject) }}}</td>
+          <td class="hidden-xs">{{ $row->attachmentTotal ? '<i class="fa fa-paperclip fs15 text-muted va-b"></i>' : '&nbsp;' }}</td>
+          <td class="text-right fw600" data-livestamp="{{ strtotime($row->date) }}" title="{{{ date_show($row->date, 'long', true) }}}">
+            {{{ date_show($row->date, '{day} {month_name}') }}}
+          </td>
+          <td class="text-center hidden-xs">
+            <a class="btn btn-danger" href="javascript:;" data-trash="{{ $row->key }}"><i class="fa fa-trash"></i></a>
+          </td>
+        </tr>
+        @endforeach
+      </tbody>
+    </table>
+    @endif
+  </div>
+</section>
+
+<div class="quick-compose-form">
+  <form id="quick-compose-form" method="post" action="@url()">
+    <input id="to" type="email" name="to[]" class="form-control" placeholder="@lang('admin.placeholder.to', 'Kime')">
+    <input id="inputSubject" type="text" class="form-control" placeholder="@lang('admin.placeholder.subject', 'Konu')">
+    <div class="summernote-quick">@lang('admin.placeholder.message', 'Mesaj')</div>
+  </form>
+</div>
+@stop
+
+@section('link')
+@parent
+<link type="text/css" href="{{ $root }}/js/plugins/dock/dockmodal.css" rel="stylesheet">
+<link type="text/css" href="{{ $root }}/js/lib/editors/summernote/summernote.css" rel="stylesheet">
+@stop
+
+@section('script')
+@parent
+<script type="text/javascript" src="{{ $root }}/js/plugins/dock/dockmodal.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/lib/editors/summernote/summernote.min.js"></script>
+<script type="text/javascript">
+  //<![CDATA[
+  $(function () {
+    'use strict';
+
+    var msgListing = $('#message-table > tbody > tr > td');
+    var msgCheckbox = $('#message-table > tbody > tr input[type=checkbox]');
+
+    // on message table checkbox click, toggle highlighted class
+    msgCheckbox.on('click', function () {
+      $(this).parents('tr').toggleClass('highlight');
+    });
+
+    // on message table row click, redirect page. Unless target was a checkbox
+    msgListing.not(":last-child").on('click', function (e) {
+      // stop event bubble if clicked item is not a checkbox
+      e.stopPropagation();
+      e.preventDefault();
+
+      // Redirect to message compose page if clicked item is not a checkbox
+      window.location = "@url($prefix . 'my/inbox/view')/" + $(this).closest('tr').data('id');
+    });
+
+    // On button click display quick compose message form
+    $('#quick-compose').on('click', function () {
+      // Admin Dock Plugin
+      $('.quick-compose-form').dockmodal({
+        minimizedWidth: 260,
+        width: 470,
+        height: 480,
+        title: "@lang('admin.title.compose', 'Yeni Mesaj')",
+        initialState: 'docked',
+        buttons: [{
+          html: "@lang('admin.button.send', 'Gönder')",
+          buttonClass: "btn btn-primary btn-sm",
+          click: function (e, dialog) {
+            // do something when the button is clicked
+            dialog.dockmodal('close');
+            // after dialog closes fire a success notification
+            setTimeout(function () {
+              msgCallback();
+            }, 500);
+          }
+        }]
+      });
+    });
+
+    // example email compose success notification
+    function msgCallback() {
+      (new PNotify({
+        title: 'Message Success!',
+        text: 'Your message has been <b>Sent.</b>',
+        type: 'success',
+        buttons: {
+          closer: false,
+          sticker: false
+        },
+        history: {
+          history: false
+        }
+      }));
+    }
+
+    // Init Summernote
+    $('.summernote-quick').summernote({
+      height: 255, //set editable area's height
+      focus: false, //set focus editable area after Initialize summernote
+      toolbar: [
+        ['style', ['bold', 'italic', 'underline']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['height', ['height']]
+      ]
+    });
+
+    $('[data-trash]').popConfirm({
+      title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+      content: "@lang('admin.message.will_trash_mail', 'Posta çöp kutusuna gönderilecek!')",
+      placement: "left",
+      yesBtn: "@lang('admin.button.yes', 'Evet')",
+      noBtn: "@lang('admin.button.no', 'Hayır')",
+      confirm: function() {
+        var $id = $(this).attr('data-trash');
+
+        $.ajax({
+          method: 'DELETE',
+          url: "@url($prefix . 'my/inbox/trash/0')".replace('/0', '/' + $id)
+        }).done(function (result) {
+          if (result.success) {
+            window.location.reload();
+          } else {
+            new PNotify({
+              title: "@lang('admin.label.error', 'Hata')",
+              text: result.text,
+              type: 'warning'
+            });
+          }
+        }).fail(function () {
+          new PNotify({
+            title: "@lang('admin.label.error', 'Hata')",
+            text: "@lang('admin.message.error_occurred', 'Bir hata oluştu')",
+            type: 'danger'
+          });
+        });
+      }
+    });
+
+  });
+  //]]>
+</script>
+@stop

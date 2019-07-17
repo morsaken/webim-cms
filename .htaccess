@@ -1,0 +1,20 @@
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_URI} !\.(.*)+$ [NC]
+RewriteRule . index.php [QSA,L]
+RewriteRule \.html$ - [F]
+RewriteCond %{REQUEST_FILENAME} !-f
+ErrorDocument 404 /
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 month"
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/jpg "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType text/javascript "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+</IfModule>

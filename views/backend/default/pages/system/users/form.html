@@ -1,0 +1,264 @@
+@extends('default')
+
+@section('title') {{{ $caption }}} :: @parent @stop
+
+@section('content')
+@include('topbar')
+<section id="content" class="table-layout">
+ <div class="tray tray-center pn va-t posr">
+  <div class="panel m15">
+   <div class="panel-heading">
+    <span class="panel-title">{{{ isset($user->name) ? lang('admin.label.edit', 'Düzenle') : lang('admin.label.create_new', 'Yeni Oluştur') }}}</span>
+    <ul class="nav panel-tabs-border panel-tabs">
+     <li class="active">
+      <a href="#tab-common" data-toggle="tab">@lang('admin.label.common', 'Genel')</a>
+     </li>
+    </ul>
+   </div>
+   <form id="form" class="panel-body p20 pb10" method="post" action="@url()">
+    <input type="hidden" id="id" name="id" value="{{ $user->id or 0 }}">
+    <input type="hidden" id="version" name="version" value="{{ $user->version or 0 }}">
+    <div class="tab-content pn br-n admin-form">
+     <div id="tab-common" class="tab-pane active">
+      @if (isset($groups))
+      <div class="section mb15">
+       <h6 class="fw400">@lang('admin.label.user_groups', 'Bağlı Olduğu Gruplar')</h6>
+       <label class="field select">
+        <select id="groups" name="groups[]" class="select2" multiple size="5">
+         @foreach ($groups as $groupId => $groupTitle)
+         <option value="{{ $groupId }}"{{ isset($user->groups[$groupId]) ? ' selected="selected"' : '' }}>{{{ $groupTitle }}}</option>
+         @endforeach
+        </select>
+       </label>
+      </div>
+      @endif
+      <div class="section mb15 row">
+       <div class="col-sm-6">
+        <h6 class="fw400">@lang('admin.label.user_name', 'Kullanıcı Adı')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="name" name="name" class="gui-input" placeholder="@lang('admin.hint.user.name', 'Kullanıcı Adı')" value="{{{ $user->name or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-user"></i>
+         </span>
+        </label>
+       </div>
+       <div class="col-sm-6">
+        <h6 class="fw400">@lang('admin.label.email', 'E-Posta Adresi')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="email" name="email" class="gui-input" placeholder="@lang('admin.hint.user.email', 'Kullanıcı E-Posta Adresi')" value="{{{ $user->email or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-envelope-o"></i>
+         </span>
+        </label>
+       </div>
+      </div>
+      <div class="section mb15 row">
+       <div class="col-sm-6">
+        <h6 class="fw400">@lang('admin.label.first_name', 'Adı')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="first_name" name="first_name" class="gui-input" placeholder="@lang('admin.hint.user.first_name', 'Adı')" value="{{{ $user->first_name or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-info"></i>
+         </span>
+        </label>
+       </div>
+       <div class="col-sm-6">
+        <h6 class="fw400">@lang('admin.label.last_name', 'Soyadı')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="last_name" name="last_name" class="gui-input" placeholder="@lang('admin.hint.user.last_name', 'Soyadı')" value="{{{ $user->last_name or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-info"></i>
+         </span>
+        </label>
+       </div>
+      </div>
+      <div class="section mb15 row">
+       <div class="col-sm-6">
+        <h6 class="fw400">@lang('admin.label.password', 'Parola')</h6>
+        <label class="field prepend-icon">
+         <input type="password" id="meta-pass" name="meta-pass" class="gui-input" placeholder="@lang('admin.hint.user.pass', 'Parola')">
+         <span class="field-icon">
+          <i class="fa fa-unlock"></i>
+         </span>
+        </label>
+       </div>
+       <div class="col-sm-6">
+        <h6 class="fw400">@lang('admin.label.pass_again', 'Parola (Tekrar)')</h6>
+        <label class="field prepend-icon">
+         <input type="password" id="pass_again" name="pass_again" class="gui-input" placeholder="@lang('admin.hint.user.pass_again', 'Parola (Tekrar)')">
+         <span class="field-icon">
+          <i class="fa fa-unlock"></i>
+         </span>
+        </label>
+       </div>
+      </div>
+      <div class="section mb15 row">
+       <div class="col-sm-6">
+        <h6 class="fw400">@lang('admin.label.user_role', 'Rolü')</h6>
+        <label class="field select">
+         <select id="role" name="role" class="empty">
+          @foreach ($roles as $roleId => $roleTitle)
+          <option value="{{ $roleId }}"{{ isset($user->role) && $user->role == $roleId ? ' selected="selected"' : '' }}>{{{ $roleTitle }}}</option>
+          @endforeach
+         </select>
+         <i class="arrow double"></i>
+        </label>
+       </div>
+       <div class="col-sm-6">
+        <h6 class="fw400">@lang('admin.label.status', 'Durum')</h6>
+        <div class="option-group field">
+         <label class="option option-primary">
+          <input type="radio" id="active_true" name="active" value="true"{{ !isset($user->active) || $user->active == 'true' ? ' checked="checked"' : '' }}>
+          <span class="radio"></span>
+          @lang('admin.label.active', 'Aktif')
+         </label>
+         <label class="option option-primary">
+          <input type="radio" id="active_false" name="active" value="false"{{ isset($user->active) && $user->active == 'false' ? ' checked="checked"' : '' }}>
+          <span class="radio"></span>
+          @lang('admin.label.passive', 'Pasif')
+         </label>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <hr class="short alt">
+    <div class="section mbn text-right">
+     <button type="submit" id="save-btn" class="btn btn-primary">
+      <i class="fa fa-save"></i>
+      @lang('admin.button.save', 'Kaydet')
+     </button>
+     @if (isset($user->id) && ($user->id > 0))
+     <button type="button" id="delete-btn" data-id="{{ $user->id }}" class="btn btn-danger">
+      <i class="fa fa-trash-o"></i>
+      @lang('admin.button.delete', 'Sil')
+     </button>
+     @endif
+     <button type="button" id="cancel-btn" class="btn btn-default">
+      <i class="fa fa-reply"></i>
+      @lang('admin.button.cancel', 'İptal')
+     </button>
+    </div>
+   </form>
+  </div>
+ </div>
+</section>
+@stop
+
+@section('script')
+@parent
+<script type="text/javascript">
+ //<![CDATA[
+ $(function() {
+  'use strict';
+
+  $('#form').validate({
+   // Rules for form validation
+   rules : {
+    name : {
+     required : true
+    },
+    email : {
+     required : true,
+     email: true
+    },
+    first_name : {
+     required : true
+    },
+    pass_again: {
+     equalTo: '#meta-pass'
+    }
+   },
+   // Messages for form validation
+   messages : {
+    name : {
+     required : "@lang('admin.message.user_name_required', 'Kullanıcı adını girin!')"
+    },
+    email : {
+     required : "@lang('admin.message.email_required', 'Kullanıcı e-posta adresini girin!')",
+     email : "@lang('admin.message.valid_email_required', 'Geçerli kullanıcı e-posta adresini girin!')"
+    },
+    first_name : {
+     required : "@lang('admin.message.name_required', 'Adı girin!')"
+    },
+    pass_again: {
+     equalTo: "@lang('admin.message.pass_must_be_equal', 'Parolayı aynı şekilde girin!')"
+    }
+   },
+   // Do not change code below
+   errorPlacement : function(error, element) {
+    error.insertAfter(element.parent());
+   },
+   submitHandler: function(form) {
+    var formData = new FormData(form);
+
+    $.ajax({
+     'type': $(form).attr('method'),
+     'url': $(form).attr('action'),
+     'cache': false,
+     'dataType': 'json',
+     'contentType': false,
+     'processData': false,
+     'data': formData
+    }).done(function(result) {
+     if (result.success) {
+      if ($('#id').val() == 0) {
+       result.onAfterClose = function() {
+        $('#cancel-btn').trigger('click');
+       };
+      }
+
+      $('#id').val(result.return.id);
+      $('#version').val(result.return.version);
+     }
+
+     if (result.success) {
+      message(result);
+     } else {
+      new PNotify({
+       title: "@lang('admin.label.error', 'Hata')",
+       text: result.text,
+       type: 'danger'
+      });
+     }
+    });
+   }
+  });
+
+  $('#delete-btn').popConfirm({
+   title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+   content: "@lang('admin.message.will_delete_user', 'Kullanıcı ile bağlantılı tüm içerikler silinecektir!')",
+   placement: "top",
+   yesBtn: "@lang('admin.button.yes', 'Evet')",
+   noBtn: "@lang('admin.button.no', 'Hayır')",
+   confirm: function() {
+    $.ajax({
+     type: 'DELETE',
+     url: $('#form').attr('action')
+    }).done(function(result) {
+     result.onAfterClose = function() {
+      if (result.success) {
+       window.location.href = '{{ urlUp($breadcrumb) }}';
+      }
+     };
+
+     if (result.success) {
+      message(result);
+     } else {
+      new PNotify({
+       title: "@lang('admin.label.error', 'Hata')",
+       text: result.text,
+       type: 'danger'
+      });
+     }
+    });
+   }
+  });
+
+  $('#cancel-btn').click(function() {
+   window.location.href = '{{ urlUp($breadcrumb) }}';
+  });
+ });
+ //]]>
+</script>
+@stop

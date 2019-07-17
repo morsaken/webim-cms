@@ -1,0 +1,135 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="../style/editor.css" rel="stylesheet" type="text/css">
+<script>
+  var sLangDir=parent.oUtil.langDir;
+  document.write("<scr"+"ipt src='../language/"+sLangDir+"/youtube_video.js'></scr"+"ipt>");
+</script>
+<script>writeTitle()</script>
+<script>
+
+//parameter for popup window, since standard window.open doesn't support parameter
+var dialogArgument = ['parent', 'parent'];
+
+function GetElement(oElement,sMatchTag)
+    {
+    while (oElement!=null&&oElement.tagName!=sMatchTag)
+        {
+        if(oElement.tagName=="BODY")return null;
+        oElement=oElement.parentNode;
+        }
+    return oElement;
+    }
+
+function doWindowFocus()
+  {
+  parent.oUtil.onSelectionChanged=new Function("realTime()");
+  }
+function bodyOnLoad()
+  {
+  loadTxt();
+
+  window.onfocus=doWindowFocus;
+  parent.oUtil.onSelectionChanged=new Function("realTime()");
+
+  realTime()
+  }
+
+function bodyOnUnload() {
+  parent.oUtil.onSelectionChanged=null;
+}
+
+function realTime()
+  {
+  var oEditor=parent.oUtil.oEditor;
+  var oSel=oEditor.getSelection();
+
+  clearAllProperties()
+
+  var oEl = parent.getSelectedElement(oSel);
+  oEl = GetElement(oEl, "OBJECT")
+
+  if (oEl)
+    {
+    //document.getElementById("inpSwfURL").value=oEl.outerHTML;
+    }
+  }
+
+function clearAllProperties()
+  {
+  document.getElementById("inpSwfURL").value="";
+  }
+
+function getVideoId(url) {
+	return url.replace(/^.*((v\/)|(embed\/)|(watch\?))\??v?=?([^\&\?]*).*/,"$5");
+}
+
+function doApply() {
+
+  var oEditor=parent.oUtil.oEditor;
+  var oSel=oEditor.getSelection();
+
+  var oEl = parent.getSelectedElement(oSel);
+  oEl = GetElement(oEl, "IFRAME")
+
+  parent.oUtil.obj.saveForUndo();
+
+  var videoId = getVideoId(document.getElementById("inpSwfURL").value);
+
+  if(videoId==null || videoId=="") return;
+
+  var sHTML = "<iframe title=\"YouTube video player\" width=\"480\" height=\"390\" src=\"http://www.youtube.com/embed/" + videoId + "\" frameborder=\"0\" allowfullscreen></iframe>";
+
+  if(oEl)oEl.removeNode(oEl);
+  var obj=parent.oUtil.obj;
+  obj.insertHTML(sHTML);
+
+}
+
+function windowClose() {
+  parent.oUtil.onSelectionChanged=null;
+  self.close();
+};
+
+</script>
+</head>
+<body style="overflow:hidden;">
+
+<table width=100% height=100% align=center cellpadding=0 cellspacing=0>
+<tr>
+<td valign=top style="padding:5;height:100%">
+
+  <table cellpadding=2 cellspacing=0>
+  <tr>
+    <td width="90px" nowrap><span id="txtLang" name="txtLang">Source</span>:&nbsp;&nbsp;</td>
+    <td colspan="4" width="100%">
+      <table cellpadding="0" cellspacing="0" width="100%" id="Table2">
+      <tr>
+      <td width="100%"><input type="text" name="inpSwfURL" id="inpSwfURL" class="inpTxt" size="40" /></td>
+      </tr>
+      </table>
+    </td>
+  </tr>
+  </table>
+
+</td>
+</tr>
+<tr>
+<td class="dialogFooter" align="right">
+  <table cellpadding=0 cellspacing=0>
+  <tr>
+  <td>
+    <input type="button" name=btnCancel id=btnCancel value="cancel" onclick="windowClose()" class="inpBtn" onmouseover="this.className='inpBtnOver';" onmouseout="this.className='inpBtnOut'">
+  </td>
+  <td>
+    <input type="button" name=btnOk id=btnOk value=" ok " onclick="doApply();windowClose()" class="inpBtn" onmouseover="this.className='inpBtnOver';" onmouseout="this.className='inpBtnOut'">
+  </td>
+  </tr>
+  </table>
+</td>
+</tr>
+</table>
+
+</body>
+</html>

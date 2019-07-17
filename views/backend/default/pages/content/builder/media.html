@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Images</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:300,600,800" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{{ $root }}/js/lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="{{ $root }}/js/plugins/fileinput/css/fileinput.min.css">
+  <style>
+    body {
+      font: 14px 'Open Sans', Arial, sans-serif
+    }
+
+    .upload-container {
+      border-bottom: 1px solid #ccc;
+      padding: 15px 15px 25px;
+      margin-bottom: 15px;
+    }
+
+    #files {
+      display: flex;
+      flex-wrap: wrap;
+      flex: 1 1;
+      justify-content: space-between;
+      padding: 15px;
+    }
+
+    #files a {
+      display: inline-block;
+      width: 100px;
+      margin: 10px;
+      text-decoration: none;
+      color: #000000;
+    }
+
+    #files a img {
+      display: block;
+      width: 100px;
+      height: 100px;
+    }
+
+    #files p {
+      text-align: center;
+      color: #f0262f;
+    }
+
+    #files span {
+      display: block;
+      height: 20px;
+      line-height: 20px;
+      overflow: hidden;
+      text-align: center;
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+<div class="upload-container">
+  <form id="upload-form" method="post" action="@url($prefix . 'content/media/upload')">
+    <input type="file" id="file" name="media-file[]" class="file-loading" multiple>
+  </form>
+</div>
+<div id="files">
+  @if (isset($files) && count($files))
+  @foreach ($files as $file)
+  <a href="{{ $file->src }}" title="{{{ $file->title }}}">
+    <img src="{{ $file->poster }}" alt="{{{ $file->title }}}">
+    <span>{{{ $file->title }}}</span>
+  </a>
+  @endforeach
+  @else
+  <p>@lang('admin.message.no_content_found', 'İçerik bulunamadı!')</p>
+  @endif
+</div>
+
+<script type="text/javascript" src="{{ $root }}/js/lib/jquery/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/fileinput/js/fileinput.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/fileinput/js/fileinput_locale_{{ lang() }}.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/lib/editors/tinymce/tinymce.min.js"></script>
+<script type="text/javascript">
+  jQuery(document).ready(function ($) {
+    //Optional: specify custom height
+    window.frameElement.style.height = '500px';
+
+    var $container = $('#files');
+
+    $container.on('click', 'a', function (e) {
+      e.preventDefault();
+      selectAsset($(this).attr('href'));
+    });
+
+    $('#file').fileinput({
+      uploadUrl: $('#upload-form').attr('action'),
+      uploadAsync: false,
+      maxFileCount: 50,
+      overwriteInitial: false
+    }).on('filebatchuploadsuccess', function (e, data) {
+      window.location.reload();
+      /*
+      var item;
+
+      for (var k in data.response) {
+        item = data.response[k];
+
+        $container.prepend(
+          $('<a/>', {
+            href: item.poster,
+            title: item.title
+          }).append(
+            $('<img/>', {
+              src: item.thumb
+            }),
+            $('<span/>').text(item.title)
+          )
+        );
+      }*/
+    });
+  });
+
+  /*
+   USE THIS FUNCTION TO SELECT CUSTOM ASSET WITH CUSTOM VALUE TO RETURN
+   An asset can be a file, an image or a page in your own CMS
+   */
+  function selectAsset(assetValue) {
+    var w = window.opener ? window.opener : window.parent;
+    @if (input('integration') === 'tinymce')
+    var inp = w.document.getElementById('{{ input("input") }}');
+    inp.value = assetValue;
+    w.tinyMCE.activeEditor.windowManager.close();
+    @else
+    //Get selected URL
+    var inp = w.$('#active-input').val();
+    w.$('#' + inp).val(assetValue);
+
+    //Close dialog
+    if (window.frameElement.id === 'ifrFileBrowse') w.$("#md-fileselect").data('simplemodal').hide();
+    if (window.frameElement.id === 'ifrImageBrowse') w.$("#md-imageselect").data('simplemodal').hide();
+    @endif
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+@if (isset($list) && $list->total)
+<div class="panel-menu p12 admin-form theme-primary">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="btn-group">
+        <button type="button" class="btn btn-dark dropdown-toggle pv5" data-toggle="dropdown" aria-expanded="false">
+          @lang('admin.button.selecteds', 'Seçilileri')
+          <span class="caret ml5"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li>
+            <a href="#delete">@lang('admin.button.delete', 'Sil')</a>
+          </li>
+          <li class="divider"></li>
+          @if (isset($buttons) && count($buttons))
+          @foreach ($buttons as $link => $label)
+          <li>
+            <a href="#{{ $link }}">{{{ $label }}}</a>
+          </li>
+          @endforeach
+          @else
+          <li>
+            <a href="#archive">@lang('admin.button.archive', 'Arşivle')</a>
+          </li>
+          <li>
+            <a href="#duplicate">@lang('admin.button.duplicate', 'Çokla')</a>
+          </li>
+          @endif
+        </ul>
+      </div>
+    </div>
+    <div class="col-xs-6 text-right">
+   <span class="hidden-xs va-m text-muted mr15">
+    @lang('admin.label.total', 'Toplam'):
+    <strong>{{ $list->total }}</strong>
+    -
+    @lang('admin.label.showing', 'Gösterilen'):
+    <strong>{{ $list->offset + 1 }}</strong> / <strong>{{ $list->limit + $list->offset }}</strong>
+   </span>
+      <div class="btn-group">
+        <button type="button" id="prev-btn" data-offset="{{ $list->offset }}" data-limit="{{ $list->limit }}" data-total="{{ $list->total }}" class="btn btn-default light pv5{{ $list->offset == 0 ? ' disabled' : '' }}">
+          <i class="fa fa-chevron-left"></i>
+        </button>
+        <button type="button" id="next-btn" data-offset="{{ $list->offset }}" data-limit="{{ $list->limit }}" data-total="{{ $list->total }}" class="btn btn-default light pv5{{ $list->offset + $list->limit >= $list->total ? ' disabled' : '' }}">
+          <i class="fa fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+@endif
+
+@section('script')
+@parent
+<script type="text/javascript">
+  //<![CDATA[
+  $(function () {
+    var p = [], qs = window.location.search.replace('?', '').split('&'), kv;
+
+    for (var k in qs) {
+      if (qs[k].length > 0) {
+        kv = qs[k].split('=');
+
+        if (kv[0] !== 'offset') {
+          p.push(kv[0] + '=' + kv[1]);
+        }
+      }
+    }
+
+    $('#prev-btn').click(function (e) {
+      e.preventDefault();
+
+      if ($(this).data('offset') > 0) {
+        p.push('offset=' + ($(this).data('offset') - $(this).data('limit')));
+
+        window.location.href = '@url()?' + p.join('&');
+      }
+    });
+
+    $('#next-btn').click(function (e) {
+      e.preventDefault();
+
+      if ($(this).data('offset') + $(this).data('limit') < $(this).data('total')) {
+        p.push('offset=' + ($(this).data('offset') + $(this).data('limit')));
+
+        window.location.href = '@url()?' + p.join('&');
+      }
+    });
+
+    $('#filter-form').submit(function (e) {
+      e.preventDefault();
+
+      var filters = [];
+
+      $(this).find('input, select').each(function () {
+        if (($(this).is('input') && $(this).val().length) || ($(this).is('select') && $(this).val() != '0')) {
+          filters.push($(this).attr('name').replace('filter-', '') + '=' + $(this).val());
+        }
+      });
+
+      window.location.href = $(this).attr('action') + (filters.length ? '?' + filters.join('&') : '')
+    });
+  });
+  //]]>
+</script>
+@stop

@@ -1,0 +1,15 @@
+@extends('default', ['bodyClass' => 'error-page alt sb-l-c sb-r-c'])
+
+@section('title') @lang('admin.menu.500', 'Sistem Hatası') :: @parent @stop
+
+@section('content')
+<section id="content" class="pn animated fadeIn">
+ <div class="center-block mt50 mw800">
+  <h1 class="error-title"> 500! </h1>
+  <h2 class="error-subtitle">@lang('admin.menu.500', 'Sistem Hatası').</h2>
+  <div>
+   {{ $content or '' }}
+  </div>
+ </div>
+</section>
+@stop

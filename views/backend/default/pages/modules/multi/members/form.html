@@ -1,0 +1,379 @@
+@extends('default')
+
+@section('title') {{{ $caption }}} :: @parent @stop
+
+@section('content')
+@include('topbar')
+<section id="content" class="table-layout">
+ <div class="tray tray-center pn va-t posr">
+  <div class="panel m15">
+   <div class="panel-heading">
+    <span class="panel-title">{{{ isset($content->title) ? lang('admin.label.edit', 'Düzenle') : lang('admin.label.create_new', 'Yeni Oluştur') }}}</span>
+    <ul class="nav panel-tabs-border panel-tabs">
+     <li class="active">
+      <a href="#tab-common" data-toggle="tab">@lang('admin.label.common', 'Genel')</a>
+     </li>
+     @foreach (langs() as $code => $lang)
+     <li>
+      <a href="#tab-{{ $code }}" data-toggle="tab">{{{ $lang }}}</a>
+     </li>
+     @endforeach
+     <li>
+      <a href="#tab-media" data-toggle="tab">@lang('admin.label.media', 'Medya')</a>
+     </li>
+    </ul>
+   </div>
+   <form id="form" class="panel-body p20 pb10" method="post" enctype="multipart/form-data" action="@url()">
+    <input type="hidden" id="id" name="id" value="{{ $content->id or 0 }}">
+    <input type="hidden" id="version" name="version" value="{{ $content->version or 0 }}">
+    <input type="hidden" id="meta-poster_id" name="meta-poster_id" value="{{ $content->meta->poster_id or 0 }}">
+    <div class="tab-content pn br-n admin-form">
+     <div id="tab-common" class="tab-pane active">
+      <div class="section mbn row">
+       <div class="col-md-4">
+        @include('addon.poster', ['poster' => (isset($content->poster->image) ? $content->poster : null), 'posterTitle' => lang('turksoy.label.flag_picture', 'Bayrak Resmi')])
+       </div>
+       <div class="col-md-8 pl15">
+        <div class="section mb15">
+         <h6 class="fw400">@lang('admin.label.url', 'URL')</h6>
+         <label class="field prepend-icon">
+         <input type="text" id="url" name="url" class="gui-input" value="{{{ $content->url or '' }}}">
+          <span class="field-icon">
+           <i class="fa fa-link"></i>
+          </span>
+         </label>
+        </div>
+        <div class="section mb15 row">
+         <div class="col-xs-4">
+          <h6 class="fw400">@lang('admin.label.turksoy.map_geo_latitude', 'Harita Koordinatı (Lat)')</h6>
+          <label class="field prepend-icon">
+           <input type="text" id="meta-geo_lat" name="meta-geo_lat" class="gui-input" value="{{{ $content->meta->geo_lat or '' }}}">
+           <span class="field-icon">
+            <i class="fa fa-map-marker"></i>
+           </span>
+          </label>
+         </div>
+         <div class="col-xs-4">
+          <h6 class="fw400">@lang('admin.label.turksoy.map_geo_lon', 'Harita Koordinatı (Lon)')</h6>
+          <label class="field prepend-icon">
+           <input type="text" id="meta-geo_lon" name="meta-geo_lon" class="gui-input" value="{{{ $content->meta->geo_lon or '' }}}">
+           <span class="field-icon">
+            <i class="fa fa-map-marker"></i>
+           </span>
+          </label>
+         </div>
+         <div class="col-xs-4">
+          <h6 class="fw400">@lang('admin.label.turksoy.map_geo_zoom', 'Harita Büyüklüğü (Zoom)')</h6>
+          <label class="field prepend-icon">
+           <input type="text" id="meta-geo_zoom" name="meta-geo_zoom" class="gui-input" value="{{{ $content->meta->geo_zoom or '' }}}">
+           <span class="field-icon">
+            <i class="fa fa-search-plus"></i>
+           </span>
+          </label>
+         </div>
+        </div>
+        <div class="section mb15">
+         <h6 class="fw400">@lang('admin.label.status', 'Durum')</h6>
+         <div class="option-group field">
+          <label class="option option-primary">
+           <input type="radio" id="active_true" name="active" value="true"{{ !isset($content->active) || $content->active == 'true' ? ' checked="checked"' : '' }}>
+           <span class="radio"></span>
+           @lang('admin.label.active', 'Aktif')
+          </label>
+          <label class="option option-primary">
+           <input type="radio" id="active_false" name="active" value="false"{{ isset($content->active) && $content->active == 'false' ? ' checked="checked"' : '' }}>
+           <span class="radio"></span>
+           @lang('admin.label.passive', 'Pasif')
+          </label>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     @foreach (langs() as $code => $lang)
+     <div id="tab-{{ $code }}" class="tab-pane">
+      @if (!isset($content->children[$code]->id))
+      <div class="alert alert-dark alert-dismissable">
+       <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+       <i class="fa fa-warning pr10"></i>
+       <strong>@lang('admin.label.warning', 'Uyarı'):</strong>
+       @lang('admin.message.no_title_no_saving_for_this_language', 'Başlık girilmediği durumda bu dil için kayıt yapılmaz!')
+      </div>
+      @endif
+      <input type="hidden" id="{{ $code }}-id" name="{{ $code }}-id" value="{{{ $content->children[$code]->id or 0 }}}">
+      <input type="hidden" id="{{ $code }}-version" name="{{ $code }}-version" value="{{ $content->children[$code]->version or 0 }}">
+      <div class="section mb15">
+       <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
+       <label class="field prepend-icon">
+        <input type="text" id="{{ $code }}-title" name="{{ $code }}-title" class="gui-input" value="{{{ $content->children[$code]->title or '' }}}">
+        <span class="field-icon">
+         <i class="fa fa-tag"></i>
+        </span>
+       </label>
+      </div>
+      <div class="section mb15">
+       <h6 class="fw400">@lang('admin.label.description', 'Açıklama')</h6>
+       <label class="field prepend-icon">
+        <textarea id="{{ $code }}-meta-description" name="{{ $code }}-meta-description" class="gui-textarea h-200">{{{ $content->children[$code]->meta->description or '' }}}</textarea>
+        <span class="field-icon">
+         <i class="fa fa-edit"></i>
+        </span>
+       </label>
+      </div>
+      <div class="section mb15 row">
+       <div class="col-xs-6">
+        <h6 class="fw400">@lang('admin.label.turksoy.capital_city', 'Başkent')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="{{ $code }}-meta-capital_city" name="{{ $code }}-meta-capital_city" class="gui-input" value="{{{ $content->children[$code]->meta->capital_city or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-info"></i>
+         </span>
+        </label>
+       </div>
+       <div class="col-xs-6">
+        <h6 class="fw400">@lang('admin.label.turksoy.official_languages', 'Resmi Diller')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="{{ $code }}-meta-official_languages" name="{{ $code }}-meta-official_languages" class="gui-input" value="{{{ $content->children[$code]->meta->official_languages or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-info"></i>
+         </span>
+        </label>
+       </div>
+      </div>
+      <div class="section mb15 row">
+       <div class="col-xs-6">
+        <h6 class="fw400">@lang('admin.label.turksoy.population', 'Nüfus')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="{{ $code }}-meta-population" name="{{ $code }}-meta-population" class="gui-input" value="{{{ $content->children[$code]->meta->population or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-info"></i>
+         </span>
+        </label>
+       </div>
+       <div class="col-xs-6">
+        <h6 class="fw400">@lang('admin.label.turksoy.area', 'Yüzölçümü')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="{{ $code }}-meta-area" name="{{ $code }}-meta-area" class="gui-input" value="{{{ $content->children[$code]->meta->area or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-info"></i>
+         </span>
+        </label>
+       </div>
+      </div>
+      <div class="section mb15 row">
+       <div class="col-xs-6">
+        <h6 class="fw400">@lang('admin.label.turksoy.ethnical_structure', 'Etnik Yapı')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="{{ $code }}-meta-ethnical_structure" name="{{ $code }}-meta-ethnical_structure" class="gui-input" value="{{{ $content->children[$code]->meta->ethnical_structure or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-info"></i>
+         </span>
+        </label>
+       </div>
+       <div class="col-xs-6">
+        <h6 class="fw400">@lang('admin.label.turksoy.biggest_cities', 'Büyük Şehirler')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="{{ $code }}-meta-biggest_cities" name="{{ $code }}-meta-biggest_cities" class="gui-input" value="{{{ $content->children[$code]->meta->biggest_cities or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-info"></i>
+         </span>
+        </label>
+       </div>
+      </div>
+      <div class="section mb15 row">
+       <div class="col-xs-6">
+        <h6 class="fw400">@lang('admin.label.turksoy.member_year', 'TÜRKSOY Üyelik Yılı')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="{{ $code }}-meta-member_year" name="{{ $code }}-meta-member_year" class="gui-input" value="{{{ $content->children[$code]->meta->member_year or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-info"></i>
+         </span>
+        </label>
+       </div>
+       <div class="col-xs-6">
+        <h6 class="fw400">@lang('admin.label.turksoy.representative', 'TÜRKSOY Temsilcisi')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="{{ $code }}-meta-representative" name="{{ $code }}-meta-representative" class="gui-input" value="{{{ $content->children[$code]->meta->representative or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-info"></i>
+         </span>
+        </label>
+       </div>
+      </div>
+      <div class="section mb15">
+       <h6 class="fw400">@lang('admin.label.turksoy.related_links', 'İlgili Bağlantılar')</h6>
+       <label class="field prepend-icon">
+        <textarea id="{{ $code }}-meta-related_links" name="{{ $code }}-meta-related_links" cols="5" class="gui-textarea">{{{ $content->children[$code]->meta->related_links or '' }}}</textarea>
+        <span class="field-icon">
+         <i class="fa fa-info"></i>
+        </span>
+        <span class="input-footer">
+         <strong>@lang('admin.label.example', 'Örnek'):</strong>
+         http://www.webim.com Web-IM
+        </span>
+       </label>
+      </div>
+      <div class="section mb15">
+       <h6 class="fw400">@lang('admin.label.turksoy.special_days', 'Önemli Günler')</h6>
+       <label class="field prepend-icon">
+        <textarea id="{{ $code }}-meta-special_days" name="{{ $code }}-meta-special_days" cols="5" class="gui-textarea">{{{ $content->children[$code]->meta->special_days or '' }}}</textarea>
+        <span class="field-icon">
+         <i class="fa fa-info"></i>
+        </span>
+        <span class="input-footer">
+         <strong>@lang('admin.label.example', 'Örnek'):</strong>
+         29 Ekim: Cumhuriyet Bayramı
+        </span>
+       </label>
+      </div>
+     </div>
+     @endforeach
+     <div id="tab-media" class="tab-pane">
+      @include('addon.media')
+     </div>
+    </div>
+    <hr class="short alt">
+    <div class="section row mbn text-right">
+     <button type="submit" id="save-btn" class="btn btn-primary">
+      <i class="fa fa-save"></i>
+      @lang('admin.button.save', 'Kaydet')
+     </button>
+     @if (isset($content->id) && ($content->id > 0))
+     <button type="button" id="delete-btn" data-id="{{ $content->id }}" class="btn btn-danger">
+      <i class="fa fa-trash-o"></i>
+      @lang('admin.button.delete', 'Sil')
+     </button>
+     @endif
+     <button type="button" id="cancel-btn" class="btn btn-default">
+      <i class="fa fa-reply"></i>
+      @lang('admin.button.cancel', 'İptal')
+     </button>
+    </div>
+   </form>
+  </div>
+ </div>
+</section>
+@stop
+
+@section('script')
+@parent
+<script type="text/javascript">
+ //<![CDATA[
+ $(function() {
+  'use strict';
+
+  $('#url').blur(function() {
+   $(this).val($.normalizeString($(this).val()));
+  });
+
+  // select dropdowns - placeholder like creation
+  var selectList = $('.admin-form select');
+  selectList.each(function(i, e) {
+   $(e).on('change', function() {
+    if ($(e).val() == "0") $(e).addClass("empty");
+    else $(e).removeClass("empty")
+   });
+  });
+  selectList.each(function(i, e) {
+   $(e).change();
+  });
+
+  $('#form').validate({
+   // Rules for form validation
+   rules : {
+    url : {
+     required : true
+    }
+   },
+   // Messages for form validation
+   messages : {
+    url : {
+     required : "@lang('admin.message.content.url_required', 'İçerik URL girilmelidir!')"
+    }
+   },
+   // Do not change code below
+   errorPlacement : function(error, element) {
+    error.insertAfter(element.parent());
+   },
+   submitHandler: function(form) {
+    var formData = new FormData(form);
+
+    $.ajax({
+     'type': $(form).attr('method'),
+     'url': $(form).attr('action'),
+     'cache': false,
+     'dataType': 'json',
+     'contentType': false,
+     'processData': false,
+     'data': formData
+    }).done(function(result) {
+     if (result.success) {
+      if (parseFloat($('#id').val()) == 0) {
+       result.onAfterClose = function() {
+        $('#cancel-btn').trigger('click');
+       };
+      }
+
+      $('#id').val(result.return.id);
+      $('#version').val(result.return.version);
+
+      if (result.return.poster.id) {
+       $.fn.posterSet(result.return.poster);
+      }
+
+      for (var code in result.return.langs) {
+       $('#' + code + '-id').val(result.return.langs[code].id);
+       $('#' + code + '-version').val(result.return.langs[code].version);
+      }
+     }
+
+     if (result.success) {
+      message(result);
+     } else {
+      new PNotify({
+       title: "@lang('admin.label.error', 'Hata')",
+       text: result.text,
+       type: 'danger'
+      });
+     }
+    });
+   }
+  });
+
+  $('#delete-btn').popConfirm({
+   title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+   content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
+   placement: "top",
+   yesBtn: "@lang('admin.button.yes', 'Evet')",
+   noBtn: "@lang('admin.button.no', 'Hayır')",
+   confirm: function() {
+    $.ajax({
+     type: 'DELETE',
+     url: $('#form').attr('action')
+    }).done(function(result) {
+     result.onAfterClose = function() {
+      if (result.success) {
+       window.location.href = '{{ urlUp($breadcrumb) }}';
+      }
+     };
+
+     if (result.success) {
+      message(result);
+     } else {
+      new PNotify({
+       title: "@lang('admin.label.error', 'Hata')",
+       text: result.text,
+       type: 'danger'
+      });
+     }
+    });
+   }
+  });
+
+  $('#cancel-btn').click(function() {
+   window.location.href = '{{ urlUp($breadcrumb) }}';
+  });
+ });
+ //]]>
+</script>
+@stop

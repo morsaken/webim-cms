@@ -1,0 +1,84 @@
+@extends('default')
+
+@section('title') {{{ $caption }}} :: @parent @stop
+
+@section('content')
+@include('topbar')
+<section id="content" class="table-layout">
+ <div class="tray tray-center pn va-t posr" data-tray-height="match">
+  <div class="panel m15">
+   <div class="panel-menu p12 admin-form theme-primary">
+    <div class="row">
+     <div class="col-md-3">
+      <label class="field select">
+       <select id="filter-language" name="filter-language">
+        @foreach (langs() as $langCode => $langTitle)
+        <option value="{{ $langCode }}"{{ input('language', lang()) == $langCode ? ' selected="selected"' : '' }}>{{{ $langTitle }}}</option>
+        @endforeach
+       </select>
+       <i class="arrow"></i>
+      </label>
+     </div>
+    </div>
+   </div>
+   <div class="panel-body">
+    <form id="form" class="admin-form" method="post" action="@url()">
+     <input type="hidden" name="language" value="{{ input('language', lang()) }}">
+     <table class="table">
+      <thead>
+       <tr>
+        <th class="text-center">#</th>
+        <th>Başlık (Gün)</th>
+        <th>Açıklama (Saat)</th>
+       </tr>
+      </thead>
+      <tbody>
+       @for ($i = 0; $i < 7; $i++)
+       <tr>
+        <td class="text-center">{{ $i + 1 }}</td>
+        <td>
+         <input type="text" name="title{{ $i }}" class="gui-input" value="@conf('openhours.' . input('language', lang()) . '.title' . $i)">
+        </td>
+        <td>
+         <input type="text" name="desc{{ $i }}" class="gui-input" value="@conf('openhours.' . input('language', lang()) . '.desc' . $i)">
+        </td>
+       </tr>
+       @endfor
+      </tbody>
+     </table>
+     <hr class="short alt">
+     <div class="section mbn text-right">
+      <button type="submit" class="btn btn-primary">
+       <i class="fa fa-save"></i>
+       @lang('admin.button.save', 'Kaydet')
+      </button>
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
+</section>
+@stop
+
+@section('script')
+@parent
+<script type="text/javascript">
+ //<![CDATA[
+ $('#filter-language').change(function() {
+  window.location.href = '@url()?language=' + $(this).val();
+ });
+
+ $('#form').submit(function() {
+  $.ajax({
+   'type': $(this).attr('method'),
+   'url': $(this).attr('action'),
+   'data': $(this).serialize()
+  }).done(function(result) {
+   message(result);
+  });
+
+  return false;
+ });
+ //]]>
+</script>
+@stop

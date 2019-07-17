@@ -1,0 +1,255 @@
+@extends('default')
+
+@section('title') {{{ $caption }}} :: @parent @stop
+
+@section('content')
+@include('topbar')
+<section id="content" class="table-layout">
+ <div class="tray tray-center pn va-t posr">
+  <div class="panel m15">
+   <div class="panel-heading">
+    <span class="panel-title">{{{ isset($group->name) ? lang('admin.label.edit', 'Düzenle') : lang('admin.label.create_new', 'Yeni Oluştur') }}}</span>
+    <ul class="nav panel-tabs-border panel-tabs">
+     <li class="active">
+      <a href="#tab-common" data-toggle="tab">@lang('admin.label.common', 'Genel')</a>
+     </li>
+    </ul>
+   </div>
+   <form id="form" class="panel-body p20 pb10" method="post" action="@url()">
+    <input type="hidden" id="id" name="id" value="{{ $group->id or 0 }}">
+    <input type="hidden" id="version" name="version" value="{{ $group->version or 0 }}">
+    <div class="tab-content pn br-n admin-form">
+     <div id="tab-common" class="tab-pane active">
+      <div class="section mb15 row">
+       <div class="col-sm-6">
+        <h6 class="fw400">@lang('admin.label.group_name', 'Grup Adı')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="name" name="name" class="gui-input" placeholder="@lang('admin.hint.group.name', 'Grup Adı')" value="{{{ $group->name or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-user"></i>
+         </span>
+        </label>
+       </div>
+       <div class="col-sm-6">
+        <h6 class="fw400">@lang('admin.label.group_title', 'Başlığı')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="first_name" name="first_name" class="gui-input" placeholder="@lang('admin.hint.group_title', 'Başlığı')" value="{{{ $group->first_name or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-info"></i>
+         </span>
+        </label>
+       </div>
+      </div>
+      <div class="section mb15 row">
+       <div class="col-sm-6">
+        <h6 class="fw400">@lang('admin.label.role', 'Rolü')</h6>
+        <label class="field select">
+         <select id="role" name="role" class="empty">
+          @foreach ($roles as $roleId => $roleTitle)
+          <option value="{{ $roleId }}"{{ isset($group->role) && $group->role == $roleId ? ' selected="selected"' : '' }}>{{{ $roleTitle }}}</option>
+          @endforeach
+         </select>
+         <i class="arrow double"></i>
+        </label>
+       </div>
+       <div class="col-sm-6">
+        <h6 class="fw400">@lang('admin.label.status', 'Durum')</h6>
+        <div class="option-group field">
+         <label class="option option-primary">
+          <input type="radio" id="active_true" name="active" value="true"{{ !isset($group->active) || $group->active == 'true' ? ' checked="checked"' : '' }}>
+          <span class="radio"></span>
+          @lang('admin.label.active', 'Aktif')
+         </label>
+         <label class="option option-primary">
+          <input type="radio" id="active_false" name="active" value="false"{{ isset($group->active) && $group->active == 'false' ? ' checked="checked"' : '' }}>
+          <span class="radio"></span>
+          @lang('admin.label.passive', 'Pasif')
+         </label>
+        </div>
+       </div>
+      </div>
+      <div class="section mb15">
+       <h6 class="fw400">@lang('admin.label.members', 'Üyeler')</h6>
+       <label class="field select">
+        <select id="members" name="members[]" class="select2" multiple size="5">
+         @if (isset($group->members))
+         @foreach ($group->members as $member)
+         <option value="{{ $member->id }}" selected="selected">{{{ $member->first_name . ' ' . $member->last_name }}}</option>
+         @endforeach
+         @endif
+        </select>
+       </label>
+      </div>
+     </div>
+    </div>
+    <hr class="short alt">
+    <div class="section mbn text-right">
+     <button type="submit" id="save-btn" class="btn btn-primary">
+      <i class="fa fa-save"></i>
+      @lang('admin.button.save', 'Kaydet')
+     </button>
+     @if (isset($group->id) && ($group->id > 0))
+     <button type="button" id="delete-btn" data-id="{{ $group->id }}" class="btn btn-danger">
+      <i class="fa fa-trash-o"></i>
+      @lang('admin.button.delete', 'Sil')
+     </button>
+     @endif
+     <button type="button" id="cancel-btn" class="btn btn-default">
+      <i class="fa fa-reply"></i>
+      @lang('admin.button.cancel', 'İptal')
+     </button>
+    </div>
+   </form>
+  </div>
+ </div>
+</section>
+@stop
+
+@section('script')
+@parent
+<script type="text/javascript">
+ //<![CDATA[
+ $(function() {
+  'use strict';
+
+  function formatUser(user) {
+   if (user.loading) return user.text;
+
+   var markup = '<div class="select2-result-repository clearfix">' +
+    '<div class="select2-result-repository__title">' + user.first_name + ' ' + user.last_name + '</div>';
+
+   markup += '</div>';
+
+   return markup;
+  }
+
+  function formatUserSelection(user) {
+   return user.text;
+  }
+
+  $('#members').select2({
+   ajax: {
+    url: "@url($prefix . 'system/users')",
+    dataType: 'json',
+    delay: 250,
+    global: false,
+    data: function(params) {
+     return {
+      title: params.term, // search term
+      page: params.page
+     };
+    },
+    processResults: function(data, page) {
+     // parse the results into the format expected by Select2.
+     // since we are using custom formatting functions we do not need to
+     // alter the remote JSON data
+     return {
+      results: data.rows
+     };
+    },
+    cache: true
+   },
+   escapeMarkup: function(markup) {
+    return markup;
+   }, // let our custom formatter work
+   minimumInputLength: 1,
+   templateResult: formatUser,
+   templateSelection: formatUserSelection
+  });
+
+  $('#form').validate({
+   // Rules for form validation
+   rules : {
+    name : {
+     required : true
+    },
+    first_name : {
+     required : true
+    }
+   },
+   // Messages for form validation
+   messages : {
+    name : {
+     required : "@lang('admin.message.group_name_required', 'Grup adını girin!')"
+    },
+    first_name : {
+     required : "@lang('admin.message.name_required', 'Adı girin!')"
+    }
+   },
+   // Do not change code below
+   errorPlacement : function(error, element) {
+    error.insertAfter(element.parent());
+   },
+   submitHandler: function(form) {
+    var formData = new FormData(form);
+
+    $.ajax({
+     'type': $(form).attr('method'),
+     'url': $(form).attr('action'),
+     'cache': false,
+     'dataType': 'json',
+     'contentType': false,
+     'processData': false,
+     'data': formData
+    }).done(function(result) {
+     if (result.success) {
+      if ($('#id').val() == 0) {
+       result.onAfterClose = function() {
+        $('#cancel-btn').trigger('click');
+       };
+      }
+
+      $('#id').val(result.return.id);
+      $('#version').val(result.return.version);
+     }
+
+     if (result.success) {
+      message(result);
+     } else {
+      new PNotify({
+       title: "@lang('admin.label.error', 'Hata')",
+       text: result.text,
+       type: 'danger'
+      });
+     }
+    });
+   }
+  });
+
+  $('#delete-btn').popConfirm({
+   title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+   content: "@lang('admin.message.will_delete_user', 'Kullanıcı ile bağlantılı tüm içerikler silinecektir!')",
+   placement: "top",
+   yesBtn: "@lang('admin.button.yes', 'Evet')",
+   noBtn: "@lang('admin.button.no', 'Hayır')",
+   confirm: function() {
+    $.ajax({
+     type: 'DELETE',
+     url: $('#form').attr('action')
+    }).done(function(result) {
+     result.onAfterClose = function() {
+      if (result.success) {
+       window.location.href = '{{ urlUp($breadcrumb) }}';
+      }
+     };
+
+     if (result.success) {
+      message(result);
+     } else {
+      new PNotify({
+       title: "@lang('admin.label.error', 'Hata')",
+       text: result.text,
+       type: 'danger'
+      });
+     }
+    });
+   }
+  });
+
+  $('#cancel-btn').click(function() {
+   window.location.href = '{{ urlUp($breadcrumb) }}';
+  });
+ });
+ //]]>
+</script>
+@stop

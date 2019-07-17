@@ -1,0 +1,280 @@
+@extends('default')
+
+@section('title') {{{ $caption }}} :: @parent @stop
+
+@section('content')
+@include('topbar')
+<section id="content" class="table-layout">
+ <div class="tray tray-center pn va-t posr">
+  <div class="panel m15">
+   <div class="panel-heading">
+    <span class="panel-title">{{{ isset($content->title) ? lang('admin.label.edit', 'Düzenle') : lang('admin.label.create_new', 'Yeni Oluştur') }}}</span>
+    <ul class="nav panel-tabs-border panel-tabs">
+     <li class="active">
+      <a href="#tab-common" data-toggle="tab">@lang('admin.label.common', 'Genel')</a>
+     </li>
+     @foreach (langs() as $code => $lang)
+     <li>
+      <a href="#tab-{{ $code }}" data-toggle="tab">{{{ $lang }}}</a>
+     </li>
+     @endforeach
+     <li>
+      <a href="#tab-media" data-toggle="tab">@lang('admin.label.media', 'Medya')</a>
+     </li>
+    </ul>
+   </div>
+   <form id="form" class="panel-body p20 pb10" method="post" enctype="multipart/form-data" action="@url()">
+    <input type="hidden" id="id" name="id" value="{{ $content->id or 0 }}">
+    <input type="hidden" id="version" name="version" value="{{ $content->version or 0 }}">
+    <input type="hidden" id="meta-poster_id" name="meta-poster_id" value="{{ $content->meta->poster_id or 0 }}">
+    <div class="tab-content pn br-n admin-form">
+     <div id="tab-common" class="tab-pane active">
+      <div class="section mbn row">
+       <div class="col-md-4">
+        @include('addon.poster', ['poster' => isset($content->poster->image) ? $content->poster : null])
+       </div>
+       <div class="col-md-8 pl15">
+        <div class="section mb15">
+         <h6 class="fw400">@lang('admin.label.url', 'URL')</h6>
+         <label class="field prepend-icon">
+          <input type="text" id="url" name="url" class="gui-input" value="{{{ $content->url or '' }}}">
+          <span class="field-icon">
+           <i class="fa fa-link"></i>
+          </span>
+         </label>
+        </div>
+        <div class="section mb15 row">
+         <div class="col-md-6">
+          <h6 class="fw400">@lang('turksoy.label.staff_phone_number', 'Telefon Numarası')</h6>
+          <label class="field prepend-icon">
+           <input type="text" id="meta-phone_number" name="meta-phone_number" class="gui-input" value="{{{ $content->meta->phone_number or '' }}}">
+           <span class="field-icon">
+            <i class="fa fa-phone"></i>
+           </span>
+          </label>
+         </div>
+         <div class="col-md-6">
+          <h6 class="fw400">@lang('turksoy.label.staff_email_address', 'E-Posta Adresi')</h6>
+          <label class="field prepend-icon">
+           <input type="text" id="meta-email_address" name="meta-email_address" class="gui-input" value="{{{ $content->meta->email_address or '' }}}">
+           <span class="field-icon">
+            <i class="fa fa-envelope-o"></i>
+           </span>
+          </label>
+         </div>
+        </div>
+        <div class="section mb15">
+         <h6 class="fw400">@lang('admin.label.order', 'Sırası')</h6>
+         <label class="field select">
+          <select id="order" name="order" class="select2">
+           @foreach ($orders as $orderId => $orderTitle)
+           <option value="{{ $orderId }}"{{ isset($content->order) && $content->order == $orderId ? ' selected="selected"' : '' }}>{{{ $orderTitle }}}</option>
+           @endforeach
+          </select>
+         </label>
+        </div>
+        <div class="section mb15">
+         <h6 class="fw400">@lang('admin.label.status', 'Durum')</h6>
+         <div class="option-group field">
+          <label class="option option-primary">
+           <input type="radio" id="active_true" name="active" value="true"{{ !isset($content->active) || $content->active == 'true' ? ' checked="checked"' : '' }}>
+           <span class="radio"></span>
+           @lang('admin.label.active', 'Aktif')
+          </label>
+          <label class="option option-primary">
+           <input type="radio" id="active_false" name="active" value="false"{{ isset($content->active) && $content->active == 'false' ? ' checked="checked"' : '' }}>
+           <span class="radio"></span>
+           @lang('admin.label.passive', 'Pasif')
+          </label>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     @foreach (langs() as $code => $lang)
+     <div id="tab-{{ $code }}" class="tab-pane">
+      @if (!isset($content->children[$code]->id))
+      <div class="alert alert-dark alert-dismissable">
+       <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+       <i class="fa fa-warning pr10"></i>
+       <strong>@lang('admin.label.warning', 'Uyarı'):</strong>
+       @lang('admin.message.no_title_no_saving_for_this_language', 'Başlık girilmediği durumda bu dil için kayıt yapılmaz!')
+      </div>
+      @endif
+      <input type="hidden" id="{{ $code }}-id" name="{{ $code }}-id" value="{{{ $content->children[$code]->id or 0 }}}">
+      <input type="hidden" id="{{ $code }}-version" name="{{ $code }}-version" value="{{ $content->children[$code]->version or 0 }}">
+      <input type="hidden" id="{{ $code }}-meta-content" name="{{ $code }}-meta-content" value="{{{ $content->children[$code]->meta->content or '' }}}">
+      <div class="section mb15 row">
+       <div class="col-md-6">
+        <h6 class="fw400">@lang('turksoy.label.staff_name', 'Personel İsmi')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="{{ $code }}-title" name="{{ $code }}-title" class="gui-input" value="{{{ $content->children[$code]->title or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-user"></i>
+         </span>
+        </label>
+       </div>
+       <div class="col-md-6">
+        <h6 class="fw400">@lang('turksoy.label.staff_position', 'Personel Görevi')</h6>
+        <label class="field prepend-icon">
+         <input type="text" id="{{ $code }}-meta-position" name="{{ $code }}-meta-position" class="gui-input" value="{{{ $content->children[$code]->meta->position or '' }}}">
+         <span class="field-icon">
+          <i class="fa fa-info"></i>
+         </span>
+        </label>
+       </div>
+      </div>
+      <div class="section">
+       @include('addon.editor', ['id' => $code . '-html-content', 'target' => $code . '-meta-content'])
+      </div>
+     </div>
+     @endforeach
+     <div id="tab-media" class="tab-pane">
+      @include('addon.media', ['media' => isset($content->media) ? $content->media : []])
+     </div>
+    </div>
+    <hr class="short alt">
+    <div class="section mbn text-right">
+     <button type="submit" id="save-btn" class="btn btn-primary">
+      <i class="fa fa-save"></i>
+      @lang('admin.button.save', 'Kaydet')
+     </button>
+     @if (isset($content->id) && ($content->id > 0))
+     <button type="button" id="delete-btn" data-id="{{ $content->id }}" class="btn btn-danger">
+      <i class="fa fa-trash-o"></i>
+      @lang('admin.button.delete', 'Sil')
+     </button>
+     @endif
+     <button type="button" id="cancel-btn" class="btn btn-default">
+      <i class="fa fa-reply"></i>
+      @lang('admin.button.cancel', 'İptal')
+     </button>
+    </div>
+   </form>
+  </div>
+ </div>
+</section>
+@stop
+
+@section('script')
+@parent
+<script type="text/javascript">
+ //<![CDATA[
+ $(function() {
+  'use strict';
+
+  $('#url').blur(function() {
+   $(this).val($.normalizeString($(this).val()));
+  });
+
+  // select dropdowns - placeholder like creation
+  var selectList = $('.admin-form select');
+  selectList.each(function(i, e) {
+   $(e).on('change', function() {
+    if ($(e).val() == "0") $(e).addClass("empty");
+    else $(e).removeClass("empty")
+   });
+  });
+  selectList.each(function(i, e) {
+   $(e).change();
+  });
+
+  $('#form').validate({
+   // Rules for form validation
+   rules : {
+    title : {
+     required : true
+    }
+   },
+   // Messages for form validation
+   messages : {
+    title : {
+     required : "@lang('admin.message.content_title_required', 'İçerik başlığını girin!')"
+    }
+   },
+   // Do not change code below
+   errorPlacement : function(error, element) {
+    error.insertAfter(element.parent());
+   },
+   submitHandler: function(form) {
+    var formData = new FormData(form);
+
+    $.ajax({
+     'type': $(form).attr('method'),
+     'url': $(form).attr('action'),
+     'cache': false,
+     'dataType': 'json',
+     'contentType': false,
+     'processData': false,
+     'data': formData
+    }).done(function(result) {
+     if (result.success) {
+      if (parseFloat($('#id').val()) == 0) {
+       result.onAfterClose = function() {
+        $('#cancel-btn').trigger('click');
+       };
+      }
+
+      $('#id').val(result.return.id);
+      $('#version').val(result.return.version);
+
+      if (result.return.poster.id) {
+       $.fn.posterSet(result.return.poster);
+      }
+
+      for (var code in result.return.langs) {
+       $('#' + code + '-id').val(result.return.langs[code].id);
+       $('#' + code + '-version').val(result.return.langs[code].version);
+      }
+     }
+
+     if (result.success) {
+      message(result);
+     } else {
+      new PNotify({
+       title: "@lang('admin.label.error', 'Hata')",
+       text: result.text,
+       type: 'danger'
+      });
+     }
+    });
+   }
+  });
+
+  $('#delete-btn').popConfirm({
+   title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+   content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
+   placement: "top",
+   yesBtn: "@lang('admin.button.yes', 'Evet')",
+   noBtn: "@lang('admin.button.no', 'Hayır')",
+   confirm: function() {
+    $.ajax({
+     type: 'DELETE',
+     url: $('#form').attr('action')
+    }).done(function(result) {
+     result.onAfterClose = function() {
+      if (result.success) {
+       window.location.href = '{{ urlUp($breadcrumb) }}';
+      }
+     };
+
+     if (result.success) {
+      message(result);
+     } else {
+      new PNotify({
+       title: "@lang('admin.label.error', 'Hata')",
+       text: result.text,
+       type: 'danger'
+      });
+     }
+    });
+   }
+  });
+
+  $('#cancel-btn').click(function() {
+   window.location.href = '{{ urlUp($breadcrumb) }}';
+  });
+ });
+ //]]>
+</script>
+@stop

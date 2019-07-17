@@ -1,0 +1,532 @@
+@extends('default')
+
+@section('title') {{{ $caption }}} :: @parent @stop
+
+@section('content')
+@include('topbar')
+<section id="content" class="table-layout">
+  <div class="tray tray-center pn va-t posr" data-tray-height="match">
+    <div class="panel m15">
+      <div class="panel-menu p12 admin-form theme-primary">
+        <div class="row">
+          <div class="col-md-3">
+            <label class="field select">
+              <select id="filter-language" name="filter-language">
+                @foreach (langs() as $langCode => $langTitle)
+                <option value="{{ $langCode }}" {{ input('language', lang()) == $langCode ? ' selected="selected"' : '' }}>{{{ $langTitle }}}</option>
+                @endforeach
+              </select>
+              <i class="arrow"></i>
+            </label>
+          </div>
+          <div class="col-md-3">
+            <div class="smart-widget sm-right smr-50">
+              <label class="field select">
+                <select id="filter-location" name="filter-location">
+                  <option value="">-- @lang('admin.label.all_locations', 'Tüm Konumlar') --</option>
+                  @foreach ($locations as $locationId => $locationTitle)
+                  <option value="{{ $locationId }}">{{{ $locationTitle }}}</option>
+                  @endforeach
+                </select>
+                <i class="arrow"></i>
+              </label>
+              <a class="button btn-primary" href="#add-location" title="@lang('admin.label.add_location', 'Konum Ekle')">+</a>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="text-right">
+              <a class="btn btn-dark" href="#add">
+                <i class="fa fa-plus mr5"></i>
+                @lang('admin.button.add', 'Ekle')
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div id="list" class="row"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="location-dialog" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4>
+          <i class="fa fa-info"></i>
+          Konum
+        </h4>
+      </div>
+      <form id="location-form" class="admin-form" method="post" action="@url($prefix . 'distributor/category')">
+        <input type="hidden" name="id" value="0">
+        <input type="hidden" name="version" value="0">
+        <div class="modal-body">
+          <div class="section mb15">
+            <h6 class="fw400">@lang('admin.label.parent_location', 'Üst Konumu')</h6>
+            <label class="field select">
+              <select name="parent_id">
+                <option value="">&nbsp;</option>
+              </select>
+              <i class="arrow double"></i>
+            </label>
+          </div>
+          <div class="section mb15">
+            <h6 class="fw400">@lang('admin.label.name', 'Adı')</h6>
+            <label class="field prepend-icon">
+              <input type="text" name="title" class="gui-input">
+              <span class="field-icon">
+                <i class="fa fa-tag"></i>
+              </span>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-sm btn-primary">
+            <i class="fa fa-save"></i>
+            @lang('admin.button.save', 'Kaydet')
+          </button>
+          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+            <i class="fa fa-close"></i>
+            @lang('admin.button.close', 'Kapat')
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="dialog" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4>
+          <i class="fa fa-info"></i>
+          Bayi Bilgisi
+        </h4>
+      </div>
+      <form id="form" class="admin-form" method="post" action="@url()">
+        <input type="hidden" name="id" value="0">
+        <input type="hidden" name="version" value="0">
+        <input type="hidden" name="language" value="@lang()">
+        <div class="modal-body">
+          <div class="section mb15">
+            <h6 class="fw400">@lang('admin.label.location', 'Konum')</h6>
+            <label class="field select">
+              <select id="parent_id" name="parent_id">
+                <option value="">&nbsp;</option>
+              </select>
+              <i class="arrow double"></i>
+            </label>
+          </div>
+          <div class="section mb15">
+            <h6 class="fw400">@lang('admin.label.name', 'Adı')</h6>
+            <label class="field prepend-icon">
+              <input type="text" name="title" class="gui-input">
+              <span class="field-icon">
+                <i class="fa fa-tag"></i>
+              </span>
+            </label>
+          </div>
+          <div class="section mb15">
+            <h6 class="fw400">@lang('admin.label.address', 'Adresi')</h6>
+            <label class="field prepend-icon">
+              <textarea name="address" class="gui-textarea"></textarea>
+              <span class="field-icon">
+                <i class="fa fa-edit"></i>
+              </span>
+            </label>
+          </div>
+          <div class="section mb15 row">
+            <div class="col-sm-6">
+              <h6 class="fw400">@lang('admin.label.phone_number', 'Telefon Numarası')</h6>
+              <label class="field prepend-icon">
+                <input type="text" name="phone" class="gui-input">
+                <span class="field-icon">
+                  <i class="fa fa-phone"></i>
+                </span>
+              </label>
+            </div>
+            <div class="col-sm-6">
+              <h6 class="fw400">@lang('admin.label.fax_number', 'Faks Numarası')</h6>
+              <label class="field prepend-icon">
+                <input type="text" name="fax" class="gui-input">
+                <span class="field-icon">
+                  <i class="fa fa-fax"></i>
+                </span>
+              </label>
+            </div>
+          </div>
+          <div class="section mb15">
+            <h6 class="fw400">@lang('admin.label.email_address', 'E-Posta Adresi')</h6>
+            <label class="field prepend-icon">
+              <input type="text" name="email" class="gui-input">
+              <span class="field-icon">
+                  <i class="fa fa-envelope"></i>
+                </span>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-sm btn-primary">
+            <i class="fa fa-save"></i>
+            @lang('admin.button.save', 'Kaydet')
+          </button>
+          <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+            <i class="fa fa-close"></i>
+            @lang('admin.button.close', 'Kapat')
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+@stop
+
+@section('link')
+@parent
+<link rel="stylesheet" type="text/css" href="{{ $root }}/js/plugins/nestable/nestable.css">
+@stop
+
+@section('script')
+@parent
+<script type="text/javascript">
+  //<![CDATA[
+  $('a[href="#add-location"]').click(function (e) {
+    e.preventDefault();
+
+    setLocations();
+
+    $('#location-form').find('input[type="text"], select, textarea').val('');
+    $('#location-form').validate().resetForm();
+    $('#location-dialog').modal();
+  });
+
+  $('a[href="#add"]').click(function (e) {
+    e.preventDefault();
+
+    setLocations();
+
+    $('#form').find('input[type="text"], select, textarea').val('');
+    $('#form').find('input[name="id"], input[name="version"]').val(0);
+    $('#form').find('input[name="language"]').val($('#filter-language').val());
+    $('#form').validate().resetForm();
+    $('select[name="parent_id"]', '#form').val($('#filter-location').val());
+    $('#dialog').modal();
+  });
+
+  function loading() {
+    return $('<div/>').addClass('alert alert-default center-block mw400 text-center').append(
+      $('<i/>').addClass('fa fa-spin fa-spinner'),
+      $('<span/>').addClass('pl10').text('@lang("admin.label.loading", "Yükleniyor...")')
+    ).appendTo($('#list').empty());
+  }
+
+  function noContent() {
+    return $('<div/>').addClass('alert alert-warning center-block mw400').append(
+      $('<i/>').addClass('fa fa-warning pr10'),
+      $('<strong/>').text('Uyarı: '),
+      '@lang("admin.message.no_content", "İçerik bulunamadı!")'
+    ).appendTo($('#list').empty());
+  }
+
+  function errorOccurred() {
+    return $('<div/>').addClass('alert alert-danger center-block mw400').append(
+      $('<i/>').addClass('fa fa-warning pr10'),
+      $('<strong/>').text('Uyarı: '),
+      '@lang("admin.message.error_occurred", "Hata oluştu!")'
+    ).appendTo($('#list').empty());
+  }
+
+  function setLocations() {
+    $('select[name="parent_id"]').empty().append(
+      $('<option/>', {
+        'value': ''
+      }).text('.')
+    );
+
+    $('#filter-location').find('option[value!=""]').each(function() {
+      $('select[name="parent_id"]').append(
+        $('<option/>', {
+          'value': $(this).attr('value')
+        }).html($(this).html())
+      );
+    });
+  }
+
+  $('#filter-language').change(function () {
+    window.location.href = "@url('#current?language=')" + $(this).val();
+  });
+
+  $('#filter-location').change(function () {
+    getList();
+  });
+
+  function getList() {
+    loading();
+
+    $.ajax({
+      'type': 'GET',
+      'url': '@url()',
+      'data': {
+        'language': $('#filter-language').val(),
+        'parent_id': $('#filter-location').val()
+      },
+      'global': false
+    }).done(function (result) {
+      $('#list').empty();
+
+      if (result.length) {
+        for (var i in result) {
+          setItem(result[i]);
+        }
+      } else {
+        noContent();
+      }
+    }).fail(function() {
+      errorOccurred();
+    });
+  }
+
+  function getLocations(callback) {
+    $('#filter-location').prop('disabled', true).empty().append(
+      $('<option/>', {
+        'value': ''
+      }).text('-- @lang("admin.label.all_locations", "Tüm Konumlar") --')
+    );
+
+    $.ajax({
+      'type': 'get',
+      'url': $('#location-form').attr('action'),
+      'data': {
+        'language': $('#filter-language').val()
+      },
+      'global': false
+    }).done(function(result) {
+      for (var i in result) {
+        setLocation(result[i]);
+      }
+
+      $('#filter-location').prop('disabled', false);
+
+      if (typeof callback === 'function') {
+        callback();
+      }
+    }).fail(function() {
+      $('#filter-location').prop('disabled', false);
+    });
+  }
+
+  function setLocation(item) {
+    var opt = $('<option/>', {
+      'value': item.id
+    }).html(item.title).appendTo('#filter-location');
+
+    $('#filter-location').val(item.id);
+
+    return opt;
+  }
+
+  function setItem(item, open) {
+    var target = $('div[data-id="' + item['id'] + '"]', '#list');
+
+    if (!target.length) {
+      target = $('<div/>', {
+        'data-id': item['id']
+      }).addClass('col-sm-6').appendTo('#list');
+    }
+
+    target.empty().append(
+      $('<div/>').addClass('dd-item mb15').append(
+        $('<div/>').addClass('dd-handle').text(item['title']),
+        $('<div/>').addClass('dd-content' + (open ? ' open' : '')).append(
+          $('<div/>').append(
+            $('<a/>', {
+              'href': '#delete',
+              'data-id': item['id']
+            }).click(function(e) {
+              e.preventDefault();
+
+              var id = $(this).data('id');
+
+              message({
+                'type': 'confirm',
+                'text': '@lang("admin.message.delete_confirm", "Silmek istediğinize emin misiniz?")',
+                'onConfirm': function () {
+                  $.ajax({
+                    type: 'DELETE',
+                    url: '@url()/' + id
+                  }).done(function (result) {
+                    if (result.success) {
+                      $('div[data-id="' + id + '"]', '#list').remove();
+
+                      if (!$('#list').find('> div[data-id]').length) {
+                        noContent();
+                      }
+                    } else {
+                      message(result);
+                    }
+                  });
+                }
+              });
+            }).addClass('text-danger pull-right fw600').text('Sil'),
+            $('<a/>', {
+              'href': '#edit',
+              'data-id': item['id']
+            }).click(function(e) {
+              e.preventDefault();
+
+              $.ajax({
+                'type': 'GET',
+                'url': '@url()',
+                'data': {
+                  'id': $(this).data('id'),
+                  'language': $('#filter-language').val()
+                }
+              }).done(function (result) {
+                if (result) {
+                  setLocations();
+
+                  for (var k in result) {
+                    setValue(k, result[k]);
+                  }
+
+                  $('#dialog').modal();
+                } else {
+                  message('@lang("admin.message.error_occurred", "Hata oluştu!")');
+                }
+              }).fail(function() {
+                message('@lang("admin.message.error_occurred", "Hata oluştu!")');
+              });
+            }).addClass('pull-right fw600 mr10').text('@lang("admin.button.edit", "Düzenle")'),
+            $('<div/>').addClass('media-body').append(
+              $('<h4/>').addClass('media-heading').text(item['parent']),
+              $('<p/>').addClass('mb10').text(item['address']),
+              $('<p/>').addClass('mb5').text(
+                '@lang("admin.label.phone", "Tel"): ' + (item['phone'] || '-') + ' | ' +
+                '@lang("admin.label.fax", "Faks"): ' + (item['fax'] || '-') + ' | ' +
+                '@lang("admin.label.email", "E-Posta"): ' + (item['email'] || '-')
+              )
+            )
+          )
+        ),
+        $('<a/>', {
+          'href': 'javascript:void(0)'
+        }).addClass('expand-btn').click(function(e) {
+          e.preventDefault();
+
+          var target = $(this).closest('.dd-item').find('.dd-content');
+
+          if (target.hasClass('open')) {
+            target.removeClass('open');
+            $(this).find('i').removeClass().addClass('fa fa-chevron-left');
+          } else {
+            target.addClass('open');
+            $(this).find('i').removeClass().addClass('fa fa-chevron-down');
+          }
+        }).append(
+          $('<i/>').addClass('fa fa-chevron-' + (open ? 'down' : 'left'))
+        )
+      )
+    );
+
+    return target;
+  }
+
+  getList();
+
+  $('#location-form').validate({
+    // Rules for form validation
+    rules: {
+      title: {
+        required: true
+      }
+    },
+    // Messages for form validation
+    messages: {
+      title: {
+        required: "@lang('admin.message.content_title_required', 'İçerik başlığını girin!')"
+      }
+    },
+    // Do not change code below
+    errorPlacement: function (error, element) {
+      error.insertAfter(element.parent());
+    },
+    submitHandler: function (form) {
+      var formData = new FormData(form);
+
+      $.ajax({
+        'type': $(form).attr('method'),
+        'url': $(form).attr('action'),
+        'cache': false,
+        'dataType': 'json',
+        'contentType': false,
+        'processData': false,
+        'data': formData
+      }).done(function (result) {
+        if (result.success) {
+          $('#location-dialog').modal('hide');
+
+          getLocations(getList);
+        } else {
+          message(result);
+        }
+      });
+    }
+  });
+
+  $('#form').validate({
+    // Rules for form validation
+    rules: {
+      parent_id: {
+        required: true
+      },
+      title: {
+        required: true
+      }
+    },
+    // Messages for form validation
+    messages: {
+      parent_id: {
+        required: "@lang('admin.message.area_required', 'Bölge seçilmelidir!')"
+      },
+      title: {
+        required: "@lang('admin.message.content_title_required', 'İçerik başlığını girin!')"
+      }
+    },
+    // Do not change code below
+    errorPlacement: function (error, element) {
+      error.insertAfter(element.parent());
+    },
+    submitHandler: function (form) {
+      var formData = new FormData(form);
+
+      $.ajax({
+        'type': $(form).attr('method'),
+        'url': $(form).attr('action'),
+        'cache': false,
+        'dataType': 'json',
+        'contentType': false,
+        'processData': false,
+        'data': formData
+      }).done(function (result) {
+        if (result.success) {
+          if (!$('#list').find('> div[data-id]').length) {
+            $('#list').empty();
+          }
+
+          setItem(result.return);
+
+          $('#dialog').modal('hide');
+        } else {
+          message(result);
+        }
+      });
+    }
+  });
+  //]]>
+</script>
+@stop

@@ -1,0 +1,879 @@
+@extends('default')
+
+@section('title') {{{ $caption }}} :: @parent @stop
+
+@section('content')
+@include('topbar')
+<section id="content" class="table-layout">
+  <div class="tray tray-center pn va-t posr">
+    <div class="panel m15">
+      <div class="panel-heading">
+        <span class="panel-title">@lang('admin.menu.settings', 'Ayarlar')</span>
+        <ul class="nav panel-tabs-border panel-tabs">
+          <li class="active">
+            <a href="#contact-tab" data-toggle="tab">@lang('admin.menu.contact_info', 'İletişim Bilgileri')</a>
+          </li>
+          <li>
+            <a href="#map-tab" data-toggle="tab">@lang('admin.menu.map', 'Harita')</a>
+          </li>
+          <li>
+            <a href="#socials-tab" data-toggle="tab">@lang('admin.menu.social_networks', 'Sosyal Ağlar')</a>
+          </li>
+          <li>
+            <a href="#google-tab" data-toggle="tab">@lang('admin.menu.google', 'Google')</a>
+          </li>
+          <li>
+            <a href="#oauth-tab" data-toggle="tab">@lang('admin.menu.oauth_settings', 'OAuth Ayarları')</a>
+          </li>
+        </ul>
+      </div>
+      <div class="panel-body p20 pb10">
+        <form id="settings-form" class="admin-form" method="post" autocomplete="off" action="@url()">
+          <div class="tab-content pn br-n">
+            <div id="contact-tab" class="tab-pane fade in active">
+              <div class="text-right">
+                <a class="btn btn-dark" href="#add-contact">
+                  <i class="fa fa-plus mr5"></i>
+                  @lang('admin.button.add', 'Ekle')
+                </a>
+              </div>
+              <table id="contact-list" class="table table-striped">
+                <tbody>
+                <tr>
+                  <td class="text-center col-xs-1" style="vertical-align: top">&nbsp;</td>
+                  <td class="col-xs-11">
+                    <div class="section mb15 row">
+                      <div class="col-md-8 col-sm-6">
+                        <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
+                        <label class="field prepend-icon">
+                          <input type="text" name="contact_title[]" class="gui-input" value="{{{ conf('contact.0.title') }}}">
+                          <span class="field-icon"><i class="fa fa-info"></i></span>
+                        </label>
+                      </div>
+                      <div class="col-md-4 col-sm-6">
+                        <h6 class="fw400">@lang('admin.label.name', 'Tanımı')</h6>
+                        <label class="field prepend-icon">
+                          <input type="text" name="contact_name[]" class="gui-input" value="{{{ conf('contact.0.name') }}}">
+                          <span class="field-icon"><i class="fa fa-info"></i></span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="section mb15">
+                      <h6 class="fw400">@lang('admin.label.address', 'Adres')</h6>
+                      <label class="field prepend-icon">
+                        <textarea name="contact_address[]" class="gui-textarea" rows="4">{{{ conf('contact.0.address') }}}</textarea>
+                        <span class="field-icon"><i class="fa fa-map-marker"></i></span>
+                      </label>
+                    </div>
+                    <div class="section mb15 row">
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <h6 class="fw400">@lang('admin.label.phone', 'Telefon')</h6>
+                            <label class="field prepend-icon">
+                              <input type="tel" name="contact_phone[]" class="gui-input" value="{{{ conf('contact.0.phone') }}}">
+                              <span class="field-icon"><i class="fa fa-phone"></i></span>
+                            </label>
+                          </div>
+                          <div class="col-sm-4">
+                            <h6 class="fw400">@lang('admin.label.gsm', 'GSM')</h6>
+                            <label class="field prepend-icon">
+                              <input type="tel" name="contact_gsm[]" class="gui-input" value="{{{ conf('contact.0.gsm') }}}">
+                              <span class="field-icon"><i class="fa fa-phone"></i></span>
+                            </label>
+                          </div>
+                          <div class="col-sm-4">
+                            <h6 class="fw400">@lang('admin.label.fax', 'Faks')</h6>
+                            <label class="field prepend-icon">
+                              <input type="tel" name="contact_fax[]" class="gui-input" value="{{{ conf('contact.0.fax') }}}">
+                              <span class="field-icon"><i class="fa fa-fax"></i></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <h6 class="fw400">@lang('admin.label.email', 'E-Posta')</h6>
+                            <label class="field prepend-icon">
+                              <input type="email" name="contact_email[]" class="gui-input" value="{{{ conf('contact.0.email') }}}">
+                              <span class="field-icon"><i class="fa fa-envelope-o"></i></span>
+                            </label>
+                          </div>
+                          <div class="col-sm-6">
+                            <h6 class="fw400">@lang('admin.label.web_address', 'Web Adresi')</h6>
+                            <label class="field prepend-icon">
+                              <input type="text" name="contact_web[]" class="gui-input" value="{{{ conf('contact.0.web') }}}">
+                              <span class="field-icon"><i class="fa fa-globe"></i></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                @foreach (conf('contact', array()) as $key => $value)
+                @if ($key)
+                <tr>
+                  <td class="text-center col-xs-1" style="vertical-align: top">
+                    <button type="button" data-remove="" class="btn btn-danger">
+                      <i class="fa fa-trash-o"></i>
+                    </button>
+                  </td>
+                  <td class="col-xs-11">
+                    <div class="section mb15 row">
+                      <div class="col-md-8 col-sm-6">
+                        <h6 class="fw400">@lang('admin.label.title', 'Başlığı')</h6>
+                        <label class="field prepend-icon">
+                          <input type="text" name="contact_title[]" class="gui-input" value="{{{ array_get($value, 'title') }}}">
+                          <span class="field-icon"><i class="fa fa-info"></i></span>
+                        </label>
+                      </div>
+                      <div class="col-md-4 col-sm-6">
+                        <h6 class="fw400">@lang('admin.label.name', 'Tanımı')</h6>
+                        <label class="field prepend-icon">
+                          <input type="text" name="contact_name[]" class="gui-input" value="{{{ array_get($value, 'name') }}}">
+                          <span class="field-icon"><i class="fa fa-info"></i></span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="section mb15">
+                      <h6 class="fw400">@lang('admin.label.address', 'Adres')</h6>
+                      <label class="field prepend-icon">
+                        <textarea name="contact_address[]" class="gui-textarea" rows="4">{{{ array_get($value, 'address') }}}</textarea>
+                        <span class="field-icon"><i class="fa fa-map-marker"></i></span>
+                      </label>
+                    </div>
+                    <div class="section mb15 row">
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <h6 class="fw400">@lang('admin.label.phone', 'Telefon')</h6>
+                            <label class="field prepend-icon">
+                              <input type="tel" name="contact_phone[]" class="gui-input" value="{{{ array_get($value, 'phone') }}}">
+                              <span class="field-icon"><i class="fa fa-phone"></i></span>
+                            </label>
+                          </div>
+                          <div class="col-sm-4">
+                            <h6 class="fw400">@lang('admin.label.gsm', 'GSM')</h6>
+                            <label class="field prepend-icon">
+                              <input type="tel" name="contact_gsm[]" class="gui-input" value="{{{ array_get($value, 'gsm') }}}">
+                              <span class="field-icon"><i class="fa fa-phone"></i></span>
+                            </label>
+                          </div>
+                          <div class="col-sm-4">
+                            <h6 class="fw400">@lang('admin.label.fax', 'Faks')</h6>
+                            <label class="field prepend-icon">
+                              <input type="tel" name="contact_fax[]" class="gui-input" value="{{{ array_get($value, 'fax') }}}">
+                              <span class="field-icon"><i class="fa fa-fax"></i></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <h6 class="fw400">@lang('admin.label.email', 'E-Posta')</h6>
+                            <label class="field prepend-icon">
+                              <input type="email" name="contact_email[]" class="gui-input" value="{{{ array_get($value, 'email') }}}">
+                              <span class="field-icon"><i class="fa fa-envelope-o"></i></span>
+                            </label>
+                          </div>
+                          <div class="col-sm-6">
+                            <h6 class="fw400">@lang('admin.label.web_address', 'Web Adresi')</h6>
+                            <label class="field prepend-icon">
+                              <input type="text" name="contact_web[]" class="gui-input" value="{{{ array_get($value, 'web') }}}">
+                              <span class="field-icon"><i class="fa fa-globe"></i></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                @endif
+                @endforeach
+                </tbody>
+              </table>
+            </div>
+            <div id="map-tab" class="tab-pane fade">
+              <div class="text-right">
+                <a class="btn btn-dark" href="#add-map">
+                  <i class="fa fa-plus mr5"></i>
+                  @lang('admin.button.add', 'Ekle')
+                </a>
+              </div>
+              <table id="map-list" class="table table-striped">
+                <tbody>
+                <tr>
+                  <td class="text-center col-xs-1" style="vertical-align: top">#</td>
+                  <td class="col-xs-11">
+                    <div class="row">
+                      <div class="col-md-7">
+                        <div class="form-group clearfix">
+                          <div class="col-xs-9 prn">
+                            <input type="text" class="form-control" name="address" value="{{{ str_replace(" \n", ' ',
+                            conf('contact.0.address')) }}}" placeholder="@lang('admin.placeholder.type_address', 'Adres
+                            girin...')">
+                          </div>
+                          <div class="col-xs-3">
+                            <button type="button" name="geocoding-btn" class="btn btn-default light btn-block">
+                              @lang('admin.button.search', 'Ara')
+                            </button>
+                          </div>
+                        </div>
+                        <div id="map0" class="map"></div>
+                      </div>
+                      <div class="col-md-5">
+                        <div class="section mb15 row">
+                          <div class="col-md-6">
+                            <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
+                            <label class="field prepend-icon">
+                              <input type="text" name="map_title[]" class="gui-input" value="{{{ conf('map.0.title') }}}">
+                              <span class="field-icon"><i class="fa fa-info"></i></span>
+                            </label>
+                          </div>
+                          <div class="col-md-6">
+                            <h6 class="fw400">@lang('admin.label.name', 'Tanımı')</h6>
+                            <label class="field prepend-icon">
+                              <input type="text" name="map_name[]" class="gui-input" value="{{{ conf('map.0.name') }}}">
+                              <span class="field-icon"><i class="fa fa-info"></i></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="section mb15 row">
+                          <div class="col-md-6">
+                            <h6 class="fw400">@lang('admin.label.map_coordinate', 'Harita Koordinatı') (Lat)</h6>
+                            <label class="field prepend-icon">
+                              <input type="text" name="map_lat[]" class="gui-input" value="{{{ conf('map.0.lat') }}}">
+                              <span class="field-icon"><i class="fa fa-location-arrow"></i></span>
+                            </label>
+                          </div>
+                          <div class="col-md-6">
+                            <h6 class="fw400">@lang('admin.label.map_coordinate', 'Harita Koordinatı') (Lon)</h6>
+                            <label class="field prepend-icon">
+                              <input type="text" name="map_lon[]" class="gui-input" value="{{{ conf('map.0.lon') }}}">
+                              <span class="field-icon"><i class="fa fa-location-arrow"></i></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="section mb15 row">
+                          <div class="col-md-6">
+                            <h6 class="fw400">@lang('admin.label.map_marker_coordinate', 'Harita Nokta Koordinatı')
+                              (Lat)</h6>
+                            <label class="field prepend-icon">
+                              <input type="text" name="map_marker_lat[]" class="gui-input" value="{{{ conf('map.0.marker_lat') }}}">
+                              <span class="field-icon"><i class="fa fa-location-arrow"></i></span>
+                            </label>
+                          </div>
+                          <div class="col-md-6">
+                            <h6 class="fw400">@lang('admin.label.map_marker_coordinate', 'Harita Nokta Koordinatı')
+                              (Lon)</h6>
+                            <label class="field prepend-icon">
+                              <input type="text" name="map_marker_lon[]" class="gui-input" value="{{{ conf('map.0.marker_lon') }}}">
+                              <span class="field-icon"><i class="fa fa-location-arrow"></i></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="section mb15 row">
+                          <div class="col-md-6">
+                            <h6 class="fw400">@lang('admin.label.map_zoom', 'Harita Büyüklüğü') (Zoom)</h6>
+                            <label class="field prepend-icon">
+                              <input type="text" name="map_zoom[]" class="gui-input" value="{{{ conf('map.0.zoom', 17) }}}">
+                              <span class="field-icon"><i class="fa fa-search-plus"></i></span>
+                            </label>
+                          </div>
+                          <div class="col-md-6"></div>
+                        </div>
+                        <div class="section mb15">
+                          <h6 class="fw400">@lang('admin.label.map_marker_content', 'Harita Nokta İçeriği')</h6>
+                          <label class="field prepend-icon">
+                            <textarea name="map_marker_content[]" class="gui-textarea" rows="4">{{{ conf('map.0.marker_content') }}}</textarea>
+                            <span class="field-icon"><i class="fa fa-map-marker"></i></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                @foreach (conf('map', array()) as $key => $value)
+                @if ($key)
+                <tr>
+                  <td class="text-center col-xs-1" style="vertical-align: top">
+                    <button type="button" data-remove="" class="btn btn-danger">
+                      <i class="fa fa-trash-o"></i>
+                    </button>
+                  </td>
+                  <td class="col-xs-11">
+                    <div class="row">
+                      <div class="col-md-7">
+                        <div class="form-group clearfix">
+                          <div class="col-xs-9 prn">
+                            <input type="text" class="form-control" name="address" value="{{{ str_replace(" \n", ' ',
+                            conf('contact.' . $key . '.address')) }}}"
+                            placeholder="@lang('admin.placeholder.type_address', 'Adres girin...')">
+                          </div>
+                          <div class="col-xs-3">
+                            <button type="button" name="geocoding-btn" class="btn btn-default light btn-block">
+                              @lang('admin.button.search', 'Ara')
+                            </button>
+                          </div>
+                        </div>
+                        <div id="map{{ $key }}" class="map"></div>
+                      </div>
+                      <div class="col-md-5">
+                        <div class="section mb15 row">
+                          <div class="col-md-6">
+                            <h6 class="fw400">@lang('admin.label.title', 'Başlık')</h6>
+                            <label class="field prepend-icon">
+                              <input type="text" name="map_title[]" class="gui-input" value="{{{ conf('map.' . $key . '.title') }}}">
+                              <span class="field-icon"><i class="fa fa-info"></i></span>
+                            </label>
+                          </div>
+                          <div class="col-md-6">
+                            <h6 class="fw400">@lang('admin.label.name', 'Tanımı')</h6>
+                            <label class="field prepend-icon">
+                              <input type="text" name="map_name[]" class="gui-input" value="{{{ conf('map.' . $key . '.name') }}}">
+                              <span class="field-icon"><i class="fa fa-info"></i></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="section mb15 row">
+                          <div class="col-md-6">
+                            <h6 class="fw400">@lang('admin.label.map_coordinate', 'Harita Koordinatı') (Lat)</h6>
+                            <label class="field prepend-icon">
+                              <input type="text" name="map_lat[]" class="gui-input" value="{{{ conf('map.' . $key . '.lat') }}}">
+                              <span class="field-icon"><i class="fa fa-location-arrow"></i></span>
+                            </label>
+                          </div>
+                          <div class="col-md-6">
+                            <h6 class="fw400">@lang('admin.label.map_coordinate', 'Harita Koordinatı') (Lon)</h6>
+                            <label class="field prepend-icon">
+                              <input type="text" name="map_lon[]" class="gui-input" value="{{{ conf('map.' . $key . '.lon') }}}">
+                              <span class="field-icon"><i class="fa fa-location-arrow"></i></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="section mb15 row">
+                          <div class="col-md-6">
+                            <h6 class="fw400">@lang('admin.label.map_marker_coordinate', 'Harita Nokta Koordinatı')
+                              (Lat)</h6>
+                            <label class="field prepend-icon">
+                              <input type="text" name="map_marker_lat[]" class="gui-input" value="{{{ conf('map.' . $key . '.marker_lat') }}}">
+                              <span class="field-icon"><i class="fa fa-location-arrow"></i></span>
+                            </label>
+                          </div>
+                          <div class="col-md-6">
+                            <h6 class="fw400">@lang('admin.label.map_marker_coordinate', 'Harita Nokta Koordinatı')
+                              (Lon)</h6>
+                            <label class="field prepend-icon">
+                              <input type="text" name="map_marker_lon[]" class="gui-input" value="{{{ conf('map.' . $key . '.marker_lon') }}}">
+                              <span class="field-icon"><i class="fa fa-location-arrow"></i></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="section mb15 row">
+                          <div class="col-md-6">
+                            <h6 class="fw400">@lang('admin.label.map_zoom', 'Harita Büyüklüğü') (Zoom)</h6>
+                            <label class="field prepend-icon">
+                              <input type="text" name="map_zoom[]" class="gui-input" value="{{{ conf('map.' . $key . '.zoom', 17) }}}">
+                              <span class="field-icon"><i class="fa fa-search-plus"></i></span>
+                            </label>
+                          </div>
+                          <div class="col-md-6"></div>
+                        </div>
+                        <div class="section mb15">
+                          <h6 class="fw400">@lang('admin.label.map_marker_content', 'Harita Nokta İçeriği')</h6>
+                          <label class="field prepend-icon">
+                            <textarea name="map_marker_content[]" class="gui-textarea" rows="4">{{{ conf('map.' . $key . '.marker_content') }}}</textarea>
+                            <span class="field-icon"><i class="fa fa-map-marker"></i></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                @endif
+                @endforeach
+                </tbody>
+              </table>
+            </div>
+            <div id="socials-tab" class="tab-pane fade">
+              <div class="section mb15 row">
+                <div class="col-md-6">
+                  <h6 class="fw400">Facebook</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="social_facebook" class="gui-input" value="{{{ conf('social.facebook') }}}">
+                    <span class="field-icon"><i class="fa fa-facebook"></i></span>
+                  </label>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="fw400">Twitter</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="social_twitter" class="gui-input" value="{{{ conf('social.twitter') }}}">
+                    <span class="field-icon"><i class="fa fa-twitter"></i></span>
+                  </label>
+                </div>
+              </div>
+              <div class="section mb15 row">
+                <div class="col-md-6">
+                  <h6 class="fw400">Google Plus</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="social_google_plus" class="gui-input" value="{{{ conf('social.google_plus') }}}">
+                    <span class="field-icon"><i class="fa fa-google-plus"></i></span>
+                  </label>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="fw400">LinkedIn</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="social_linkedin" class="gui-input" value="{{{ conf('social.linkedin') }}}">
+                    <span class="field-icon"><i class="fa fa-linkedin"></i></span>
+                  </label>
+                </div>
+              </div>
+              <div class="section mb15 row">
+                <div class="col-md-6">
+                  <h6 class="fw400">Instagram</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="social_instagram" class="gui-input" value="{{{ conf('social.instagram') }}}">
+                    <span class="field-icon"><i class="fa fa-instagram"></i></span>
+                  </label>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="fw400">Youtube</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="social_youtube" class="gui-input" value="{{{ conf('social.youtube') }}}">
+                    <span class="field-icon"><i class="fa fa-youtube"></i></span>
+                  </label>
+                </div>
+              </div>
+              <div class="section mb15 row">
+                <div class="col-md-6">
+                  <h6 class="fw400">Flickr</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="social_flickr" class="gui-input" value="{{{ conf('social.flickr') }}}">
+                    <span class="field-icon"><i class="fa fa-flickr"></i></span>
+                  </label>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="fw400">Pinterest</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="social_pinterest" class="gui-input" value="{{{ conf('social.pinterest') }}}">
+                    <span class="field-icon"><i class="fa fa-pinterest"></i></span>
+                  </label>
+                </div>
+              </div>
+              <div class="section mb15 row">
+                <div class="col-md-6">
+                  <h6 class="fw400">Skype</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="social_skype" class="gui-input" value="{{{ conf('social.skype') }}}">
+                    <span class="field-icon"><i class="fa fa-skype"></i></span>
+                  </label>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="fw400">Vimeo</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="social_vimeo" class="gui-input" value="{{{ conf('social.vimeo') }}}">
+                    <span class="field-icon"><i class="fa fa-vimeo"></i></span>
+                  </label>
+                </div>
+              </div>
+              <div class="section mb15 row">
+                <div class="col-md-6">
+                  <h6 class="fw400">GitHub</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="social_github" class="gui-input" value="{{{ conf('social.github') }}}">
+                    <span class="field-icon"><i class="fa fa-github"></i></span>
+                  </label>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="fw400">WhatsApp</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="social_whatsapp" class="gui-input" value="{{{ conf('social.whatsapp') }}}">
+                    <span class="field-icon"><i class="fa fa-whatsapp"></i></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div id="google-tab" class="tab-pane fade">
+              <div class="section mb15">
+                <h6 class="fw400">@lang('admin.label.map_key', 'Harita Anahtarı')</h6>
+                <label class="field prepend-icon">
+                  <input type="text" name="google_map_key" class="gui-input" value="{{{ conf('google.map_key') }}}">
+                  <span class="field-icon"><i class="fa fa-lock"></i></span>
+                </label>
+              </div>
+              <div class="section mb15">
+                <h6 class="fw400">@lang('admin.label.google_search_console_verification_code', 'Search Console Doğrulama
+                  Kodu')</h6>
+                <label class="field prepend-icon">
+                  <input type="text" name="google_search_console" class="gui-input" value="{{{ conf('google.search_console') }}}">
+                  <span class="field-icon"><i class="fa fa-globe"></i></span>
+                </label>
+              </div>
+              <div class="section mb15">
+                <h6 class="fw400">@lang('admin.label.google_analytics_code', 'Analytics Kodu')</h6>
+                <label class="field prepend-icon">
+                  <textarea name="google_analytics" class="gui-textarea" rows="4">{{{ conf('google.analytics') }}}</textarea>
+                  <span class="field-icon"><i class="fa fa-globe"></i></span>
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="section mb15">
+                    <h6 class="fw400">@lang('admin.label.google_recaptcha_site_key', 'ReCaptcha Site Anahtarı')</h6>
+                    <label class="field prepend-icon">
+                      <input type="text" name="google_recaptcha_site_key" class="gui-input" value="{{{ conf('google.recaptcha_site_key') }}}">
+                      <span class="field-icon"><i class="fa fa-key"></i></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="section mb15">
+                    <h6 class="fw400">@lang('admin.label.google_recaptcha_site_key', 'ReCaptcha Güvenlik Anahtarı')</h6>
+                    <label class="field prepend-icon">
+                      <input type="text" name="google_recaptcha_site_secret" class="gui-input" value="{{{ conf('google.recaptcha_site_secret') }}}">
+                      <span class="field-icon"><i class="fa fa-key"></i></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="section mb15">
+                <h6 class="fw400">@lang('admin.label.google_adsense_code', 'AdSense Kodu')</h6>
+                <label class="field prepend-icon">
+                  <textarea name="google_adsense" class="gui-textarea" rows="4">{{{ conf('google.adsense') }}}</textarea>
+                  <span class="field-icon"><i class="fa fa-globe"></i></span>
+                </label>
+              </div>
+            </div>
+            <div id="oauth-tab" class="tab-pane fade">
+              <div class="section mb15 row">
+                <div class="col-md-6">
+                  <h6 class="fw400">@lang('admin.label.facebook_app_id', 'Facebook App Id')</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="facebook_app_id" class="gui-input" value="{{{ conf('oauth.facebook.app_id') }}}">
+                    <span class="field-icon"><i class="fa fa-lock"></i></span>
+                  </label>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="fw400">@lang('admin.label.facebook_app_secret', 'Facebook App Secret')</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="facebook_app_secret" class="gui-input" value="{{{ conf('oauth.facebook.app_secret') }}}">
+                    <span class="field-icon"><i class="fa fa-lock"></i></span>
+                  </label>
+                </div>
+              </div>
+              <hr class="short">
+              <div class="section mb15 row">
+                <div class="col-md-6">
+                  <h6 class="fw400">@lang('admin.label.twitter_api_key', 'Twitter Api Key')</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="twitter_api_key" class="gui-input" value="{{{ conf('oauth.twitter.api_key') }}}">
+                    <span class="field-icon"><i class="fa fa-lock"></i></span>
+                  </label>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="fw400">@lang('admin.label.twitter_secret', 'Twitter Api Secret')</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="twitter_api_secret" class="gui-input" value="{{{ conf('oauth.twitter.api_secret') }}}">
+                    <span class="field-icon"><i class="fa fa-lock"></i></span>
+                  </label>
+                </div>
+              </div>
+              <div class="section mb15 row">
+                <div class="col-md-6">
+                  <h6 class="fw400">@lang('admin.label.twitter_access_token', 'Twitter Access Token')</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="twitter_access_token" class="gui-input" value="{{{ conf('oauth.twitter.access_token') }}}">
+                    <span class="field-icon"><i class="fa fa-lock"></i></span>
+                  </label>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="fw400">@lang('admin.label.twitter_access_token_secret', 'Twitter Access Token Secret')</h6>
+                  <label class="field prepend-icon">
+                    <input type="text" name="twitter_access_token_secret" class="gui-input" value="{{{ conf('oauth.twitter.access_token_secret') }}}">
+                    <span class="field-icon"><i class="fa fa-lock"></i></span>
+                  </label>
+                </div>
+              </div>
+              <hr class="short">
+              <div class="section mb15">
+                <h6 class="fw400">@lang('admin.html_editor', 'HTML Editör')</h6>
+                <label class="field select">
+                  <select id="html_editor" name="html_editor" class="empty">
+                    <option value="default"{{ conf('html_editor', 'default') == 'default' ? ' selected="selected"' : '' }}>@lang('admin.label.default', 'Varsayılan')</option>
+                    <option value="ckeditor"{{ conf('html_editor', 'default') == 'ckeditor' ? ' selected="selected"' : '' }}>CK Editor</option>
+                    <option value="tiny"{{ conf('html_editor', 'default') == 'tiny' ? ' selected="selected"' : '' }}>TinyMCE</option>
+                  </select>
+                  <i class="arrow double"></i>
+                </label>
+              </div>
+            </div>
+            <hr class="short alt">
+            <div class="section mbn text-right">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa fa-save"></i>
+                @lang('admin.button.save', 'Kaydet')
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+@stop
+
+@section('script')
+@parent
+<script type="text/javascript" src="//maps.google.com/maps/api/js?key=@conf('google.map_key')"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/map/gmaps.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/gmap/jquery.ui.map.min.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/gmap/ui/jquery.ui.map.services.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/gmap/ui/jquery.ui.map.extensions.js"></script>
+<script type="text/javascript" src="{{ $root }}/js/plugins/gmap/ui/jquery.ui.map.microformat.js"></script>
+<script type="text/javascript">
+  //<![CDATA[
+
+  /**
+   * Map init
+   *
+   * @param index
+   * @returns {GMaps}
+   */
+  function initMap(index) {
+    var lat, lon;
+    var inp_lat = $('input[name="map_lat[]"]').eq(index).data('index', index);
+    var inp_lon = $('input[name="map_lon[]"]').eq(index).data('index', index);
+    var inp_zoom = $('input[name="map_zoom[]"]').eq(index).data('index', index);
+    var inp_marker_lat = $('input[name="map_marker_lat[]"]').eq(index).data('index', index);
+    var inp_marker_lon = $('input[name="map_marker_lon[]"]').eq(index).data('index', index);
+    var inp_marker_content = $('textarea[name="map_marker_content[]"]').eq(index).data('index', index);
+
+    if (inp_lat.val() && inp_lon.val()) {
+      lat = inp_lat.val();
+      lon = inp_lon.val();
+    } else if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        lat = pos.coords.latitude;
+        lon = pos.coords.longitude;
+
+        inp_lat.val(lat);
+        inp_lon.val(lon).change();
+      });
+    }
+
+    if (!lat) {
+      lat = 0;
+    }
+
+    if (!lon) {
+      lon = 0;
+    }
+
+    $([inp_lat, inp_lon, inp_zoom, inp_marker_lat, inp_marker_lon, inp_marker_content]).change(function (e) {
+      var index = $(this).data('index');
+
+      if (maps[index]) {
+        var inp_lat = $('input[name="map_lat[]"]').eq(index);
+        var inp_lon = $('input[name="map_lon[]"]').eq(index);
+        var inp_zoom = $('input[name="map_zoom[]"]').eq(index);
+        var inp_marker_lat = $('input[name="map_marker_lat[]"]').eq(index);
+        var inp_marker_lon = $('input[name="map_marker_lon[]"]').eq(index);
+        var inp_marker_content = $('textarea[name="map_marker_content[]"]').eq(index);
+
+        var lat = parseFloat(inp_lat.val());
+        var lon = parseFloat(inp_lon.val());
+
+        if (!isNaN(lat) && !isNaN(lon)) {
+          maps[index].setCenter(inp_lat.val(), inp_lon.val());
+        }
+
+        var zoom = parseInt(inp_zoom.val());
+
+        if (!isNaN(zoom)) {
+          maps[index].setZoom(zoom);
+        }
+
+        var marker_lat = parseFloat(inp_marker_lat.val());
+        var marker_lon = parseFloat(inp_marker_lon.val());
+
+        if (!isNaN(marker_lat) && !isNaN(marker_lon)) {
+          maps[index].removeMarkers();
+          maps[index].addMarker({
+            'lat': marker_lat,
+            'lng': marker_lon,
+            'infoWindow': {
+              'content': inp_marker_content.val().replace(/\n/g, '<br>')
+            }
+          });
+        }
+      }
+    });
+
+    $('button[name="geocoding-btn"]').eq(index).data('index', index).click(function (e) {
+      e.preventDefault();
+
+      var index = $(this).data('index');
+
+      if (maps[index]) {
+        GMaps.geocode({
+          address: $('input[name="address"]').eq(index).val().trim(),
+          callback: function (results, status) {
+            if (status === 'OK') {
+              var latlng = results[0].geometry.location;
+
+              $('input[name="map_lat[]"]').eq(index).val(latlng.lat());
+              $('input[name="map_lon[]"]').eq(index).val(latlng.lng());
+              $('input[name="map_marker_lat[]"]').eq(index).val(latlng.lat());
+              $('input[name="map_marker_lon[]"]').eq(index).val(latlng.lng());
+
+              maps[index].setCenter(latlng.lat(), latlng.lng());
+              maps[index].removeMarkers();
+              maps[index].addMarker({
+                'lat': latlng.lat(),
+                'lng': latlng.lng(),
+                'infoWindow': {
+                  'content': $('textarea[name="map_marker_content[]"]').eq(index).val().replace(/\n/g, '<br>')
+                }
+              });
+            }
+          }
+        });
+      }
+    });
+
+    var map = new GMaps({
+      'div': '#map' + index,
+      'lat': lat,
+      'lng': lon,
+      'zoom': parseFloat(inp_zoom.val()) || 16,
+      'click': function (e) {
+        var lat = e.latLng.lat();
+        var lon = e.latLng.lng();
+
+        $('input[name="map_marker_lat[]"]').eq(index).val(lat);
+        $('input[name="map_marker_lon[]"]').eq(index).val(lon);
+
+        map.removeMarkers();
+        map.addMarker({
+          'lat': lat,
+          'lng': lon,
+          'infoWindow': {
+            content: $('textarea[name="map_marker_content[]"]').eq(index).val().replace(/\n/g, '<br>')
+          }
+        });
+      },
+      'dragend': function (e) {
+        $('input[name="map_lat[]"]').eq(index).val(e.center.lat());
+        $('input[name="map_lon[]"]').eq(index).val(e.center.lng());
+        $('input[name="map_zoom[]"]').eq(index).val(e.zoom);
+      },
+      'zoom_changed': function (e) {
+        $('input[name="map_zoom[]"]').eq(index).val(e.zoom);
+      }
+    });
+
+    map.addMarker({
+      'lat': inp_marker_lat.val(),
+      'lng': inp_marker_lon.val(),
+      'infoWindow': {
+        'content': inp_marker_content.val().replace(/\n/g, '<br>')
+      }
+    });
+
+    mapInits[index] = true;
+
+    return map;
+  }
+
+  var confirmation = {
+    title: "@lang('admin.message.are_you_sure', 'Emin misiniz?')",
+    content: "@lang('admin.message.will_delete_content', 'İçerik ile bağlantılı tüm içerikler silinecektir!')",
+    placement: "top",
+    yesBtn: "@lang('admin.button.yes', 'Evet')",
+    noBtn: "@lang('admin.button.no', 'Hayır')",
+    confirm: function () {
+      var $this = $(this);
+
+      window.setTimeout(function () {
+        $this.closest('tr').remove();
+      }, 250);
+    }
+  };
+
+  var maps = [], mapInits = [], mapInitiators = [];
+
+  $('button[data-remove]').popConfirm(confirmation);
+
+  $('a[href="#add-contact"]').click(function (e) {
+    e.preventDefault();
+
+    var cloned = $('#contact-list tbody tr').eq(0).clone();
+    cloned.find('td').eq(0).empty().append(
+      $('<button/>', {
+        'type': 'button',
+        'data-remove': ''
+      }).popConfirm(confirmation).addClass('btn btn-danger').append(
+        $('<i/>').addClass('fa fa-trash-o')
+      )
+    );
+    cloned.find('input, textarea').val('');
+    cloned.appendTo('#contact-list tbody');
+
+    $('input[name="contact_title[]"]:last').focus();
+  });
+
+  $('a[href="#add-map"]').click(function (e) {
+    e.preventDefault();
+
+    var index = $('#map-list tbody tr').length;
+
+    var cloned = $('#map-list tbody tr').eq(0).clone();
+    cloned.find('td').eq(0).empty().append(
+      $('<button/>', {
+        'type': 'button',
+        'data-remove': ''
+      }).popConfirm(confirmation).addClass('btn btn-danger').append(
+        $('<i/>').addClass('fa fa-trash-o')
+      )
+    );
+    cloned.find('input, textarea').val('');
+    cloned.find('.map').empty().attr('id', 'map' + index).removeAttr('style');
+    cloned.appendTo('#map-list tbody');
+
+    maps[index] = initMap(index);
+
+    $('input[name="map_title[]"]:last').focus();
+  });
+
+
+  $('#map-list tr').each(function (index) {
+    //Set init
+    mapInits[index] = false;
+    mapInitiators[index] = window.setInterval(function () {
+      if (!mapInits[index] && $('#map' + index).is(':visible')) {
+        maps[index] = initMap(index);
+
+        window.clearInterval(mapInitiators[index]);
+      }
+    }, 100);
+  });
+
+  $('#settings-form').submit(function (e) {
+    e.preventDefault();
+
+    $.ajax({
+      'type': $(this).attr('method'),
+      'url': $(this).attr('action'),
+      'data': $(this).serialize()
+    }).done(function (result) {
+      message(result);
+    });
+
+    return false;
+  });
+  //]]>
+</script>
+@stop
