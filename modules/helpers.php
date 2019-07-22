@@ -458,13 +458,15 @@ function renderForm($content, $captcha = null) {
     preg_match_all('/{{(.*?)}}/s', $content, $matches);
 
     if (isset($matches[1])) {
+
       foreach ($matches[1] as $key => $match) {
-        @list($type, $action) = explode(':', trim($match));
+        @list($type, $name) = explode(':', trim($match));
+
         $type = trim($type);
-        $action = trim($action, '" ');
+        $name = trim($name, '" ');
 
         if ($type === 'form') {
-          $form = System\Property\Manager::form($action, lang());
+          $form = System\Property\Manager::form($name, lang());
 
           if ($form->label) {
             // form footer
@@ -480,8 +482,8 @@ function renderForm($content, $captcha = null) {
             $footer[] = '<button type="submit" class="btn btn-primary">' . lang('button.submit', 'Gönder') . '</button>';
             $footer[] = '</div>';
 
-            $html = array('<form id="' . $action . '-form" method="post" action="' . url('form/' . $action) . '">');
-            $html[] = '<input type="hidden" name="form" value="' . $action . '">';
+            $html = array('<form id="' . $name . '-form" method="post" action="' . url('form/' . $name) . '">');
+            $html[] = '<input type="hidden" name="form" value="' . $name . '">';
 
             foreach ($form->elements as $group => $elements) {
               $html[] = '<fieldset>';

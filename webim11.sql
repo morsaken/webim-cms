@@ -211,6 +211,7 @@ CREATE TABLE `sys_form` (
   `language` varchar(5) COLLATE utf8_turkish_ci NOT NULL,
   `name` varchar(50) COLLATE utf8_turkish_ci NOT NULL,
   `label` varchar(255) COLLATE utf8_turkish_ci NOT NULL,
+  `meta` text COLLATE utf8_turkish_ci,
   `version` int(10) unsigned DEFAULT '1',
   `active` enum('true','false') COLLATE utf8_turkish_ci DEFAULT 'true',
   PRIMARY KEY (`id`),

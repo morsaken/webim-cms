@@ -41,14 +41,14 @@ class Manager extends Controller {
 
     foreach ($forms as $group_ids) {
       //Form info
-      $form = new \stdClass();
+      $form = new stdClass();
 
       //Groups
       $groups = array();
 
       foreach ($group_ids as $field_ids) {
         //Group info
-        $group = new \stdClass();
+        $group = new stdClass();
 
         //Group properties
         $fields = array();
