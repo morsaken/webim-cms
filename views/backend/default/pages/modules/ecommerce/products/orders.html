@@ -78,6 +78,10 @@
        'value': result[key]['id']
       }).html(result[key]['title']).appendTo('#category');
      }
+
+     if ($('#category').val()) {
+      $('#list-form').submit();
+     }
     }
    });
   }
