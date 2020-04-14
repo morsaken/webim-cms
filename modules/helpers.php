@@ -533,7 +533,7 @@ function renderForm($content, $captcha = null) {
                 }
 
                 if (($element->type === 'checkbox') && isset($element->meta->value)) {
-                  $html[] = '<input name="' . $element->name . '"' . $params . ' value="' . $element->meta->value . '"' . ($element->default === $element->meta->value ? ' checked' : '') . '>';
+                  $html[] = '<input type="checkbox" name="' . $element->name . '"' . $params . ' value="' . $element->meta->value . '"' . ($element->default === $element->meta->value ? ' checked' : '') . '>';
                 }
 
                 if (($element->type === 'radio') && isset($element->meta->options) && !is_scalar($element->meta->options)) {
